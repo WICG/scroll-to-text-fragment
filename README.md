@@ -2,7 +2,7 @@
 
 ## Introduction
 
-To enable users to easily navigate to specific content in a web page, we propose adding support for specifying a text snippet in the URL fragment.
+To enable users to easily navigate to specific content in a web page, we propose adding support for specifying a text snippet in the URL fragment. When navigating to a URL with such a fragment, the browser will find the first instance of the text snippet in the page and bring it into view.
 
 Web standards currently specify support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, when [navigating to a fragment](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid). While named anchors and elements with ids enable scrolling to limited specific parts of web pages, not all documents make use of these elements, and not all parts of pages are addressable by named anchors or elements with ids.
 
