@@ -32,6 +32,28 @@ We propose generalizing [existing support](https://html.spec.whatwg.org/multipag
 
 This extends the existing support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, to scrolling to other textual content on a web page. Browsers first attempt to find an element that matches the fragment using the existing support for elements with id attributes and anchor elements with name attributes. If no matches are found, browsers then attempt to parse the fragment as a text snippet specification.
 
+### Encoding the text snippet in the URL fragment
+
+We propose encoding a text snippet in the URL fragment, prefixed with the ```targetText=``` string. Since text can contain characters invalid in a URL (e.g. spaces), the text must be percent encoded. For example, ```#targetText=My%20Heading``` would cause the first occurance of "My Heading" on the page to be selected as the indicated part of the document.
+
+Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
+
+### Extended Syntax
+
+There are interesting use cases where the specified text may be quite long, potentially one or more entire paragraphs. Specifying such long snippets in a URL can be cumbersome and unwieldy. To avoid exploding URL lengths, this syntax can be easily extended to allow specifying both a start and end piece. This effectively allows a simple form of wildcarding such that it will match the first text block of the form ```startPiece.*endPiece```. To specify the text snippet in this way, simply provide two arguments to targetText, separated by a comma. Example:
+
+```
+www.example.com#targetText=the%20lazy%20dog,brown%20fox
+```
+
+Would match "The lazy dog jumped over the quick brown fox".
+
+### URL fragment encoding
+
+In order to specify a text snippet in the fragment of a web page URL, the author must encode the selector in a way that produces a valid URL fragment.
+
+The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
+
 ### Visual Indicators
 
 In addition to scrolling, the user agent may wish to emphasize the targetted text snippet to the user to help direct their attention. This can be done by providing a visual cue, such as highlighting the targetted snippet.
@@ -42,28 +64,6 @@ Users may wish to customize the behavior of the visual indicator. Two examples w
 - Multiple highlights - Users may wish to highlight multiple items on the page, for instance, multiple bullet points in a list.
 
 While we consider these useful additions, these capabilities are out of scope for our initial proposal, save that we'd like to leave the syntax open to possible future extensions like this.
-
-### Encoding the text snippet in the URL fragment
-
-We propose encoding a text snippet in the URL fragment, prefixed with the ```targetText=``` string. Since text can contain characters invalid in a URL (e.g. spaces), the text must be percent encoded. For example, ```#targetText=My%20Heading``` would cause the first occurance of "My Heading" on the page to be selected as the indicated part of the document.
-
-Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
-
-#### Extended Syntax
-
-There are interesting use cases where the specified text may be quite long, potentially one or more entire paragraphs. Specifying such long snippets in a URL can be cumbersome and unwieldy. To avoid exploding URL lengths, this syntax can be easily extended to allow specifying both a start and end piece. This effectively allows a simple form of wildcarding such that it will match the first text block of the form ```startPiece.*endPiece```. To specify the text snippet in this way, simply provide two arguments to targetText, separated by a comma. Example:
-
-```
-www.example.com#targetText=the%20lazy%20dog,brown%20fox
-```
-
-Would match "The lazy dog jumped over the quick brown fox".
-
-#### URL fragment encoding
-
-In order to specify a text snippet in the fragment of a web page URL, the author must encode the selector in a way that produces a valid URL fragment.
-
-The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
 
 ## Alternatives Considered
 
