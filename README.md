@@ -69,7 +69,7 @@ The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can c
 
 ### CSS Selector Fragments
 
-Our initial idea, explored in some detail, was to allow encoding a CSS selector in the URL fragment. The selector would determine which element on the page should be the "indicated element" in the [navigating to a fragment](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid) steps.
+Our initial idea, explored in some detail, was to allow encoding a CSS selector in the URL fragment. The selector would determine which element on the page should be the "indicated element" in the [navigating to a fragment](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid) steps. In fact, this explainer is based on @bryanmcquade's original [CSS Selector Fragment explainer](https://github.com/bryanmcquade/scroll-to-css-selector).
 
 The main drawback with this approach was making it secure. Allowing scroll on load to a CSS selector allows several ways an attacker could exfiltrate hidden information (e.g. CSRF tokens) from the page. One such attack is demonstrated [here](https://blog.sheddow.xyz/css-timing-attack/) but others were quickly discovered as well.
 
