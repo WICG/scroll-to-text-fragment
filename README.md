@@ -109,9 +109,11 @@ A browser that doesn’t yet support this feature will attempt to match the spec
 
 ### Web Compatibility
 
-Web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites are already using ```targetText``` in the URL fragment for their own purposes, this feature could break those sites.
+Web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites are already using ```targetText``` in the URL fragment for their own purposes, or if they don't handle unexpected tokens, this feature could break those sites. In particular, some frameworks use the fragment for routing.
 
-We expect this usage to be exceedingly rare. It's an abuse of the purpose of URL fragments and page arguments are typically encoded using the '?' character (e.g. http://example.com?name=test). Still, we may run an experiment to see if `targetText` is available enough to use as a reserved token.
+We should investigate how common these use cases are and what the failure modes are. If unexpecteded parameters are simply ignored, this would be a compatible change. If they cause error pages or visible failures, this would be a cause for concern.
+
+We should also measure how likely a naming collision would be using [HTTPArchive](https://httparchive.org/). i.e. Check to see if `targetText` is available enough to use as a reserved token.
 
 ### Security
 
