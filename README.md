@@ -44,7 +44,7 @@ This extends the existing support for scrolling to anchor elements with name att
 
 ### Encoding the text snippet in the URL fragment
 
-We propose encoding a text snippet in the URL fragment, prefixed with the ```targetText=``` string. Since text can contain characters invalid in a URL (e.g. spaces), the text must be percent encoded. For example, ```#targetText=My%20Heading``` would cause the first occurance of "My Heading" on the page to be selected as the indicated part of the document.
+We propose encoding a text snippet in the URL fragment, prefixed with the ```targetText=``` string. Since text can contain characters invalid in a URL (e.g. spaces), and some characters are reserved by the fragment syntax (e.g. ',') the text must be percent encoded. For example, ```#targetText=My%20Heading``` would cause the first occurance of "My Heading" on the page to be selected as the indicated part of the document. The currently required characters to be percent encoded are ' ' (%20) and ',' (%2C).
 
 Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
 
