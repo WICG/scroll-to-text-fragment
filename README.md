@@ -101,7 +101,29 @@ If the match is provided using two arguments, the left argument is considered th
 
 If the match is specified as a single argument, we consider it an exact match search (e.g. targetText=_textSnippet_). The browser will highlight the first occurence of exactly the _textSnippet_ string. In this case, the text cannot span multiple elements.
 
-TODO: Examples
+<table><tr><td>
+E.g. Given:
+            
+ * Text1
+ * Text2
+ * Text3
+ * Text4
+
+`targetText=Text2,Text4` will highlight all items except the first:
+
+* Text1
+* __Text2__
+* __Text3__
+* __Text4__
+
+`targetText=Text2` will highlight just the second item:
+
+* Text1
+* __Text2__
+* Text3
+* Text4
+
+</td></tr></table>
 
 #### Context
 To disambiguate non-unique snippets of text on a page, the fragment can specify optional _prefix_ and _suffix_ terms. If provided, the match term will only match text that is immediately preceded by the _prefix_ text and/or immediately followed by the _suffix_ text (allowing for an arbitrary amount of whitespace in between). Immediately preceded, in these cases, means there are no other text nodes between the match and the context term in DOM order. There may be arbitrary whitespace and the context text may be the child of a different element (i.e. searching for context crosses element boundaries).
@@ -110,7 +132,52 @@ If provided, the prefix must end (and suffix must begin) with a dash (-) charact
 
 If provided, the prefix must be the first argument to targetText. Similarly, the suffix must be the last argument to targetText.
 
-TODO: Examples
+<table><tr><td>
+            
+For example, suppose we want to perform the following highlight:
+
+* header1
+  * text1
+* __header1__
+  * text2
+  * text3
+
+Since the text “header1” is ambiguous, we must provide a suffix to disambiguate it:
+
+`#targetText=header1,-text2`
+
+</td></tr></table>
+
+
+<table><tr><td>
+            
+Here’s an example where we need both pieces of context:
+
+Interstellar
+* Christopher Nolan Director
+
+Inception
+* __Christopher Nolan__ Director
+
+Inception
+* Christopher Nolan Writer
+
+`#targetText=Inception-,Christopher Nolan,-Director`
+
+_Note: The space in “Christopher Nolan” would have to be percent-encoded since spaces aren’t valid in a URL. However, most browsers will do this for you automatically._
+
+</td></tr></table>
+
+<table><tr><td>
+
+If the snippet is unique enough, we could provide no context:
+
+Here is a __Superduper unique__ string 
+
+`#targetText=Superduper unique`
+
+</td></tr></table>
+
 
 ### Processing Model
 
