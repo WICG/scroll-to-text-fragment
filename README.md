@@ -226,7 +226,7 @@ Simon St. Laurent and Eric Meyer [proposed](http://simonstl.com/articles/cssFrag
 
 [Shaun Inman](https://shauninman.com/archive/2011/07/25/cssfrag) and others later implemented browser extensions using this #css() syntax for Firefox, Safari, Chrome, and Opera, which shows that it is possible to implement this feature across a variety of browsers.
 
-The [Open Annotation Community Group](https://www.w3.org/community/openannotation/) aims to allow annotating arbitrary content. Our work has been informed specifically be prior efforts at selecting arbitrary textual content for an annotation.
+The [Open Annotation Community Group](https://www.w3.org/community/openannotation/) aims to allow annotating arbitrary content. Our work has been informed specifically by prior efforts at selecting arbitrary textual content for an annotation.
 
 Scroll Anchoring
 
