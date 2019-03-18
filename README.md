@@ -8,7 +8,7 @@ Web standards currently specify support for scrolling to anchor elements with na
 
 ## Current Status
 
-This feature is currently implemented as an experimental feature in Chrome 74.0.3706.0 and newer. It is not yet shipped to users by default. Users who wish to experiment with it can use chrome://flags#enable-text-fragment-anchor.
+This feature is currently implemented as an experimental feature in Chrome 74.0.3706.0 and newer. It is not yet shipped to users by default. Users who wish to experiment with it can use chrome://flags#enable-text-fragment-anchor. The implementation is incomplete and doesn't necessarily match the specification in this document.
 
 ## A Note on Specifications / "Why Not Use The Standardization Process?"
 
@@ -38,44 +38,119 @@ When referencing a specific section of a web page, for example as part of sharin
 
 ## Proposed Solution
 
+### tl;dr
+
+Allow specifying text to scroll and highlight in the URL fragment:
+
+https://example.com#targetText=prefix-,startText,endText,-suffix
+
+Using this syntax
+
+```
+targetText=[prefix-,]textStart[,textEnd][,-suffix]
+            context  |-------match-----|  context
+```
+
+Navigating to such a URL will find the first instance of the specified targetText, surrounded by the optionally provided prefix and suffix, and scroll it into view during a navigation. The snippet will be highlighted using a mechanism similar to Chrome’s Find-In-Page feature.
+
+This will work only if the user provided a gesture, for a full “new-page” navigation, and be disabled in iframes. All text matching will be performed on word boundaries for security reasons (where possible).
+
+### Background
+
 We propose generalizing [existing support](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element) for scrolling to elements as part of a navigation by adding support for specifying a text snippet in the URL fragment. We modify the [indicated part of the document](https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document) processing model to allow using a text snippet as the indicated part. The user agent would then follow the existing logic for [scrolling to the fragment identifier](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier) as part of performing a navigation.
 
 This extends the existing support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, to scrolling to other textual content on a web page. Browsers first attempt to find an element that matches the fragment using the existing support for elements with id attributes and anchor elements with name attributes. If no matches are found, browsers then attempt to parse the fragment as a text snippet specification.
 
-### Encoding the text snippet in the URL fragment
+The Open Annotation specification already specifies a [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector). This proposal has been made quite similar to the TextQuoteSelector in hopes that we can extend and reuse that processing model rather than inventing a new one, albeit with a stripped down syntax for ease of use in a URL.
 
-We propose encoding a text snippet in the URL fragment, prefixed with the ```targetText=``` string. Since text can contain characters invalid in a URL (e.g. spaces), and some characters are reserved by the fragment syntax (e.g. ',') the text must be percent encoded. For example, ```#targetText=My%20Heading``` would cause the first occurance of "My Heading" on the page to be selected as the indicated part of the document. The currently required characters to be percent encoded are ' ' (%20) and ',' (%2C).
+### Additional Considerations
+
+ * Highlighting - In addition to scrolling the targeted snippet into view, the browser should highlight it to the user.
+ * Multiple highlights - It is desirable to be able to highlight multiple snippets on a page.
+ * Cross-element matching - The user may wish to highlight text that spans multiple paragraphs, list items, or table entries. In cases where possible, we should allow specifying text snippets across these boundaries.
+ * Non-uniqueness of text - The text to be highlighted may not be unique on the page. The solution must account for this by allowing ways to disambiguate matches on a page.
+
+### Identifying a Text Snippet
+Specify a text snippet that should be scrolled into view on page load:
+
+https://en.wikipedia.org/wiki/Cat#targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+
+```
+targetText=[prefix-,]textStart[,textEnd][,-suffix]
+            context  |-------match-----|  context
+```
+
+_(Square brackets indicate an optional parameter)_
 
 Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
 
-### Extended Syntax
-
-There are interesting use cases where the specified text may be quite long, potentially one or more entire paragraphs. Specifying such long snippets in a URL can be cumbersome and unwieldy. To avoid exploding URL lengths, this syntax can be easily extended to allow specifying both a start and end piece. This effectively allows a simple form of wildcarding such that it will match the first text block of the form ```startPiece.*endPiece```. To specify the text snippet in this way, simply provide two arguments to targetText, separated by a comma. Example:
-
-```
-www.example.com#targetText=the%20lazy%20dog,brown%20fox
-```
-
-Would match "The lazy dog jumped over the quick brown fox".
-
-### URL fragment encoding
-
-In order to specify a text snippet in the fragment of a web page URL, the author must encode the selector in a way that produces a valid URL fragment.
+The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is will be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to prevent being interpreted as part of the fragment syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
 
-### Visual Indicators
+There are two kinds of terms specified in the targetText value: the _match_ and the _context_. The match is the portion of text that’s to be scrolled to and highlighted. The context is used only to disambiguate the match and is not highlighted.
 
-In addition to scrolling, the user agent may wish to emphasize the targetted text snippet to the user to help direct their attention. This can be done by providing a visual cue, such as highlighting the targetted snippet.
+Context is optional, it need not be provided. However, the targetText must always specify a match term.
 
-Users may wish to customize the behavior of the visual indicator. Two examples we've come across are:
+#### Match
+A match can be specified either with one argument or two.
 
-- Turning off highlighting - Users may wish to scroll some non-text element into view (e.g. image). If the element doesn't have an id/name, users may use the surrounding text instead. Highlighting the text could be misleading in this case.
-- Multiple highlights - Users may wish to highlight multiple items on the page, for instance, multiple bullet points in a list.
+If the match is provided using two arguments, the left argument is considered the starting snippet and the right argument is considered the ending snippet (e.g. targetText=_startText_,_endText_). In this case, the browser will perform a search for a block of text that starts with _startText_ and ends with _endText_. If multiple blocks match the first in DOM order is chosen (i.e. find the first occurence of startText, from there find the next occurence of endText). When a match is specified with two arguments, we allow highlighting text that spans multiple elements.
 
-While we consider these useful additions, these capabilities are out of scope for our initial proposal, save that we'd like to leave the syntax open to possible future extensions like this.
+If the match is specified as a single argument, we consider it an exact match search (e.g. targetText=_textSnippet_). The browser will highlight the first occurence of exactly the _textSnippet_ string. In this case, the text cannot span multiple elements.
+
+TODO: Examples
+
+#### Context
+To disambiguate non-unique snippets of text on a page, the fragment can specify optional _prefix_ and _suffix_ terms. If provided, the match term will only match text that is immediately preceded by the _prefix_ text and/or immediately followed by the _suffix_ text (allowing for an arbitrary amount of whitespace in between). Immediately preceded, in these cases, means there are no other text nodes between the match and the context term in DOM order. There may be arbitrary whitespace and the context text may be the child of a different element (i.e. searching for context crosses element boundaries).
+
+If provided, the prefix must end (and suffix must begin) with a dash (-) character. This is to disambiguate the prefix and suffix in the presence of optional parameters. It also leaves open the possibility of extending the syntax to allow multiple context terms, allowing more complicated context matching across elements.
+
+If provided, the prefix must be the first argument to targetText. Similarly, the suffix must be the last argument to targetText.
+
+TODO: Examples
+
+### Processing Model
+
+We plan to reuse as much of the processing model - how the text search is performed, how white space is collapsed, etc. - in the Web Annotation’s TextQuoteSelector as possible, potentially adding enhancements to that specification. Notably, we’d need to add the ability to specify text using a starting and ending snippet to TextQuoteSelector.
+
+If we cannot find a match that meets all the requirements in the fragment, no scrolling or highlighting is performed. 
+
+If an attacker can determine if a page has scrolled, this feature could be used to detect the presence of arbitrary text on the page. To prevent brute force attacks to guess important words on a page (e.g. passwords, pin codes), matches and prefix/suffix will only be matched on word boundaries. E.g. “range” will match “mountain range” but not “color orange” nor “forest ranger”.  Word boundaries are simple in languages with spaces but can become more subtle in languages without breaks (e.g. Chinese). A library like ICU [provides support](http://userguide.icu-project.org/boundaryanalysis#TOC-Word-Boundary) for finding word boundaries across all supported languages based on the Unicode Text Segmentation standard. Some browsers already allow word-boundary matching for the window.find API which allows specifying wholeWord as an argument. We hope this existing usage can be leveraged in the same way.
+
+### Highlight
+The UA will highlight the passage of text specified by targetText. Use cases exist for more precise control over the highlight, ex:
+ * Highlight but don’t scroll into view
+ * Scroll but don’t highlight
+
+We won’t support these features in the initial version but would like to leave the option open for future extension.
+
+We allow highlighting multiple snippets by providing additional targetText fragments, separated by the ampersand (&) character. Each targetText is considered independent in the sense that failure to find a match in one does not affect highlighting of any other targetTexts. e.g.:
+
+```
+example.com#targetText=foo&targetText=bar&targetText=bas
+```
+
+will highlight “foo”, “bar”, and “baz” and scroll “foo” into view, assuming all appear on the page.
+
+Only the left-most, successfully matched, targetText will be scrolled-into-view and used as the CSS target. That is, if “foo” did not appear anywhere on the page but “bar” does, we scroll “bar” into view.
+
+Each target text will start searching from the top of the page independently so that we may allow highlighting a snippet above the one that was scrolled into view.
+
+### :target
+
+For element-id based fragments (e.g. https://en.wikipedia.org/wiki/Cat#Anatomy), navigation causes the identified element to receive the `:target` CSS pseudo-class. This is a nice feature as it allows the page to add some customized highlighting or styling for an element that’s been targeted. For example, note that navigating to a citation on a Wikipedia page highlights the citation text: https://en.wikipedia.org/wiki/Cat#cite_note-Linaeus1758-1
+
+The question is how we should treat the `:target` CSS pseudo-class with the targetText fragment.
+An element-id fragment will target a complete and unique Element on the page. A text snippet may only be a portion of the text in an Element.
+
+We can start with setting :target on the parent Element of the first (i.e. the match we scroll to) match. If we find this causes ambiguity or confusion we can simply avoid setting `:target`. 
 
 ## Alternatives Considered
+
+### targetText 0.1
+
+A prior revision of this document contained a somewhat similar proposal. The main difference in the updated propoal is that it adds context terms to targetText. This helps to allow disambiguating text on a page as well as brings this proposal more in-line with the Open Annotation's [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector).
 
 ### CSS Selector Fragments
 
@@ -95,7 +170,7 @@ We also considered specifying the target element via a JavaScript-based navigati
 
 ## Future Work
 
-One important use case that's not covered by this proposal is being able to scroll to an image. A nearby text snippet can be used to scroll to the image but it depends on the page and is indirect. We'd eventually like to support this use case more directly.
+One important use case that's not covered by this proposal is being able to scroll to an image. A nearby text snippet can be used to scroll to the image but it depends on the page and is indirect. We'd eventually like to support this use case more directly. One potential option is to consider this just one of any available [Open Annotation selectors](https://www.w3.org/TR/annotation-model/#selectors). Future specification and implementation work could allow using selectors other than TextQuote to allow targetting various kinds of content.
 
 Another avenue of exploration is allowing users to specify highlighting in more detail. This was touched on briefly in the sections above. There are cases where the user may wish to highlight multiple snippets of text. For technical reasons, a text match across block-level elements may be difficult for a browser to implement. Allowing the user to specify multiple highlights would allow highlighting multiple paragraphs or bullet points. There are also cases where the user may wish to prevent highlights altogether, as in the image search case described above.
 
@@ -150,6 +225,8 @@ Browsers currently support scrolling to elements with ids, as well as anchor ele
 Simon St. Laurent and Eric Meyer [proposed](http://simonstl.com/articles/cssFragID.html) using CSS Selectors as fragment identifiers (last updated in 2012). Their proposal differs only in syntax used: St. Laurent and Meyer proposed specifying the CSS selector using a ```#css(...)``` syntax, for example ```#css(.myclass)```. This syntax is based on the XML Pointer Language (XPointer) Framework, an "extensible system for XML addressing" ... "intended to be used as a basis for fragment identifiers". XPointer does not appear to be supported by commonly used browsers, so we have elected to not depend on it in this proposal.
 
 [Shaun Inman](https://shauninman.com/archive/2011/07/25/cssfrag) and others later implemented browser extensions using this #css() syntax for Firefox, Safari, Chrome, and Opera, which shows that it is possible to implement this feature across a variety of browsers.
+
+The [Open Annotation Community Group](https://www.w3.org/community/openannotation/) aims to allow annotating arbitrary content. Our work has been informed specifically be prior efforts at selecting arbitrary textual content for an annotation.
 
 Scroll Anchoring
 
