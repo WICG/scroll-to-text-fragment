@@ -48,10 +48,12 @@ Using this syntax
 
 ```
 targetText=[prefix-,]textStart[,textEnd][,-suffix]
+
             context  |-------match-----|  context
 ```
+_(Square brackets indicate an optional parameter)_
 
-Navigating to such a URL will find the first instance of the specified targetText, surrounded by the optionally provided prefix and suffix, and scroll it into view during a navigation. The snippet will be highlighted using a mechanism similar to Chrome’s Find-In-Page feature.
+Navigating to such a URL will find the first instance of the specified targetText, surrounded by the (optionally provided) prefix and suffix, and scroll it into view during a navigation. The snippet will be highlighted using a mechanism similar to the browser’s Find-In-Page feature.
 
 This will work only if the user provided a gesture, for a full “new-page” navigation, and be disabled in iframes. All text matching will be performed on word boundaries for security reasons (where possible).
 
@@ -61,7 +63,7 @@ We propose generalizing [existing support](https://html.spec.whatwg.org/multipag
 
 This extends the existing support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, to scrolling to other textual content on a web page. Browsers first attempt to find an element that matches the fragment using the existing support for elements with id attributes and anchor elements with name attributes. If no matches are found, browsers then attempt to parse the fragment as a text snippet specification.
 
-The Open Annotation specification already specifies a [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector). This proposal has been made quite similar to the TextQuoteSelector in hopes that we can extend and reuse that processing model rather than inventing a new one, albeit with a stripped down syntax for ease of use in a URL.
+The Open Annotation specification already specifies a [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector). This proposal has been made similar to the TextQuoteSelector in hopes that we can extend and reuse that processing model rather than inventing a new one, albeit with a stripped down syntax for ease of use in a URL.
 
 ### Additional Considerations
 
@@ -77,14 +79,14 @@ https://en.wikipedia.org/wiki/Cat#targetText=Claws-,Like%20almost,the%20Felidae%
 
 ```
 targetText=[prefix-,]textStart[,textEnd][,-suffix]
+
             context  |-------match-----|  context
 ```
-
 _(Square brackets indicate an optional parameter)_
 
 Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
 
-The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is will be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to prevent being interpreted as part of the fragment syntax.
+The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to avoid being interpreted as part of the fragment syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
 
@@ -104,7 +106,7 @@ TODO: Examples
 #### Context
 To disambiguate non-unique snippets of text on a page, the fragment can specify optional _prefix_ and _suffix_ terms. If provided, the match term will only match text that is immediately preceded by the _prefix_ text and/or immediately followed by the _suffix_ text (allowing for an arbitrary amount of whitespace in between). Immediately preceded, in these cases, means there are no other text nodes between the match and the context term in DOM order. There may be arbitrary whitespace and the context text may be the child of a different element (i.e. searching for context crosses element boundaries).
 
-If provided, the prefix must end (and suffix must begin) with a dash (-) character. This is to disambiguate the prefix and suffix in the presence of optional parameters. It also leaves open the possibility of extending the syntax to allow multiple context terms, allowing more complicated context matching across elements.
+If provided, the prefix must end (and suffix must begin) with a dash (-) character. This is to disambiguate the prefix and suffix in the presence of optional parameters. It also leaves open the possibility of extending the syntax in the future to allow multiple context terms, allowing more complicated context matching across elements.
 
 If provided, the prefix must be the first argument to targetText. Similarly, the suffix must be the last argument to targetText.
 
@@ -112,7 +114,7 @@ TODO: Examples
 
 ### Processing Model
 
-We plan to reuse as much of the processing model - how the text search is performed, how white space is collapsed, etc. - in the Web Annotation’s TextQuoteSelector as possible, potentially adding enhancements to that specification. Notably, we’d need to add the ability to specify text using a starting and ending snippet to TextQuoteSelector.
+We'd like to reuse as much of the processing model - how the text search is performed, how white space is collapsed, etc. - in the Web Annotation’s TextQuoteSelector as possible, potentially adding enhancements to that specification. Notably, we’d need to add the ability to specify text using a starting and ending snippet to TextQuoteSelector.
 
 If we cannot find a match that meets all the requirements in the fragment, no scrolling or highlighting is performed. 
 
@@ -150,7 +152,7 @@ We can start with setting :target on the parent Element of the first (i.e. the m
 
 ### targetText 0.1
 
-A prior revision of this document contained a somewhat similar proposal. The main difference in the updated propoal is that it adds context terms to targetText. This helps to allow disambiguating text on a page as well as brings this proposal more in-line with the Open Annotation's [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector).
+A prior revision of this document contained a somewhat similar proposal. The main difference in the updated proposal is that it adds context terms to targetText. This helps to allow disambiguating text on a page as well as brings this proposal more in-line with the Open Annotation's [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector). Many use cases and details were considered while iterating on the initial revision. The updated proposal is a sum of lessons learned and improved understanding as we experimented with and considered the initial version and its limitations
 
 ### CSS Selector Fragments
 
@@ -170,7 +172,9 @@ We also considered specifying the target element via a JavaScript-based navigati
 
 ## Future Work
 
-One important use case that's not covered by this proposal is being able to scroll to an image. A nearby text snippet can be used to scroll to the image but it depends on the page and is indirect. We'd eventually like to support this use case more directly. One potential option is to consider this just one of any available [Open Annotation selectors](https://www.w3.org/TR/annotation-model/#selectors). Future specification and implementation work could allow using selectors other than TextQuote to allow targetting various kinds of content.
+One important use case that's not covered by this proposal is being able to scroll to an image. A nearby text snippet can be used to scroll to the image but it depends on the page and is indirect. We'd eventually like to support this use case more directly.
+
+A potential option is to consider this just one of many available [Open Annotation selectors](https://www.w3.org/TR/annotation-model/#selectors). Future specification and implementation work could allow using selectors other than TextQuote to allow targetting various kinds of content.
 
 Another avenue of exploration is allowing users to specify highlighting in more detail. This was touched on briefly in the sections above. There are cases where the user may wish to highlight multiple snippets of text. For technical reasons, a text match across block-level elements may be difficult for a browser to implement. Allowing the user to specify multiple highlights would allow highlighting multiple paragraphs or bullet points. There are also cases where the user may wish to prevent highlights altogether, as in the image search case described above.
 
@@ -226,7 +230,7 @@ Simon St. Laurent and Eric Meyer [proposed](http://simonstl.com/articles/cssFrag
 
 [Shaun Inman](https://shauninman.com/archive/2011/07/25/cssfrag) and others later implemented browser extensions using this #css() syntax for Firefox, Safari, Chrome, and Opera, which shows that it is possible to implement this feature across a variety of browsers.
 
-The [Open Annotation Community Group](https://www.w3.org/community/openannotation/) aims to allow annotating arbitrary content. Our work has been informed specifically by prior efforts at selecting arbitrary textual content for an annotation.
+The [Open Annotation Community Group](https://www.w3.org/community/openannotation/) aims to allow annotating arbitrary content. There is significant overlap in our goal of specifying a snippet of text in a resource. Our work has been informed specifically by prior efforts at selecting arbitrary textual content for an annotation.
 
 Scroll Anchoring
 
