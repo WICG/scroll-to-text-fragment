@@ -6,23 +6,23 @@ To enable users to easily navigate to specific content in a web page, we propose
 
 Web standards currently specify support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, when [navigating to a fragment](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid). While named anchors and elements with ids enable scrolling to limited specific parts of web pages, not all documents make use of these elements, and not all parts of pages are addressable by named anchors or elements with ids.
 
-## Current Status
+### Current Status
 
 This feature is currently implemented as an experimental feature in Chrome 74.0.3706.0 and newer. It is not yet shipped to users by default. Users who wish to experiment with it can use chrome://flags#enable-text-fragment-anchor. The implementation is incomplete and doesn't necessarily match the specification in this document.
 
-## A Note on Specifications / "Why Not Use The Standardization Process?"
+### A Note on Specifications / "Why Not Use The Standardization Process?"
 
 Our intent is definitely for this to be part of the standards process, interoperable with other browsers, with feedback and ideas from the broader community. This document is meant to serve as an explainer to that end and to serve as a __starting point__ for those discussions.
 
 Likewise, the experimental implementation is used to prove the viability of the concept, help us iterate on ideas, and help inform design and standards work. Once we're satisfied that we understand the space sufficiently, this work will move into the appropriate standardization forum.
 
-## Motivating Use Cases
+### Motivating Use Cases
 
 When following a link to read a specific part of a web page, finding the relevant part of the document after navigating can be cumbersome. This is especially true on mobile, where it can be difficult to find specific content when scrolling through long articles or using the browser's "find in page" feature. Fewer than 1% of clients use the "Find in Page" feature in Chrome on Android.
 
 To enable scrolling directly to a specific part of a web page, we propose generalizing the existing support for scrolling to elements based on the fragment identifier. We believe this capability could be used by a variety of websites (e.g. search engine results pages, Wikipedia reference links), as well as by end users when sharing links from a browser.
 
-### Search Engines
+#### Search Engines
 
 Search engines, which link to pages that contain content relevant to user queries, would benefit from being able to scroll users directly to the part of the page most relevant to their query.
 
@@ -32,7 +32,7 @@ For example, Google Search currently links to named anchors and elements with id
 
 However, there are many pages with relevant sub passages with no named anchor or id, and search engines cannot provide a "Jump to" link in such cases.
 
-### Referencing / sharing a specific passage in a web page
+#### Referencing / sharing a specific passage in a web page
 
 When referencing a specific section of a web page, for example as part of sharing that content via email or on social media, it is desirable to be able to link directly to the specific section. If a section is not linkable by a named anchor or element with id, it is not currently possible to share a link directly to a specific section. Users may work around this by sharing screenshots of the relevant portion of the document (preventing the recipient of the content from engaging with the actual web page that hosts the content), or by including extra instructions to scroll to a specific part of the document (e.g. "skip to the sixth paragraph"). We would like to enable users to link to the relevant section of a document directly. Linking directly to the relevant section of a document preserves attribution, and allows the user following the URL to engage directly with the original publisher.
 
