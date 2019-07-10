@@ -4,7 +4,10 @@ The targetText value that will be added to the URL fragment contains a portion o
 
 #### 2.2. Is this specification exposing the minimum amount of information necessary to power the feature?
 
-The feature itself does not expose information. The URL creator (e.g. a website providing a reference or a user sharing a targetText URL) adds some amount of information to the URL using this feature, but this is information expected to be in the target page.
+The feature itself does not expose information. The URL creator (e.g. a website providing a reference or a user sharing a targetText URL) adds some amount of information to the URL using this feature, but this is information expected to be in the target page. We have restrictions in place to prevent exfiltration of page contents using this feature:
+- Restricted to top-level frames (no iframes)
+- Restricted to non-same-page activations
+- Restricted to pages without an opener (no window.open)
 
 #### 2.3. How does this specification deal with personal information or personally-identifiable information or information derived thereof?
 
@@ -48,7 +51,7 @@ None.
 
 #### 2.13. How does this specification distinguish between behavior in first-party and third-party contexts?
 
-A third-party context that has access to the URL fragment would be able to see the targetText, but similar to first-party concerns this information is already expected to be in the webpage.
+Third-party contexts cannot access the URL fragment, so there should be no way to access the targetText. The most a cross-origin iframe can check is document.referrer, but document.referrer does not include the URL fragment.
 
 #### 2.14. How does this specification work in the context of a user agent’s Private \ Browsing or "incognito" mode?
 
