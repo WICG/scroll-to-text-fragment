@@ -1,6 +1,6 @@
 2.1. What information might this feature expose to Web sites or other parties, and for what purposes is that exposure necessary?
 
-The targetText value that will be added to the URL fragment contains a portion of text that is expected to be in the page. This information is either already on the page, or isn't on the page but was expected to be, so shouldn't be a privacy concern. 
+The targetText value that will be added to the URL fragment contains a portion of text that is expected to be in the page. This information is either already on the page, or isn't on the page but was expected to be, so shouldn't be a privacy concern.
 
 2.2. Is this specification exposing the minimum amount of information necessary to power the feature?
 
@@ -48,10 +48,16 @@ None.
 
 2.13. How does this specification distinguish between behavior in first-party and third-party contexts?
 
+A third-party context that has access to the URL fragment would be able to see the targetText, but similar to first-party concerns this information is already expected to be in the webpage.
+
 2.14. How does this specification work in the context of a user agent’s Private \ Browsing or "incognito" mode?
+
+The feature works the same in a private browsing context, and does not reveal private browsing mode or provide information to correlate private browsing activity.
 
 2.15. Does this specification have a "Security Considerations" and "Privacy Considerations" section?
 
+Yes.
+
 2.16. Does this specification allow downgrading default security characteristics?
 
-2.17. What should this questionnaire have asked?
+No.
