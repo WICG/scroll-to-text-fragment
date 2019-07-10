@@ -285,6 +285,12 @@ For these reasons, we've determined a set of restrictions to ensure an attacker 
 
 While these may seem overly-restrictive, we believe they don't impede the main use-cases. We'd like to start off cautious and re-examine if interesting but blocked use-cases arise.
 
+### Privacy
+
+While the feature itself does not expose privacy related information, the targetText value may contain sensitive information that the page could read from the URL fragment. However, this information is either already on the page, or was at least expected to be, so it likely wouldn't be a privacy concern for the page to have access to this information.
+
+To improve web compatibility of Scroll To Text, we have been exploring the idea of having a delimiter such as ## to indicate the start of the targetText directive in the URL fragment, and then hiding the delimiter and targetText from the page. In addition to compatibility improvements for sites that use the fragment for their own purposes (see issue #15), this would also have the benefit of not exposing the targetText to the target page in case there are privacy concerns.
+
 ### Relation to existing support for navigating to a fragment
 
 Browsers currently support scrolling to elements with ids, as well as anchor elements with name attributes. This proposal is intended to extend this existing support, to allow navigating to additional parts of a document. As Shaun Inman [notes](https://shauninman.com/archive/2011/07/25/cssfrag) (in support of CSS selector fragments), this feature is "not meant to replace more concise, author-designed urls" using id attributes, but rather "enables a site’s users to address specific sub-content that the site’s author may not have anticipated as being interesting".
