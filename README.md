@@ -178,6 +178,15 @@ Here is a __Superduper unique__ string
 
 </td></tr></table>
 
+#### Alternative syntax
+A problem with using the URL fragment to specify targetText is that some sites rely on the URL fragment for routing/state, see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15). This can be solved by specifying a delimiter to be used to separate the targetText from the rest of the URL fragment, for example a double-hash syntax:
+
+```
+https://example.com##targetText=example
+https://example.com#state##targetText=example
+```
+
+The browser can then strip off the ##targetText part of the URL fragment, only exposing the part of the URL fragment preceding ## to the site.
 
 ### Processing Model
 
