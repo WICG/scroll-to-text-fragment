@@ -23,6 +23,11 @@ The core use case for scroll to text is to allow URLs to serve as an exact text 
 TODO
 
 # Description # {#description}
+
+## Syntax ## {#syntax}
+TODO - targetText syntax
+
+## Navigating to a text fragment ## {#navigating-to-text-fragment}
 TODO - description of amendment to [[html#scroll-to-fragid]]
 
 <div class="example">
