@@ -1,0 +1,30 @@
+<pre class='metadata'>
+Status: CG-DRAFT
+Title: Scroll To Text Fragment
+ED: wicg.github.io/ScrollToTextFragment/draftspec.html
+Shortname: scroll-to-text
+Level: 1
+Editor: Nick Burris, Google https://www.google.com, nburris@chromium.org
+Editor: David Bokan, Google https://www.google.com, bokan@chromium.org
+Abstract: Scroll To Text adds support for specifying a text snippet in the URL fragment. When navigating to a URL with such a fragment, the browser will find the first instance of the text snippet and scroll it into view.
+Group: wicg
+Repository: wicg/ScrollToTextFragment
+</pre>
+
+# Introduction # {#introduction}
+TODO
+
+## Use cases ## {#use-cases}
+
+### Web text references ### {#web-text-references}
+The core use case for scroll to text is to allow URLs to serve as an exact text reference across the web. For example, Wikipedia references could link to the exact text they are quoting from a page. Similarly, search engines can serve URLs that direct the user to the answer they are looking for in the page rather than linking to the top of the page.
+
+### User sharing ### {#user-sharing}
+TODO
+
+# Description # {#description}
+TODO - description of amendment to [[html#scroll-to-fragid]]
+
+<div class="example">
+https://github.com/WICG/ScrollToTextFragment#targetText=future%20extension.-,we%20allow%20highlighting,other%20targetTexts.,-e.g.
+</div>
