@@ -126,3 +126,10 @@ To find the target text for a given string <em>fragment directive</em>, the user
         3. Return match.
     3. Return null.
 16. Return null.
+
+# Description # {#description}
+TODO - description of amendment to [[html#scroll-to-fragid]]
+
+<div class="example">
+https://github.com/WICG/ScrollToTextFragment#targetText=future%20extension.-,we%20allow%20highlighting,other%20targetTexts.,-e.g.
+</div>
