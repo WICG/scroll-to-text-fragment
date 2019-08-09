@@ -128,6 +128,11 @@ To find the target text for a given string <em>fragment directive</em>, the user
 16. Return null.
 
 # Description # {#description}
+
+## Syntax ## {#syntax}
+TODO - targetText syntax
+
+## Navigating to a text fragment ## {#navigating-to-text-fragment}
 TODO - description of amendment to [[html#scroll-to-fragid]]
 
 <div class="example">
