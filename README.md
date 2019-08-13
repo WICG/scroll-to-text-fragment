@@ -36,6 +36,10 @@ However, there are many pages with relevant sub passages with no named anchor or
 
 When referencing a specific section of a web page, for example as part of sharing that content via email or on social media, it is desirable to be able to link directly to the specific section. If a section is not linkable by a named anchor or element with id, it is not currently possible to share a link directly to a specific section. Users may work around this by sharing screenshots of the relevant portion of the document (preventing the recipient of the content from engaging with the actual web page that hosts the content), or by including extra instructions to scroll to a specific part of the document (e.g. "skip to the sixth paragraph"). We would like to enable users to link to the relevant section of a document directly. Linking directly to the relevant section of a document preserves attribution, and allows the user following the URL to engage directly with the original publisher.
 
+#### Citations
+
+Links are sometimes used as citations in web pages where the author wishes to substantiate a claim with a reference to a source page (e.g. references in wikipedia). These source pages can often be large, so finding the exact passage that supports the claim can be very time consuming. By linking to the passage that supports their underlying claim, authors can make it more efficient for readers to follow their overall argument.
+
 ## Proposed Solution
 
 ### tl;dr
