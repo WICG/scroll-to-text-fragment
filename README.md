@@ -42,14 +42,14 @@ When referencing a specific section of a web page, for example as part of sharin
 
 Allow specifying text to scroll and highlight in the URL fragment:
 
-https://example.com#targetText=prefix-,startText,endText,-suffix
+https://example.com##targetText=prefix-,startText,endText,-suffix
 
 Using this syntax
 
 ```
-targetText=[prefix-,]textStart[,textEnd][,-suffix]
+##targetText=[prefix-,]textStart[,textEnd][,-suffix]
 
-            context  |-------match-----|  context
+              context  |-------match-----|  context
 ```
 _(Square brackets indicate an optional parameter)_
 
@@ -75,12 +75,12 @@ The Open Annotation specification already specifies a [TextQuoteSelector](https:
 ### Identifying a Text Snippet
 Specify a text snippet that should be scrolled into view on page load:
 
-https://en.wikipedia.org/wiki/Cat#targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+https://en.wikipedia.org/wiki/Cat##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
 ```
-targetText=[prefix-,]textStart[,textEnd][,-suffix]
+##targetText=[prefix-,]textStart[,textEnd][,-suffix]
 
-            context  |-------match-----|  context
+              context  |-------match-----|  context
 ```
 _(Square brackets indicate an optional parameter)_
 
@@ -89,6 +89,12 @@ Though existing HTML support for id and name attributes specifies the target ele
 The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to avoid being interpreted as part of the fragment syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
+
+The targetText is delimited by a double-hash to indicate that it is a _fragment directive_ that the user agent should process and then remove from the URL fragment that is exposed to the site. This solves the problem of sites relying on the URL fragment for routing/state, see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15). This also allows the URL fragment to still contain an element ID that can be scrolled into view in case there's no targetText match found:
+
+https://en.wikipedia.org/wiki/Cat#Characteristics##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+
+The delimiter for the targetText is still an open question. The hash symbol is currently not a valid [URL code point](https://url.spec.whatwg.org/#url-code-points), and thus would require an amendment to the URL spec.
 
 There are two kinds of terms specified in the targetText value: the _match_ and the _context_. The match is the portion of text that’s to be scrolled to and highlighted. The context is used only to disambiguate the match and is not highlighted.
 
@@ -144,7 +150,7 @@ For example, suppose we want to perform the following highlight:
 
 Since the text “header1” is ambiguous, we must provide a suffix to disambiguate it:
 
-`#targetText=header1,-text2`
+`targetText=header1,-text2`
 
 </td></tr></table>
 
@@ -162,7 +168,7 @@ Inception
 Inception
 * Christopher Nolan Writer
 
-`#targetText=Inception-,Christopher Nolan,-Director`
+`targetText=Inception-,Christopher Nolan,-Director`
 
 _Note: The space in “Christopher Nolan” would have to be percent-encoded since spaces aren’t valid in a URL. However, most browsers will do this for you automatically._
 
@@ -174,19 +180,9 @@ If the snippet is unique enough, we could provide no context:
 
 Here is a __Superduper unique__ string 
 
-`#targetText=Superduper unique`
+`targetText=Superduper unique`
 
 </td></tr></table>
-
-#### Alternative syntax
-A problem with using the URL fragment to specify targetText is that some sites rely on the URL fragment for routing/state, see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15). This can be solved by specifying a delimiter to be used to separate the targetText from the rest of the URL fragment, for example a double-hash syntax:
-
-```
-https://example.com##targetText=example
-https://example.com#state##targetText=example
-```
-
-The browser can then strip off the ##targetText part of the URL fragment, only exposing the part of the URL fragment preceding ## to the site.
 
 ### Processing Model
 
@@ -206,7 +202,7 @@ We won’t support these features in the initial version but would like to leave
 We allow highlighting multiple snippets by providing additional targetText fragments, separated by the ampersand (&) character. Each targetText is considered independent in the sense that failure to find a match in one does not affect highlighting of any other targetTexts. e.g.:
 
 ```
-example.com#targetText=foo&targetText=bar&targetText=bas
+example.com##targetText=foo&targetText=bar&targetText=bas
 ```
 
 will highlight “foo”, “bar”, and “baz” and scroll “foo” into view, assuming all appear on the page.
@@ -264,11 +260,7 @@ A browser that doesn’t yet support this feature will attempt to match the spec
 
 ### Web Compatibility
 
-Web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites are already using ```targetText``` in the URL fragment for their own purposes, or if they don't handle unexpected tokens, this feature could break those sites. In particular, some frameworks use the fragment for routing.
-
-We should investigate how common these use cases are and what the failure modes are. If unexpecteded parameters are simply ignored, this would be a compatible change. If they cause error pages or visible failures, this would be a cause for concern.
-
-We should also measure how likely a naming collision would be using [HTTPArchive](https://httparchive.org/). i.e. Check to see if `targetText` is available enough to use as a reserved token.
+Web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites are already using ```targetText``` in the URL fragment for their own purposes, or if they don't handle unexpected tokens, this feature could break those sites. In particular, some frameworks use the fragment for routing. This is solved by the user agent hiding the ##targetText part of the fragment from the site, but browsers that do not have this feature implemented would still break such sites. [Feature detection](https://github.com/WICG/ScrollToTextFragment/issues/19) mitigates this issue by allowing sites to only serve ##targetText links to supporting browsers, however there is still the risk of these links being shared widely where anyone could follow the link with an unsupporting browser.
 
 ### Security
 
