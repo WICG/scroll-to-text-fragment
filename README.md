@@ -2,7 +2,7 @@
 
 ## Introduction
 
-To enable users to easily navigate to specific content in a web page, we propose adding support for specifying a text snippet in the URL fragment. When navigating to a URL with such a fragment, the browser will find the first instance of the text snippet in the page and bring it into view.
+To enable users to easily navigate to specific content in a web page, we propose adding support for specifying a text snippet in the URL. When navigating to such a URL, the browser will find the first instance of the text snippet in the page and bring it into view.
 
 Web standards currently specify support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, when [navigating to a fragment](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid). While named anchors and elements with ids enable scrolling to limited specific parts of web pages, not all documents make use of these elements, and not all parts of pages are addressable by named anchors or elements with ids.
 
@@ -30,21 +30,21 @@ For example, Google Search currently links to named anchors and elements with id
 
 ![Example "Jump to" link in search results](jumpto.png)
 
-However, there are many pages with relevant sub passages with no named anchor or id, and search engines cannot provide a "Jump to" link in such cases.
+However, there are many pages with relevant passages with no named anchor or id, and search engines cannot provide a "Jump to" link in such cases.
 
-#### Referencing / sharing a specific passage in a web page
-
-When referencing a specific section of a web page, for example as part of sharing that content via email or on social media, it is desirable to be able to link directly to the specific section. If a section is not linkable by a named anchor or element with id, it is not currently possible to share a link directly to a specific section. Users may work around this by sharing screenshots of the relevant portion of the document (preventing the recipient of the content from engaging with the actual web page that hosts the content), or by including extra instructions to scroll to a specific part of the document (e.g. "skip to the sixth paragraph"). We would like to enable users to link to the relevant section of a document directly. Linking directly to the relevant section of a document preserves attribution, and allows the user following the URL to engage directly with the original publisher.
-
-#### Citations
+#### Citations / Reference links
 
 Links are sometimes used as citations in web pages where the author wishes to substantiate a claim with a reference to a source page (e.g. references in wikipedia). These source pages can often be large, so finding the exact passage that supports the claim can be very time consuming. By linking to the passage that supports their underlying claim, authors can make it more efficient for readers to follow their overall argument.
+
+#### Sharing a specific passage in a web page
+
+When referencing a specific section of a web page, for example as part of sharing that content via email or on social media, it is desirable to be able to link directly to the specific section. If a section is not linkable by a named anchor or element with id, it is not currently possible to share a link directly to a specific section. Users may work around this by sharing screenshots of the relevant portion of the document (preventing the recipient of the content from engaging with the actual web page that hosts the content), or by including extra instructions to scroll to a specific part of the document (e.g. "skip to the sixth paragraph"). We would like to enable users to link to the relevant section of a document directly. Linking directly to the relevant section of a document preserves attribution, and allows the user following the URL to engage directly with the original publisher.
 
 ## Proposed Solution
 
 ### tl;dr
 
-Allow specifying text to scroll and highlight in the URL fragment:
+Allow specifying text to scroll and highlight in the URL:
 
 https://example.com##targetText=prefix-,startText,endText,-suffix
 
@@ -63,9 +63,9 @@ This will work only if the user provided a gesture, for a full “new-page” na
 
 ### Background
 
-We propose generalizing [existing support](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element) for scrolling to elements as part of a navigation by adding support for specifying a text snippet in the URL fragment. We modify the [indicated part of the document](https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document) processing model to allow using a text snippet as the indicated part. The user agent would then follow the existing logic for [scrolling to the fragment identifier](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier) as part of performing a navigation.
+We propose generalizing [existing support](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element) for scrolling to elements as part of a navigation by adding support for specifying a text snippet in the URL. We modify the [indicated part of the document](https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document) processing model to allow using a text snippet as the indicated part. The user agent would then follow the existing logic for [scrolling to the fragment identifier](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier) as part of performing a navigation.
 
-This extends the existing support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, to scrolling to other textual content on a web page. Browsers first attempt to find an element that matches the fragment using the existing support for elements with id attributes and anchor elements with name attributes. If no matches are found, browsers then attempt to parse the fragment as a text snippet specification.
+This extends the existing support for scrolling to anchor elements with name attributes, as well as DOM elements with ids, to scrolling to other textual content on a web page. Browsers first attempt to find an element that matches the fragment using the existing support for elements with id attributes and anchor elements with name attributes. If no matches are found, browsers then will process the text snippet specification.
 
 The Open Annotation specification already specifies a [TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector). This proposal has been made similar to the TextQuoteSelector in hopes that we can extend and reuse that processing model rather than inventing a new one, albeit with a stripped down syntax for ease of use in a URL.
 
