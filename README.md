@@ -1,4 +1,4 @@
-# Scroll-To-Text using a URL fragment
+# Scroll-To-Text using a URL fragment directive
 
 ## Introduction
 
@@ -18,7 +18,7 @@ Likewise, the experimental implementation is used to prove the viability of the 
 
 ### Motivating Use Cases
 
-When following a link to read a specific part of a web page, finding the relevant part of the document after navigating can be cumbersome. This is especially true on mobile, where it can be difficult to find specific content when scrolling through long articles or using the browser's "find in page" feature. Fewer than 1% of clients use the "Find in Page" feature in Chrome on Android.
+When following a link to read a specific part of a web page, finding the relevant part of the document after navigating can be cumbersome. This is especially true on mobile devices, where it can be difficult to find specific content when scrolling through long pages or using the browser's "find in page" feature. Fewer than 1% of clients use the "Find in Page" feature in Chrome on Android.
 
 To enable scrolling directly to a specific part of a web page, we propose generalizing the existing support for scrolling to elements based on the fragment identifier. We believe this capability could be used by a variety of websites (e.g. search engine results pages, Wikipedia reference links), as well as by end users when sharing links from a browser.
 
@@ -34,7 +34,7 @@ However, there are many pages with relevant passages with no named anchor or id,
 
 #### Citations / Reference links
 
-Links are sometimes used as citations in web pages where the author wishes to substantiate a claim with a reference to a source page (e.g. references in wikipedia). These source pages can often be large, so finding the exact passage that supports the claim can be very time consuming. By linking to the passage that supports their underlying claim, authors can make it more efficient for readers to follow their overall argument.
+Links are sometimes used as citations in web pages where the author wishes to substantiate a claim by referencing another page (e.g. references in wikipedia). These reference pages can often be large, so finding the exact passage that supports the claim can be very time consuming. By linking to the passage that supports their underlying claim, authors can make it more efficient for readers to follow their overall argument.
 
 #### Sharing a specific passage in a web page
 
@@ -60,6 +60,12 @@ _(Square brackets indicate an optional parameter)_
 Navigating to such a URL will find the first instance of the specified targetText, surrounded by the (optionally provided) prefix and suffix, and scroll it into view during a navigation. The snippet will be highlighted using a mechanism similar to the browser’s Find-In-Page feature.
 
 This will work only if the user provided a gesture, for a full “new-page” navigation, and be disabled in iframes. All text matching will be performed on word boundaries for security reasons (where possible).
+
+The targetText is delimited by a double-hash to indicate that it is a _fragment directive_ that the user agent should process and then remove from the URL fragment that is exposed to the site. This solves the problem of sites relying on the URL fragment for routing/state, see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15). This also allows the URL fragment to still contain an element ID that can be scrolled into view in case there's no targetText match found:
+
+https://en.wikipedia.org/wiki/Cat#Characteristics##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+
+Note that the delimiter for the targetText is still an open question. The hash symbol is currently not a valid [URL code point](https://url.spec.whatwg.org/#url-code-points), and thus would require an amendment to the URL spec.
 
 ### Background
 
@@ -90,15 +96,9 @@ _(Square brackets indicate an optional parameter)_
 
 Though existing HTML support for id and name attributes specifies the target element directly in the fragment, most other mime types make use of this x=y pattern in the fragment, such as [Media Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g. #track=audio&t=10,20), [PDF](https://tools.ietf.org/html/rfc3778#section-3) (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g. #row=4).
 
-The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to avoid being interpreted as part of the fragment syntax.
+The _targetText_ keyword will identify a block of text that should be scrolled into view. The provided text is be percent-decoded before matching. Dash (-), ampersand (&), and comma (,) characters in text snippets must be percent-encoded to avoid being interpreted as part of the targetText syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well as [UTF-8 percent encoded characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in the [fragment percent encode set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent encoded.
-
-The targetText is delimited by a double-hash to indicate that it is a _fragment directive_ that the user agent should process and then remove from the URL fragment that is exposed to the site. This solves the problem of sites relying on the URL fragment for routing/state, see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15). This also allows the URL fragment to still contain an element ID that can be scrolled into view in case there's no targetText match found:
-
-https://en.wikipedia.org/wiki/Cat#Characteristics##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
-
-The delimiter for the targetText is still an open question. The hash symbol is currently not a valid [URL code point](https://url.spec.whatwg.org/#url-code-points), and thus would require an amendment to the URL spec.
 
 There are two kinds of terms specified in the targetText value: the _match_ and the _context_. The match is the portion of text that’s to be scrolled to and highlighted. The context is used only to disambiguate the match and is not highlighted.
 
@@ -136,7 +136,7 @@ E.g. Given:
 </td></tr></table>
 
 #### Context
-To disambiguate non-unique snippets of text on a page, the fragment can specify optional _prefix_ and _suffix_ terms. If provided, the match term will only match text that is immediately preceded by the _prefix_ text and/or immediately followed by the _suffix_ text (allowing for an arbitrary amount of whitespace in between). Immediately preceded, in these cases, means there are no other text nodes between the match and the context term in DOM order. There may be arbitrary whitespace and the context text may be the child of a different element (i.e. searching for context crosses element boundaries).
+To disambiguate non-unique snippets of text on a page, targetText arguments can specify optional _prefix_ and _suffix_ terms. If provided, the match term will only match text that is immediately preceded by the _prefix_ text and/or immediately followed by the _suffix_ text (allowing for an arbitrary amount of whitespace in between). Immediately preceded, in these cases, means there are no other text nodes between the match and the context term in DOM order. There may be arbitrary whitespace and the context text may be the child of a different element (i.e. searching for context crosses element boundaries).
 
 If provided, the prefix must end (and suffix must begin) with a dash (-) character. This is to disambiguate the prefix and suffix in the presence of optional parameters. It also leaves open the possibility of extending the syntax in the future to allow multiple context terms, allowing more complicated context matching across elements.
 
@@ -192,7 +192,7 @@ Here is a __Superduper unique__ string
 
 We'd like to reuse as much of the processing model - how the text search is performed, how white space is collapsed, etc. - in the Web Annotation’s TextQuoteSelector as possible, potentially adding enhancements to that specification. Notably, we’d need to add the ability to specify text using a starting and ending snippet to TextQuoteSelector.
 
-If we cannot find a match that meets all the requirements in the fragment, no scrolling or highlighting is performed. 
+If we cannot find a match that meets all the requirements in the targetText arguments, no scrolling or highlighting is performed. 
 
 If an attacker can determine if a page has scrolled, this feature could be used to detect the presence of arbitrary text on the page. To prevent brute force attacks to guess important words on a page (e.g. passwords, pin codes), matches and prefix/suffix will only be matched on word boundaries. E.g. “range” will match “mountain range” but not “color orange” nor “forest ranger”.  Word boundaries are simple in languages with spaces but can become more subtle in languages without breaks (e.g. Chinese). A library like ICU [provides support](http://userguide.icu-project.org/boundaryanalysis#TOC-Word-Boundary) for finding word boundaries across all supported languages based on the Unicode Text Segmentation standard. Some browsers already allow word-boundary matching for the window.find API which allows specifying wholeWord as an argument. We hope this existing usage can be leveraged in the same way.
 
@@ -203,7 +203,7 @@ The UA will highlight the passage of text specified by targetText. Use cases exi
 
 We won’t support these features in the initial version but would like to leave the option open for future extension.
 
-We allow highlighting multiple snippets by providing additional targetText fragments, separated by the ampersand (&) character. Each targetText is considered independent in the sense that failure to find a match in one does not affect highlighting of any other targetTexts. e.g.:
+We allow highlighting multiple snippets by providing additional targetTexts in the _fragment directive_, separated by the ampersand (&) character. Each targetText is considered independent in the sense that failure to find a match in one does not affect highlighting of any other targetTexts. e.g.:
 
 ```
 example.com##targetText=foo&targetText=bar&targetText=bas
@@ -219,7 +219,7 @@ Each target text will start searching from the top of the page independently so 
 
 For element-id based fragments (e.g. https://en.wikipedia.org/wiki/Cat#Anatomy), navigation causes the identified element to receive the `:target` CSS pseudo-class. This is a nice feature as it allows the page to add some customized highlighting or styling for an element that’s been targeted. For example, note that navigating to a citation on a Wikipedia page highlights the citation text: https://en.wikipedia.org/wiki/Cat#cite_note-Linaeus1758-1
 
-The question is how we should treat the `:target` CSS pseudo-class with the targetText fragment.
+The question is how we should treat the `:target` CSS pseudo-class with the targetText fragment directive.
 An element-id fragment will target a complete and unique Element on the page. A text snippet may only be a portion of the text in an Element.
 
 We can start with setting :target on the parent Element of the first (i.e. the match we scroll to) match. If we find this causes ambiguity or confusion we can simply avoid setting `:target`. 
@@ -258,19 +258,17 @@ We've thought about these cases insofar as making sure our proposed solution doe
 
 ## Additional Considerations
 
-### Browser compatibility and fallback behavior
+### Web and Browser Compatibility
 
-A browser that doesn’t yet support this feature will attempt to match the specified text snippet in the URL fragment using the existing logic to find a [potential indicated element](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element). A fragment-encoded text selector is prefixed with ‘targetText=’, which is unlikely to appear in an id or name attribute, so we do not expect a matching element to be found in these cases. Thus, browsers that do not support this feature should fall back to the default behavior of not scrolling the document.
+As noted in [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15), web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites don't handle unexpected tokens when processing the fragment, this feature could break those sites. In particular, some frameworks use the fragment for routing. This is solved by the user agent hiding the ##targetText part of the fragment from the site, but browsers that do not have this feature implemented would still break such sites.
 
-### Web Compatibility
-
-Web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites are already using ```targetText``` in the URL fragment for their own purposes, or if they don't handle unexpected tokens, this feature could break those sites. In particular, some frameworks use the fragment for routing. This is solved by the user agent hiding the ##targetText part of the fragment from the site, but browsers that do not have this feature implemented would still break such sites. [Feature detection](https://github.com/WICG/ScrollToTextFragment/issues/19) mitigates this issue by allowing sites to only serve ##targetText links to supporting browsers, however there is still the risk of these links being shared widely where anyone could follow the link with an unsupporting browser.
+For pages that don't process the fragment, a browser that doesn't yet support this feature will attempt to process the fragment and _fragment directive_ (i.e. ##targetText) using the existing logic to find a [potential indicated element](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element). If a fragment exists in the URL alongside the _fragment directive_, the browser may not scroll to the desired fragment due to the confusion with parsing the _fragment directive_.  If a fragment does not exist alongside the _fragment directive_, the browser will just load the page and won't initiate any scrolling.  In either case, the browser will just fall back to the default behavior of not scrolling the document.
 
 ### Security
 
-Care must be taken when implementing this feature so that it cannot be used to exfiltrate information across origins. Since an attacker can navigate a page to a cross-origin URL fragment, if they can determine that the victim page scrolled, they can infer the existence of any text on the page.
+Care must be taken when implementing this feature so that it cannot be used to exfiltrate information across origins. Note that an attacker can navigate a page to a cross-origin URL with a targetText _fragment directive_. If they can determine that the victim page scrolled, they can infer the existence of any text on the page.
 
-A related attack is possible if the existence of a match takes significantly more or less work than non-existence. An attacker can navigate to a fragment and time how busy the JS thread is; a high load may imply the existence or non-existence of an arbitrary text snippet. This is a variation of a documented [proof-of-concept](https://blog.sheddow.xyz/css-timing-attack/).
+A related attack is possible if the existence of a match takes significantly more or less work than non-existence. An attacker can navigate to a targetText _fragment directive_ and time how busy the JS thread is; a high load may imply the existence or non-existence of an arbitrary text snippet. This is a variation of a documented [proof-of-concept](https://blog.sheddow.xyz/css-timing-attack/).
 
 For these reasons, we've determined a set of restrictions to ensure an attacker cannot use this feature to exfiltrate arbitrary information from the page:
 
@@ -292,9 +290,7 @@ While these may seem overly-restrictive, we believe they don't impede the main u
 
 ### Privacy
 
-While the feature itself does not expose privacy related information, the targetText value may contain sensitive information that the page could read from the URL fragment. However, this information is either already on the page, or was at least expected to be, so it likely wouldn't be a privacy concern for the page to have access to this information.
-
-To improve web compatibility of Scroll To Text, we have been exploring the idea of having a delimiter such as ## to indicate the start of the targetText directive in the URL fragment, and then hiding the delimiter and targetText from the page. In addition to compatibility improvements for sites that use the fragment for their own purposes (see issue #15), this would also have the benefit of not exposing the targetText to the target page in case there are privacy concerns.
+While the feature itself does not expose privacy related information, the targetText value may contain sensitive information. This is why the _fragment directive_ is designed so the user agent processes and then removes the _fragment directive_, so that the site does not have access to this information.
 
 ### Relation to existing support for navigating to a fragment
 
@@ -317,8 +313,9 @@ Scroll Anchoring
 
 Scroll to text
 
-* [http://zesty.ca/crit/draft-yee-url-textsearch-00.txt](http://zesty.ca/crit/draft-yee-url-textsearch-00.txt)
 * [https://indieweb.org/fragmention](https://indieweb.org/fragmention)
+* [http://zesty.ca/crit/draft-yee-url-textsearch-00.txt](http://zesty.ca/crit/draft-yee-url-textsearch-00.txt)
+* [http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html](http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html)
 
 Other
 
