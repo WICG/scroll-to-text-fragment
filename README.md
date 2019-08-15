@@ -1,4 +1,4 @@
-# Scroll-To-Text using a URL fragment directive
+# Scroll-To-Text using a URL fragment
 
 ## Introduction
 
@@ -257,6 +257,12 @@ Another avenue of exploration is allowing users to specify highlighting in more 
 We've thought about these cases insofar as making sure our proposed solution doesn't preclude these enhancements in the future. However, the work of actually realizing them will be left for future iterations of this effort.
 
 ## Additional Considerations
+
+### Constructing Arguments to targetText
+
+We imagine URLs with targetText fragment directives to primarily be machine-generated rather than crafted by hand by users. At the same time, we believe there's a benefit to keeping targetText arguments relatively human-readable: in most cases, simply copying and pasting the desired passage should generate a targetText argument that will scroll and highlight the desired passage.
+
+The two systems that we believe will generate the bulk of targetText URLs are browsers and search engines. We forsee users selecting text from the browser, with an option to "share a link to here". These links can then be shared further as wikipedia reference links or over channels like social media or email. Search engines can also generate targetText URLs as links to search results for user queries; these links may scroll to and highlight relevant passages to the user's query. Note that even though using the selected text as the textStart argument to targetText may work reasonably well in practice as a heuristic, generating targetText URLs that scroll to arbitrary text requires access to the full document text up to the desired text. Both browsers and search engines have access to the entire visible text of the page, so it is indeed possible for these systems to generate proper URLs with targetText arguments that scroll and highlight any arbitrary text.
 
 ### Web and Browser Compatibility
 
