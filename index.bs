@@ -99,14 +99,40 @@ example" in "here is an example text".
 </div>
 
 ## The Fragment Directive ## {#fragment-directive}
-To avoid compatibility issues with usage of the existing URL fragment, scroll
-to text uses the <em>fragment directive</em> which is a proposed part of the
-URL fragment delimited by the double-hash "##". The fragment directive is
-reserved for UA instructions such as targetText, and is stripped from the URL
-during loading.
+To avoid compatibility issues with usage of existing URL fragments, this spec
+introduces the <em>fragment directive</em>. The fragment directive is a portion
+of the URL fragment delimited by the double-hash "##". It is reserved for UA
+instructions, such as targetText, and is stripped from the URL during loading
+so that author scripts can't directly interact with it.
 
-See <a href="https://github.com/whatwg/url/issues/445">whatwg/url#445</a> for
-the full URL spec proposal.
+The fragment-directive is a mechanism for URLs to specify instructions meant
+for the UA rather than the document. It's meant to avoid direct interaction with
+author script so that future UA instructions can be added without fear
+introducing breaking changes to existing content. Potential examples could be:
+translation-hints or enabling accessibility features.
+
+### Processing the fragment directive
+
+We amend the
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
+create and initialize a Document object</a> steps to store and remove the
+fragment directive from the a Document's URL.
+
+Replace steps 7 and 8 of this algorithm with:
+
+7. Let url be null
+8. If request is non-null, then set url to request's current URL.
+9. Otherwise, set url to response's URL.
+10. Find the first instance of the fragment directive delimiter (##) in url's
+    fragment.
+11. Let fragment-directive be a substring of url's fragment starting from the
+    first character immediately after the delimiter to the end of url's
+    fragment.
+12. Set document's fragment-directive be fragment-directive. (Note: this
+    is stored on the document but not web-exposed)
+13. Remove all characters in url's fragment following and including the
+    fragment directive delimiter (##).
+14. Set the document's url to be url.
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
