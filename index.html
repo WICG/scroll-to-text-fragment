@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 08c4b0e94d147852f66673459784d3429bb3bda1" name="generator">
+  <meta content="Bikeshed version cb5a17652cb33dffd20b8b6a876bb811c1f749a9" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1366,7 +1366,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-08-23">23 August 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-09">9 September 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1385,7 +1385,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>Scroll To Text adds support for specifying a text snippet in the URL fragment. When navigating to a URL with such a fragment, the browser will find the first instance of the text snippet and scroll it into view.</p>
+   <p>Scroll To Text adds support for specifying a text snippet in the URL</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">Status of this document</span></h2>
@@ -1440,9 +1440,19 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     TODO 
    <h3 class="heading settled" data-level="1.1" id="use-cases"><span class="secno">1.1. </span><span class="content">Use cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="1.1.1" id="web-text-references"><span class="secno">1.1.1. </span><span class="content">Web text references</span><a class="self-link" href="#web-text-references"></a></h4>
-    The core use case for scroll to text is to allow URLs to serve as an exact text reference across the web. For example, Wikipedia references could link to the exact text they are quoting from a page. Similarly, search engines can serve URLs that direct the user to the answer they are looking for in the page rather than linking to the top of the page. 
+    The core use case for scroll to text is to allow URLs to serve as an exact text
+reference across the web. For example, Wikipedia references could link to the
+exact text they are quoting from a page. Similarly, search engines can serve
+URLs that direct the user to the answer they are looking for in the page rather
+than linking to the top of the page. 
    <h4 class="heading settled" data-level="1.1.2" id="user-sharing"><span class="secno">1.1.2. </span><span class="content">User sharing</span><a class="self-link" href="#user-sharing"></a></h4>
-    With scroll to text, browsers may implement an option to 'Copy URL to here' when the user highlights and opens the context menu on some text. The browser can then generate a URL with the target text appropriately specified, and the recipient of the URL will have the text scrolled into view and highlighted. Without scroll to text, if a user wants to share a passage of text from a page, they would likely just copy and paste the passage, in which case the receiver loses the context of the page. 
+    With scroll to text, browsers may implement an option to 'Copy URL to here'
+when the user highlights and opens the context menu on some text. The browser
+can then generate a URL with the target text appropriately specified, and the
+recipient of the URL will have the text scrolled into view and highlighted.
+Without scroll to text, if a user wants to share a passage of text from a page,
+they would likely just copy and paste the passage, in which case the receiver
+loses the context of the page. 
    <h2 class="heading settled" data-level="2" id="description"><span class="secno">2. </span><span class="content">Description</span><a class="self-link" href="#description"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="syntax"><span class="secno">2.1. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
     A text fragment is specified in the fragment directive (see <a href="#fragment-directive">§ 2.2 The Fragment Directive</a>) with the following format: 
@@ -1450,48 +1460,84 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
               context  |-------match-----|  context
 </pre>
    <p><em>(Square brackets indicate an optional parameter)</em></p>
-   <p>The text parameters are percent-decoded before matching. Dash (-), ampersand (&amp;), and comma (,) characters in text parameters must be percent-encoded to avoid being interpreted as part of the targetText syntax.</p>
-   <p>The only required parameter is textStart. If only textStart is specified, the first instance of this exact text string is the target text.</p>
-   <div class="example" id="example-c1f71e43"><a class="self-link" href="#example-c1f71e43"></a> <code>##targetText=an%20example%20text%20fragment</code> indicates that the exact text "an example text fragment" is the target text. </div>
-   <p>If the textEnd parameter is also specified, then the target text refers to a range of text in the page. The target text range is the text range starting at the first instance of startText, until the first instance of endText that appears after startText. This is equivalent to specifying the entire text range in the startText parameter, but allows the URL to avoid being bloated with a long target text.</p>
-   <div class="example" id="example-1039063f"><a class="self-link" href="#example-1039063f"></a> <code>##targetText=an%20example,text%20fragment</code> indicates that the first instance of "an example" until the following first instance of "text fragment" is the target text. </div>
+   <p>The text parameters are percent-decoded before matching. Dash (-), ampersand
+(&amp;), and comma (,) characters in text parameters must be percent-encoded to
+avoid being interpreted as part of the targetText syntax.</p>
+   <p>The only required parameter is textStart. If only textStart is specified, the
+first instance of this exact text string is the target text.</p>
+   <div class="example" id="example-c1f71e43"><a class="self-link" href="#example-c1f71e43"></a> <code>##targetText=an%20example%20text%20fragment</code> indicates that the
+exact text "an example text fragment" is the target text. </div>
+   <p>If the textEnd parameter is also specified, then the target text refers to a
+range of text in the page. The target text range is the text range starting at
+the first instance of startText, until the first instance of endText that
+appears after startText. This is equivalent to specifying the entire text range
+in the startText parameter, but allows the URL to avoid being bloated with a
+long target text.</p>
+   <div class="example" id="example-1039063f"><a class="self-link" href="#example-1039063f"></a> <code>##targetText=an%20example,text%20fragment</code> indicates that the first
+instance of "an example" until the following first instance of "text fragment"
+is the target text. </div>
    <h4 class="heading settled" data-level="2.1.1" id="context-terms"><span class="secno">2.1.1. </span><span class="content">Context Terms</span><a class="self-link" href="#context-terms"></a></h4>
-   <p>The other two optional parameters are context terms. They are specified by the dash (-) character succeeding the prefix and preceding the suffix, to differentiate them from the textStart and textEnd parameters, as any combination of optional parameters may be specified.</p>
-   <p>Context terms are used to disambiguate the target text fragment. The context terms can specify the text immediately before (prefix) and immediately after (suffix) the text fragment, allowing for whitespace.</p>
-   <div class="note" role="note"> While the context terms must be the immediate text surrounding the target text fragment, any amount of whitespace is allowed between context terms and the text fragment. This helps allow context terms to be across element boundaries, for example if the target text fragment is at the beginning of a paragraph and it must be disambiguated by the previous element’s text as a prefix. </div>
-   <p>The context terms are not part of the target text fragment and should not be highlighted or affect the scroll position.</p>
-   <div class="example" id="example-63ee52b7"><a class="self-link" href="#example-63ee52b7"></a> <code>##targetText=this%20is-,an%20example,-text%20fragment</code> would match to "an example" in "this is an example text fragment", but not match to "an example" in "here is an example text". </div>
+   <p>The other two optional parameters are context terms. They are specified by the
+dash (-) character succeeding the prefix and preceding the suffix, to
+differentiate them from the textStart and textEnd parameters, as any
+combination of optional parameters may be specified.</p>
+   <p>Context terms are used to disambiguate the target text fragment. The context
+terms can specify the text immediately before (prefix) and immediately after
+(suffix) the text fragment, allowing for whitespace.</p>
+   <div class="note" role="note"> While the context terms must be the immediate text surrounding the target text
+fragment, any amount of whitespace is allowed between context terms and the
+text fragment. This helps allow context terms to be across element boundaries,
+for example if the target text fragment is at the beginning of a paragraph and
+it must be disambiguated by the previous element’s text as a prefix. </div>
+   <p>The context terms are not part of the target text fragment and should not be
+highlighted or affect the scroll position.</p>
+   <div class="example" id="example-63ee52b7"><a class="self-link" href="#example-63ee52b7"></a> <code>##targetText=this%20is-,an%20example,-text%20fragment</code> would match
+to "an example" in "this is an example text fragment", but not match to "an
+example" in "here is an example text". </div>
    <h3 class="heading settled" data-level="2.2" id="fragment-directive"><span class="secno">2.2. </span><span class="content">The Fragment Directive</span><a class="self-link" href="#fragment-directive"></a></h3>
-    To avoid compatibility issues with usage of the existing URL fragment, scroll to text uses the <em>fragment directive</em> which is a proposed part of the URL fragment delimited by the double-hash "##". The fragment directive is reserved for UA instructions such as targetText, and is stripped from the URL during loading. 
-   <p>See <a href="https://github.com/whatwg/url/issues/445">whatwg/url#445</a> for the full URL spec proposal.</p>
+    To avoid compatibility issues with usage of the existing URL fragment, scroll
+to text uses the <em>fragment directive</em> which is a proposed part of the
+URL fragment delimited by the double-hash "##". The fragment directive is
+reserved for UA instructions such as targetText, and is stripped from the URL
+during loading. 
+   <p>See <a href="https://github.com/whatwg/url/issues/445">whatwg/url#445</a> for
+the full URL spec proposal.</p>
    <h3 class="heading settled" data-level="2.3" id="navigating-to-text-fragment"><span class="secno">2.3. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a targetText fragment directive is present and a match is found in the page, the text fragment takes precedent over the element fragment as the indicated part of the document. </div>
-   <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The indicated part of the document</a>.</p>
+   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a targetText fragment directive is
+present and a match is found in the page, the text fragment takes precedent
+over the element fragment as the indicated part of the document. </div>
+   <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
+indicated part of the document</a>.</p>
    <ol>
     <li data-md>
      <p>Let <em>fragment directive</em> be the document URL’s <a href="#fragment-directive">fragment directive</a>.</p>
     <li data-md>
-     <p>If <a href="#find-a-target-text">§ 2.3.1 Find a target text</a> with <em>fragment directive</em> returns non-null, then the return value is the indicated part of the document; return.</p>
+     <p>If <a href="#find-a-target-text">§ 2.3.1 Find a target text</a> with <em>fragment directive</em> returns
+non-null, then the return value is the indicated part of the document; return.</p>
    </ol>
    <h4 class="heading settled" data-level="2.3.1" id="find-a-target-text"><span class="secno">2.3.1. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
-   <p>To find the target text for a given string <em>fragment directive</em>, the user agent must run these steps:</p>
+   <p>To find the target text for a given string <em>fragment directive</em>, the
+user agent must run these steps:</p>
    <ol>
     <li data-md>
-     <p>If <em>fragment directive</em> does not begin with the string "targetText=", then return null.</p>
+     <p>If <em>fragment directive</em> does not begin with the string "targetText=",
+then return null.</p>
     <li data-md>
      <p>Let <em>raw target text</em> be the substring of <em>fragment directive</em> starting at index 11.</p>
      <div class="note" role="note"> This is the remainder of the fragment directive following, but not including, the "targetText=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
     <li data-md>
-     <p>Let <em>tokens</em> be a list of strings that is the result of splitting the string <em>raw target text</em> on commas.</p>
+     <p>Let <em>tokens</em> be a list of strings that is the result of splitting the
+string <em>raw target text</em> on commas.</p>
     <li data-md>
      <p>If <em>tokens</em> has size 1, then:</p>
      <ol>
       <li data-md>
        <p>Let <em>target text</em> be <em>tokens[0]</em>.</p>
       <li data-md>
-       <p>Let <em>text match</em> be the range of text that is the first instance of <em>target text</em> in the DOM tree.</p>
+       <p>Let <em>text match</em> be the range of text that is the first instance
+of <em>target text</em> in the DOM tree.</p>
       <li data-md>
        <p>Return <em>text match</em></p>
      </ol>
@@ -1520,12 +1566,14 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      </ol>
     <li data-md>
      <p class="assertion">Assert: <em>tokens</em> has size 1 or <em>tokens</em> has size 2.</p>
-     <div class="note" role="note"> Once the prefix and suffix are removed from tokens, tokens may either contain one item (textStart) or two items (textStart and textEnd). </div>
+     <div class="note" role="note"> Once the prefix and suffix are removed from tokens, tokens may either
+contain one item (textStart) or two items (textStart and textEnd). </div>
     <li data-md>
      <p>Let <em>textStart</em> be the first item of <em>tokens</em>.</p>
     <li data-md>
      <p>If <em>tokens</em> has size 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
-     <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the targetText parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
+     <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the
+targetText parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
     <li data-md>
      <p>If textEnd is the empty string, then:</p>
      <ol>
@@ -1533,9 +1581,11 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <p>For each instance of <em>textStart</em> in the DOM tree:</p>
        <ol>
         <li data-md>
-         <p>If <em>prefix</em> is not the empty string and <em>prefix</em> is not the text immediately preceding this instance of <em>textStart</em> in the DOM tree, then continue.</p>
+         <p>If <em>prefix</em> is not the empty string and <em>prefix</em> is
+not the text immediately preceding this instance of <em>textStart</em> in the DOM tree, then continue.</p>
         <li data-md>
-         <p>If <em>suffix</em> is not the empty string and <em>suffix</em> is not the text immediately following this instance of <em>textStart</em> in the DOM tree, then continue.</p>
+         <p>If <em>suffix</em> is not the empty string and <em>suffix</em> is
+not the text immediately following this instance of <em>textStart</em> in the DOM tree, then continue.</p>
         <li data-md>
          <p>Return this instance of <em>textStart</em> as the indicated part of the document.</p>
        </ol>
@@ -1546,12 +1596,16 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <p>For each instance of <em>textStart</em> in the DOM tree:</p>
      <ol>
       <li data-md>
-       <p>If <em>prefix</em> is not the empty string and <em>prefix</em> is not the text immediately preceding this instance of <em>textStart</em> in the DOM tree, then continue.</p>
+       <p>If <em>prefix</em> is not the empty string and <em>prefix</em> is not
+the text immediately preceding this instance of <em>textStart</em> in the
+DOM tree, then continue.</p>
       <li data-md>
        <p>For each instance of <em>textEnd</em> in the DOM tree, starting from this instance of <em>textStart</em>:</p>
        <ol>
         <li data-md>
-         <p>If <em>suffix</em> is not the empty string and <em>suffix</em> is not the text immediately following this instance of <em>textEnd</em> in the DOM tree, then continue.</p>
+         <p>If <em>suffix</em> is not the empty string and <em>suffix</em> is
+not the text immediately following this instance of <em>textEnd</em> in
+the DOM tree, then continue.</p>
         <li data-md>
          <p>Let <em>match</em> be the range of text from this instance of <em>textStart</em> to this instance of <em>textEnd</em>.</p>
         <li data-md>
