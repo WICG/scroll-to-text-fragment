@@ -1571,18 +1571,15 @@ the fragment is the string "test" and the fragment-directive is the string
 "targetText=foo". </div>
    <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
    <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
-   <p><em></em></p>
-   <em> </em>
    <ol start="8">
-    <em></em>
     <li data-md>
-     <em><p>If the exclude fragment flag is unset and url’s fragment-directive is
-non-null:</p> </em>
+     <p>If the <em>exclude fragment flag</em> is unset and <em>url’s fragment-directive</em> is
+non-null:</p>
      <ol>
-      <em><li data-md><p>If url’s fragment is null, append U+0023 (#) to output.</p> </li></em>
       <li data-md>
-       <em></em>
-       <p><em>Append "##", followed by url’s fragment-directive, to output. </em></p>
+       <p>If <em>url’s fragment</em> is null, append U+0023 (#) to <em>output</em>.</p>
+      <li data-md>
+       <p>Append "##", followed by <em>url’s fragment-directive</em>, to <em>output</em>.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.2.3" id="processing-the-fragment-directive"><span class="secno">2.2.3. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
