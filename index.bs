@@ -111,28 +111,100 @@ author script so that future UA instructions can be added without fear
 introducing breaking changes to existing content. Potential examples could be:
 translation-hints or enabling accessibility features.
 
+### Parsing the fragment directive
+
+To the definition of a <a href="https://url.spec.whatwg.org/#concept-url">
+URL record</a>, add:
+
+<em>
+A URL's fragment-directive is either null or an ASCII string holding data used
+by the UA to process the resource. It is initially null
+</em>
+
+Let the <em>fragment-directive delimiter</em> be the string consisting of two
+consecutive U+0023 (#) code-points: "##".
+
+<div class="note">We are considering finding a new string to serve as the
+fragment-directive delimiter since U+0023 is not a valid code point in the
+fragment string.</div>
+
+Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
+basic URL parser</a> steps to parse fragment directives in a URL:
+
+  - In step 11 of this algorithm, amend the <em>fragment state</em> case:
+    - In the inner switch on <em>c</em>, in the Otherwise case, add a step after
+      step 2:
+        - If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
+          (#), set state to <em>fragment-directive state</em>. Increment <em>c</em>
+          by the length of the <em>fragment-directive delimiter</em> minus 1.
+          <div class="note"> This means we require three hash characters in the
+          URL since one hash is used to get into the fragment state step. This
+          is foreshadowing a change to the delimiter string. Were we to keep
+          the double-hash we'd want to make an exception for the case where
+          there is no fragment.</div>
+    - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
+  - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
+    case with the following steps:
+    
+    <em>fragment-directive state</em>:
+    - Switching on <em>c</em>:
+        - The EOF code point: Do nothing
+        - U+0000 NULL: Validation error
+        - Otherwise:
+          1. If <em>c</em> is not a URL code point and not U+0025 (%), validation
+             error.
+          2. If <em>c</em> is U+0025 (%) and <em>remaining</em> does not start with
+             two ASCII hex digits, validation error.
+          3. UTF-8 percent encode <em>c</em> using the fragment percent-encode set
+             and append the result to <em>url’s fragment-directive</em>.
+
+<div class="note">
+  These changes make a URL's fragment end at the fragment directive delimiter.
+  The fragment-directive includes all characters that follow, but not including,
+  the delimiter.
+</div>
+
+<div class="example">
+<code>https://example.org/#test##targetText=foo</code> will be parsed such that
+the fragment is the string "test" and the fragment-directive is the string
+"targetText=foo".
+</div>
+
+### Serializing the fragment directive
+
+Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
+</a> steps by inserting a step after step 7:
+
+8. If the <em>exclude fragment flag</em> is unset and <em>url's fragment-directive</em> is
+non-null:
+    1. If <em>url's fragment</em> is null, append U+0023 (#) to <em>output</em>.
+    2. Append "##", followed by <em>url's fragment-directive</em>, to <em>output</em>.
+
 ### Processing the fragment directive
 
-We amend the
+To the definition of
+<a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:
+
+<em>
+Each document has an associated fragment directive.
+</em>
+
+Amend the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
 create and initialize a Document object</a> steps to store and remove the
 fragment directive from the a Document's URL.
 
 Replace steps 7 and 8 of this algorithm with:
 
-7. Let url be null
-8. If request is non-null, then set url to request's current URL.
-9. Otherwise, set url to response's URL.
-10. Find the first instance of the fragment directive delimiter (##) in url's
-    fragment.
-11. Let fragment-directive be a substring of url's fragment starting from the
-    first character immediately after the delimiter to the end of url's
-    fragment.
-12. Set document's fragment-directive be fragment-directive. (Note: this
-    is stored on the document but not web-exposed)
-13. Remove all characters in url's fragment following and including the
-    fragment directive delimiter (##).
-14. Set the document's url to be url.
+7. Let <em>url</em> be null
+8. If <em>request</em> is non-null, then set <em>url</em> to <em>request's
+   current URL</em>.
+9. Otherwise, set <em>url</em> to <em>response's URL</em>.
+10. Set <em>document's fragment-directive</em> be <em>url's
+    fragment-directive</em>.  (Note: this is stored on the document but not
+    web-exposed)
+11. Set <em>url's fragment-directive</em> to null.
+12. Set the <em>document's url</em> to be <em>url</em>.
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
