@@ -1531,16 +1531,18 @@ fragment string.</div>
      <ul>
       <li data-md>
        <p>In the inner switch on <em>c</em>, in the Otherwise case, add a step after
-  step 2:</p>
+step 2:</p>
        <ul>
         <li data-md>
          <p>If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
-  (#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the <em>fragment-directive delimiter</em> minus 1.</p>
-         <div class="note" role="note"> This means we require three hash characters in the
-  URL since one hash is used to get into the fragment state step. This
-  is foreshadowing a change to the delimiter string. Were we to keep
-  the double-hash we’d want to make an exception for the case where
-  there is no fragment.</div>
+(#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the <em>fragment-directive
+delimiter</em> minus 1. </p>
+         <div class="note" role="note"> This means we require
+three hash characters in the URL since one hash is used to get into
+the fragment state step. This is foreshadowing a change to the
+delimiter string. Were we to keep the double-hash we’d want to make
+an exception for the case where there is no fragment.</div>
+         <p></p>
        </ul>
       <li data-md>
        <p>Step 3 (now step 4 after the above change) must begin with "Otherwise,"</p>
@@ -1561,13 +1563,13 @@ fragment string.</div>
          <ol>
           <li data-md>
            <p>If <em>c</em> is not a URL code point and not U+0025 (%), validation
- error.</p>
+error.</p>
           <li data-md>
            <p>If <em>c</em> is U+0025 (%) and <em>remaining</em> does not start with
- two ASCII hex digits, validation error.</p>
+two ASCII hex digits, validation error.</p>
           <li data-md>
            <p>UTF-8 percent encode <em>c</em> using the fragment percent-encode set
- and append the result to <em>url’s fragment-directive</em>.</p>
+and append the result to <em>url’s fragment-directive</em>.</p>
          </ol>
        </ul>
      </ul>
@@ -1602,7 +1604,7 @@ fragment directive from the a Document’s URL.</p>
      <p>Let <em>url</em> be null</p>
     <li data-md>
      <p>If <em>request</em> is non-null, then set <em>url</em> to <em>request’s
-   current URL</em>.</p>
+current URL</em>.</p>
     <li data-md>
      <p>Otherwise, set <em>url</em> to <em>response’s URL</em>.</p>
     <li data-md>
