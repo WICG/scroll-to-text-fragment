@@ -1426,7 +1426,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li>
        <a href="#fragment-directive"><span class="secno">2.2</span> <span class="content">The Fragment Directive</span></a>
        <ol class="toc">
-        <li><a href="#processing-the-fragment-directive"><span class="secno">2.2.1</span> <span class="content">Processing the fragment directive</span></a>
+        <li><a href="#parsing-the-fragment-directive"><span class="secno">2.2.1</span> <span class="content">Parsing the fragment directive</span></a>
+        <li><a href="#serializing-the-fragment-directive"><span class="secno">2.2.2</span> <span class="content">Serializing the fragment directive</span></a>
+        <li><a href="#processing-the-fragment-directive"><span class="secno">2.2.3</span> <span class="content">Processing the fragment directive</span></a>
        </ol>
       <li>
        <a href="#navigating-to-text-fragment"><span class="secno">2.3</span> <span class="content">Navigating to a Text Fragment</span></a>
@@ -1513,32 +1515,104 @@ for the UA rather than the document. It’s meant to avoid direct interaction wi
 author script so that future UA instructions can be added without fear
 introducing breaking changes to existing content. Potential examples could be:
 translation-hints or enabling accessibility features.</p>
-   <h4 class="heading settled" data-level="2.2.1" id="processing-the-fragment-directive"><span class="secno">2.2.1. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
-   <p>We amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the
+   <h4 class="heading settled" data-level="2.2.1" id="parsing-the-fragment-directive"><span class="secno">2.2.1. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
+   <p>To the definition of a <a href="https://url.spec.whatwg.org/#concept-url"> URL record</a>, add:</p>
+   <p><em> A URL’s fragment-directive is either null or an ASCII string holding data used
+by the UA to process the resource. It is initially null </em></p>
+   <p>Let the <em>fragment-directive delimiter</em> be the string consisting of two
+consecutive U+0023 (#) code-points: "##".</p>
+   <div class="note" role="note">We are considering finding a new string to serve as the
+fragment-directive delimiter since U+0023 is not a valid code point in the
+fragment string.</div>
+   <p>Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser"> basic URL parser</a> steps to parse fragment directives in a URL:</p>
+   <ul>
+    <li data-md>
+     <p>In step 11 of this algorithm, amend the <em>fragment state</em> case:</p>
+     <ul>
+      <li data-md>
+       <p>In the inner switch on <em>c</em>, in the Otherwise case, add a step after
+  step 2:</p>
+       <ul>
+        <li data-md>
+         <p>If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
+  (#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the <em>fragment-directive delimiter</em> minus 1.</p>
+         <div class="note" role="note"> This means we require three hash characters in the
+  URL since one hash is used to get into the fragment state step. This
+  is foreshadowing a change to the delimiter string. Were we to keep
+  the double-hash we’d want to make an exception for the case where
+  there is no fragment.</div>
+       </ul>
+      <li data-md>
+       <p>Step 3 (now step 4 after the above change) must begin with "Otherwise,"</p>
+     </ul>
+    <li data-md>
+     <p>In step 11 of this algorithm, add a new <em>fragment-directive state</em> case with the following steps:</p>
+     <p><em>fragment-directive state</em>:</p>
+     <ul>
+      <li data-md>
+       <p>Switching on <em>c</em>:</p>
+       <ul>
+        <li data-md>
+         <p>The EOF code point: Do nothing</p>
+        <li data-md>
+         <p>U+0000 NULL: Validation error</p>
+        <li data-md>
+         <p>Otherwise:</p>
+         <ol>
+          <li data-md>
+           <p>If <em>c</em> is not a URL code point and not U+0025 (%), validation
+ error.</p>
+          <li data-md>
+           <p>If <em>c</em> is U+0025 (%) and <em>remaining</em> does not start with
+ two ASCII hex digits, validation error.</p>
+          <li data-md>
+           <p>UTF-8 percent encode <em>c</em> using the fragment percent-encode set
+ and append the result to <em>url’s fragment-directive</em>.</p>
+         </ol>
+       </ul>
+     </ul>
+   </ul>
+   <div class="note" role="note"> These changes make a URL’s fragment end at the fragment directive delimiter.
+  The fragment-directive includes all characters that follow, but not including,
+  the delimiter. </div>
+   <div class="example" id="example-46f8654f"><a class="self-link" href="#example-46f8654f"></a> <code>https://example.org/#test##targetText=foo</code> will be parsed such that
+the fragment is the string "test" and the fragment-directive is the string
+"targetText=foo". </div>
+   <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
+   <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
+   <ol start="8">
+    <li data-md>
+     <p>If the <em>exclude fragment flag</em> is unset and <em>url’s fragment-directive</em> is
+non-null:</p>
+     <ol>
+      <li data-md>
+       <p>If <em>url’s fragment</em> is null, append U+0023 (#) to <em>output</em>.</p>
+      <li data-md>
+       <p>Append "##", followed by <em>url’s fragment-directive</em>, to <em>output</em>.</p>
+     </ol>
+   </ol>
+   <h4 class="heading settled" data-level="2.2.3" id="processing-the-fragment-directive"><span class="secno">2.2.3. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
+   <p>To the definition of <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:</p>
+   <p><em> Each document has an associated fragment directive. </em></p>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the
 fragment directive from the a Document’s URL.</p>
    <p>Replace steps 7 and 8 of this algorithm with:</p>
    <ol start="7">
     <li data-md>
-     <p>Let url be null</p>
+     <p>Let <em>url</em> be null</p>
     <li data-md>
-     <p>If request is non-null, then set url to request’s current URL.</p>
+     <p>If <em>request</em> is non-null, then set <em>url</em> to <em>request’s
+   current URL</em>.</p>
     <li data-md>
-     <p>Otherwise, set url to response’s URL.</p>
+     <p>Otherwise, set <em>url</em> to <em>response’s URL</em>.</p>
     <li data-md>
-     <p>Find the first instance of the fragment directive delimiter (##) in url’s
-fragment.</p>
+     <p>Set <em>document’s fragment-directive</em> be <em>url’s
+fragment-directive</em>.  (Note: this is stored on the document but not
+web-exposed)</p>
     <li data-md>
-     <p>Let fragment-directive be a substring of url’s fragment starting from the
-first character immediately after the delimiter to the end of url’s
-fragment.</p>
+     <p>Set <em>url’s fragment-directive</em> to null.</p>
     <li data-md>
-     <p>Set document’s fragment-directive be fragment-directive. (Note: this
-is stored on the document but not web-exposed)</p>
-    <li data-md>
-     <p>Remove all characters in url’s fragment following and including the
-fragment directive delimiter (##).</p>
-    <li data-md>
-     <p>Set the document’s url to be url.</p>
+     <p>Set the <em>document’s url</em> to be <em>url</em>.</p>
    </ol>
    <h3 class="heading settled" data-level="2.3" id="navigating-to-text-fragment"><span class="secno">2.3. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
    <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a targetText fragment directive is
