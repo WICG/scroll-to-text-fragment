@@ -1515,23 +1515,28 @@ translation-hints or enabling accessibility features.</p>
    <p>To the definition of a <a href="https://url.spec.whatwg.org/#concept-url"> URL record</a>, add:</p>
    <p><em> A URL’s fragment-directive is either null or an ASCII string holding data used
 by the UA to process the resource. It is initially null </em></p>
+   <p>Let the <em>fragment-directive delimiter</em> be the string consisting of two
+consecutive U+0023 (#) code-points: "##".</p>
+   <div class="note" role="note">We are considering finding a new string to serve as the
+fragment-directive delimiter since U+0023 is not a valid code point in the
+fragment string.</div>
    <p>Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser"> basic URL parser</a> steps to parse fragment directives in a URL:</p>
    <ul>
     <li data-md>
      <p>In step 11 of this algorithm, amend the <em>fragment state</em> case:</p>
      <ul>
       <li data-md>
-       <p>In the inner switch on <em>c</em>, add a step after step 2:</p>
+       <p>In the inner switch on <em>c</em>, in the Otherwise case, add a step after
+  step 2:</p>
        <ul>
         <li data-md>
          <p>If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
-  (#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the fragment-directive delimiter minus 1. </p>
-         <div class="note" role="note"> This means we require three hash characters in the URL since one
-  hash is used to get into the fragment state step. This is
-  foreshadowing a change to the delimiter string. Were we to keep the
-  double-hash we’d want to make an exception for the case where there
-  is no fragment. </div>
-         <p></p>
+  (#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the <em>fragment-directive delimiter</em> minus 1.</p>
+         <div class="note" role="note"> This means we require three hash characters in the
+  URL since one hash is used to get into the fragment state step. This
+  is foreshadowing a change to the delimiter string. Were we to keep
+  the double-hash we’d want to make an exception for the case where
+  there is no fragment.</div>
        </ul>
       <li data-md>
        <p>Step 3 (now step 4 after the above change) must begin with "Otherwise,"</p>
