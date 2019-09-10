@@ -1424,7 +1424,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#fragment-directive"><span class="secno">2.2</span> <span class="content">The Fragment Directive</span></a>
        <ol class="toc">
         <li><a href="#parsing-the-fragment-directive"><span class="secno">2.2.1</span> <span class="content">Parsing the fragment directive</span></a>
-        <li><a href="#processing-the-fragment-directive"><span class="secno">2.2.2</span> <span class="content">Processing the fragment directive</span></a>
+        <li><a href="#serializing-the-fragment-directive"><span class="secno">2.2.2</span> <span class="content">Serializing the fragment directive</span></a>
+        <li><a href="#processing-the-fragment-directive"><span class="secno">2.2.3</span> <span class="content">Processing the fragment directive</span></a>
        </ol>
       <li>
        <a href="#navigating-to-text-fragment"><span class="secno">2.3</span> <span class="content">Navigating to a Text Fragment</span></a>
@@ -1568,7 +1569,23 @@ by the UA to process the resource. It is initially null </em></p>
    <div class="example" id="example-46f8654f"><a class="self-link" href="#example-46f8654f"></a> <code>https://example.org/#test##targetText=foo</code> will be parsed such that
 the fragment is the string "test" and the fragment-directive is the string
 "targetText=foo". </div>
-   <h4 class="heading settled" data-level="2.2.2" id="processing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
+   <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
+   <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
+   <p><em></em></p>
+   <em> </em>
+   <ol start="8">
+    <em></em>
+    <li data-md>
+     <em><p>If the exclude fragment flag is unset and url’s fragment-directive is
+non-null:</p> </em>
+     <ol>
+      <em><li data-md><p>If url’s fragment is null, append U+0023 (#) to output.</p> </li></em>
+      <li data-md>
+       <em></em>
+       <p><em>Append "##", followed by url’s fragment-directive, to output. </em></p>
+     </ol>
+   </ol>
+   <h4 class="heading settled" data-level="2.2.3" id="processing-the-fragment-directive"><span class="secno">2.2.3. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
    <p>To the definition of <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:</p>
    <p><em> Each document has an associated fragment directive. </em></p>
    <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the

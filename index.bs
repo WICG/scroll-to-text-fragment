@@ -162,6 +162,18 @@ the fragment is the string "test" and the fragment-directive is the string
 "targetText=foo".
 </div>
 
+### Serializing the fragment directive
+
+Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
+</a> steps by inserting a step after step 7:
+
+<em>
+8. If the exclude fragment flag is unset and url's fragment-directive is
+non-null:
+    1. If url's fragment is null, append U+0023 (#) to output.
+    2. Append "##", followed by url's fragment-directive, to output.
+</em>
+
 ### Processing the fragment directive
 
 To the definition of
