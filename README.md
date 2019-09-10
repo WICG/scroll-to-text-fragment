@@ -1,5 +1,10 @@
 # Scroll-To-Text using a URL fragment
 
+[Draft Spec](https://wicg.github.io/ScrollToTextFragment)  
+[Web Platform Tests](https://wpt.fyi/results/scroll-to-text-fragment?label=experimental&label=master&aligned)  
+[ChromeStatus entry](https://chromestatus.com/feature/4733392803332096)  
+[Origin Trial Entry](https://developers.chrome.com/origintrials/#/view_trial/3084965744748789761)
+
 ## Introduction
 
 To enable users to easily navigate to specific content in a web page, we propose adding support for specifying a text snippet in the URL. When navigating to such a URL, the browser will find the first instance of the text snippet in the page and bring it into view.
