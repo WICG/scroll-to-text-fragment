@@ -12,6 +12,8 @@ This feature is currently implemented as an experimental feature in Chrome 74.0.
 
 ### A Note on Specifications / "Why Not Use The Standardization Process?"
 
+The current draft specification can be viewed at https://wicg.github.io/ScrollToTextFragment/.
+
 Our intent is definitely for this to be part of the standards process, interoperable with other browsers, with feedback and ideas from the broader community. This document is meant to serve as an explainer to that end and to serve as a __starting point__ for those discussions.
 
 Likewise, the experimental implementation is used to prove the viability of the concept, help us iterate on ideas, and help inform design and standards work. Once we're satisfied that we understand the space sufficiently, this work will move into the appropriate standardization forum.
