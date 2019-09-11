@@ -1745,8 +1745,6 @@ then break.</p>
          <p>If the text following <em>search position</em> does not equal <em>query</em>, then continue.</p>
        </ol>
       <li data-md>
-       <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em>.</p>
-      <li data-md>
        <p>Advance <em>search position</em> to the end of the next instance of <em>query</em> in <em>text</em>.</p>
        <div class="note" role="note"> If a prefix was specified, the search position is at the beginning of <em>query</em> and this will advance it to the end of the query to
 search for a potential suffix. Otherwise, this will find the next
@@ -1754,6 +1752,8 @@ instance of query. </div>
       <li data-md>
        <p>If <em>search position</em> points past the end of <em>text</em>, then
 break.</p>
+      <li data-md>
+       <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em> minus the length of <em>query</em>.</p>
       <li data-md>
        <p>If <em>suffix</em> is the empty string, then return <em>potential match
 position</em>.</p>
