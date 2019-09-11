@@ -243,52 +243,40 @@ user agent must run these steps:
     page.
     <div class="note">
     This algorithm returns a <em>text range</em>, defined as a text position and
-    text length that specifies a text fragment in the page text. It is up to the
-    implementation how this text range within <em>page text</em> will map to the
-    indicated part of the document.
+    text length that specifies a text range in the page text. TODO: Define how
+    a text range within <em>page text</em> will map to the indicated part of the
+    document.
     </div>
 6. Let <em>position</em> be a position variable for <em>page text</em>,
     pointing at the start of <em>page text</em>.
-7. If <em>tokens</em> has size 1, then:
-    1. Let <em>target text</em> be <em>tokens[0]</em>.
-    2. Let <em>match position</em> be the result of <em>Find an exact match with
-        context</em> with input text <em>page text</em>, search position
-        <em>position</em>, prefix <em>null</em>, query <em>target text</em>, and
-        suffix <em>null</em>.
-    3. If <em>match position</em> points past the end of <em>page text</em>,
-        then return null.
-    4. Let <em>match</em> be the range of text that starts at <em>match
-        position</em> and has length equal to the length of <em>target
-        text</em>.
-    5. Return <em>match</em>.
-8. Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
+7. Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
     string.
     <div class="note">
     prefix, suffix, and textEnd are the optional parameters of targetText.
     </div>
-9. Let <em>potential prefix</em> be the first item of <em>tokens</em>.
-10. If the last character of <em>potential prefix</em> is U+002D (-), then:
+8. Let <em>potential prefix</em> be the first item of <em>tokens</em>.
+9. If the last character of <em>potential prefix</em> is U+002D (-), then:
     1. Set <em>prefix</em> to the result of removing any U+002D (-) from
         <em>potential prefix</em>.
     2. Remove the first item of the list <em>tokens</em>.
-11. Let <em>potential suffix</em> be the last item of <em>tokens</em>.
-12. If the first character of <em>potential suffix</em> is U+002D (-), then:
+10. Let <em>potential suffix</em> be the last item of <em>tokens</em>.
+11. If the first character of <em>potential suffix</em> is U+002D (-), then:
     1. Set <em>suffix</em> to the result of removing any U+002D (-) from
         <em>potential suffix</em>.
     2. Remove the last item of the list <em>tokens</em>.
-13. Assert: <em>tokens</em> has size 1 or <em>tokens</em> has size 2.
+12. Assert: <em>tokens</em> has size 1 or <em>tokens</em> has size 2.
     <div class="note">
     Once the prefix and suffix are removed from tokens, tokens may either
     contain one item (textStart) or two items (textStart and textEnd).
     </div>
-14. Let <em>textStart</em> be the first item of <em>tokens</em>.
-15. If <em>tokens</em> has size 2, then let <em>textEnd</em> be the last item of
+13. Let <em>textStart</em> be the first item of <em>tokens</em>.
+14. If <em>tokens</em> has size 2, then let <em>textEnd</em> be the last item of
     <em>tokens</em>.
     <div class="note">
     The strings prefix, textStart, textEnd, and suffix now contain the
     targetText parameters as defined in [[#syntax]].
     </div>
-16. If textEnd is the empty string, then:
+15. If textEnd is the empty string, then:
     1. Let <em>match position</em> be the result of <em>Find an exact match with
         context</em> with input text <em>page text</em>, search position
         <em>position</em>, prefix <em>prefix</em>, query <em>textStart</em>, and
@@ -298,22 +286,22 @@ user agent must run these steps:
     3. Let <em>match</em> be the range of text that starts at <em>match
         position</em> and has length equal to the length of <em>textStart</em>.
     4. Return <em>match</em>.
-17. Otherwise, let <em>potential start position</em> be the result of <em>Find
+16. Otherwise, let <em>potential start position</em> be the result of <em>Find
     an exact match with context</em> with input text <em>page text</em>, start
     position <em>position</em>, prefix <em>prefix</em>, query
     <em>textStart</em>, and suffix <em>null</em>.
-18. If <em>potential start position</em> points past the end of <em>page
+17. If <em>potential start position</em> points past the end of <em>page
     text</em>, then return null.
-19. Let <em>end position</em> be the result of <em>Find an exact match with
+18. Let <em>end position</em> be the result of <em>Find an exact match with
     context</em> with input text <em>page text</em>, search position
     <em>potential start position</em>, prefix <em>null</em>, query
     <em>textEnd</em>, and suffix <em>suffix</em>.
-20. If <em>end position</em> points past the end of <em>page text</em>, then
+19. If <em>end position</em> points past the end of <em>page text</em>, then
     return null.
-21. Advance <em>end position</em> by the length of <em>textEnd</em>.
-22. Let <em>match</em> be the range of text from <em>potential start
+20. Advance <em>end position</em> by the length of <em>textEnd</em>.
+21. Let <em>match</em> be the range of text from <em>potential start
     position</em> to <em>end position</em>.
-23. Return <em>match</em>.
+22. Return <em>match</em>.
 
 ### Find an exact match with context ### {#find-match-with-context}
 <div class="note">
@@ -333,10 +321,16 @@ This algorithm has input <em>text, search position, prefix, query,</em> and
         <em>search position</em>.
     3. Advance <em>search position</em> to the end of the next instance of
         <em>query</em> in <em>text</em>.
+        <div class="note">
+        If a prefix was specified, the search position is at the beginning of
+        <em>query</em> and this will advance it to the end of the query to
+        search for a potential suffix. Otherwise, this will find the next
+        instance of query.
+        </div>
     4. If <em>search position</em> points past the end of <em>text</em>, then
         break.
     5. If <em>suffix</em> is the empty string, then return <em>potential match
         position</em>.
-    6. If the text following <em>search position</em> equals <em>query</em>,
+    6. If the text following <em>search position</em> equals <em>suffix</em>,
         then return <em>potential match position</em>.
 2. Return <em>search position</em>.

@@ -1366,7 +1366,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-10">10 September 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-11">11 September 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1650,31 +1650,12 @@ string <em>raw target text</em> on commas.</p>
      <p>Let <em>page text</em> be a string that is all of the visible text on the
 page.</p>
      <div class="note" role="note"> This algorithm returns a <em>text range</em>, defined as a text position and
-text length that specifies a text fragment in the page text. It is up to the
-implementation how this text range within <em>page text</em> will map to the
-indicated part of the document. </div>
+text length that specifies a text range in the page text. TODO: Define how
+a text range within <em>page text</em> will map to the indicated part of the
+document. </div>
     <li data-md>
      <p>Let <em>position</em> be a position variable for <em>page text</em>,
 pointing at the start of <em>page text</em>.</p>
-    <li data-md>
-     <p>If <em>tokens</em> has size 1, then:</p>
-     <ol>
-      <li data-md>
-       <p>Let <em>target text</em> be <em>tokens[0]</em>.</p>
-      <li data-md>
-       <p>Let <em>match position</em> be the result of <em>Find an exact match with
-context</em> with input text <em>page text</em>, search position <em>position</em>, prefix <em>null</em>, query <em>target text</em>, and
-suffix <em>null</em>.</p>
-      <li data-md>
-       <p>If <em>match position</em> points past the end of <em>page text</em>,
-then return null.</p>
-      <li data-md>
-       <p>Let <em>match</em> be the range of text that starts at <em>match
-position</em> and has length equal to the length of <em>target
-text</em>.</p>
-      <li data-md>
-       <p>Return <em>match</em>.</p>
-     </ol>
     <li data-md>
      <p>Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
 string.</p>
@@ -1767,6 +1748,9 @@ then break.</p>
        <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em>.</p>
       <li data-md>
        <p>Advance <em>search position</em> to the end of the next instance of <em>query</em> in <em>text</em>.</p>
+       <div class="note" role="note"> If a prefix was specified, the search position is at the beginning of <em>query</em> and this will advance it to the end of the query to
+search for a potential suffix. Otherwise, this will find the next
+instance of query. </div>
       <li data-md>
        <p>If <em>search position</em> points past the end of <em>text</em>, then
 break.</p>
@@ -1774,7 +1758,7 @@ break.</p>
        <p>If <em>suffix</em> is the empty string, then return <em>potential match
 position</em>.</p>
       <li data-md>
-       <p>If the text following <em>search position</em> equals <em>query</em>,
+       <p>If the text following <em>search position</em> equals <em>suffix</em>,
 then return <em>potential match position</em>.</p>
      </ol>
     <li data-md>
