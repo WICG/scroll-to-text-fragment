@@ -311,14 +311,15 @@ This algorithm has input <em>text, search position, prefix, query,</em> and
 
 1. While <em>search position</em> does not point past the end of <em>text</em>:
     1. If <em>prefix</em> is not the empty string, then:
-        1. Advance <em>search position</em> to the end of the next instance of
-            <em>prefix</em> in <em>text</em>
+        1. Advance <em>search position</em> to the position after the next
+            instance of <em>prefix</em> in <em>text</em>.
         2. If <em>search position</em> points past the end of <em>text</em>,
             then break.
         3. If the text following <em>search position</em> does not equal
             <em>query</em>, then continue.
-    2. Advance <em>search position</em> to the end of the next instance of
-        <em>query</em> in <em>text</em>.
+    2. Advance <em>search position</em> to the position after the first instance
+        of <em>query</em> in <em>text</em> starting from <em>search
+        position</em>.
         <div class="note">
         If a prefix was specified, the search position is at the beginning of
         <em>query</em> and this will advance it to the end of the query to
