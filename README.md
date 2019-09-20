@@ -295,7 +295,7 @@ For these reasons, we've determined a set of restrictions to ensure an attacker 
 - Match only on word boundaries
     - Prevents an attacker from repeatedly probing to determine a sensitive word, e.g. "Password: a", "Password: ad, etc."
     - “quick brown fox” would be matched from either “quick” or “quick brown” but neither “ick brown” nor “quick brow” would match.
-    - Not all languages have visible word boundaries, for example, Chineese. We'll follow the rules set out in [Unicode Standard Annex #29](http://www.unicode.org/reports/tr29/#Word_Boundaries) supplemented by a word dictionary as done by the ICU Project's [boundary analysis](http://userguide.icu-project.org/boundaryanalysis)
+    - Not all languages have visible word boundaries, for example, Chinese. We'll follow the rules set out in [Unicode Standard Annex #29](http://www.unicode.org/reports/tr29/#Word_Boundaries) supplemented by a word dictionary as done by the ICU Project's [boundary analysis](http://userguide.icu-project.org/boundaryanalysis)
 - For highlighting - a visual-only indicator should be used (i.e. don’t cause selection), styled by the UA
     - Prevents drag-and-drop or copy-paste attacks
 
