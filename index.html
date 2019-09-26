@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version cb5a17652cb33dffd20b8b6a876bb811c1f749a9" name="generator">
+  <meta content="Bikeshed version e86d5b1b47a216fa66165c234892adc259212183" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1366,7 +1366,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-12">12 September 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-26">26 September 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1435,6 +1435,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <ol class="toc">
         <li><a href="#find-a-target-text"><span class="secno">2.3.1</span> <span class="content">Find a target text</span></a>
         <li><a href="#find-match-with-context"><span class="secno">2.3.2</span> <span class="content">Find an exact match with context</span></a>
+        <li><a href="#advance-walker-to-text"><span class="secno">2.3.3</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
        </ol>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
@@ -1647,16 +1648,6 @@ including, the "targetText=" prefix. </div>
      <p>Let <em>tokens</em> be a list of strings that is the result of splitting the
 string <em>raw target text</em> on commas.</p>
     <li data-md>
-     <p>Let <em>page text</em> be a string that is all of the visible text on the
-page.</p>
-     <div class="note" role="note"> This algorithm returns a <em>text range</em>, defined as a text position and
-text length that specifies a text range in the page text. TODO: Define how
-a text range within <em>page text</em> will map to the indicated part of the
-document. </div>
-    <li data-md>
-     <p>Let <em>position</em> be a position variable for <em>page text</em>,
-pointing at the start of <em>page text</em>.</p>
-    <li data-md>
      <p>Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
 string.</p>
      <div class="note" role="note"> prefix, suffix, and textEnd are the optional parameters of targetText. </div>
@@ -1691,81 +1682,131 @@ contain one item (textStart) or two items (textStart and textEnd). </div>
      <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the
 targetText parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
     <li data-md>
+     <p>Let <em>walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> equal to <a href="https://dom.spec.whatwg.org/#dom-document-createtreewalker">Document.createTreeWalker()</a>.</p>
+    <li data-md>
+     <p>Let <em>position</em> be a position variable that indicates a text offset in
+in <em>walker.currentNode.innerText</em>.</p>
+    <li data-md>
      <p>If textEnd is the empty string, then:</p>
      <ol>
       <li data-md>
-       <p>Let <em>match position</em> be the result of <em>Find an exact match with
-context</em> with input text <em>page text</em>, search position <em>position</em>, prefix <em>prefix</em>, query <em>textStart</em>, and
-suffix <em>suffix</em>.</p>
+       <p>Let <em>match position</em> be the result of <a href="#find-match-with-context">§ 2.3.2 Find an exact match with context</a> with input walker <em>walker</em>, search position <em>position</em>,
+prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>suffix</em>.</p>
       <li data-md>
-       <p>If <em>match position</em> points past the end of <em>page text</em>,
-then return null.</p>
+       <p>If <em>match position</em> is null, then return null.</p>
       <li data-md>
-       <p>Let <em>match</em> be the range of text that starts at <em>match
-position</em> and has length equal to the length of <em>textStart</em>.</p>
+       <p>Let <em>match</em> be a Range in <em>walker.currentNode</em> with
+position <em>match position</em> and length equal to the length of <em>textStart</em>.</p>
       <li data-md>
        <p>Return <em>match</em>.</p>
      </ol>
     <li data-md>
-     <p>Otherwise, let <em>potential start position</em> be the result of <em>Find
-an exact match with context</em> with input text <em>page text</em>, start
+     <p>Otherwise, let <em>potential start position</em> be the result of <a href="#find-match-with-context">§ 2.3.2 Find an exact match with context</a> with input walker <em>walker</em>, start
 position <em>position</em>, prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>null</em>.</p>
     <li data-md>
-     <p>If <em>potential start position</em> points past the end of <em>page
-text</em>, then return null.</p>
+     <p>If <em>potential start position</em> is null, then return null.</p>
     <li data-md>
-     <p>Let <em>end position</em> be the result of <em>Find an exact match with
-context</em> with input text <em>page text</em>, search position <em>potential start position</em>, prefix <em>null</em>, query <em>textEnd</em>, and suffix <em>suffix</em>.</p>
+     <p>Let <em>end position</em> be the result of <a href="#find-match-with-context">§ 2.3.2 Find an exact match with context</a> with
+input walker <em>walker</em>, search position <em>potential start
+position</em>, prefix <em>null</em>, query <em>textEnd</em>, and suffix <em>suffix</em>.</p>
     <li data-md>
-     <p>If <em>end position</em> points past the end of <em>page text</em>, then
-return null.</p>
+     <p>If <em>end position</em> is null, then return null.</p>
     <li data-md>
      <p>Advance <em>end position</em> by the length of <em>textEnd</em>.</p>
     <li data-md>
-     <p>Let <em>match</em> be the range of text from <em>potential start
-position</em> to <em>end position</em>.</p>
+     <p>Let <em>match</em> be a Range in <em>walker.currentNode</em> with start
+position <em>potential start position</em> and length equal to <em>end
+position - start position</em>.</p>
     <li data-md>
      <p>Return <em>match</em>.</p>
    </ol>
    <h4 class="heading settled" data-level="2.3.2" id="find-match-with-context"><span class="secno">2.3.2. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
-   <div class="note" role="note"> This algorithm has input <em>text, search position, prefix, query,</em> and <em>suffix</em> and returns a text position that is the start of the match. </div>
+   <div class="note" role="note"> This algorithm has input <em>walker, search position, prefix, query,</em> and <em>suffix</em> and returns a text position that is the start of the match. </div>
+   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not
+a copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
     <li data-md>
-     <p>While <em>search position</em> does not point past the end of <em>text</em>:</p>
+     <p>While <em>walker.currentNode</em> is not null:</p>
      <ol>
       <li data-md>
-       <p>If <em>prefix</em> is not the empty string, then:</p>
+       <p class="assertion">Assert: <em>walker.currentNode</em> is a text node.</p>
+      <li data-md>
+       <p>Let <em>text</em> be equal to <em>walker.currentNode.innerText</em>.</p>
+      <li data-md>
+       <p>While <em>search position</em> does not point past the end of <em>text</em>:</p>
        <ol>
         <li data-md>
-         <p>Advance <em>search position</em> to the position after the next
+         <p>If <em>prefix</em> is not the empty string, then:</p>
+         <ol>
+          <li data-md>
+           <p>Advance <em>search position</em> to the position after the next
 instance of <em>prefix</em> in <em>text</em>.</p>
-        <li data-md>
-         <p>If <em>search position</em> points past the end of <em>text</em>,
+          <li data-md>
+           <p>If <em>search position</em> points past the end of <em>text</em>,
 then break.</p>
+          <li data-md>
+           <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
+           <ol>
+            <li data-md>
+             <p>Perform <a href="#advance-walker-to-text">§ 2.3.3 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
+            <li data-md>
+             <p>If <em>walker.currentNode</em> is null, then return null.</p>
+            <li data-md>
+             <p>Set <em>text</em> to <em>walker.currentNode.innerText</em>.</p>
+            <li data-md>
+             <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
+           </ol>
+          <li data-md>
+           <p>If the text following <em>search position</em> does not equal <em>query</em>, then continue.</p>
+         </ol>
         <li data-md>
-         <p>If the text following <em>search position</em> does not equal <em>query</em>, then continue.</p>
-       </ol>
-      <li data-md>
-       <p>Advance <em>search position</em> to the position after the first instance
+         <p>Advance <em>search position</em> to the position after the first instance
 of <em>query</em> in <em>text</em> starting from <em>search
 position</em>.</p>
-       <div class="note" role="note"> If a prefix was specified, the search position is at the beginning of <em>query</em> and this will advance it to the end of the query to
+         <div class="note" role="note"> If a prefix was specified, the search position is at the beginning of <em>query</em> and this will advance it to the end of the query to
 search for a potential suffix. Otherwise, this will find the next
 instance of query. </div>
-      <li data-md>
-       <p>If <em>search position</em> points past the end of <em>text</em>, then
+        <li data-md>
+         <p>If <em>search position</em> points past the end of <em>text</em>, then
 break.</p>
-      <li data-md>
-       <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em> minus the length of <em>query</em>.</p>
-      <li data-md>
-       <p>If <em>suffix</em> is the empty string, then return <em>potential match
+        <li data-md>
+         <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em> minus the length of <em>query</em>.</p>
+        <li data-md>
+         <p>If <em>suffix</em> is the empty string, then return <em>potential match
 position</em>.</p>
+        <li data-md>
+         <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
+         <ol>
+          <li data-md>
+           <p>Let <em>suffix_walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> that is a copy of <em>walker</em>.</p>
+          <li data-md>
+           <p>Perform <a href="#advance-walker-to-text">§ 2.3.3 Advance a TreeWalker to the next text node</a> on <em>suffix_walker</em>.</p>
+          <li data-md>
+           <p>If <em>suffix_walker.currentNode</em> is null, then return null.</p>
+          <li data-md>
+           <p>Set <em>text</em> to <em>walker.currentNode.innerText</em>.</p>
+          <li data-md>
+           <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
+         </ol>
+        <li data-md>
+         <p>If the text following <em>search position</em> equals <em>suffix</em>, then return <em>potential match position</em>.</p>
+       </ol>
       <li data-md>
-       <p>If the text following <em>search position</em> equals <em>suffix</em>,
-then return <em>potential match position</em>.</p>
+       <p>Perform <a href="#advance-walker-to-text">§ 2.3.3 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
      </ol>
     <li data-md>
-     <p>Return <em>search position</em>.</p>
+     <p>Return null.</p>
+   </ol>
+   <h4 class="heading settled" data-level="2.3.3" id="advance-walker-to-text"><span class="secno">2.3.3. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
+   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not
+a copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
+   <ol>
+    <li data-md>
+     <p>While the input <em>walker.currentNode</em> is not null and <em>walker.currentNode</em> is not a text node:</p>
+     <ol>
+      <li data-md>
+       <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">walker.nextNode()</a></p>
+     </ol>
    </ol>
   </main>
   <div data-fill-with="conformance">
