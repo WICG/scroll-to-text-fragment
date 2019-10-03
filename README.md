@@ -27,6 +27,15 @@ wish to experiment with it can use chrome://flags#enable-text-fragment-anchor.
 The implementation is incomplete and doesn't necessarily match the
 specification in this document.
 
+Chrome is running an origin trial for this feature in M76, M77, and M78. Web
+authors wishing to experiment with this API can opt their origin in so that
+navigations from the origin (to the same or other origins) allow scrolling to a
+text snippet. Use [this
+page](https://developers.chrome.com/origintrials/#/view_trial/3084965744748789761)
+to opt your origin into the trial. For more information about origin trials see
+the [origin trial developer
+guide](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md).
+
 ### A Note on Specifications / "Why Not Use The Standardization Process?"
 
 The current draft specification can be viewed at https://wicg.github.io/ScrollToTextFragment/.
@@ -104,12 +113,12 @@ URL to engage directly with the original publisher.
 
 Allow specifying text to scroll and highlight in the URL:
 
-https://example.com##targetText=prefix-,startText,endText,-suffix
+https://example.com:~:targetText=prefix-,startText,endText,-suffix
 
 Using this syntax
 
 ```
-##targetText=[prefix-,]textStart[,textEnd][,-suffix]
+:~:targetText=[prefix-,]textStart[,textEnd][,-suffix]
 
               context  |-------match-----|  context
 ```
@@ -124,20 +133,22 @@ This will work only if the user provided a gesture, for a full “new-page”
 navigation, and be disabled in iframes. All text matching will be performed on
 word boundaries for security reasons (where possible).
 
-The targetText is delimited by a double-hash to indicate that it is a _fragment
-directive_ that the user agent should process and then remove from the URL
-fragment that is exposed to the site. This solves the problem of sites relying
-on the URL fragment for routing/state, see [issue
+The targetText is delimited by the `:~:` token to indicate that it is a
+_fragment directive_ that the user agent should process and then remove from
+the URL fragment that is exposed to the site. This solves the problem of sites
+relying on the URL fragment for routing/state, see [issue
  #15](https://github.com/WICG/ScrollToTextFragment/issues/15).
 This also allows the URL fragment to still contain an element ID that can be
-scrolled into view in case there's no targetText match found:
+scrolled into view in case no targetText match is found:
 
-https://en.wikipedia.org/wiki/Cat#Characteristics##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+https://en.wikipedia.org/wiki/Cat#Characteristics:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
-Note that the delimiter for the targetText is still an open question. The hash
-symbol is currently not a valid [URL code
-point](https://url.spec.whatwg.org/#url-code-points), and thus would require an
-amendment to the URL spec.
+Various options for delimiters have been explored, including `##`. The double
+hash was deemed too high-risk since it has potential to break existing URL
+parsers. The hash symbol is not a valid [URL code
+point](https://url.spec.whatwg.org/#url-code-points). `:~:` was chosen for
+succinctness and web-compatibility after careful analysis of web crawler data
+and usage statistics in Google Chrome.
 
 ### Background
 
@@ -181,10 +192,10 @@ albeit with a stripped down syntax for ease of use in a URL.
 ### Identifying a Text Snippet
 Specify a text snippet that should be scrolled into view on page load:
 
-https://en.wikipedia.org/wiki/Cat##targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+https://en.wikipedia.org/wiki/Cat:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
 ```
-##targetText=[prefix-,]textStart[,textEnd][,-suffix]
+:~:targetText=[prefix-,]textStart[,textEnd][,-suffix]
 
               context  |-------match-----|  context
 ```
@@ -366,7 +377,7 @@ targetText is considered independent in the sense that failure to find a match
 in one does not affect highlighting of any other targetTexts. e.g.:
 
 ```
-example.com##targetText=foo&targetText=bar&targetText=bas
+example.com:~:targetText=foo&targetText=bar&targetText=bas
 ```
 
 will highlight “foo”, “bar”, and “baz” and scroll “foo” into view, assuming all
@@ -397,7 +408,9 @@ text in an Element.
 
 We can start with setting :target on the parent Element of the first (i.e. the
 match we scroll to) match. If we find this causes ambiguity or confusion we can
-simply avoid setting `:target`. 
+simply avoid setting `:target`.
+
+_Note: This is unimplemented in the initial version of the feature in Chrome_
 
 ## Alternatives Considered
 
@@ -515,12 +528,12 @@ web pages could potentially be using the fragment to store parameters, e.g.
 `http://example.com/#name=test`. If sites don't handle unexpected tokens when
 processing the fragment, this feature could break those sites. In particular,
 some frameworks use the fragment for routing. This is solved by the user agent
-hiding the ##targetText part of the fragment from the site, but browsers that
+hiding the :~:targetText part of the fragment from the site, but browsers that
 do not have this feature implemented would still break such sites.
 
 For pages that don't process the fragment, a browser that doesn't yet support
 this feature will attempt to process the fragment and _fragment directive_
-(i.e. ##targetText) using the existing logic to find a [potential indicated
+(i.e. :~:targetText) using the existing logic to find a [potential indicated
 element](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element).
 If a fragment exists in the URL alongside the _fragment directive_, the browser
 may not scroll to the desired fragment due to the confusion with parsing the
