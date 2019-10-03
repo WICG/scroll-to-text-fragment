@@ -136,10 +136,13 @@ word boundaries for security reasons (where possible).
 The targetText is delimited from the rest of the fragment using the `:~:` token
 to indicate that it is a _fragment directive_ that the user agent should
 process and then remove from the URL fragment that is exposed to the site. This
-solves the problem of sites relying on the URL fragment for routing/state, see
-[issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).  This also
-allows the URL fragment to still contain an element ID that can be scrolled
-into view in case no targetText match is found:
+change has been [proposed](https://github.com/whatwg/html/issues/4868) to the
+HTML spec.
+
+This solves the problem of sites relying on the URL fragment for routing/state,
+see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).  This
+also allows the URL fragment to still contain an element ID that can be
+scrolled into view in case no targetText match is found:
 
 https://en.wikipedia.org/wiki/Cat#Characteristics:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
