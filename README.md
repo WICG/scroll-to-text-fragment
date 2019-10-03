@@ -111,9 +111,9 @@ URL to engage directly with the original publisher.
 
 ### tl;dr
 
-Allow specifying text to scroll and highlight in the URL:
+Allow specifying text to scroll and highlight in the URL fragment:
 
-https://example.com:~:targetText=prefix-,startText,endText,-suffix
+https://example.com#:~:targetText=prefix-,startText,endText,-suffix
 
 Using this syntax
 
@@ -133,13 +133,13 @@ This will work only if the user provided a gesture, for a full “new-page”
 navigation, and be disabled in iframes. All text matching will be performed on
 word boundaries for security reasons (where possible).
 
-The targetText is delimited by the `:~:` token to indicate that it is a
-_fragment directive_ that the user agent should process and then remove from
-the URL fragment that is exposed to the site. This solves the problem of sites
-relying on the URL fragment for routing/state, see [issue
- #15](https://github.com/WICG/ScrollToTextFragment/issues/15).
-This also allows the URL fragment to still contain an element ID that can be
-scrolled into view in case no targetText match is found:
+The targetText is delimited from the rest of the fragment using the `:~:` token
+to indicate that it is a _fragment directive_ that the user agent should
+process and then remove from the URL fragment that is exposed to the site. This
+solves the problem of sites relying on the URL fragment for routing/state, see
+[issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).  This also
+allows the URL fragment to still contain an element ID that can be scrolled
+into view in case no targetText match is found:
 
 https://en.wikipedia.org/wiki/Cat#Characteristics:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
@@ -192,7 +192,7 @@ albeit with a stripped down syntax for ease of use in a URL.
 ### Identifying a Text Snippet
 Specify a text snippet that should be scrolled into view on page load:
 
-https://en.wikipedia.org/wiki/Cat:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
+https://en.wikipedia.org/wiki/Cat#:~:targetText=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
 ```
 :~:targetText=[prefix-,]textStart[,textEnd][,-suffix]
@@ -377,7 +377,7 @@ targetText is considered independent in the sense that failure to find a match
 in one does not affect highlighting of any other targetTexts. e.g.:
 
 ```
-example.com:~:targetText=foo&targetText=bar&targetText=bas
+example.com#:~:targetText=foo&targetText=bar&targetText=bas
 ```
 
 will highlight “foo”, “bar”, and “baz” and scroll “foo” into view, assuming all
