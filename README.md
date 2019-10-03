@@ -437,35 +437,97 @@ easier to understand by non-technical users.
 
 ### Increase use of elements with named anchors / id attributes in existing web pages
 
-As an alternative, we could ask web developers to include additional named anchor tags in their pages, and reference those new anchors. There are two issues that make this less appealing. First, legacy content on the web won’t get updated, but users consuming that legacy content could still benefit from this feature. Second, it is difficult for web developers to reason about all of the possible points other sites might want to scroll to in their pages. Thus, to be most useful, we prefer a solution that supports scrolling to any point in a web page.
+As an alternative, we could ask web developers to include additional named
+anchor tags in their pages, and reference those new anchors. There are two
+issues that make this less appealing. First, legacy content on the web won’t
+get updated, but users consuming that legacy content could still benefit from
+this feature. Second, it is difficult for web developers to reason about all of
+the possible points other sites might want to scroll to in their pages. Thus,
+to be most useful, we prefer a solution that supports scrolling to any point in
+a web page.
 
 ### JavaScript-based API (instead of URL fragment)
 
-We also considered specifying the target element via a JavaScript-based navigation API, such as via a new parameter to location.assign(). It was concluded that such an API is less useful, as it can only be used in contexts where JavaScript is available. Sharing a link to a specific part of a document is one use case that would not be possible if the target element was specified via a JavaScript API. Using a JavaScript API is also less consistent than existing cases where a scroll target is specified in a URL, such as the existing support in HTML, as well as support for other document formats such as PDF and CSV.
+We also considered specifying the target element via a JavaScript-based
+navigation API, such as via a new parameter to location.assign(). It was
+concluded that such an API is less useful, as it can only be used in contexts
+where JavaScript is available. Sharing a link to a specific part of a document
+is one use case that would not be possible if the target element was specified
+via a JavaScript API. Using a JavaScript API is also less consistent than
+existing cases where a scroll target is specified in a URL, such as the
+existing support in HTML, as well as support for other document formats such as
+PDF and CSV.
 
 ## Future Work
 
-One important use case that's not covered by this proposal is being able to scroll to an image. A nearby text snippet can be used to scroll to the image but it depends on the page and is indirect. We'd eventually like to support this use case more directly.
+One important use case that's not covered by this proposal is being able to
+scroll to an image. A nearby text snippet can be used to scroll to the image
+but it depends on the page and is indirect. We'd eventually like to support
+this use case more directly.
 
-A potential option is to consider this just one of many available [Open Annotation selectors](https://www.w3.org/TR/annotation-model/#selectors). Future specification and implementation work could allow using selectors other than TextQuote to allow targetting various kinds of content.
+A potential option is to consider this just one of many available [Open
+Annotation selectors](https://www.w3.org/TR/annotation-model/#selectors).
+Future specification and implementation work could allow using selectors other
+than TextQuote to allow targetting various kinds of content.
 
-Another avenue of exploration is allowing users to specify highlighting in more detail. This was touched on briefly in the sections above. There are cases where the user may wish to highlight multiple snippets of text. For technical reasons, a text match across block-level elements may be difficult for a browser to implement. Allowing the user to specify multiple highlights would allow highlighting multiple paragraphs or bullet points. There are also cases where the user may wish to prevent highlights altogether, as in the image search case described above.
+Another avenue of exploration is allowing users to specify highlighting in more
+detail. This was touched on briefly in the sections above. There are cases
+where the user may wish to highlight multiple snippets of text. For technical
+reasons, a text match across block-level elements may be difficult for a
+browser to implement. Allowing the user to specify multiple highlights would
+allow highlighting multiple paragraphs or bullet points. There are also cases
+where the user may wish to prevent highlights altogether, as in the image
+search case described above.
 
-We've thought about these cases insofar as making sure our proposed solution doesn't preclude these enhancements in the future. However, the work of actually realizing them will be left for future iterations of this effort.
+We've thought about these cases insofar as making sure our proposed solution
+doesn't preclude these enhancements in the future. However, the work of
+actually realizing them will be left for future iterations of this effort.
 
 ## Additional Considerations
 
 ### Constructing Arguments to targetText
 
-We imagine URLs with targetText fragment directives to primarily be machine-generated rather than crafted by hand by users. At the same time, we believe there's a benefit to keeping targetText arguments relatively human-readable: in most cases, simply copying and pasting the desired passage should generate a targetText argument that will scroll and highlight the desired passage.
+We imagine URLs with targetText fragment directives to primarily be
+machine-generated rather than crafted by hand by users. At the same time, we
+believe there's a benefit to keeping targetText arguments relatively
+human-readable: in most cases, simply copying and pasting the desired passage
+should generate a targetText argument that will scroll and highlight the
+desired passage.
 
-The two systems that we believe will generate the bulk of targetText URLs are browsers and search engines. We forsee users selecting text from the browser, with an option to "share a link to here". These links can then be shared further as wikipedia reference links or over channels like social media or email. Search engines can also generate targetText URLs as links to search results for user queries; these links may scroll to and highlight relevant passages to the user's query. Note that even though using the selected text as the textStart argument to targetText may work reasonably well in practice as a heuristic, generating targetText URLs that scroll to arbitrary text requires access to the full document text up to the desired text. Both browsers and search engines have access to the entire visible text of the page, so it is indeed possible for these systems to generate proper URLs with targetText arguments that scroll and highlight any arbitrary text.
+The two systems that we believe will generate the bulk of targetText URLs are
+browsers and search engines. We forsee users selecting text from the browser,
+with an option to "share a link to here". These links can then be shared
+further as wikipedia reference links or over channels like social media or
+email. Search engines can also generate targetText URLs as links to search
+results for user queries; these links may scroll to and highlight relevant
+passages to the user's query. Note that even though using the selected text as
+the textStart argument to targetText may work reasonably well in practice as a
+heuristic, generating targetText URLs that scroll to arbitrary text requires
+access to the full document text up to the desired text. Both browsers and
+search engines have access to the entire visible text of the page, so it is
+indeed possible for these systems to generate proper URLs with targetText
+arguments that scroll and highlight any arbitrary text.
 
 ### Web and Browser Compatibility
 
-As noted in [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15), web pages could potentially be using the fragment to store parameters, e.g. `http://example.com/#name=test`. If sites don't handle unexpected tokens when processing the fragment, this feature could break those sites. In particular, some frameworks use the fragment for routing. This is solved by the user agent hiding the ##targetText part of the fragment from the site, but browsers that do not have this feature implemented would still break such sites.
+As noted in [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15),
+web pages could potentially be using the fragment to store parameters, e.g.
+`http://example.com/#name=test`. If sites don't handle unexpected tokens when
+processing the fragment, this feature could break those sites. In particular,
+some frameworks use the fragment for routing. This is solved by the user agent
+hiding the ##targetText part of the fragment from the site, but browsers that
+do not have this feature implemented would still break such sites.
 
-For pages that don't process the fragment, a browser that doesn't yet support this feature will attempt to process the fragment and _fragment directive_ (i.e. ##targetText) using the existing logic to find a [potential indicated element](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element). If a fragment exists in the URL alongside the _fragment directive_, the browser may not scroll to the desired fragment due to the confusion with parsing the _fragment directive_.  If a fragment does not exist alongside the _fragment directive_, the browser will just load the page and won't initiate any scrolling.  In either case, the browser will just fall back to the default behavior of not scrolling the document.
+For pages that don't process the fragment, a browser that doesn't yet support
+this feature will attempt to process the fragment and _fragment directive_
+(i.e. ##targetText) using the existing logic to find a [potential indicated
+element](https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element).
+If a fragment exists in the URL alongside the _fragment directive_, the browser
+may not scroll to the desired fragment due to the confusion with parsing the
+_fragment directive_.  If a fragment does not exist alongside the _fragment
+directive_, the browser will just load the page and won't initiate any
+scrolling.  In either case, the browser will just fall back to the default
+behavior of not scrolling the document.
 
 ### Security
 
