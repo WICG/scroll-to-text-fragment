@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version e86d5b1b47a216fa66165c234892adc259212183" name="generator">
+  <meta content="Bikeshed version b76a1f3caa65320a39ee72dbf2680ea887ace619" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1254,6 +1254,43 @@ figcaption {
 figcaption:not(.no-marker)::before {
     content: "Figure " counter(figure) " ";
 }</style>
+<style>/* style-dfn-panel */
+
+.dfn-panel {
+    position: absolute;
+    z-index: 35;
+    height: auto;
+    width: -webkit-fit-content;
+    width: fit-content;
+    max-width: 300px;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.75em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: #DDDDDD;
+    color: black;
+    border: outset 0.2em;
+}
+.dfn-panel:not(.on) { display: none; }
+.dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
+.dfn-panel > b { display: block; }
+.dfn-panel a { color: black; }
+.dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
+.dfn-panel > b + b { margin-top: 0.25em; }
+.dfn-panel ul { padding: 0; }
+.dfn-panel li { list-style: inside; }
+.dfn-panel.activated {
+    display: inline-block;
+    position: fixed;
+    left: .5em;
+    bottom: 2em;
+    margin: 0 auto;
+    max-width: calc(100vw - 1.5em - .4em - .5em);
+    max-height: 30vh;
+}
+
+.dfn-paneled { cursor: pointer; }
+</style>
 <style>/* style-selflinks */
 
 .heading, .issue, .note, .example, li, dt {
@@ -1366,7 +1403,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-26">26 September 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-04">4 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1436,9 +1473,15 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#find-a-target-text"><span class="secno">2.3.1</span> <span class="content">Find a target text</span></a>
         <li><a href="#find-match-with-context"><span class="secno">2.3.2</span> <span class="content">Find an exact match with context</span></a>
         <li><a href="#advance-walker-to-text"><span class="secno">2.3.3</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
+        <li><a href="#next-word-bounded-instance"><span class="secno">2.3.4</span> <span class="content">Find the next word bounded instance</span></a>
        </ol>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
+    <li>
+     <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+     </ol>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
@@ -1448,7 +1491,6 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
-    TODO 
    <h3 class="heading settled" data-level="1.1" id="use-cases"><span class="secno">1.1. </span><span class="content">Use cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="1.1.1" id="web-text-references"><span class="secno">1.1.1. </span><span class="content">Web text references</span><a class="self-link" href="#web-text-references"></a></h4>
     The core use case for scroll to text is to allow URLs to serve as an exact text
@@ -1739,11 +1781,13 @@ a copy, i.e. any modifications are performed on the caller’s instance of <em>w
          <p>If <em>prefix</em> is not the empty string, then:</p>
          <ol>
           <li data-md>
-           <p>Advance <em>search position</em> to the position after the next
-instance of <em>prefix</em> in <em>text</em>.</p>
+           <p>Advance <em>search position</em> to the position after the result
+of <a href="#next-word-bounded-instance">§ 2.3.4 Find the next word bounded instance</a> of <em>prefix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale">current
+locale</a>.</p>
           <li data-md>
-           <p>If <em>search position</em> points past the end of <em>text</em>,
-then break.</p>
+           <p>If <em>search position</em> is null, then break.</p>
+          <li data-md>
+           <p>Advance <em>search position</em> past any whitespace.</p>
           <li data-md>
            <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
            <ol>
@@ -1755,25 +1799,28 @@ then break.</p>
              <p>Set <em>text</em> to <em>walker.currentNode.innerText</em>.</p>
             <li data-md>
              <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
+            <li data-md>
+             <p>Advance <em>search position</em> past any whitespace.</p>
            </ol>
           <li data-md>
-           <p>If the text following <em>search position</em> does not equal <em>query</em>, then continue.</p>
+           <p>If the result of <a href="#next-word-bounded-instance">§ 2.3.4 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
+position</em>, then continue.</p>
          </ol>
         <li data-md>
-         <p>Advance <em>search position</em> to the position after the first instance
-of <em>query</em> in <em>text</em> starting from <em>search
-position</em>.</p>
-         <div class="note" role="note"> If a prefix was specified, the search position is at the beginning of <em>query</em> and this will advance it to the end of the query to
-search for a potential suffix. Otherwise, this will find the next
+         <p>Advance <em>search position</em> to the position after the result of <a href="#next-word-bounded-instance">§ 2.3.4 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale②">current locale</a>.</p>
+         <div class="note" role="note"> If a prefix was specified, the search position is at the beginning
+of <em>query</em> and this will advance it to the end of the query
+to search for a potential suffix. Otherwise, this will find the next
 instance of query. </div>
         <li data-md>
-         <p>If <em>search position</em> points past the end of <em>text</em>, then
-break.</p>
+         <p>If <em>search position</em> is null, then break.</p>
         <li data-md>
          <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em> minus the length of <em>query</em>.</p>
         <li data-md>
-         <p>If <em>suffix</em> is the empty string, then return <em>potential match
-position</em>.</p>
+         <p>If <em>suffix</em> is the empty string, then return <em>potential
+match position</em>.</p>
+        <li data-md>
+         <p>Advance <em>search position</em> past any whitespace.</p>
         <li data-md>
          <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
          <ol>
@@ -1784,12 +1831,15 @@ position</em>.</p>
           <li data-md>
            <p>If <em>suffix_walker.currentNode</em> is null, then return null.</p>
           <li data-md>
-           <p>Set <em>text</em> to <em>walker.currentNode.innerText</em>.</p>
+           <p>Set <em>text</em> to <em>suffix_walker.currentNode.innerText</em>.</p>
           <li data-md>
            <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
+          <li data-md>
+           <p>Advance <em>search position</em> past any whitespace.</p>
          </ol>
         <li data-md>
-         <p>If the text following <em>search position</em> equals <em>suffix</em>, then return <em>potential match position</em>.</p>
+         <p>If the result of <a href="#next-word-bounded-instance">§ 2.3.4 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
+locale</a> starts at <em>search position</em>, then return <em>potential match position</em>.</p>
        </ol>
       <li data-md>
        <p>Perform <a href="#advance-walker-to-text">§ 2.3.3 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
@@ -1797,6 +1847,7 @@ position</em>.</p>
     <li data-md>
      <p>Return null.</p>
    </ol>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="current-locale">current locale</dfn> is the <a href="https://html.spec.whatwg.org/multipage/dom.html#language">language</a> of the <em>currentNode</em>.</p>
    <h4 class="heading settled" data-level="2.3.3" id="advance-walker-to-text"><span class="secno">2.3.3. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
    <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not
 a copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
@@ -1807,6 +1858,36 @@ a copy, i.e. any modifications are performed on the caller’s instance of <em>w
       <li data-md>
        <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">walker.nextNode()</a></p>
      </ol>
+   </ol>
+   <h4 class="heading settled" data-level="2.3.4" id="next-word-bounded-instance"><span class="secno">2.3.4. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
+   <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
+instance if it is found. </div>
+   <ol>
+    <li data-md>
+     <p>While <em>start position</em> does not point past the end of <em>text</em>:</p>
+     <ol>
+      <li data-md>
+       <p>Advance <em>start position</em> to the next instance of <em>query</em> in <em>text</em>.</p>
+      <li data-md>
+       <p>Let <em>range</em> be a Range with position <em>start position</em> and
+length equal to the length of <em>query</em>.</p>
+      <li data-md>
+       <p>Using locale <em>locale</em>, let <em>left bound</em> be the last word
+boundary in <em>text</em> before <em>range</em>.</p>
+      <li data-md>
+       <p>Using locale <em>locale</em>, let <em>right bound</em> be the first word
+boundary in <em>text</em> after <em>range</em>.</p>
+       <div class="note" role="note">A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
+text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of what
+constitutes a word boundary, but as the specification mentions, a
+language-specific word boundary library should be used where possible
+based on the <em>locale</em>, such as the ICU library. </div>
+      <li data-md>
+       <p>If <em>left bound</em> immediately precedes <em>range</em> and <em>right
+bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
+     </ol>
+    <li data-md>
+     <p>Return <em>null</em>.</p>
    </ol>
   </main>
   <div data-fill-with="conformance">
@@ -1955,9 +2036,76 @@ a copy, i.e. any modifications are performed on the caller’s instance of <em>w
 
 })();
 </script>
+  <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#current-locale">current locale</a><span>, in §2.3.2</span>
+  </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
   </dl>
+  <aside class="dfn-panel" data-for="current-locale">
+   <b><a href="#current-locale">#current-locale</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-current-locale">2.3.2. Find an exact match with context</a> <a href="#ref-for-current-locale①">(2)</a> <a href="#ref-for-current-locale②">(3)</a> <a href="#ref-for-current-locale③">(4)</a>
+   </ul>
+  </aside>
+<script>/* script-dfn-panel */
+
+document.body.addEventListener("click", function(e) {
+    var queryAll = function(sel) { return [].slice.call(document.querySelectorAll(sel)); }
+    // Find the dfn element or panel, if any, that was clicked on.
+    var el = e.target;
+    var target;
+    var hitALink = false;
+    while(el.parentElement) {
+        if(el.tagName == "A") {
+            // Clicking on a link in a <dfn> shouldn't summon the panel
+            hitALink = true;
+        }
+        if(el.classList.contains("dfn-paneled")) {
+            target = "dfn";
+            break;
+        }
+        if(el.classList.contains("dfn-panel")) {
+            target = "dfn-panel";
+            break;
+        }
+        el = el.parentElement;
+    }
+    if(target != "dfn-panel") {
+        // Turn off any currently "on" or "activated" panels.
+        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(function(el){
+            el.classList.remove("on");
+            el.classList.remove("activated");
+        });
+    }
+    if(target == "dfn" && !hitALink) {
+        // open the panel
+        var dfnPanel = document.querySelector(".dfn-panel[data-for='" + el.id + "']");
+        if(dfnPanel) {
+            dfnPanel.classList.add("on");
+            var rect = el.getBoundingClientRect();
+            dfnPanel.style.left = window.scrollX + rect.right + 5 + "px";
+            dfnPanel.style.top = window.scrollY + rect.top + "px";
+            var panelRect = dfnPanel.getBoundingClientRect();
+            var panelWidth = panelRect.right - panelRect.left;
+            if(panelRect.right > document.body.scrollWidth && (rect.left - (panelWidth + 5)) > 0) {
+                // Reposition, because the panel is overflowing
+                dfnPanel.style.left = window.scrollX + rect.left - (panelWidth + 5) + "px";
+            }
+        } else {
+            console.log("Couldn't find .dfn-panel[data-for='" + el.id + "']");
+        }
+    } else if(target == "dfn-panel") {
+        // Switch it to "activated" state, which pins it.
+        el.classList.add("activated");
+        el.style.left = null;
+        el.style.top = null;
+    }
+
+});
+</script>

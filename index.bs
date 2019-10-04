@@ -14,7 +14,6 @@ Repository: wicg/ScrollToTextFragment
 </pre>
 
 # Introduction # {#introduction}
-TODO
 
 ## Use cases ## {#use-cases}
 
@@ -315,45 +314,58 @@ a copy, i.e. any modifications are performed on the caller's instance of
     3. While <em>search position</em> does not point past the end of
         <em>text</em>:
         1. If <em>prefix</em> is not the empty string, then:
-            1. Advance <em>search position</em> to the position after the next
-                instance of <em>prefix</em> in <em>text</em>.
-            2. If <em>search position</em> points past the end of <em>text</em>,
-                then break.
-            3. If <em>search position</em> is at the end of <em>text</em>, then:
+            1. Advance <em>search position</em> to the position after the result
+                of [[#next-word-bounded-instance]] of <em>prefix</em> in
+                <em>text</em> from <em>search position</em> with [=current
+                locale=].
+            2. If <em>search position</em> is null, then break.
+            3. Advance <em>search position</em> past any whitespace.
+            4. If <em>search position</em> is at the end of <em>text</em>, then:
                 1. Perform [[#advance-walker-to-text]] on <em>walker</em>.
                 2. If <em>walker.currentNode</em> is null, then return null.
                 3. Set <em>text</em> to <em>walker.currentNode.innerText</em>.
                 4. Set <em>search position</em> to the beginning of
                     <em>text</em>.
-            4. If the text following <em>search position</em> does not equal
-                <em>query</em>, then continue.
-        2. Advance <em>search position</em> to the position after the first
-            instance of <em>query</em> in <em>text</em> starting from <em>search
-            position</em>.
+                5. Advance <em>search position</em> past any whitespace.
+            5. If the result of [[#next-word-bounded-instance]] of
+                <em>query</em> in <em>text</em> from <em>search position</em> 
+                with [=current locale=] does not start at <em>search
+                position</em>, then continue.
+        2. Advance <em>search position</em> to the position after the result of
+            [[#next-word-bounded-instance]] of <em>query</em> in <em>text</em>
+            from <em>search position</em> with [=current locale=].
             <div class="note">
             If a prefix was specified, the search position is at the beginning
             of <em>query</em> and this will advance it to the end of the query
             to search for a potential suffix. Otherwise, this will find the next
             instance of query.
             </div>
-        3. If <em>search position</em> points past the end of <em>text</em>,
-            then break.
+        3. If <em>search position</em> is null, then break.
         4. Let <em>potential match position</em> be a position variable equal to
             <em>search position</em> minus the length of <em>query</em>.
         5. If <em>suffix</em> is the empty string, then return <em>potential
             match position</em>.
-        6. If <em>search position</em> is at the end of <em>text</em>, then:
+        6. Advance <em>search position</em> past any whitespace.
+        7. If <em>search position</em> is at the end of <em>text</em>, then:
             1. Let <em>suffix_walker</em> be a
                 <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a>
                 that is a copy of <em>walker</em>.
             2. Perform [[#advance-walker-to-text]] on <em>suffix_walker</em>.
             3. If <em>suffix_walker.currentNode</em> is null, then return null.
-            4. Set <em>text</em> to <em>walker.currentNode.innerText</em>.
+            4. Set <em>text</em> to
+                <em>suffix_walker.currentNode.innerText</em>.
             5. Set <em>search position</em> to the beginning of <em>text</em>.
-        7. If the text following <em>search position</em> equals
-            <em>suffix</em>, then return <em>potential match position</em>.
+            6. Advance <em>search position</em> past any whitespace.
+        8. If the result of [[#next-word-bounded-instance]] of <em>suffix</em>
+            in <em>text</em> from <em>search position</em> with [=current
+            locale=] starts at <em>search position</em>, then return
+            <em>potential match position</em>.
     4. Perform [[#advance-walker-to-text]] on <em>walker</em>.
 2. Return null.
+
+The <dfn>current locale</dfn> is the
+<a href="https://html.spec.whatwg.org/multipage/dom.html#language">language</a>
+of the <em>currentNode</em>.
 
 ### Advance a TreeWalker to the next text node ### {#advance-walker-to-text}
 <div class="note">
@@ -367,3 +379,33 @@ a copy, i.e. any modifications are performed on the caller's instance of
     <em>walker.currentNode</em> is not a text node:
     1. Advance the current node by calling
         <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">walker.nextNode()</a>
+
+### Find the next word bounded instance ### {#next-word-bounded-instance}
+<div class="note">
+This algorithm has input <em>query, text, start position,</em> and
+<em>locale</em> and returns a Range that specifies the word bounded text
+instance if it is found.
+</div>
+
+1. While <em>start position</em> does not point past the end of <em>text</em>:
+    1. Advance <em>start position</em> to the next instance of <em>query</em> in
+        <em>text</em>.
+    2. Let <em>range</em> be a Range with position <em>start position</em> and
+        length equal to the length of <em>query</em>.
+    3. Using locale <em>locale</em>, let <em>left bound</em> be the last word
+        boundary in <em>text</em> before <em>range</em>.
+    4. Using locale <em>locale</em>, let <em>right bound</em> be the first word
+        boundary in <em>text</em> after <em>range</em>.
+        <div class="note">A word boundary is as defined in the 
+        <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
+        text segmentation annex</a>. The
+        <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries">
+        Default Word Boundary Specification</a> defines a default set of what
+        constitutes a word boundary, but as the specification mentions, a
+        language-specific word boundary library should be used where possible
+        based on the <em>locale</em>, such as the ICU library.
+        </div>
+    5. If <em>left bound</em> immediately precedes <em>range</em> and <em>right
+        bound</em> immediately follows <em>range</em>, then return
+        <em>range</em>.
+2. Return <em>null</em>.
