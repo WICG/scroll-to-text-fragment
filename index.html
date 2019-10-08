@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version b76a1f3caa65320a39ee72dbf2680ea887ace619" name="generator">
+  <meta content="Bikeshed version ab064036f6954708ab86ed349b68bf5950f5dceb" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1509,24 +1509,24 @@ loses the context of the page.
    <h2 class="heading settled" data-level="2" id="description"><span class="secno">2. </span><span class="content">Description</span><a class="self-link" href="#description"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="syntax"><span class="secno">2.1. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
     A text fragment is specified in the fragment directive (see <a href="#fragment-directive">§ 2.2 The Fragment Directive</a>) with the following format: 
-<pre>##targetText=[prefix-,]textStart[,textEnd][,-suffix]
-              context  |-------match-----|  context
+<pre>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
+          context  |-------match-----|  context
 </pre>
    <p><em>(Square brackets indicate an optional parameter)</em></p>
    <p>The text parameters are percent-decoded before matching. Dash (-), ampersand
 (&amp;), and comma (,) characters in text parameters must be percent-encoded to
-avoid being interpreted as part of the targetText syntax.</p>
+avoid being interpreted as part of the text directive syntax.</p>
    <p>The only required parameter is textStart. If only textStart is specified, the
 first instance of this exact text string is the target text.</p>
-   <div class="example" id="example-c1f71e43"><a class="self-link" href="#example-c1f71e43"></a> <code>##targetText=an%20example%20text%20fragment</code> indicates that the
+   <div class="example" id="example-4e85550d"><a class="self-link" href="#example-4e85550d"></a> <code>#:~:text=an%20example%20text%20fragment</code> indicates that the
 exact text "an example text fragment" is the target text. </div>
-   <p>If the textEnd parameter is also specified, then the target text refers to a
+   <p>If the textEnd parameter is also specified, then the text directive refers to a
 range of text in the page. The target text range is the text range starting at
 the first instance of startText, until the first instance of endText that
 appears after startText. This is equivalent to specifying the entire text range
 in the startText parameter, but allows the URL to avoid being bloated with a
-long target text.</p>
-   <div class="example" id="example-1039063f"><a class="self-link" href="#example-1039063f"></a> <code>##targetText=an%20example,text%20fragment</code> indicates that the first
+long text directive.</p>
+   <div class="example" id="example-7df2027e"><a class="self-link" href="#example-7df2027e"></a> <code>#:~:text=an%20example,text%20fragment</code> indicates that the first
 instance of "an example" until the following first instance of "text fragment"
 is the target text. </div>
    <h4 class="heading settled" data-level="2.1.1" id="context-terms"><span class="secno">2.1.1. </span><span class="content">Context Terms</span><a class="self-link" href="#context-terms"></a></h4>
@@ -1544,29 +1544,26 @@ for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element’s text as a prefix. </div>
    <p>The context terms are not part of the target text fragment and should not be
 highlighted or affect the scroll position.</p>
-   <div class="example" id="example-63ee52b7"><a class="self-link" href="#example-63ee52b7"></a> <code>##targetText=this%20is-,an%20example,-text%20fragment</code> would match
+   <div class="example" id="example-5c87b699"><a class="self-link" href="#example-5c87b699"></a> <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
 to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text". </div>
    <h3 class="heading settled" data-level="2.2" id="fragment-directive"><span class="secno">2.2. </span><span class="content">The Fragment Directive</span><a class="self-link" href="#fragment-directive"></a></h3>
     To avoid compatibility issues with usage of existing URL fragments, this spec
 introduces the <em>fragment directive</em>. The fragment directive is a portion
-of the URL fragment delimited by the double-hash "##". It is reserved for UA
-instructions, such as targetText, and is stripped from the URL during loading
-so that author scripts can’t directly interact with it. 
+of the URL fragment delimited by the code sequence <code>:~:</code>. It is
+reserved for UA instructions, such as text=, and is stripped from the URL
+during loading so that author scripts can’t directly interact with it. 
    <p>The fragment-directive is a mechanism for URLs to specify instructions meant
 for the UA rather than the document. It’s meant to avoid direct interaction with
-author script so that future UA instructions can be added without fear
+author script so that future UA instructions can be added without fear of
 introducing breaking changes to existing content. Potential examples could be:
 translation-hints or enabling accessibility features.</p>
    <h4 class="heading settled" data-level="2.2.1" id="parsing-the-fragment-directive"><span class="secno">2.2.1. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
    <p>To the definition of a <a href="https://url.spec.whatwg.org/#concept-url"> URL record</a>, add:</p>
    <p><em> A URL’s fragment-directive is either null or an ASCII string holding data used
 by the UA to process the resource. It is initially null </em></p>
-   <p>Let the <em>fragment-directive delimiter</em> be the string consisting of two
-consecutive U+0023 (#) code-points: "##".</p>
-   <div class="note" role="note">We are considering finding a new string to serve as the
-fragment-directive delimiter since U+0023 is not a valid code point in the
-fragment string.</div>
+   <p>Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
+three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
    <p>Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser"> basic URL parser</a> steps to parse fragment directives in a URL:</p>
    <ul>
     <li data-md>
@@ -1577,15 +1574,9 @@ fragment string.</div>
 step 2:</p>
        <ul>
         <li data-md>
-         <p>If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
-(#), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the length of the <em>fragment-directive
-delimiter</em> minus 1. </p>
-         <div class="note" role="note"> This means we require
-three hash characters in the URL since one hash is used to get into
-the fragment state step. This is foreshadowing a change to the
-delimiter string. Were we to keep the double-hash we’d want to make
-an exception for the case where there is no fragment.</div>
-         <p></p>
+         <p>If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
+code points U+007E (~) and U+003A (:), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the
+length of the <em>fragment-directive delimiter</em> minus 1.</p>
        </ul>
       <li data-md>
        <p>Step 3 (now step 4 after the above change) must begin with "Otherwise,"</p>
@@ -1620,9 +1611,9 @@ and append the result to <em>url’s fragment-directive</em>.</p>
    <div class="note" role="note"> These changes make a URL’s fragment end at the fragment directive delimiter.
   The fragment-directive includes all characters that follow, but not including,
   the delimiter. </div>
-   <div class="example" id="example-46f8654f"><a class="self-link" href="#example-46f8654f"></a> <code>https://example.org/#test##targetText=foo</code> will be parsed such that
+   <div class="example" id="example-cac370ee"><a class="self-link" href="#example-cac370ee"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the fragment-directive is the string
-"targetText=foo". </div>
+"text=foo". </div>
    <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
    <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
    <ol start="8">
@@ -1633,7 +1624,7 @@ non-null:</p>
       <li data-md>
        <p>If <em>url’s fragment</em> is null, append U+0023 (#) to <em>output</em>.</p>
       <li data-md>
-       <p>Append "##", followed by <em>url’s fragment-directive</em>, to <em>output</em>.</p>
+       <p>Append ":~:", followed by <em>url’s fragment-directive</em>, to <em>output</em>.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.2.3" id="processing-the-fragment-directive"><span class="secno">2.2.3. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
@@ -1660,9 +1651,9 @@ web-exposed)</p>
      <p>Set the <em>document’s url</em> to be <em>url</em>.</p>
    </ol>
    <h3 class="heading settled" data-level="2.3" id="navigating-to-text-fragment"><span class="secno">2.3. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a targetText fragment directive is
-present and a match is found in the page, the text fragment takes precedent
-over the element fragment as the indicated part of the document. </div>
+   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a text fragment directive is present
+and a match is found in the page, the text fragment takes precedent over the
+element fragment as the indicated part of the document. </div>
    <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
 indicated part of the document</a>.</p>
    <ol>
@@ -1678,12 +1669,12 @@ return.</p>
 user agent must run these steps:</p>
    <ol>
     <li data-md>
-     <p>If <em>fragment directive</em> does not begin with the string "targetText=",
+     <p>If <em>fragment directive</em> does not begin with the string "text=",
 then return null.</p>
     <li data-md>
-     <p>Let <em>raw target text</em> be the substring of <em>fragment directive</em> starting at index 11.</p>
+     <p>Let <em>raw target text</em> be the substring of <em>fragment directive</em> starting at index 5.</p>
      <div class="note" role="note"> This is the remainder of the fragment directive following, but not
-including, the "targetText=" prefix. </div>
+including, the "text=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
     <li data-md>
@@ -1692,7 +1683,8 @@ string <em>raw target text</em> on commas.</p>
     <li data-md>
      <p>Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
 string.</p>
-     <div class="note" role="note"> prefix, suffix, and textEnd are the optional parameters of targetText. </div>
+     <div class="note" role="note"> prefix, suffix, and textEnd are the optional parameters of the text
+directive. </div>
     <li data-md>
      <p>Let <em>potential prefix</em> be the first item of <em>tokens</em>.</p>
     <li data-md>
@@ -1722,7 +1714,7 @@ contain one item (textStart) or two items (textStart and textEnd). </div>
     <li data-md>
      <p>If <em>tokens</em> has size 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
      <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the
-targetText parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
+text directive parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
     <li data-md>
      <p>Let <em>walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> equal to <a href="https://dom.spec.whatwg.org/#dom-document-createtreewalker">Document.createTreeWalker()</a>.</p>
     <li data-md>

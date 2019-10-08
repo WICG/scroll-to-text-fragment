@@ -39,32 +39,32 @@ loses the context of the page.
 A text fragment is specified in the fragment directive (see
 [[#fragment-directive]]) with the following format:
 <pre>
-##targetText=[prefix-,]textStart[,textEnd][,-suffix]
-              context  |-------match-----|  context
+#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
+          context  |-------match-----|  context
 </pre>
 <em>(Square brackets indicate an optional parameter)</em>
 
 The text parameters are percent-decoded before matching. Dash (-), ampersand
 (&), and comma (,) characters in text parameters must be percent-encoded to
-avoid being interpreted as part of the targetText syntax.
+avoid being interpreted as part of the text directive syntax.
 
 The only required parameter is textStart. If only textStart is specified, the
 first instance of this exact text string is the target text.
 
 <div class="example">
-<code>##targetText=an%20example%20text%20fragment</code> indicates that the
+<code>#:~:text=an%20example%20text%20fragment</code> indicates that the
 exact text "an example text fragment" is the target text.
 </div>
 
-If the textEnd parameter is also specified, then the target text refers to a
+If the textEnd parameter is also specified, then the text directive refers to a
 range of text in the page. The target text range is the text range starting at
 the first instance of startText, until the first instance of endText that
 appears after startText. This is equivalent to specifying the entire text range
 in the startText parameter, but allows the URL to avoid being bloated with a
-long target text.
+long text directive.
 
 <div class="example">
-<code>##targetText=an%20example,text%20fragment</code> indicates that the first
+<code>#:~:text=an%20example,text%20fragment</code> indicates that the first
 instance of "an example" until the following first instance of "text fragment"
 is the target text.
 </div>
@@ -92,7 +92,7 @@ The context terms are not part of the target text fragment and should not be
 highlighted or affect the scroll position.
 
 <div class="example">
-<code>##targetText=this%20is-,an%20example,-text%20fragment</code> would match
+<code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
 to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text".
 </div>
@@ -100,13 +100,13 @@ example" in "here is an example text".
 ## The Fragment Directive ## {#fragment-directive}
 To avoid compatibility issues with usage of existing URL fragments, this spec
 introduces the <em>fragment directive</em>. The fragment directive is a portion
-of the URL fragment delimited by the double-hash "##". It is reserved for UA
-instructions, such as targetText, and is stripped from the URL during loading
-so that author scripts can't directly interact with it.
+of the URL fragment delimited by the code sequence <code>:~:</code>. It is
+reserved for UA instructions, such as text=, and is stripped from the URL
+during loading so that author scripts can't directly interact with it.
 
 The fragment-directive is a mechanism for URLs to specify instructions meant
 for the UA rather than the document. It's meant to avoid direct interaction with
-author script so that future UA instructions can be added without fear
+author script so that future UA instructions can be added without fear of
 introducing breaking changes to existing content. Potential examples could be:
 translation-hints or enabling accessibility features.
 
@@ -120,12 +120,8 @@ A URL's fragment-directive is either null or an ASCII string holding data used
 by the UA to process the resource. It is initially null
 </em>
 
-Let the <em>fragment-directive delimiter</em> be the string consisting of two
-consecutive U+0023 (#) code-points: "##".
-
-<div class="note">We are considering finding a new string to serve as the
-fragment-directive delimiter since U+0023 is not a valid code point in the
-fragment string.</div>
+Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
+three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse fragment directives in a URL:
@@ -133,14 +129,10 @@ basic URL parser</a> steps to parse fragment directives in a URL:
   - In step 11 of this algorithm, amend the <em>fragment state</em> case:
     - In the inner switch on <em>c</em>, in the Otherwise case, add a step after
         step 2:
-        - If <em>c</em> is U+0023 (#) and <em>remaining</em> begins with U+0023
-            (#), set state to <em>fragment-directive state</em>. Increment 
-            <em>c</em> by the length of the <em>fragment-directive
-            delimiter</em> minus 1. <div class="note"> This means we require
-            three hash characters in the URL since one hash is used to get into
-            the fragment state step. This is foreshadowing a change to the
-            delimiter string. Were we to keep the double-hash we'd want to make
-            an exception for the case where there is no fragment.</div>
+        - If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
+            consecutive code points U+007E (~) and U+003A (:), set state to
+            <em>fragment-directive state</em>. Increment <em>c</em> by the
+            length of the <em>fragment-directive delimiter</em> minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
   - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
     case with the following steps:
@@ -164,9 +156,9 @@ basic URL parser</a> steps to parse fragment directives in a URL:
 </div>
 
 <div class="example">
-<code>https://example.org/#test##targetText=foo</code> will be parsed such that
+<code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the fragment-directive is the string
-"targetText=foo".
+"text=foo".
 </div>
 
 ### Serializing the fragment directive ### {#serializing-the-fragment-directive}
@@ -177,7 +169,7 @@ Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
 8. If the <em>exclude fragment flag</em> is unset and <em>url's fragment-directive</em> is
     non-null:
     1. If <em>url's fragment</em> is null, append U+0023 (#) to <em>output</em>.
-    2. Append "##", followed by <em>url's fragment-directive</em>, to <em>output</em>.
+    2. Append ":~:", followed by <em>url's fragment-directive</em>, to <em>output</em>.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
@@ -208,9 +200,9 @@ Replace steps 7 and 8 of this algorithm with:
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
 The scroll to text specification proposes an amendment to
-[[html#scroll-to-fragid]]. In summary, if a targetText fragment directive is
-present and a match is found in the page, the text fragment takes precedent
-over the element fragment as the indicated part of the document.
+[[html#scroll-to-fragid]]. In summary, if a text fragment directive is present
+and a match is found in the page, the text fragment takes precedent over the
+element fragment as the indicated part of the document.
 </div>
 
 Add the following steps to the beginning of the processing model for <a
@@ -227,13 +219,13 @@ indicated part of the document</a>.
 
 To find the target text for a given string <em>fragment directive</em>, the
 user agent must run these steps:
-1. If <em>fragment directive</em> does not begin with the string "targetText=",
+1. If <em>fragment directive</em> does not begin with the string "text=",
     then return null.
 2. Let <em>raw target text</em> be the substring of <em>fragment directive</em>
-    starting at index 11.
+    starting at index 5.
     <div class="note">
     This is the remainder of the fragment directive following, but not
-    including, the "targetText=" prefix.
+    including, the "text=" prefix.
     </div>
 3. If <em>raw target text</em> is the empty string, return null.
 4. Let <em>tokens</em> be a list of strings that is the result of splitting the
@@ -241,7 +233,8 @@ user agent must run these steps:
 5. Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
     string.
     <div class="note">
-    prefix, suffix, and textEnd are the optional parameters of targetText.
+    prefix, suffix, and textEnd are the optional parameters of the text
+    directive.
     </div>
 6. Let <em>potential prefix</em> be the first item of <em>tokens</em>.
 7. If the last character of <em>potential prefix</em> is U+002D (-), then:
@@ -263,7 +256,7 @@ user agent must run these steps:
     <em>tokens</em>.
     <div class="note">
     The strings prefix, textStart, textEnd, and suffix now contain the
-    targetText parameters as defined in [[#syntax]].
+    text directive parameters as defined in [[#syntax]].
     </div>
 13. Let <em>walker</em> be a
     <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> equal to
