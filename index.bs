@@ -386,6 +386,13 @@ This algorithm has input <em>query, text, start position,</em> and
 <em>locale</em> and returns a Range that specifies the word bounded text
 instance if it is found.
 </div>
+<div class="note">
+See
+<a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
+a proposal to specify unicode segmentation, including word segmentation. Once
+specified, this algorithm may be improved by making use of the Intl.Segmenter
+API for word boundary matching.
+</div>
 
 1. While <em>start position</em> does not point past the end of <em>text</em>:
     1. Advance <em>start position</em> to the next instance of <em>query</em> in
@@ -396,14 +403,18 @@ instance if it is found.
         boundary in <em>text</em> before <em>range</em>.
     4. Using locale <em>locale</em>, let <em>right bound</em> be the first word
         boundary in <em>text</em> after <em>range</em>.
-        <div class="note">A word boundary is as defined in the 
+        <div class="note">Word boundary matching is one of the security
+        mitigations for this feature. A word boundary is as defined in the
         <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
         text segmentation annex</a>. The
         <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries">
         Default Word Boundary Specification</a> defines a default set of what
         constitutes a word boundary, but as the specification mentions, a
         language-specific word boundary library should be used where possible
-        based on the <em>locale</em>, such as the ICU library.
+        based on the <em>locale</em>, such as the ICU library. For dictionary
+        based word bounding in languages with a small number of characters
+        (<100) the dictionary must not contain a large proportion of the
+        individual characters (<20%).
         </div>
     5. If <em>left bound</em> immediately precedes <em>range</em> and <em>right
         bound</em> immediately follows <em>range</em>, then return

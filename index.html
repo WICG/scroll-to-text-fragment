@@ -1403,7 +1403,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-04">4 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-07">7 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1862,6 +1862,10 @@ a copy, i.e. any modifications are performed on the caller’s instance of <em>w
    <h4 class="heading settled" data-level="2.3.4" id="next-word-bounded-instance"><span class="secno">2.3.4. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
 instance if it is found. </div>
+   <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
+a proposal to specify unicode segmentation, including word segmentation. Once
+specified, this algorithm may be improved by making use of the Intl.Segmenter
+API for word boundary matching. </div>
    <ol>
     <li data-md>
      <p>While <em>start position</em> does not point past the end of <em>text</em>:</p>
@@ -1877,11 +1881,15 @@ boundary in <em>text</em> before <em>range</em>.</p>
       <li data-md>
        <p>Using locale <em>locale</em>, let <em>right bound</em> be the first word
 boundary in <em>text</em> after <em>range</em>.</p>
-       <div class="note" role="note">A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
+       <div class="note" role="note">Word boundary matching is one of the security
+mitigations for this feature. A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
 text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of what
 constitutes a word boundary, but as the specification mentions, a
 language-specific word boundary library should be used where possible
-based on the <em>locale</em>, such as the ICU library. </div>
+based on the <em>locale</em>, such as the ICU library. For dictionary
+based word bounding in languages with a small number of characters
+(&lt;100) the dictionary must not contain a large proportion of the
+individual characters (&lt;20%). </div>
       <li data-md>
        <p>If <em>left bound</em> immediately precedes <em>range</em> and <em>right
 bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
