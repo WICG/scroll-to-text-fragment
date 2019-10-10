@@ -29,7 +29,7 @@ than linking to the top of the page.
 ### User sharing ### {#user-sharing}
 With scroll to text, browsers may implement an option to 'Copy URL to here'
 when the user opens the context menu on a text selection. The browser can
-then generate a URL with the target text appropriately specified, and the
+then generate a URL with the text selection appropriately specified, and the
 recipient of the URL will have the text scrolled into view and visually
 indicated.  Without scroll to text, if a user wants to share a passage of text
 from a page, they would likely just copy and paste the passage, in which case
