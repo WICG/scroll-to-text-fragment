@@ -1958,12 +1958,13 @@ bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
      <p>Return <em>null</em>.</p>
    </ol>
    <h3 class="heading settled" data-level="2.4" id="indicating-the-text-match"><span class="secno">2.4. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
-   <p>In addition to scrolling the text fragment into view as part of the <a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try> steps, the UA should visually indicate the
-matched text in some way such that the user is made aware of the text match.</a></p>
-   <a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try> <p>The UA should provide to the user some method of dismissing the match, such
-that the matched text no longer appears visually indicated.</p> </a>
-   <p><a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try>The exact appearance and mechanics of the indication are left as UA-defined.
-However, the UA must not use the Document’s </a><a href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
+   <p>In addition to scrolling the text fragment into view as part of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
+To Scroll To The Fragment</a> steps, the UA should visually indicate the
+matched text in some way such that the user is made aware of the text match.</p>
+   <p>The UA should provide to the user some method of dismissing the match, such
+that the matched text no longer appears visually indicated.</p>
+   <p>The exact appearance and mechanics of the indication are left as UA-defined.
+However, the UA must not use the Document’s <a href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
 indicate the text match as doing so could allow attack vectors for content
 exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>

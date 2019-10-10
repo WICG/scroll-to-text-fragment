@@ -432,7 +432,7 @@ API for word boundary matching.
 ## Indicating The Text Match ## {#indicating-the-text-match}
 
 In addition to scrolling the text fragment into view as part of the <a
-href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment"Try
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
 To Scroll To The Fragment</a> steps, the UA should visually indicate the
 matched text in some way such that the user is made aware of the text match.
 
