@@ -15,6 +15,8 @@ Repository: wicg/ScrollToTextFragment
 
 # Introduction # {#introduction}
 
+<div class='note'>This section is non-normative</div>
+
 ## Use cases ## {#use-cases}
 
 ### Web text references ### {#web-text-references}
@@ -26,16 +28,19 @@ than linking to the top of the page.
 
 ### User sharing ### {#user-sharing}
 With scroll to text, browsers may implement an option to 'Copy URL to here'
-when the user highlights and opens the context menu on some text. The browser
-can then generate a URL with the target text appropriately specified, and the
-recipient of the URL will have the text scrolled into view and highlighted.
-Without scroll to text, if a user wants to share a passage of text from a page,
-they would likely just copy and paste the passage, in which case the receiver
-loses the context of the page.
+when the user opens the context menu on a text selection. The browser can
+then generate a URL with the text selection appropriately specified, and the
+recipient of the URL will have the text scrolled into view and visually
+indicated.  Without scroll to text, if a user wants to share a passage of text
+from a page, they would likely just copy and paste the passage, in which case
+the receiver loses the context of the page.
 
 # Description # {#description}
 
 ## Syntax ## {#syntax}
+
+<div class='note'>This section is non-normative</div>
+
 A text fragment is specified in the fragment directive (see
 [[#fragment-directive]]) with the following format:
 <pre>
@@ -71,6 +76,8 @@ is the target text.
 
 ### Context Terms ### {#context-terms}
 
+<div class='note'>This section is non-normative</div>
+
 The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
 differentiate them from the textStart and textEnd parameters, as any
@@ -88,8 +95,8 @@ for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element's text as a prefix.
 </div>
 
-The context terms are not part of the target text fragment and should not be
-highlighted or affect the scroll position.
+The context terms are not part of the target text fragment and must not be
+visually indicated or affect the scroll position.
 
 <div class="example">
 <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
@@ -431,6 +438,24 @@ API for word boundary matching.
         bound</em> immediately follows <em>range</em>, then return
         <em>range</em>.
 2. Return <em>null</em>.
+
+## Indicating The Text Match ## {#indicating-the-text-match}
+
+In addition to scrolling the text fragment into view as part of the <a
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
+To Scroll To The Fragment</a> steps, the UA should visually indicate the
+matched text in some way such that the user is made aware of the text match.
+
+The UA should provide to the user some method of dismissing the match, such
+that the matched text no longer appears visually indicated.
+
+The exact appearance and mechanics of the indication are left as UA-defined.
+However, the UA must not use the Document's <a
+href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
+indicate the text match as doing so could allow attack vectors for content
+exfiltration.
+
+The UA must not visually indicate any provided context terms.
 
 ## Feature Detectability ## {#feature-detectability}
 
