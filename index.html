@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 5edf8bee6cb6f00d270bf8e0fbb20d6ccc477cfd" name="generator">
+  <meta content="Bikeshed version 7e430f4a6cb4a7616872addf238a902c73553f9d" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-09">9 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-10">10 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1533,7 +1533,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#advance-walker-to-text"><span class="secno">2.3.3</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
         <li><a href="#next-word-bounded-instance"><span class="secno">2.3.4</span> <span class="content">Find the next word bounded instance</span></a>
        </ol>
-      <li><a href="#feature-detectability"><span class="secno">2.4</span> <span class="content">Feature Detectability</span></a>
+      <li><a href="#indicating-the-text-match"><span class="secno">2.4</span> <span class="content">Indicating The Text Match</span></a>
+      <li><a href="#feature-detectability"><span class="secno">2.5</span> <span class="content">Feature Detectability</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -1551,6 +1552,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
+   <div class="note" role="note">This section is non-normative</div>
    <h3 class="heading settled" data-level="1.1" id="use-cases"><span class="secno">1.1. </span><span class="content">Use cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="1.1.1" id="web-text-references"><span class="secno">1.1.1. </span><span class="content">Web text references</span><a class="self-link" href="#web-text-references"></a></h4>
     The core use case for scroll to text is to allow URLs to serve as an exact text
@@ -1560,15 +1562,16 @@ URLs that direct the user to the answer they are looking for in the page rather
 than linking to the top of the page. 
    <h4 class="heading settled" data-level="1.1.2" id="user-sharing"><span class="secno">1.1.2. </span><span class="content">User sharing</span><a class="self-link" href="#user-sharing"></a></h4>
     With scroll to text, browsers may implement an option to 'Copy URL to here'
-when the user highlights and opens the context menu on some text. The browser
-can then generate a URL with the target text appropriately specified, and the
-recipient of the URL will have the text scrolled into view and highlighted.
-Without scroll to text, if a user wants to share a passage of text from a page,
-they would likely just copy and paste the passage, in which case the receiver
-loses the context of the page. 
+when the user selects and opens the context menu on some text. The browser can
+then generate a URL with the target text appropriately specified, and the
+recipient of the URL will have the text scrolled into view and visually
+indicated.  Without scroll to text, if a user wants to share a passage of text
+from a page, they would likely just copy and paste the passage, in which case
+the receiver loses the context of the page. 
    <h2 class="heading settled" data-level="2" id="description"><span class="secno">2. </span><span class="content">Description</span><a class="self-link" href="#description"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="syntax"><span class="secno">2.1. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
-    A text fragment is specified in the fragment directive (see <a href="#fragment-directive">§ 2.2 The Fragment Directive</a>) with the following format: 
+   <div class="note" role="note">This section is non-normative</div>
+   <p>A text fragment is specified in the fragment directive (see <a href="#fragment-directive">§ 2.2 The Fragment Directive</a>) with the following format:</p>
 <pre>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
           context  |-------match-----|  context
 </pre>
@@ -1590,6 +1593,7 @@ long text directive.</p>
 instance of "an example" until the following first instance of "text fragment"
 is the target text. </div>
    <h4 class="heading settled" data-level="2.1.1" id="context-terms"><span class="secno">2.1.1. </span><span class="content">Context Terms</span><a class="self-link" href="#context-terms"></a></h4>
+   <div class="note" role="note">This section is non-normative</div>
    <p>The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
 differentiate them from the textStart and textEnd parameters, as any
@@ -1602,8 +1606,8 @@ fragment, any amount of whitespace is allowed between context terms and the
 text fragment. This helps allow context terms to be across element boundaries,
 for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element’s text as a prefix. </div>
-   <p>The context terms are not part of the target text fragment and should not be
-highlighted or affect the scroll position.</p>
+   <p>The context terms are not part of the target text fragment and must not be
+visually indicated or affect the scroll position.</p>
    <div class="example" id="example-5c87b699"><a class="self-link" href="#example-5c87b699"></a> <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
 to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text". </div>
@@ -1953,7 +1957,16 @@ bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
     <li data-md>
      <p>Return <em>null</em>.</p>
    </ol>
-   <h3 class="heading settled" data-level="2.4" id="feature-detectability"><span class="secno">2.4. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
+   <h3 class="heading settled" data-level="2.4" id="indicating-the-text-match"><span class="secno">2.4. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
+   <p>In addition to scrolling the text fragment into view as part of the <a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try> steps, the UA should visually indicate the
+matched text in some way such that the user is made aware of the text match.</a></p>
+   <a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try> <p>The UA should provide to the user some method of dismissing the match, such
+that the matched text no longer appears visually indicated.</p> </a>
+   <p><a a fragmentU0003C href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" scroll the to try>The exact appearance and mechanics of the indication are left as UA-defined.
+However, the UA must not use the Document’s </a><a href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
+indicate the text match as doing so could allow attack vectors for content
+exfiltration.</p>
+   <h3 class="heading settled" data-level="2.5" id="feature-detectability"><span class="secno">2.5. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
 that is exposed via window.location.fragmentDirective if the UA supports the
 feature.</p>
@@ -2117,9 +2130,9 @@ Location Interface</a> to include a fragmentDirective property:</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#current-locale">current locale</a><span>, in §2.3.2</span>
-   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §2.4</span>
-   <li><a href="#fragmentdirective">FragmentDirective</a><span>, in §2.4</span>
-   <li><a href="#location">Location</a><span>, in §2.4</span>
+   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §2.5</span>
+   <li><a href="#fragmentdirective">FragmentDirective</a><span>, in §2.5</span>
+   <li><a href="#location">Location</a><span>, in §2.5</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -2145,7 +2158,7 @@ Location Interface</a> to include a fragmentDirective property:</p>
   <aside class="dfn-panel" data-for="fragmentdirective">
    <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective">2.4. Feature Detectability</a>
+    <li><a href="#ref-for-fragmentdirective">2.5. Feature Detectability</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
