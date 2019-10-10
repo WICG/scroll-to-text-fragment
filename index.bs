@@ -445,6 +445,8 @@ href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
 indicate the text match as doing so could allow attack vectors for content
 exfiltration.
 
+The UA must not visually indicate any provided context terms.
+
 ## Feature Detectability ## {#feature-detectability}
 
 For feature detectability, we propose adding a new FragmentDirective interface
