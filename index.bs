@@ -123,6 +123,16 @@ by the UA to process the resource. It is initially null
 Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
+<div class="note">
+  The fragment-directive is part of the URL fragment. This means it must always
+  appear after a U+0023 (#) code point in a URL. 
+</div>
+
+<div class="example">
+  To add a fragment-directive to a URL like https://example.com, a fragment
+  must first be appended to the URL: https://example.com#:~:text=foo.
+</div>
+
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse fragment directives in a URL:
 
