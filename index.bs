@@ -421,3 +421,24 @@ API for word boundary matching.
         bound</em> immediately follows <em>range</em>, then return
         <em>range</em>.
 2. Return <em>null</em>.
+
+## Feature Detectability ## {#feature-detectability}
+
+For feature detectability, we propose adding a new FragmentDirective interface
+that is exposed via window.location.fragmentDirective if the UA supports the
+feature.
+
+<pre class='idl'>
+interface FragmentDirective {
+};
+</pre>
+
+We amend
+<a href="https://html.spec.whatwg.org/multipage/history.html#the-location-interface">The
+Location Interface</a> to include a fragmentDirective property:
+
+<pre class='idl'>
+interface Location {
+    readonly attribute FragmentDirective fragmentDirective;
+};
+</pre>
