@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 5edf8bee6cb6f00d270bf8e0fbb20d6ccc477cfd" name="generator">
+  <meta content="Bikeshed version 7e430f4a6cb4a7616872addf238a902c73553f9d" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-09">9 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-10">10 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1624,6 +1624,10 @@ translation-hints or enabling accessibility features.</p>
 by the UA to process the resource. It is initially null </em></p>
    <p>Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
+   <div class="note" role="note"> The fragment-directive is part of the URL fragment. This means it must always
+  appear after a U+0023 (#) code point in a URL. </div>
+   <div class="example" id="example-8a44ecf3"><a class="self-link" href="#example-8a44ecf3"></a> To add a fragment-directive to a URL like https://example.com, a fragment
+  must first be appended to the URL: https://example.com#:~:text=foo. </div>
    <p>Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser"> basic URL parser</a> steps to parse fragment directives in a URL:</p>
    <ul>
     <li data-md>
