@@ -1554,7 +1554,6 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
       <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
-      <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
      </ol>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
@@ -1744,7 +1743,7 @@ can infer the existence of any text on the page.</p>
 origin.  Although scripts on that page can already learn a lot about a user’s
 actions, a text fragment directive can still contain sensitive information. For
 this reason, this specification provides no way for a page to extract the
-content of the test fragment anchor. User agents must not expose this
+content of the text fragment anchor. User agents must not expose this
 information to the page.</p>
    <div class="example" id="example-9ced00a5"><a class="self-link" href="#example-9ced00a5"></a> A user visiting a page listing dozens of medical conditions may have gotten
   there via a link with a text fragment directive containing a specific
@@ -1780,7 +1779,7 @@ indicated part of the document</a>.</p>
     <li data-md>
      <p>Let <em>fragment directive</em> be the document URL’s <a href="#fragment-directive">fragment directive</a>.</p>
     <li data-md>
-     <p>Let <em>is user activated</em> be true if the current navigation was <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation" id="ref-for-triggered-by-user-activation" ref="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
+     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
    user activation</a></p>
      <div class="note" role="note"> TODO: This might need an additional flag somewhere to track the user
   activation triggering </div>
@@ -2300,25 +2299,9 @@ manipulations
    <li><a href="#fragmentdirective">FragmentDirective</a><span>, in §2.6</span>
    <li><a href="#location">Location</a><span>, in §2.6</span>
   </ul>
-  <aside class="dfn-panel" data-for="term-for-triggered-by-user-activation">
-   <a href="https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation">https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-triggered-by-user-activation">2.4. Navigating to a Text Fragment</a>
-   </ul>
-  </aside>
-  <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
-  <ul class="index">
-   <li>
-    <a data-link-type="biblio">[HTML]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-triggered-by-user-activation" style="color:initial">triggered by user activation</span>
-    </ul>
-  </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
-   <dt id="biblio-html">[HTML]
-   <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
   </dl>

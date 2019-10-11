@@ -230,7 +230,7 @@ In addition, the user's privacy should be ensured even from the destination
 origin.  Although scripts on that page can already learn a lot about a user's
 actions, a text fragment directive can still contain sensitive information. For
 this reason, this specification provides no way for a page to extract the
-content of the test fragment anchor. User agents must not expose this
+content of the text fragment anchor. User agents must not expose this
 information to the page.
 
 <div class="example">
@@ -271,7 +271,7 @@ indicated part of the document</a>.
 1. Let <em>fragment directive</em> be the document URL's
    <a href="#fragment-directive">fragment directive</a>. 
 2. Let <em>is user activated</em> be true if the current navigation was <a
-   ref="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
+   href="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
    user activation</a>
    <div class="note">
       TODO: This might need an additional flag somewhere to track the user
