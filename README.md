@@ -519,7 +519,7 @@ email. Search engines can also generate text directive URLs as links to search
 results for user queries; these links may scroll to and highlight relevant
 passages to the user's query. Note that even though using the selected text as
 the textStart argument to the text directive may work reasonably well in
-practice as a heuristic, generating tURLs that scroll to arbitrary text
+practice as a heuristic, generating URLs that scroll to arbitrary text
 requires access to the full document text up to the desired text. Both browsers
 and search engines have access to the entire visible text of the page, so it is
 indeed possible for these systems to generate proper URLs with text directive
