@@ -542,10 +542,10 @@ as a range-based match.
 
 Context terms allow the text fragment directive to disambiguate text snippets
 on a page. However, their use can make the URL more brittle in some cases.
-Often, the desired string will at an element boundary. The context will
-therefore exist in an adjacent element. Changes to the page structure could
-invalidate the text fragment directive since the context and match text may no
-longer appear to be adjacent.
+Often, the desired string will start or end at an element boundary. The context
+will therefore exist in an adjacent element. Changes to the page structure
+could invalidate the text fragment directive since the context and match text
+may no longer appear to be adjacent.
 
 <div class='example'>
   Suppose we wish to craft a URL for the following text:
@@ -555,7 +555,7 @@ longer appear to be adjacent.
         &lt;div class="content"&gt;Text to quote&lt;/div&gt;
   </pre>
 
-  We could craft a the text fragment directive as follows:
+  We could craft the text fragment directive as follows:
 
   <pre>
     text=HEADER-,Text%20to%20quote
