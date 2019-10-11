@@ -395,6 +395,122 @@ Each target text will start searching from the top of the page independently so
 that we may allow highlighting a snippet above the one that was scrolled into
 view.
 
+### Fragment Delmiter
+
+We ran into an interesting challenge during development, tracked in
+[#15](https://github.com/WICG/ScrollToTextFragment/issues/15). Some existing
+pages on the web use fragments for their own state/routing. These pages may
+break if an unexpected fragment is attached to its URL.
+
+Element-id based fragments also cause these pages to break; however, text
+fragments are much more likely to be user-generated and are thus more likely
+to cause unexpected breakage.
+
+Our solution to this is to introduce the concept of a _fragment directive_.
+The fragment directive is a specially-delimited part of the URL fragment that
+is meant for UA instructions only. During page load it's stripped out from the
+URL so that it's completely invisible to the page.
+
+This has two major benefits:
+
+1) Allows specifying UA instructions like a text fragment in a way that's
+   guaranteed not to interfere with page script. This ensures maximal
+   compatibility with the existing web.
+2) Improved privacy. The text fragment may include highly sensitive information
+   about a user. This information should not be revealed, even the destination
+   domain. Consider a user visiting a page with information on multiple medical
+   conditions. If the user was sent there via a text fragment, the fragment
+   could reveal a specific condition. By hiding the directive from all WebAPIs,
+   the user's privacy is preserved.
+
+However, stripping arbitrary parts of a fragment may not be web compatible! We
+went through several ideas here:
+
+#### The Double-Hash
+
+We could delimit the fragment directive using `##`. This is a nice and ergonomic
+approach and works well since, if the original URL doesn't have a fragment, the
+double-hash delimiter will already be parsed as a fragment!
+
+However, `#` is [not a valid code
+point](https://url.spec.whatwg.org/#url-code-points) in the URL spec. This is
+was both good and bad news. The good news is that this made it less likely to
+collide with existing URLs. However, (in addition to changing something as
+fundamental as URLs) the bad news is that it could trip up existing parsers.
+
+As was explained in a thread on the [w3.org URI mailing
+list](https://lists.w3.org/Archives/Public/uri/2019Sep/0000.html), some URL
+parsers parse from right to left. Having an additional `#` character will cause
+these parsers to break. Worse, we don't have a good way to measure the risk.
+
+On top of that, use counters we added to Chrome in M77 showed that, on Windows,
+about 0.08% of page loads already have a `#` character in the fragment. While
+small, that's a non trivial percentage.
+
+#### :~:
+
+Given the down-sides, we abandoned `##` as a delimiter and set out in search of
+a better one. A new delimiter would have to be both spec-compliant with the URL
+spec (i.e. must be composed of valid URL fragment code-points), and have
+sufficiently low usage on the existing web such that this change would be web-
+compatible.
+
+We assumed this would preclude any single or double character sequences and
+produced a list of candidates to consider:
+* !~!
+* !~~!
+* ~&~
+* :~:
+* ~@~
+* ~\_~
+* \_~\_
+
+We also considered using a more verbose delimiter:
+* &directive
+* @directive
+* $directive
+* /directive
+* -directive
+
+Looking through links seen in the last 5 years by the Google Search crawler, we
+eliminated some of this list. None of the "verbose" list had been seen;
+however, given valid candidates in the first list, we prefered them for
+succinctness and to avoid English-centric keywords (one could use a similar
+argument for `text=`).
+
+Of the above list, the following had never been seen in a URL fragment by the
+crawler:
+
+* ~&~ no hits
+* :~: no hits
+* ~@~ one hit
+
+While this doesn't guarantee compatibility, it did give us some confidence.  We
+chose `:~:` from this list somewhat arbitrarily. However, we've also added
+Chrome use-counters to M78 for all these delimiters. Data from Canary has shown
+no collisions yet; we're currently awaiting confirmation from Beta and Stable
+channels.
+
+#### Directives and Delimiters
+
+One nice thing about the `##` idea was that you could simply append it to any
+URL:
+
+`https://example.com` --> `https://example.com##text=foo`
+
+This is less satisfying with an alternative delimiter because we still need to
+ensure we're inside a fragment:
+
+`https://example.com` --> `https://example.com#:~:text=foo`
+
+However, a nice benefit of the directive idea in general is that we can specify
+both a "legacy" fragment as well as a directive:
+
+`https://example.com#fallback:~:text=foo`
+
+In this case, if the text fragment isn't found, we can fallback to scrolling
+the element-id specified in the fragment (e.g. id="fallback" in this case).
+
 ### :target
 
 For element-id based fragments (e.g.
