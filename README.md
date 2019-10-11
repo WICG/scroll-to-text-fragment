@@ -447,22 +447,22 @@ On top of that, use counters we added to Chrome in M77 showed that, on Windows,
 about 0.08% of page loads already have a `#` character in the fragment. While
 small, that's a non trivial percentage.
 
-#### :~:
+#### Enter :~:
 
 Given the down-sides, we abandoned `##` as a delimiter and set out in search of
 a better one. A new delimiter would have to be both spec-compliant with the URL
 spec (i.e. must be composed of valid URL fragment code-points), and have
-sufficiently low usage on the existing web such that this change would be web-
-compatible.
+sufficiently low usage on the existing web such that this change would be
+web-compatible.
 
 We assumed this would preclude any single or double character sequences and
 produced a list of candidates to consider:
 * !~!
 * !~~!
-* ~&~
+* \~&\~
 * :~:
-* ~@~
-* ~\_~
+* \~@\~
+* \~\_\~
 * \_~\_
 
 We also considered using a more verbose delimiter:
@@ -481,9 +481,9 @@ argument for `text=`).
 Of the above list, the following had never been seen in a URL fragment by the
 crawler:
 
-* ~&~ no hits
+* \~&\~ no hits
 * :~: no hits
-* ~@~ one hit
+* \~@\~ one hit
 
 While this doesn't guarantee compatibility, it did give us some confidence.  We
 chose `:~:` from this list somewhat arbitrarily. However, we've also added
