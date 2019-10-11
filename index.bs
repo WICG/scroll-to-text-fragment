@@ -477,3 +477,156 @@ interface Location {
     readonly attribute FragmentDirective fragmentDirective;
 };
 </pre>
+
+# Generating Text Fragment Directives # {#generating-text-fragment-directives}
+
+<div class='note'>
+  This section is non-normative.
+</div>
+
+This section contains recommendations for UAs automatically generating URLs
+with text fragment directives. These recommendations aren't normative but are
+provided to ensure generated URLs result in maximally stable and usable URLs.
+
+## Prefer Exact Matching To Range-based
+
+The match text can be provided either as an exact string "text=foo%20bar%20baz"
+or as a range "text=foo,bar".
+
+UAs should prefer to specify the entire string where practical. This ensures
+that if the destination page is removed or changed, the intended destination can
+still be derived from the URL itself.
+
+<div class='example'>
+  Suppose we wish to craft a URL to
+  https://en.wikipedia.org/wiki/History_of_computing quoting the sentence:
+
+  <pre>
+    The first recorded idea of using digital electronics for computing was the
+    1931 paper "The Use of Thyratrons for High Speed Automatic Counting of
+    Physical Phenomena" by C. E. Wynn-Williams.
+  </pre>
+
+  We could create a range-based match like so:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded,Williams">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded,Williams</a>
+
+  Or we could encode the entire sentence using an exact match term:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded%20idea%20of%20using%20digital%20electronics%20for%20computing%20was%20the%201931%20paper%20%22The%20Use%20of%20Thyratrons%20for%20High%20Speed%20Automatic%20Counting%20of%20Physical%20Phenomena%22%20by%20C.%20E.%20Wynn-Williams">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded%20idea%20of%20using%20digital%20electronics%20for%20computing%20was%20the%201931%20paper%20%22The%20Use%20of%20Thyratrons%20for%20High%20Speed%20Automatic%20Counting%20of%20Physical%20Phenomena%22%20by%20C.%20E.%20Wynn-Williams</a>
+
+  The range-based match is less stable, meaning that if the page is changed to
+  include another instance of "The first recorded" somewhere earlier in the
+  page, the link will now target an unintended text snippet.
+
+  The range-based match is also less useful semantically. If the page is
+  changed to remove the sentence, the user won't know what the intended
+  target was. In the exact match case, the user can read, or the UA can
+  surface, the text that was being searched for but not found.
+</div>
+
+Range-based matches can be helpful when the quoted text is excessively long
+and encoding the entire string would produce an unwieldly URL.
+
+It is recommended that text snippets shorter than 300 characters always be
+encoded using an exact match. Above this limit, the UA should encode the string
+as a range-based match.
+
+<div class='note'>
+  TODO:  Can we determine the above limit in some more objective way?
+</div>
+
+## Use Context Only When Necessary
+
+Context terms allow the text fragment directive to disambiguate text snippets
+on a page. However, their use can make the URL more brittle in some cases.
+Often, the desired string will start or end at an element boundary. The context
+will therefore exist in an adjacent element. Changes to the page structure
+could invalidate the text fragment directive since the context and match text
+may no longer appear to be adjacent.
+
+<div class='example'>
+  Suppose we wish to craft a URL for the following text:
+
+  <pre>
+        &lt;div class="section"&gt;HEADER&lt;/div&gt;
+        &lt;div class="content"&gt;Text to quote&lt;/div&gt;
+  </pre>
+
+  We could craft the text fragment directive as follows:
+
+  <pre>
+    text=HEADER-,Text%20to%20quote
+  </pre>
+
+  However, suppose the page changes to add a "[edit]" link beside all section
+  headers. This would now break the URL.
+</div>
+
+Where a text snippet is long enough and unique, a UA should prefer to avoid
+adding superfluous context terms.
+
+It is recommended that context should be used only if one of the following is
+true:
+<ul>
+  <li>The UA determines the quoted text is ambiguous</li>
+  <li>The quoted text contains 3 or fewer words</li>
+</ul>
+
+<div class="note">
+  TODO: Determine the numeric limit above in a more objective way
+</div>
+
+## Determine If Fragment Id Is Needed
+
+When the UA navigates to a URL containing a text fragment directive, it will
+fallback to scrolling into view a regular element-id based fragment if it
+exists and the text fragment isn't found.
+
+This can be useful to provide a fallback, in case the text in the document
+changes, invalidating the text fragment directive.
+
+<div class='example'>
+  Suppose we wish to craft a URL to
+  https://en.wikipedia.org/wiki/History_of_computing quoting the sentence:
+
+  <pre>
+    The earliest known tool for use in computation is the Sumerian abacus
+  </pre>
+
+  By specifying the section that the text appears in, we ensure that, if the
+  text is changed or removed, the user will still be pointed to the relevant
+  section:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#Early_computation:~:text=The%20earliest%20known%20tool%20for%20use%20in%20computation%20is%20the%20Sumerian%20abacus">
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation:~:text=The%20earliest%20known%20tool%20for%20use%20in%20computation%20is%20the%20Sumerian%20abacus</a>
+</div>
+
+However, UAs should take care that the fallback element-id fragment is the
+correct one:
+
+<div class='example'>
+  Suppose the user navigates to
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation. They
+  now scroll down to the Symbolic Computations section. There, they select a
+  text snippet and choose to create a URL to it:
+
+  <pre>
+    By the late 1960s, computer systems could perform symbolic algebraic
+    manipulations
+  </pre>
+
+  The UA should note that, even though the current URL of the page is:
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation, using
+  #Early_computation as a fallback is inappropriate. If the above sentence is
+  changed or removed, the page will load in the #Early_computation section
+  which could be quite confusing to the user.
+
+  If the UA cannot reliably determine an appropriate fragment to fallback to,
+  it should remove the fragment id from the URL:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations</a>
+</div>
