@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 7e430f4a6cb4a7616872addf238a902c73553f9d" name="generator">
+  <meta content="Bikeshed version 86a39676f08870ba1210b97fe65ff62bd4e723c9" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -2031,16 +2031,16 @@ as a range-based match.</p>
    <h3 class="heading settled" data-level="3.2" id="use-context-only-when-necessary"><span class="secno">3.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
    <p>Context terms allow the text fragment directive to disambiguate text snippets
 on a page. However, their use can make the URL more brittle in some cases.
-Often, the desired string will at an element boundary. The context will
-therefore exist in an adjacent element. Changes to the page structure could
-invalidate the text fragment directive since the context and match text may no
-longer appear to be adjacent.</p>
-   <div class="example" id="example-d84dfa8a">
-    <a class="self-link" href="#example-d84dfa8a"></a> Suppose we wish to craft a URL for the following text: 
+Often, the desired string will start or end at an element boundary. The context
+will therefore exist in an adjacent element. Changes to the page structure
+could invalidate the text fragment directive since the context and match text
+may no longer appear to be adjacent.</p>
+   <div class="example" id="example-735b40dc">
+    <a class="self-link" href="#example-735b40dc"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
 &lt;div class="content">Text to quote&lt;/div>
 </pre>
-    <p>We could craft a the text fragment directive as follows:</p>
+    <p>We could craft the text fragment directive as follows:</p>
 <pre>text=HEADER-,Text%20to%20quote
 </pre>
     <p>However, suppose the page changes to add a "[edit]" link beside all section
