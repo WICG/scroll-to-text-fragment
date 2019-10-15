@@ -708,6 +708,9 @@ While these may seem overly-restrictive, we believe they don't impede the main
 use-cases. We'd like to start off cautious and re-examine if interesting but
 blocked use-cases arise.
 
+Some of the more detailed reasoning behind the security decisions is described
+in our [security review doc](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.g7hd03ifqsc)
+
 ### Privacy
 
 While the feature itself does not expose privacy related information, the text
