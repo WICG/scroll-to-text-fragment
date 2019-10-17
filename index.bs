@@ -15,6 +15,8 @@ Repository: wicg/ScrollToTextFragment
 
 # Introduction # {#introduction}
 
+<div class='note'>This section is non-normative</div>
+
 ## Use cases ## {#use-cases}
 
 ### Web text references ### {#web-text-references}
@@ -26,16 +28,19 @@ than linking to the top of the page.
 
 ### User sharing ### {#user-sharing}
 With scroll to text, browsers may implement an option to 'Copy URL to here'
-when the user highlights and opens the context menu on some text. The browser
-can then generate a URL with the target text appropriately specified, and the
-recipient of the URL will have the text scrolled into view and highlighted.
-Without scroll to text, if a user wants to share a passage of text from a page,
-they would likely just copy and paste the passage, in which case the receiver
-loses the context of the page.
+when the user opens the context menu on a text selection. The browser can
+then generate a URL with the text selection appropriately specified, and the
+recipient of the URL will have the text scrolled into view and visually
+indicated.  Without scroll to text, if a user wants to share a passage of text
+from a page, they would likely just copy and paste the passage, in which case
+the receiver loses the context of the page.
 
 # Description # {#description}
 
 ## Syntax ## {#syntax}
+
+<div class='note'>This section is non-normative</div>
+
 A text fragment is specified in the fragment directive (see
 [[#fragment-directive]]) with the following format:
 <pre>
@@ -71,6 +76,8 @@ is the target text.
 
 ### Context Terms ### {#context-terms}
 
+<div class='note'>This section is non-normative</div>
+
 The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
 differentiate them from the textStart and textEnd parameters, as any
@@ -88,8 +95,8 @@ for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element's text as a prefix.
 </div>
 
-The context terms are not part of the target text fragment and should not be
-highlighted or affect the scroll position.
+The context terms are not part of the target text fragment and must not be
+visually indicated or affect the scroll position.
 
 <div class="example">
 <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
@@ -122,6 +129,16 @@ by the UA to process the resource. It is initially null
 
 Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
+
+<div class="note">
+  The fragment-directive is part of the URL fragment. This means it must always
+  appear after a U+0023 (#) code point in a URL. 
+</div>
+
+<div class="example">
+  To add a fragment-directive to a URL like https://example.com, a fragment
+  must first be appended to the URL: https://example.com#:~:text=foo.
+</div>
 
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse fragment directives in a URL:
@@ -197,6 +214,48 @@ Replace steps 7 and 8 of this algorithm with:
 11. Set <em>url's fragment-directive</em> to null.
 12. Set the <em>document's url</em> to be <em>url</em>.
 
+## Security and Privacy ## {#allow-text-fragment-directives}
+
+### Motivation
+
+<div class="note">This section is non-normative</div>
+
+Care must be taken when implementing text fragment directive so that it
+cannot be used to exfiltrate information across origins. Scripts can navigate
+a page to a cross-origin URL with a text fragment directive.  If a malicious
+actor can determine that a victim page scrolled after such a navigation, they
+can infer the existence of any text on the page.
+
+In addition, the user's privacy should be ensured even from the destination
+origin.  Although scripts on that page can already learn a lot about a user's
+actions, a text fragment directive can still contain sensitive information. For
+this reason, this specification provides no way for a page to extract the
+content of the text fragment anchor. User agents must not expose this
+information to the page.
+
+<div class="example">
+  A user visiting a page listing dozens of medical conditions may have gotten
+  there via a link with a text fragment directive containing a specific
+  condition. This information must not be shared with the page.
+</div>
+
+### Should Allow Text Fragment ### {#should-allow-text-fragment}
+
+<div class="note">
+This algorithm has input <em>window, is user triggered</em> and returns a
+boolean indicating whether a text fragment directive should be allowed to
+invoke.
+</div>
+
+1. If any of the following conditions are true, return false.
+  * <em>window</em>'s parent field is non-null.
+  * <em>window</em>'s opener field is non-null.
+  * The document of the previous entry in <em>window</em>'s browsing context's session history is equal to <em>window</em>'s document.
+    <div class="note">That is, this is the result of a same document navigation</div>
+  * <em>is user triggered</em> is false.
+2. Otherwise, return true.
+
+
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
 The scroll to text specification proposes an amendment to
@@ -210,10 +269,19 @@ href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated
 indicated part of the document</a>.
 
 1. Let <em>fragment directive</em> be the document URL's
-    <a href="#fragment-directive">fragment directive</a>. 
-2. If [[#find-a-target-text]] with <em>fragment directive</em> returns
-    non-null, then the return value is the indicated part of the document;
-    return.
+   <a href="#fragment-directive">fragment directive</a>. 
+2. Let <em>is user activated</em> be true if the current navigation was <a
+   href="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
+   user activation</a>
+   <div class="note">
+      TODO: This might need an additional flag somewhere to track the user
+      activation triggering
+   </div>
+3. If the result of [[#should-allow-text-fragment]] with the window of the
+   document's browsing context and <em>is user activated</em> is true then:
+    1. If [[#find-a-target-text]] with <em>fragment directive</em> returns
+       non-null, then the return value is the indicated part of the document;
+       return.
 
 ### Find a target text ### {#find-a-target-text}
 
@@ -422,6 +490,24 @@ API for word boundary matching.
         <em>range</em>.
 2. Return <em>null</em>.
 
+## Indicating The Text Match ## {#indicating-the-text-match}
+
+In addition to scrolling the text fragment into view as part of the <a
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
+To Scroll To The Fragment</a> steps, the UA should visually indicate the
+matched text in some way such that the user is made aware of the text match.
+
+The UA should provide to the user some method of dismissing the match, such
+that the matched text no longer appears visually indicated.
+
+The exact appearance and mechanics of the indication are left as UA-defined.
+However, the UA must not use the Document's <a
+href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
+indicate the text match as doing so could allow attack vectors for content
+exfiltration.
+
+The UA must not visually indicate any provided context terms.
+
 ## Feature Detectability ## {#feature-detectability}
 
 For feature detectability, we propose adding a new FragmentDirective interface
@@ -442,3 +528,156 @@ interface Location {
     readonly attribute FragmentDirective fragmentDirective;
 };
 </pre>
+
+# Generating Text Fragment Directives # {#generating-text-fragment-directives}
+
+<div class='note'>
+  This section is non-normative.
+</div>
+
+This section contains recommendations for UAs automatically generating URLs
+with text fragment directives. These recommendations aren't normative but are
+provided to ensure generated URLs result in maximally stable and usable URLs.
+
+## Prefer Exact Matching To Range-based
+
+The match text can be provided either as an exact string "text=foo%20bar%20baz"
+or as a range "text=foo,bar".
+
+UAs should prefer to specify the entire string where practical. This ensures
+that if the destination page is removed or changed, the intended destination can
+still be derived from the URL itself.
+
+<div class='example'>
+  Suppose we wish to craft a URL to
+  https://en.wikipedia.org/wiki/History_of_computing quoting the sentence:
+
+  <pre>
+    The first recorded idea of using digital electronics for computing was the
+    1931 paper "The Use of Thyratrons for High Speed Automatic Counting of
+    Physical Phenomena" by C. E. Wynn-Williams.
+  </pre>
+
+  We could create a range-based match like so:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded,Williams">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded,Williams</a>
+
+  Or we could encode the entire sentence using an exact match term:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded%20idea%20of%20using%20digital%20electronics%20for%20computing%20was%20the%201931%20paper%20%22The%20Use%20of%20Thyratrons%20for%20High%20Speed%20Automatic%20Counting%20of%20Physical%20Phenomena%22%20by%20C.%20E.%20Wynn-Williams">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=The%20first%20recorded%20idea%20of%20using%20digital%20electronics%20for%20computing%20was%20the%201931%20paper%20%22The%20Use%20of%20Thyratrons%20for%20High%20Speed%20Automatic%20Counting%20of%20Physical%20Phenomena%22%20by%20C.%20E.%20Wynn-Williams</a>
+
+  The range-based match is less stable, meaning that if the page is changed to
+  include another instance of "The first recorded" somewhere earlier in the
+  page, the link will now target an unintended text snippet.
+
+  The range-based match is also less useful semantically. If the page is
+  changed to remove the sentence, the user won't know what the intended
+  target was. In the exact match case, the user can read, or the UA can
+  surface, the text that was being searched for but not found.
+</div>
+
+Range-based matches can be helpful when the quoted text is excessively long
+and encoding the entire string would produce an unwieldly URL.
+
+It is recommended that text snippets shorter than 300 characters always be
+encoded using an exact match. Above this limit, the UA should encode the string
+as a range-based match.
+
+<div class='note'>
+  TODO:  Can we determine the above limit in some more objective way?
+</div>
+
+## Use Context Only When Necessary
+
+Context terms allow the text fragment directive to disambiguate text snippets
+on a page. However, their use can make the URL more brittle in some cases.
+Often, the desired string will start or end at an element boundary. The context
+will therefore exist in an adjacent element. Changes to the page structure
+could invalidate the text fragment directive since the context and match text
+may no longer appear to be adjacent.
+
+<div class='example'>
+  Suppose we wish to craft a URL for the following text:
+
+  <pre>
+        &lt;div class="section"&gt;HEADER&lt;/div&gt;
+        &lt;div class="content"&gt;Text to quote&lt;/div&gt;
+  </pre>
+
+  We could craft the text fragment directive as follows:
+
+  <pre>
+    text=HEADER-,Text%20to%20quote
+  </pre>
+
+  However, suppose the page changes to add a "[edit]" link beside all section
+  headers. This would now break the URL.
+</div>
+
+Where a text snippet is long enough and unique, a UA should prefer to avoid
+adding superfluous context terms.
+
+It is recommended that context should be used only if one of the following is
+true:
+<ul>
+  <li>The UA determines the quoted text is ambiguous</li>
+  <li>The quoted text contains 3 or fewer words</li>
+</ul>
+
+<div class="note">
+  TODO: Determine the numeric limit above in a more objective way
+</div>
+
+## Determine If Fragment Id Is Needed
+
+When the UA navigates to a URL containing a text fragment directive, it will
+fallback to scrolling into view a regular element-id based fragment if it
+exists and the text fragment isn't found.
+
+This can be useful to provide a fallback, in case the text in the document
+changes, invalidating the text fragment directive.
+
+<div class='example'>
+  Suppose we wish to craft a URL to
+  https://en.wikipedia.org/wiki/History_of_computing quoting the sentence:
+
+  <pre>
+    The earliest known tool for use in computation is the Sumerian abacus
+  </pre>
+
+  By specifying the section that the text appears in, we ensure that, if the
+  text is changed or removed, the user will still be pointed to the relevant
+  section:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#Early_computation:~:text=The%20earliest%20known%20tool%20for%20use%20in%20computation%20is%20the%20Sumerian%20abacus">
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation:~:text=The%20earliest%20known%20tool%20for%20use%20in%20computation%20is%20the%20Sumerian%20abacus</a>
+</div>
+
+However, UAs should take care that the fallback element-id fragment is the
+correct one:
+
+<div class='example'>
+  Suppose the user navigates to
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation. They
+  now scroll down to the Symbolic Computations section. There, they select a
+  text snippet and choose to create a URL to it:
+
+  <pre>
+    By the late 1960s, computer systems could perform symbolic algebraic
+    manipulations
+  </pre>
+
+  The UA should note that, even though the current URL of the page is:
+  https://en.wikipedia.org/wiki/History_of_computing#Early_computation, using
+  #Early_computation as a fallback is inappropriate. If the above sentence is
+  changed or removed, the page will load in the #Early_computation section
+  which could be quite confusing to the user.
+
+  If the UA cannot reliably determine an appropriate fragment to fallback to,
+  it should remove the fragment id from the URL:
+
+  <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations">
+  https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations</a>
+</div>
