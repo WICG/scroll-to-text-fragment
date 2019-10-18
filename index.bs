@@ -41,8 +41,8 @@ the receiver loses the context of the page.
 
 <div class='note'>This section is non-normative</div>
 
-A text fragment is specified in the fragment directive (see
-[[#fragment-directive]]) with the following format:
+A [=valid text directive=] is specified in the fragment directive (see
+[[#the-fragment-directive]]) with the following format:
 <pre>
 #:~:text=[prefix-,]textStart[,textEnd][,-suffix]
           context  |-------match-----|  context
@@ -104,7 +104,7 @@ to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text".
 </div>
 
-## The Fragment Directive ## {#fragment-directive}
+## The Fragment Directive ## {#the-fragment-directive}
 To avoid compatibility issues with usage of existing URL fragments, this spec
 introduces the <em>fragment directive</em>. The fragment directive is a portion
 of the URL fragment delimited by the code sequence <code>:~:</code>. It is
@@ -127,8 +127,11 @@ A URL's fragment-directive is either null or an ASCII string holding data used
 by the UA to process the resource. It is initially null
 </em>
 
-Let the <em>fragment-directive delimiter</em> be the string ":~:", that is the
+The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
+
+The <dfn>fragment directive</dfn> is the part of the URL fragment that follows
+the [=fragment directive delimiter=].
 
 <div class="note">
   The fragment-directive is part of the URL fragment. This means it must always
@@ -149,7 +152,7 @@ basic URL parser</a> steps to parse fragment directives in a URL:
         - If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
             consecutive code points U+007E (~) and U+003A (:), set state to
             <em>fragment-directive state</em>. Increment <em>c</em> by the
-            length of the <em>fragment-directive delimiter</em> minus 1.
+            length of the [=fragment directive delimiter=] minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
   - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
     case with the following steps:
@@ -167,8 +170,8 @@ basic URL parser</a> steps to parse fragment directives in a URL:
                 and append the result to <em>url’s fragment-directive</em>.
 
 <div class="note">
-  These changes make a URL's fragment end at the fragment directive delimiter.
-  The fragment-directive includes all characters that follow, but not including,
+  These changes make a URL's fragment end at the [=fragment directive delimiter=].
+  The [=fragment directive=] includes all characters that follow, but not including,
   the delimiter.
 </div>
 
@@ -213,6 +216,39 @@ Replace steps 7 and 8 of this algorithm with:
     web-exposed)
 11. Set <em>url's fragment-directive</em> to null.
 12. Set the <em>document's url</em> to be <em>url</em>.
+
+### Fragment directive grammar ### {#fragment-directive-grammar}
+A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
+in the [=fragment directive=] that matches the production:
+<dl>
+<code><dt><dfn>FragmentDirective</dfn> ::=</dt> <dd>[=TextDirective=] ("&" [=TextDirective=])*</dd></code>
+</dl>
+
+<div class="note">
+The [=FragmentDirective=] may contain multiple directives split by the "&"
+character. Currently this means we allow multiple text directives to enable
+multiple indicated strings in the page, but this also allows for future
+directive types to be added and combined.
+</div>
+
+A <dfn>valid text directive</dfn> is one such directive, that matches the
+production:
+
+<dl>
+<code><dt><dfn>TextDirective</dfn> ::=</dt> <dd>"text=" [=TextDirectiveParameters=]</dd></code>
+<code><dt><dfn>TextDirectiveParameters</dfn> ::=</dt> <dd>([=TextDirectivePrefix=] ",")? [=TextMatchString=] ("," [=TextMatchString=])? ("," [=TextDirectiveSuffix=])?</dd></code>
+<code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt> <dd>[=TextMatchString=] "-"</dd></code>
+<code><dt><dfn>TextDirectiveSuffix</dfn> ::=</dt> <dd>"-" [=TextMatchString=]</dd></code>
+<code><dt><dfn>TextMatchString</dfn> ::=</dt> <dd>([=TextMatchChar=] | [=PercentEncodedChar=])+</dd></code>
+<code><dt><dfn>TextMatchChar</dfn> ::=</dt> <dd>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd></code>
+<div class = "note">
+A [=TextMatchChar=] may be any
+<a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
+is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and ",",
+which must be percent-encoded.
+</div>
+<code><dt><dfn>PercentEncodedChar</dfn> ::=</dt> <dd>"%" [a-zA-Z0-9]+</dd></code>
+</dl>
 
 ## Security and Privacy ## {#allow-text-fragment-directives}
 
