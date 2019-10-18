@@ -217,12 +217,25 @@ Replace steps 7 and 8 of this algorithm with:
 11. Set <em>url's fragment-directive</em> to null.
 12. Set the <em>document's url</em> to be <em>url</em>.
 
-### Text directive grammar ### {#text-directive-grammer}
-A <dfn>valid text directive</dfn> is a sequence of characters that appears in
-the [=fragment directive=] that matches the production:
+### Fragment directive grammar ### {#fragment-directive-grammar}
+A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
+in the [=fragment directive=] that matches the production:
+<dl>
+<code><dt><dfn>FragmentDirective</dfn> ::=</dt> <dd>[=TextDirective=] ("&" [=TextDirective=])*</dd></code>
+</dl>
+
+<div class="note">
+The [=FragmentDirective=] may contain multiple directives split by the "&"
+character. Currently this means we allow multiple text directives to enable
+multiple indicated strings in the page, but this also allows for future
+directive types to be added and combined.
+</div>
+
+A <dfn>valid text directive</dfn> is one such directive, that matches the
+production:
 
 <dl>
-<code><dt><dfn>TextDirective</dfn> ::=</dt> <dd>"text=" [=TextDirectiveParameters=] ("&text=" [=TextDirectiveParameters=])*</dd></code>
+<code><dt><dfn>TextDirective</dfn> ::=</dt> <dd>"text=" [=TextDirectiveParameters=]</dd></code>
 <code><dt><dfn>TextDirectiveParameters</dfn> ::=</dt> <dd>([=TextDirectivePrefix=] ",")? [=TextMatchString=] ("," [=TextMatchString=])? ("," [=TextDirectiveSuffix=])?</dd></code>
 <code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt> <dd>[=TextMatchString=] "-"</dd></code>
 <code><dt><dfn>TextDirectiveSuffix</dfn> ::=</dt> <dd>"-" [=TextMatchString=]</dd></code>
