@@ -167,7 +167,7 @@ basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
             2. If [[URL#c]] is U+0025 (%) and <em>remaining</em> does not start with
                 two ASCII hex digits, validation error.
             3. UTF-8 percent encode [[URL#c]] using the fragment percent-encode set
-                and append the result to <em>url’s fragment-directive</em>.
+                and append the result to <em>url’s</em> [=fragment directive=].
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive delimiter=].
@@ -186,10 +186,10 @@ the fragment is the string "test" and the [=fragment directive=] is the string
 Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
 </a> steps by inserting a step after step 7:
 
-8. If the <em>exclude fragment flag</em> is unset and <em>url's fragment-directive</em> is
+8. If the <em>exclude fragment flag</em> is unset and <em>url's</em> [=fragment directive=] is
     non-null:
     1. If <em>url's fragment</em> is null, append U+0023 (#) to <em>output</em>.
-    2. Append ":~:", followed by <em>url's fragment-directive</em>, to <em>output</em>.
+    2. Append ":~:", followed by <em>url's</em> [=fragment directive=], to <em>output</em>.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
@@ -211,10 +211,10 @@ Replace steps 7 and 8 of this algorithm with:
 8. If <em>request</em> is non-null, then set <em>url</em> to <em>request's
     current URL</em>.
 9. Otherwise, set <em>url</em> to <em>response's URL</em>.
-10. Set <em>document's fragment-directive</em> be <em>url's
-    fragment-directive</em>.  (Note: this is stored on the document but not
+10. Set <em>document's</em> [=fragment directive=] be <em>url's</em>
+    [=fragment directive=].  (Note: this is stored on the document but not
     web-exposed)
-11. Set <em>url's fragment-directive</em> to null.
+11. Set <em>url's</em> [=fragment directive=] to null.
 12. Set the <em>document's url</em> to be <em>url</em>.
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
