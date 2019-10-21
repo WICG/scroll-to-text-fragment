@@ -1687,34 +1687,34 @@ error.</p>
 two ASCII hex digits, validation error.</p>
           <li data-md>
            <p>UTF-8 percent encode <a href="https://url.spec.whatwg.org/#c">URL Standard §c</a> using the fragment percent-encode set
-and append the result to <em>url’s fragment-directive</em>.</p>
+and append the result to <em>url’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑧">fragment directive</a>.</p>
          </ol>
        </ul>
      </ul>
    </ul>
    <div class="note" role="note"> These changes make a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive delimiter</a>.
-  The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑧">fragment directive</a> includes all characters that follow, but not including,
+  The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> includes all characters that follow, but not including,
   the delimiter. </div>
    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> is the string
+the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a> is the string
 "text=foo". </div>
    <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
    <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
    <ol start="8">
     <li data-md>
-     <p>If the <em>exclude fragment flag</em> is unset and <em>url’s fragment-directive</em> is
+     <p>If the <em>exclude fragment flag</em> is unset and <em>url’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> is
 non-null:</p>
      <ol>
       <li data-md>
        <p>If <em>url’s fragment</em> is null, append U+0023 (#) to <em>output</em>.</p>
       <li data-md>
-       <p>Append ":~:", followed by <em>url’s fragment-directive</em>, to <em>output</em>.</p>
+       <p>Append ":~:", followed by <em>url’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment directive</a>, to <em>output</em>.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.2.3" id="processing-the-fragment-directive"><span class="secno">2.2.3. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
    <p>To the definition of <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:</p>
-   <p><em> Each document has an associated <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a>. </em></p>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> from the a Document’s URL.</p>
+   <p><em> Each document has an associated <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①③">fragment directive</a>. </em></p>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①④">fragment directive</a> from the a Document’s URL.</p>
    <p>Replace steps 7 and 8 of this algorithm with:</p>
    <ol start="7">
     <li data-md>
@@ -1725,23 +1725,22 @@ current URL</em>.</p>
     <li data-md>
      <p>Otherwise, set <em>url</em> to <em>response’s URL</em>.</p>
     <li data-md>
-     <p>Set <em>document’s fragment-directive</em> be <em>url’s
-fragment-directive</em>.  (Note: this is stored on the document but not
+     <p>Set <em>document’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑤">fragment directive</a> be <em>url’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑥">fragment directive</a>.  (Note: this is stored on the document but not
 web-exposed)</p>
     <li data-md>
-     <p>Set <em>url’s fragment-directive</em> to null.</p>
+     <p>Set <em>url’s</em> <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑦">fragment directive</a> to null.</p>
     <li data-md>
      <p>Set the <em>document’s url</em> to be <em>url</em>.</p>
    </ol>
    <h4 class="heading settled" data-level="2.2.4" id="fragment-directive-grammar"><span class="secno">2.2.4. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
     A <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> is a sequence of characters that appears
-in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment directive</a> that matches the production: 
+in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑧">fragment directive</a> that matches the production: 
    <dl> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirective">FragmentDirective</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> ("&amp;" <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a>)*</dd></code> </dl>
    <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective">FragmentDirective</a> may contain multiple directives split by the "&amp;"
 character. Currently this means we allow multiple text directives to enable
 multiple indicated strings in the page, but this also allows for future
 directive types to be added and combined. </div>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①③">fragment directive</a> that
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑨">fragment directive</a> that
 enables specifying a piece of text on the page, that matches the production:</p>
    <dl>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt> <dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring">TextMatchString</a> ("," <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring①">TextMatchString</a>)? ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)?</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring②">TextMatchString</a> "-"</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::=</dt> <dd>"-" <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring③">TextMatchString</a></dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchstring">TextMatchString</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar">TextMatchChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchchar">TextMatchChar</dfn> ::=</dt> <dd>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd></code> 
@@ -1797,7 +1796,7 @@ element fragment as the indicated part of the document. </div>
 indicated part of the document</a>.</p>
    <ol>
     <li data-md>
-     <p>Let <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-string">fragment directive string</dfn> be the document URL’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①④">fragment
+     <p>Let <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-string">fragment directive string</dfn> be the document URL’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive②⓪">fragment
 directive</a>.</p>
     <li data-md>
      <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
@@ -2364,10 +2363,11 @@ manipulations
    <ul>
     <li><a href="#ref-for-fragment-directive">2.1. Syntax</a>
     <li><a href="#ref-for-fragment-directive①">2.2. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a> <a href="#ref-for-fragment-directive③">(3)</a>
-    <li><a href="#ref-for-fragment-directive④">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive⑤">(2)</a> <a href="#ref-for-fragment-directive⑥">(3)</a> <a href="#ref-for-fragment-directive⑦">(4)</a> <a href="#ref-for-fragment-directive⑧">(5)</a> <a href="#ref-for-fragment-directive⑨">(6)</a>
-    <li><a href="#ref-for-fragment-directive①⓪">2.2.3. Processing the fragment directive</a> <a href="#ref-for-fragment-directive①①">(2)</a>
-    <li><a href="#ref-for-fragment-directive①②">2.2.4. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①③">(2)</a>
-    <li><a href="#ref-for-fragment-directive①④">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-fragment-directive④">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive⑤">(2)</a> <a href="#ref-for-fragment-directive⑥">(3)</a> <a href="#ref-for-fragment-directive⑦">(4)</a> <a href="#ref-for-fragment-directive⑧">(5)</a> <a href="#ref-for-fragment-directive⑨">(6)</a> <a href="#ref-for-fragment-directive①⓪">(7)</a>
+    <li><a href="#ref-for-fragment-directive①①">2.2.2. Serializing the fragment directive</a> <a href="#ref-for-fragment-directive①②">(2)</a>
+    <li><a href="#ref-for-fragment-directive①③">2.2.3. Processing the fragment directive</a> <a href="#ref-for-fragment-directive①④">(2)</a> <a href="#ref-for-fragment-directive①⑤">(3)</a> <a href="#ref-for-fragment-directive①⑥">(4)</a> <a href="#ref-for-fragment-directive①⑦">(5)</a>
+    <li><a href="#ref-for-fragment-directive①⑧">2.2.4. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①⑨">(2)</a>
+    <li><a href="#ref-for-fragment-directive②⓪">2.4. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective">
