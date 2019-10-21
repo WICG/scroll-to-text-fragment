@@ -1659,15 +1659,15 @@ step 2:</p>
        <ul>
         <li data-md>
          <p>If <a href="https://url.spec.whatwg.org/#c">URL Standard §c</a> is U+003A (:) and <em>remaining</em> begins with the two
-consecutive code points U+007E (~) and U+003A (:), set state to <em>fragment-directive state</em>. Increment <a href="https://url.spec.whatwg.org/#pointer">URL Standard §pointer</a> by the
+consecutive code points U+007E (~) and U+003A (:), set state to <a data-link-type="dfn" href="#fragment-directive-state" id="ref-for-fragment-directive-state">fragment directive state</a>. Increment <a href="https://url.spec.whatwg.org/#pointer">URL Standard §pointer</a> by the
 length of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive delimiter</a> minus 1.</p>
        </ul>
       <li data-md>
        <p>Step 3 (now step 4 after the above change) must begin with "Otherwise,"</p>
      </ul>
     <li data-md>
-     <p>In step 11 of this algorithm, add a new <em>fragment-directive state</em> case with the following steps:</p>
-     <p><em>fragment-directive state</em>:</p>
+     <p>In step 11 of this algorithm, add a new <a data-link-type="dfn" href="#fragment-directive-state" id="ref-for-fragment-directive-state①">fragment directive state</a> case with the following steps:</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-state">fragment directive state</dfn>:</p>
      <ul>
       <li data-md>
        <p>Switching on <a href="https://url.spec.whatwg.org/#c">URL Standard §c</a>:</p>
@@ -2325,6 +2325,7 @@ manipulations
     </ul>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §2.2.1</span>
    <li><a href="#fragment-directive-input">fragment directive input</a><span>, in §2.4.1</span>
+   <li><a href="#fragment-directive-state">fragment directive state</a><span>, in §2.2.1</span>
    <li><a href="#fragment-directive-string">fragment directive string</a><span>, in §2.4</span>
    <li><a href="#location">Location</a><span>, in §2.6</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.2.4</span>
@@ -2368,6 +2369,12 @@ manipulations
     <li><a href="#ref-for-fragment-directive①③">2.2.3. Processing the fragment directive</a> <a href="#ref-for-fragment-directive①④">(2)</a> <a href="#ref-for-fragment-directive①⑤">(3)</a> <a href="#ref-for-fragment-directive①⑥">(4)</a> <a href="#ref-for-fragment-directive①⑦">(5)</a>
     <li><a href="#ref-for-fragment-directive①⑧">2.2.4. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①⑨">(2)</a>
     <li><a href="#ref-for-fragment-directive②⓪">2.4. Navigating to a Text Fragment</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="fragment-directive-state">
+   <b><a href="#fragment-directive-state">#fragment-directive-state</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fragment-directive-state">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive-state①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective">
