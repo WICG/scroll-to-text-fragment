@@ -252,7 +252,7 @@ which must be percent-encoded.
 
 ## Security and Privacy ## {#allow-text-fragment-directives}
 
-### Motivation
+### Motivation ### {#motivation}
 
 <div class="note">This section is non-normative</div>
 
@@ -284,11 +284,14 @@ invoke.
 </div>
 
 1. If any of the following conditions are true, return false.
-  * <em>window</em>'s parent field is non-null.
-  * <em>window</em>'s opener field is non-null.
-  * The document of the previous entry in <em>window</em>'s browsing context's session history is equal to <em>window</em>'s document.
-    <div class="note">That is, this is the result of a same document navigation</div>
-  * <em>is user triggered</em> is false.
+    * <em>window</em>'s parent field is non-null.
+    * <em>window</em>'s opener field is non-null.
+    * The document of the previous entry in <em>window</em>'s browsing context's
+        session history is equal to <em>window</em>'s document.
+        <div class="note">
+        That is, this is the result of a same document navigation
+        </div>
+    * <em>is user triggered</em> is false.
 2. Otherwise, return true.
 
 
@@ -305,19 +308,19 @@ href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated
 indicated part of the document</a>.
 
 1. Let <em>fragment directive</em> be the document URL's
-   <a href="#fragment-directive">fragment directive</a>. 
+    <a href="#fragment-directive">fragment directive</a>. 
 2. Let <em>is user activated</em> be true if the current navigation was <a
-   href="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
-   user activation</a>
-   <div class="note">
-      TODO: This might need an additional flag somewhere to track the user
-      activation triggering
-   </div>
+    href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
+    by user activation</a>
+    <div class="note">
+    TODO: This might need an additional flag somewhere to track the user
+    activation triggering
+    </div>
 3. If the result of [[#should-allow-text-fragment]] with the window of the
-   document's browsing context and <em>is user activated</em> is true then:
+    document's browsing context and <em>is user activated</em> is true then:
     1. If [[#find-a-target-text]] with <em>fragment directive</em> returns
-       non-null, then the return value is the indicated part of the document;
-       return.
+        non-null, then the return value is the indicated part of the document;
+        return.
 
 ### Find a target text ### {#find-a-target-text}
 
@@ -575,7 +578,7 @@ This section contains recommendations for UAs automatically generating URLs
 with text fragment directives. These recommendations aren't normative but are
 provided to ensure generated URLs result in maximally stable and usable URLs.
 
-## Prefer Exact Matching To Range-based
+## Prefer Exact Matching To Range-based ## {#prefer-exact-matching-to-range-based}
 
 The match text can be provided either as an exact string "text=foo%20bar%20baz"
 or as a range "text=foo,bar".
@@ -625,7 +628,7 @@ as a range-based match.
   TODO:  Can we determine the above limit in some more objective way?
 </div>
 
-## Use Context Only When Necessary
+## Use Context Only When Necessary ## {#use-context-only-when-necessary}
 
 Context terms allow the text fragment directive to disambiguate text snippets
 on a page. However, their use can make the URL more brittle in some cases.
@@ -666,7 +669,7 @@ true:
   TODO: Determine the numeric limit above in a more objective way
 </div>
 
-## Determine If Fragment Id Is Needed
+## Determine If Fragment Id Is Needed ## {#determine-if-fragment-id-is-needed}
 
 When the UA navigates to a URL containing a text fragment directive, it will
 fallback to scrolling into view a regular element-id based fragment if it

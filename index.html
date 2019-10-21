@@ -1781,8 +1781,9 @@ invoke. </div>
       <li data-md>
        <p><em>window</em>’s opener field is non-null.</p>
       <li data-md>
-       <p>The document of the previous entry in <em>window</em>’s browsing context’s session history is equal to <em>window</em>’s document.</p>
-       <div class="note" role="note">That is, this is the result of a same document navigation</div>
+       <p>The document of the previous entry in <em>window</em>’s browsing context’s
+session history is equal to <em>window</em>’s document.</p>
+       <div class="note" role="note"> That is, this is the result of a same document navigation </div>
       <li data-md>
        <p><em>is user triggered</em> is false.</p>
      </ul>
@@ -1799,18 +1800,18 @@ indicated part of the document</a>.</p>
     <li data-md>
      <p>Let <em>fragment directive</em> be the document URL’s <a href="#fragment-directive" id="ref-for-fragment-directive②">fragment directive</a>.</p>
     <li data-md>
-     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation">triggered by
-   user activation</a></p>
+     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
+by user activation</a></p>
      <div class="note" role="note"> TODO: This might need an additional flag somewhere to track the user
-  activation triggering </div>
+activation triggering </div>
     <li data-md>
      <p>If the result of <a href="#should-allow-text-fragment">§ 2.3.2 Should Allow Text Fragment</a> with the window of the
-   document’s browsing context and <em>is user activated</em> is true then:</p>
+document’s browsing context and <em>is user activated</em> is true then:</p>
      <ol>
       <li data-md>
        <p>If <a href="#find-a-target-text">§ 2.4.1 Find a target text</a> with <em>fragment directive</em> returns
-   non-null, then the return value is the indicated part of the document;
-   return.</p>
+non-null, then the return value is the indicated part of the document;
+return.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.4.1" id="find-a-target-text"><span class="secno">2.4.1. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
