@@ -41,7 +41,7 @@ the receiver loses the context of the page.
 
 <div class='note'>This section is non-normative</div>
 
-A [=valid text directive=] is specified in the fragment directive (see
+A [=text fragment directive=] is specified in the [=fragment directive=] (see
 [[#the-fragment-directive]]) with the following format:
 <pre>
 #:~:text=[prefix-,]textStart[,textEnd][,-suffix]
@@ -106,7 +106,7 @@ example" in "here is an example text".
 
 ## The Fragment Directive ## {#the-fragment-directive}
 To avoid compatibility issues with usage of existing URL fragments, this spec
-introduces the <em>fragment directive</em>. The fragment directive is a portion
+introduces the [=fragment directive=]. The [=fragment directive=] is a portion
 of the URL fragment delimited by the code sequence <code>:~:</code>. It is
 reserved for UA instructions, such as text=, and is stripped from the URL
 during loading so that author scripts can't directly interact with it.
@@ -144,7 +144,7 @@ the [=fragment directive delimiter=].
 </div>
 
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
-basic URL parser</a> steps to parse fragment directives in a URL:
+basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
 
   - In step 11 of this algorithm, amend the <em>fragment state</em> case:
     - In the inner switch on [[URL#c]], in the Otherwise case, add a step after
@@ -197,13 +197,13 @@ To the definition of
 <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:
 
 <em>
-Each document has an associated fragment directive.
+Each document has an associated [=fragment directive=].
 </em>
 
 Amend the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
 create and initialize a Document object</a> steps to store and remove the
-fragment directive from the a Document's URL.
+[=fragment directive=] from the a Document's URL.
 
 Replace steps 7 and 8 of this algorithm with:
 
@@ -231,8 +231,8 @@ multiple indicated strings in the page, but this also allows for future
 directive types to be added and combined.
 </div>
 
-A <dfn>valid text directive</dfn> is one such directive, that matches the
-production:
+The <dfn>text fragment directive</dfn> is one such [=fragment directive=] that
+enables specifying a piece of text on the page, that matches the production:
 
 <dl>
 <code><dt><dfn>TextDirective</dfn> ::=</dt> <dd>"text=" [=TextDirectiveParameters=]</dd></code>
@@ -256,22 +256,22 @@ which must be percent-encoded.
 
 <div class="note">This section is non-normative</div>
 
-Care must be taken when implementing text fragment directive so that it
+Care must be taken when implementing [=text fragment directive=] so that it
 cannot be used to exfiltrate information across origins. Scripts can navigate
-a page to a cross-origin URL with a text fragment directive.  If a malicious
+a page to a cross-origin URL with a [=text fragment directive=].  If a malicious
 actor can determine that a victim page scrolled after such a navigation, they
 can infer the existence of any text on the page.
 
 In addition, the user's privacy should be ensured even from the destination
 origin.  Although scripts on that page can already learn a lot about a user's
-actions, a text fragment directive can still contain sensitive information. For
-this reason, this specification provides no way for a page to extract the
+actions, a [=text fragment directive=] can still contain sensitive information.
+For this reason, this specification provides no way for a page to extract the
 content of the text fragment anchor. User agents must not expose this
 information to the page.
 
 <div class="example">
   A user visiting a page listing dozens of medical conditions may have gotten
-  there via a link with a text fragment directive containing a specific
+  there via a link with a [=text fragment directive=] containing a specific
   condition. This information must not be shared with the page.
 </div>
 
@@ -279,7 +279,7 @@ information to the page.
 
 <div class="note">
 This algorithm has input <em>window, is user triggered</em> and returns a
-boolean indicating whether a text fragment directive should be allowed to
+boolean indicating whether a [=text fragment directive=] should be allowed to
 invoke.
 </div>
 
@@ -298,7 +298,7 @@ invoke.
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
 The scroll to text specification proposes an amendment to
-[[html#scroll-to-fragid]]. In summary, if a text fragment directive is present
+[[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is present
 and a match is found in the page, the text fragment takes precedent over the
 element fragment as the indicated part of the document.
 </div>
@@ -307,8 +307,8 @@ Add the following steps to the beginning of the processing model for <a
 href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
 indicated part of the document</a>.
 
-1. Let <em>fragment directive</em> be the document URL's
-    <a href="#fragment-directive">fragment directive</a>. 
+1. Let <dfn>fragment directive string</dfn> be the document URL's [=fragment
+    directive=]. 
 2. Let <em>is user activated</em> be true if the current navigation was <a
     href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
     by user activation</a>
@@ -318,20 +318,20 @@ indicated part of the document</a>.
     </div>
 3. If the result of [[#should-allow-text-fragment]] with the window of the
     document's browsing context and <em>is user activated</em> is true then:
-    1. If [[#find-a-target-text]] with <em>fragment directive</em> returns
+    1. If [[#find-a-target-text]] with [=fragment directive string=] returns
         non-null, then the return value is the indicated part of the document;
         return.
 
 ### Find a target text ### {#find-a-target-text}
 
-To find the target text for a given string <em>fragment directive</em>, the
-user agent must run these steps:
-1. If <em>fragment directive</em> does not begin with the string "text=",
+To find the target text for a given string <dfn>fragment directive input</dfn>,
+the user agent must run these steps:
+1. If [=fragment directive input=] does not begin with the string "text=",
     then return null.
-2. Let <em>raw target text</em> be the substring of <em>fragment directive</em>
+2. Let <em>raw target text</em> be the substring of [=fragment directive input=]
     starting at index 5.
     <div class="note">
-    This is the remainder of the fragment directive following, but not
+    This is the remainder of the [=fragment directive input=] following, but not
     including, the "text=" prefix.
     </div>
 3. If <em>raw target text</em> is the empty string, return null.
@@ -575,7 +575,7 @@ interface Location {
 </div>
 
 This section contains recommendations for UAs automatically generating URLs
-with text fragment directives. These recommendations aren't normative but are
+with a [=text fragment directive=]. These recommendations aren't normative but are
 provided to ensure generated URLs result in maximally stable and usable URLs.
 
 ## Prefer Exact Matching To Range-based ## {#prefer-exact-matching-to-range-based}
@@ -630,11 +630,11 @@ as a range-based match.
 
 ## Use Context Only When Necessary ## {#use-context-only-when-necessary}
 
-Context terms allow the text fragment directive to disambiguate text snippets
+Context terms allow the [=text fragment directive=] to disambiguate text snippets
 on a page. However, their use can make the URL more brittle in some cases.
 Often, the desired string will start or end at an element boundary. The context
 will therefore exist in an adjacent element. Changes to the page structure
-could invalidate the text fragment directive since the context and match text
+could invalidate the [=text fragment directive=] since the context and match text
 may no longer appear to be adjacent.
 
 <div class='example'>
@@ -645,7 +645,7 @@ may no longer appear to be adjacent.
         &lt;div class="content"&gt;Text to quote&lt;/div&gt;
   </pre>
 
-  We could craft the text fragment directive as follows:
+  We could craft the [=text fragment directive=] as follows:
 
   <pre>
     text=HEADER-,Text%20to%20quote
@@ -671,12 +671,12 @@ true:
 
 ## Determine If Fragment Id Is Needed ## {#determine-if-fragment-id-is-needed}
 
-When the UA navigates to a URL containing a text fragment directive, it will
+When the UA navigates to a URL containing a [=text fragment directive=], it will
 fallback to scrolling into view a regular element-id based fragment if it
 exists and the text fragment isn't found.
 
 This can be useful to provide a fallback, in case the text in the document
-changes, invalidating the text fragment directive.
+changes, invalidating the [=text fragment directive=].
 
 <div class='example'>
   Suppose we wish to craft a URL to
