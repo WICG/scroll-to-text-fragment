@@ -123,8 +123,9 @@ To the definition of a <a href="https://url.spec.whatwg.org/#concept-url">
 URL record</a>, add:
 
 <em>
-A URL's [=fragment directive=] is either null or an ASCII string holding data used
-by the UA to process the resource. It is initially null
+A [[URL#concept-url|URL]]'s <dfn lt="URL's fragment directive">fragment
+directive</dfn> is either null or an ASCII string holding data used by the UA to
+process the resource. It is initially null.
 </em>
 
 The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
@@ -146,13 +147,15 @@ the [=fragment directive delimiter=].
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
 
-  - In step 11 of this algorithm, amend the <em>fragment state</em> case:
+  - In step 11 of this algorithm, amend the [[URL#fragment-state]] case:
     - In the inner switch on [[URL#c]], in the Otherwise case, add a step after
         step 2:
-        - If [[URL#c]] is U+003A (:) and <em>remaining</em> begins with the two
-            consecutive code points U+007E (~) and U+003A (:), set state to
-            [=fragment directive state=]. Increment [[URL#pointer]] by the
-            length of the [=fragment directive delimiter=] minus 1.
+        - If [[URL#c]] is U+003A (:) and
+            <a href="https://url.spec.whatwg.org/#remaining">remaining</a>
+            begins with the two consecutive code points U+007E (~) and U+003A
+            (:), set state to [=fragment directive state=]. Increment
+            [[URL#pointer]] by the length of the [=fragment directive
+            delimiter=] minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
   - In step 11 of this algorithm, add a new [=fragment directive state=]
     case with the following steps:
@@ -164,10 +167,11 @@ basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
         - Otherwise:
             1. If [[URL#c]] is not a URL code point and not U+0025 (%), validation
                 error.
-            2. If [[URL#c]] is U+0025 (%) and <em>remaining</em> does not start with
-                two ASCII hex digits, validation error.
+            2. If [[URL#c]] is U+0025 (%) and
+                <a href="https://url.spec.whatwg.org/#remaining">remaining</a>
+                does not start with two ASCII hex digits, validation error.
             3. UTF-8 percent encode [[URL#c]] using the fragment percent-encode set
-                and append the result to <em>url’s</em> [=fragment directive=].
+                and append the result to [=URL's fragment directive=].
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive delimiter=].
@@ -186,10 +190,10 @@ the fragment is the string "test" and the [=fragment directive=] is the string
 Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
 </a> steps by inserting a step after step 7:
 
-8. If the <em>exclude fragment flag</em> is unset and <em>url's</em> [=fragment directive=] is
+8. If the <em>exclude fragment flag</em> is unset and [=URL's fragment directive=] is
     non-null:
     1. If <em>url's fragment</em> is null, append U+0023 (#) to <em>output</em>.
-    2. Append ":~:", followed by <em>url's</em> [=fragment directive=], to <em>output</em>.
+    2. Append ":~:", followed by [=URL's fragment directive=], to <em>output</em>.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
@@ -197,7 +201,8 @@ To the definition of
 <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:
 
 <em>
-Each document has an associated [=fragment directive=].
+Each document has an associated <dfn lt="Document's fragment directive">fragment
+directive</dfn>.
 </em>
 
 Amend the
@@ -211,10 +216,9 @@ Replace steps 7 and 8 of this algorithm with:
 8. If <em>request</em> is non-null, then set <em>url</em> to <em>request's
     current URL</em>.
 9. Otherwise, set <em>url</em> to <em>response's URL</em>.
-10. Set <em>document's</em> [=fragment directive=] be <em>url's</em>
-    [=fragment directive=].  (Note: this is stored on the document but not
-    web-exposed)
-11. Set <em>url's</em> [=fragment directive=] to null.
+10. Set [=Document's fragment directive=] to [=URL's fragment directive=].
+    (Note: this is stored on the document but not web-exposed)
+11. Set [=URL's fragment directive=] to null.
 12. Set the <em>document's url</em> to be <em>url</em>.
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
@@ -307,8 +311,8 @@ Add the following steps to the beginning of the processing model for <a
 href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
 indicated part of the document</a>.
 
-1. Let <dfn>fragment directive string</dfn> be the document URL's [=fragment
-    directive=]. 
+1. Let <dfn>fragment directive string</dfn> be the document [=URL's fragment
+    directive=].
 2. Let <em>is user activated</em> be true if the current navigation was <a
     href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
     by user activation</a>
