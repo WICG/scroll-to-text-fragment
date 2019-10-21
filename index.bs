@@ -151,13 +151,13 @@ basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
         step 2:
         - If [[URL#c]] is U+003A (:) and <em>remaining</em> begins with the two
             consecutive code points U+007E (~) and U+003A (:), set state to
-            <em>fragment-directive state</em>. Increment [[URL#pointer]] by the
+            [=fragment directive state=]. Increment [[URL#pointer]] by the
             length of the [=fragment directive delimiter=] minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
-  - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
+  - In step 11 of this algorithm, add a new [=fragment directive state=]
     case with the following steps:
     
-    <em>fragment-directive state</em>:
+    <dfn>fragment directive state</dfn>:
     - Switching on [[URL#c]]:
         - The EOF code point: Do nothing
         - U+0000 NULL: Validation error
