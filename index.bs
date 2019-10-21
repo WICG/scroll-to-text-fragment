@@ -342,12 +342,12 @@ user agent must run these steps:
     </div>
 6. Let <em>potential prefix</em> be the first item of <em>tokens</em>.
 7. If the last character of <em>potential prefix</em> is U+002D (-), then:
-    1. Set <em>prefix</em> to the result of removing any U+002D (-) from
+    1. Set <em>prefix</em> to the result of removing the last character from
         <em>potential prefix</em>.
     2. Remove the first item of the list <em>tokens</em>.
 8. Let <em>potential suffix</em> be the last item of <em>tokens</em>.
 9. If the first character of <em>potential suffix</em> is U+002D (-), then:
-    1. Set <em>suffix</em> to the result of removing any U+002D (-) from
+    1. Set <em>suffix</em> to the result of removing the first character from
         <em>potential suffix</em>.
     2. Remove the last item of the list <em>tokens</em>.
 10. Assert: <em>tokens</em> has size 1 or <em>tokens</em> has size 2.
