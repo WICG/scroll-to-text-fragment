@@ -151,7 +151,7 @@ basic URL parser</a> steps to parse fragment directives in a URL:
         step 2:
         - If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
             consecutive code points U+007E (~) and U+003A (:), set state to
-            <em>fragment-directive state</em>. Increment <em>c</em> by the
+            <em>fragment-directive state</em>. Increase <em>pointer</em> by the
             length of the [=fragment directive delimiter=] minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
   - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
