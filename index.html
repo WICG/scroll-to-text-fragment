@@ -1711,7 +1711,8 @@ the fragment is the string "test" and the <a data-link-type="dfn" href="#fragmen
 non-null:</p>
      <ol>
       <li data-md>
-       <p>If <em>url’s fragment</em> is null, append U+0023 (#) to <em>output</em>.</p>
+       <p>If <a href="https://url.spec.whatwg.org/#concept-url-fragment">url’s fragment</a> is null, append U+0023 (#)
+to <em>output</em>.</p>
       <li data-md>
        <p>Append ":~:", followed by <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive②">URL’s fragment directive</a>, to <em>output</em>.</p>
      </ol>
@@ -1726,17 +1727,16 @@ directive</dfn>. </em></p>
     <li data-md>
      <p>Let <em>url</em> be null</p>
     <li data-md>
-     <p>If <em>request</em> is non-null, then set <em>url</em> to <em>request’s
-current URL</em>.</p>
+     <p>If <em>request</em> is non-null, then set <em>document</em>’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a> to <em>request</em>’s <a href="https://fetch.spec.whatwg.org/#concept-request-current-url">current URL</a>.</p>
     <li data-md>
-     <p>Otherwise, set <em>url</em> to <em>response’s URL</em>.</p>
+     <p>Otherwise, set <em>url</em> to <em>response</em>’s <a href="https://fetch.spec.whatwg.org/#concept-response-url">URL</a>.</p>
     <li data-md>
      <p>Set <a data-link-type="dfn" href="#documents-fragment-directive" id="ref-for-documents-fragment-directive">Document’s fragment directive</a> to <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive③">URL’s fragment directive</a>.
 (Note: this is stored on the document but not web-exposed)</p>
     <li data-md>
      <p>Set <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive④">URL’s fragment directive</a> to null.</p>
     <li data-md>
-     <p>Set the <em>document’s url</em> to be <em>url</em>.</p>
+     <p>Set <em>document</em>’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a> to be <em>url</em>.</p>
    </ol>
    <h4 class="heading settled" data-level="2.2.4" id="fragment-directive-grammar"><span class="secno">2.2.4. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
     A <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> is a sequence of characters that appears

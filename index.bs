@@ -192,7 +192,8 @@ Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
 
 8. If the <em>exclude fragment flag</em> is unset and [=URL's fragment directive=] is
     non-null:
-    1. If <em>url's fragment</em> is null, append U+0023 (#) to <em>output</em>.
+    1. If [[URL#concept-url-fragment|url's fragment]] is null, append U+0023 (#)
+        to <em>output</em>.
     2. Append ":~:", followed by [=URL's fragment directive=], to <em>output</em>.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
@@ -213,13 +214,12 @@ create and initialize a Document object</a> steps to store and remove the
 Replace steps 7 and 8 of this algorithm with:
 
 7. Let <em>url</em> be null
-8. If <em>request</em> is non-null, then set <em>url</em> to <em>request's
-    current URL</em>.
-9. Otherwise, set <em>url</em> to <em>response's URL</em>.
+8. If <em>request</em> is non-null, then set <em>document</em>'s [[DOM#concept-document-url|URL]] to <em>request</em>'s [[FETCH#concept-request-current-url|current URL]].
+9. Otherwise, set <em>url</em> to <em>response</em>'s [[FETCH#concept-response-url|URL]].
 10. Set [=Document's fragment directive=] to [=URL's fragment directive=].
     (Note: this is stored on the document but not web-exposed)
 11. Set [=URL's fragment directive=] to null.
-12. Set the <em>document's url</em> to be <em>url</em>.
+12. Set <em>document</em>'s [[DOM#concept-document-url|URL]] to be <em>url</em>.
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
