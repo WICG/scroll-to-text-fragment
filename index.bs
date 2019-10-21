@@ -147,26 +147,26 @@ Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse fragment directives in a URL:
 
   - In step 11 of this algorithm, amend the <em>fragment state</em> case:
-    - In the inner switch on <em>c</em>, in the Otherwise case, add a step after
+    - In the inner switch on [[URL#c]], in the Otherwise case, add a step after
         step 2:
-        - If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
+        - If [[URL#c]] is U+003A (:) and <em>remaining</em> begins with the two
             consecutive code points U+007E (~) and U+003A (:), set state to
-            <em>fragment-directive state</em>. Increase <em>pointer</em> by the
+            <em>fragment-directive state</em>. Increment [[URL#pointer]] by the
             length of the [=fragment directive delimiter=] minus 1.
     - Step 3 (now step 4 after the above change) must begin with "Otherwise,"
   - In step 11 of this algorithm, add a new <em>fragment-directive state</em>
     case with the following steps:
     
     <em>fragment-directive state</em>:
-    - Switching on <em>c</em>:
+    - Switching on [[URL#c]]:
         - The EOF code point: Do nothing
         - U+0000 NULL: Validation error
         - Otherwise:
-            1. If <em>c</em> is not a URL code point and not U+0025 (%), validation
+            1. If [[URL#c]] is not a URL code point and not U+0025 (%), validation
                 error.
-            2. If <em>c</em> is U+0025 (%) and <em>remaining</em> does not start with
+            2. If [[URL#c]] is U+0025 (%) and <em>remaining</em> does not start with
                 two ASCII hex digits, validation error.
-            3. UTF-8 percent encode <em>c</em> using the fragment percent-encode set
+            3. UTF-8 percent encode [[URL#c]] using the fragment percent-encode set
                 and append the result to <em>url’s fragment-directive</em>.
 
 <div class="note">
