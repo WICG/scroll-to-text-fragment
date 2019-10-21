@@ -111,7 +111,7 @@ of the URL fragment delimited by the code sequence <code>:~:</code>. It is
 reserved for UA instructions, such as text=, and is stripped from the URL
 during loading so that author scripts can't directly interact with it.
 
-The fragment-directive is a mechanism for URLs to specify instructions meant
+The [=fragment directive=] is a mechanism for URLs to specify instructions meant
 for the UA rather than the document. It's meant to avoid direct interaction with
 author script so that future UA instructions can be added without fear of
 introducing breaking changes to existing content. Potential examples could be:
@@ -123,7 +123,7 @@ To the definition of a <a href="https://url.spec.whatwg.org/#concept-url">
 URL record</a>, add:
 
 <em>
-A URL's fragment-directive is either null or an ASCII string holding data used
+A URL's [=fragment directive=] is either null or an ASCII string holding data used
 by the UA to process the resource. It is initially null
 </em>
 
@@ -134,12 +134,12 @@ The <dfn>fragment directive</dfn> is the part of the URL fragment that follows
 the [=fragment directive delimiter=].
 
 <div class="note">
-  The fragment-directive is part of the URL fragment. This means it must always
+  The [=fragment directive=] is part of the URL fragment. This means it must always
   appear after a U+0023 (#) code point in a URL. 
 </div>
 
 <div class="example">
-  To add a fragment-directive to a URL like https://example.com, a fragment
+  To add a [=fragment directive=] to a URL like https://example.com, a fragment
   must first be appended to the URL: https://example.com#:~:text=foo.
 </div>
 
@@ -177,7 +177,7 @@ basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
 
 <div class="example">
 <code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the fragment-directive is the string
+the fragment is the string "test" and the [=fragment directive=] is the string
 "text=foo".
 </div>
 
