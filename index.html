@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-18">18 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-21">21 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1659,7 +1659,7 @@ step 2:</p>
        <ul>
         <li data-md>
          <p>If <em>c</em> is U+003A (:) and <em>remaining</em> begins with the two
-consecutive code points U+007E (~) and U+003A (:), set state to <em>fragment-directive state</em>. Increment <em>c</em> by the
+consecutive code points U+007E (~) and U+003A (:), set state to <em>fragment-directive state</em>. Increase <em>pointer</em> by the
 length of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive delimiter</a> minus 1.</p>
        </ul>
       <li data-md>
@@ -1840,7 +1840,7 @@ directive. </div>
      <p>If the last character of <em>potential prefix</em> is U+002D (-), then:</p>
      <ol>
       <li data-md>
-       <p>Set <em>prefix</em> to the result of removing any U+002D (-) from <em>potential prefix</em>.</p>
+       <p>Set <em>prefix</em> to the result of removing the last character from <em>potential prefix</em>.</p>
       <li data-md>
        <p>Remove the first item of the list <em>tokens</em>.</p>
      </ol>
@@ -1850,7 +1850,7 @@ directive. </div>
      <p>If the first character of <em>potential suffix</em> is U+002D (-), then:</p>
      <ol>
       <li data-md>
-       <p>Set <em>suffix</em> to the result of removing any U+002D (-) from <em>potential suffix</em>.</p>
+       <p>Set <em>suffix</em> to the result of removing the first character from <em>potential suffix</em>.</p>
       <li data-md>
        <p>Remove the last item of the list <em>tokens</em>.</p>
      </ol>
