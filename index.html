@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 98212c11613b78977e54b28cc53499f2ee83d388" name="generator">
-  <link href="wicg.github.io/ScrollToTextFragment/draftspec.html" rel="canonical">
+  <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1465,7 +1465,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="wicg.github.io/ScrollToTextFragment/draftspec.html">wicg.github.io/ScrollToTextFragment/draftspec.html</a>
+     <dd><a class="u-url" href="wicg.github.io/ScrollToTextFragment/index.html">wicg.github.io/ScrollToTextFragment/index.html</a>
      <dt>Issue Tracking:
      <dd><a href="https://github.com/wicg/ScrollToTextFragment/issues/">GitHub</a>
      <dt class="editor">Editors:
@@ -1660,7 +1660,7 @@ step 2:</p>
        <ul>
         <li data-md>
          <p>If <a href="https://url.spec.whatwg.org/#c">c</a> is U+003A (:) and <a href="https://url.spec.whatwg.org/#remaining">remaining</a> begins with the two consecutive code points U+007E (~) and U+003A
-(:), set state to <a data-link-type="dfn" href="#fragment-directive-state" id="ref-for-fragment-directive-state">fragment directive state</a>. Increment <a href="https://url.spec.whatwg.org/#pointer">pointer</a> by the length of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive
+(:), set state to <a data-link-type="dfn" href="#fragment-directive-state" id="ref-for-fragment-directive-state">fragment directive state</a>. Increment <em>pointer</em> by the length of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive
 delimiter</a> minus 1.</p>
        </ul>
       <li data-md>
@@ -1716,7 +1716,7 @@ to <em>output</em>.</p>
    <p>To the definition of <a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:</p>
    <p><em> Each document has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="Document’s fragment directive" data-noexport id="documents-fragment-directive">fragment
 directive</dfn>. </em></p>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> from the a Document’s URL.</p>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to store and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> from the Document’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a>.</p>
    <p>Replace steps 7 and 8 of this algorithm with:</p>
    <ol start="7">
     <li data-md>
@@ -1776,12 +1776,12 @@ invoke. </div>
      <p>If any of the following conditions are true, return false.</p>
      <ul>
       <li data-md>
-       <p><em>window</em>’s parent field is non-null.</p>
+       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent">parent</a> field is non-null.</p>
       <li data-md>
-       <p><em>window</em>’s opener field is non-null.</p>
+       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener">opener</a> field is non-null.</p>
       <li data-md>
-       <p>The document of the previous entry in <em>window</em>’s browsing context’s
-session history is equal to <em>window</em>’s document.</p>
+       <p>The <a href="https://html.spec.whatwg.org/#document">Document</a> of the <a href="https://html.spec.whatwg.org/multipage/#latest-entry">latest entry</a> in <em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/#browsing-context">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/#session-history">session history</a> is equal to <em>window</em>’s
+document.</p>
        <div class="note" role="note"> That is, this is the result of a same document navigation </div>
       <li data-md>
        <p><em>is user triggered</em> is false.</p>
@@ -1797,7 +1797,7 @@ element fragment as the indicated part of the document. </div>
 indicated part of the document</a>.</p>
    <ol>
     <li data-md>
-     <p>Let <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-string">fragment directive string</dfn> be the document <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive⑤">URL’s fragment
+     <p>Let <em>fragment directive string</em> be the document <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive⑤">URL’s fragment
 directive</a>.</p>
     <li data-md>
      <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
@@ -1809,27 +1809,27 @@ activation triggering </div>
 document’s browsing context and <em>is user activated</em> is true then:</p>
      <ol>
       <li data-md>
-       <p>If <a href="#find-a-target-text">§ 2.4.1 Find a target text</a> with <a data-link-type="dfn" href="#fragment-directive-string" id="ref-for-fragment-directive-string">fragment directive string</a> returns
+       <p>If <a href="#find-a-target-text">§ 2.4.1 Find a target text</a> with <em>fragment directive string</em> returns
 non-null, then the return value is the indicated part of the document;
 return.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.4.1" id="find-a-target-text"><span class="secno">2.4.1. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
-   <p>To find the target text for a given string <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-input">fragment directive input</dfn>,
+   <p>To find the target text for a given string <em>fragment directive input</em>,
 the user agent must run these steps:</p>
    <ol>
     <li data-md>
-     <p>If <a data-link-type="dfn" href="#fragment-directive-input" id="ref-for-fragment-directive-input">fragment directive input</a> does not begin with the string "text=",
+     <p>If <em>fragment directive input</em> does not begin with the string "text=",
 then return null.</p>
     <li data-md>
-     <p>Let <em>raw target text</em> be the substring of <a data-link-type="dfn" href="#fragment-directive-input" id="ref-for-fragment-directive-input①">fragment directive input</a> starting at index 5.</p>
-     <div class="note" role="note"> This is the remainder of the <a data-link-type="dfn" href="#fragment-directive-input" id="ref-for-fragment-directive-input②">fragment directive input</a> following, but not
+     <p>Let <em>raw target text</em> be the substring of <em>fragment directive input</em> starting at index 5.</p>
+     <div class="note" role="note"> This is the remainder of the <em>fragment directive input</em> following, but not
 including, the "text=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
     <li data-md>
-     <p>Let <em>tokens</em> be a list of strings that is the result of splitting the
-string <em>raw target text</em> on commas.</p>
+     <p>Let <em>tokens</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of strings that is the result of <a href="https://infra.spec.whatwg.org/#split-on-commas">splitting a string on commas</a> of <em>raw target
+text</em>.</p>
     <li data-md>
      <p>Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
 string.</p>
@@ -1843,7 +1843,7 @@ directive. </div>
       <li data-md>
        <p>Set <em>prefix</em> to the result of removing the last character from <em>potential prefix</em>.</p>
       <li data-md>
-       <p>Remove the first item of the list <em>tokens</em>.</p>
+       <p><a href="https://infra.spec.whatwg.org/#list-remove">Remove</a> the first item of the list <em>tokens</em>.</p>
      </ol>
     <li data-md>
      <p>Let <em>potential suffix</em> be the last item of <em>tokens</em>.</p>
@@ -1853,23 +1853,23 @@ directive. </div>
       <li data-md>
        <p>Set <em>suffix</em> to the result of removing the first character from <em>potential suffix</em>.</p>
       <li data-md>
-       <p>Remove the last item of the list <em>tokens</em>.</p>
+       <p><a href="https://infra.spec.whatwg.org/#list-remove">Remove</a> the last item of the list <em>tokens</em>.</p>
      </ol>
     <li data-md>
-     <p class="assertion">Assert: <em>tokens</em> has size 1 or <em>tokens</em> has size 2.</p>
+     <p class="assertion">Assert: <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 1 or <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 2.</p>
      <div class="note" role="note"> Once the prefix and suffix are removed from tokens, tokens may either
 contain one item (textStart) or two items (textStart and textEnd). </div>
     <li data-md>
      <p>Let <em>textStart</em> be the first item of <em>tokens</em>.</p>
     <li data-md>
-     <p>If <em>tokens</em> has size 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
+     <p>If <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
      <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the
 text directive parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
     <li data-md>
      <p>Let <em>walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> equal to <a href="https://dom.spec.whatwg.org/#dom-document-createtreewalker">Document.createTreeWalker()</a>.</p>
     <li data-md>
-     <p>Let <em>position</em> be a position variable that indicates a text offset in
-in <em>walker.currentNode.innerText</em>.</p>
+     <p>Let <em>position</em> be a <a href="https://infra.spec.whatwg.org/#string-position-variable">position
+variable</a> that indicates a text offset in <em>walker.currentNode.innerText</em>.</p>
     <li data-md>
      <p>If textEnd is the empty string, then:</p>
      <ol>
@@ -1906,8 +1906,8 @@ position - start position</em>.</p>
    </ol>
    <h4 class="heading settled" data-level="2.4.2" id="find-match-with-context"><span class="secno">2.4.2. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>walker, search position, prefix, query,</em> and <em>suffix</em> and returns a text position that is the start of the match. </div>
-   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not
-a copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
+   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
+copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
     <li data-md>
      <p>While <em>walker.currentNode</em> is not null:</p>
@@ -1929,7 +1929,7 @@ locale</a>.</p>
           <li data-md>
            <p>If <em>search position</em> is null, then break.</p>
           <li data-md>
-           <p>Advance <em>search position</em> past any whitespace.</p>
+           <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
           <li data-md>
            <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
            <ol>
@@ -1942,7 +1942,7 @@ locale</a>.</p>
             <li data-md>
              <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
             <li data-md>
-             <p>Advance <em>search position</em> past any whitespace.</p>
+             <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
            </ol>
           <li data-md>
            <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.4 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
@@ -1957,12 +1957,12 @@ instance of query. </div>
         <li data-md>
          <p>If <em>search position</em> is null, then break.</p>
         <li data-md>
-         <p>Let <em>potential match position</em> be a position variable equal to <em>search position</em> minus the length of <em>query</em>.</p>
+         <p>Let <em>potential match position</em> be a <a href="https://infra.spec.whatwg.org/#string-position-variable">position variable</a> equal to <em>search position</em> minus the length of <em>query</em>.</p>
         <li data-md>
          <p>If <em>suffix</em> is the empty string, then return <em>potential
 match position</em>.</p>
         <li data-md>
-         <p>Advance <em>search position</em> past any whitespace.</p>
+         <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
         <li data-md>
          <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
          <ol>
@@ -1977,7 +1977,7 @@ match position</em>.</p>
           <li data-md>
            <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
           <li data-md>
-           <p>Advance <em>search position</em> past any whitespace.</p>
+           <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
          </ol>
         <li data-md>
          <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.4 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
@@ -1991,8 +1991,8 @@ locale</a> starts at <em>search position</em>, then return <em>potential match p
    </ol>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="current-locale">current locale</dfn> is the <a href="https://html.spec.whatwg.org/multipage/dom.html#language">language</a> of the <em>currentNode</em>.</p>
    <h4 class="heading settled" data-level="2.4.3" id="advance-walker-to-text"><span class="secno">2.4.3. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
-   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not
-a copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
+   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
+copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
     <li data-md>
      <p>While the input <em>walker.currentNode</em> is not null and <em>walker.currentNode</em> is not a text node:</p>
@@ -2056,8 +2056,8 @@ exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>
    <h3 class="heading settled" data-level="2.6" id="feature-detectability"><span class="secno">2.6. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
-that is exposed via window.location.fragmentDirective if the UA supports the
-feature.</p>
+that is exposed via <code>window.location.fragmentDirective</code> if the UA
+supports the feature.</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fragmentdirective①"><code><c- g>FragmentDirective</c-></code></dfn> {
 };
 </pre>
@@ -2326,9 +2326,7 @@ manipulations
      <li><a href="#fragmentdirective">definition of</a><span>, in §2.2.4</span>
     </ul>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §2.2.1</span>
-   <li><a href="#fragment-directive-input">fragment directive input</a><span>, in §2.4.1</span>
    <li><a href="#fragment-directive-state">fragment directive state</a><span>, in §2.2.1</span>
-   <li><a href="#fragment-directive-string">fragment directive string</a><span>, in §2.4</span>
    <li><a href="#location">Location</a><span>, in §2.6</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.2.4</span>
    <li><a href="#textdirective">TextDirective</a><span>, in §2.2.4</span>
@@ -2451,18 +2449,6 @@ manipulations
    <b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-percentencodedchar">2.2.4. Fragment directive grammar</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="fragment-directive-string">
-   <b><a href="#fragment-directive-string">#fragment-directive-string</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fragment-directive-string">2.4. Navigating to a Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="fragment-directive-input">
-   <b><a href="#fragment-directive-input">#fragment-directive-input</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fragment-directive-input">2.4.1. Find a target text</a> <a href="#ref-for-fragment-directive-input①">(2)</a> <a href="#ref-for-fragment-directive-input②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="current-locale">
