@@ -1645,18 +1645,19 @@ process the resource. It is initially null. </em></p>
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive">fragment directive</dfn> is the part of the URL fragment that follows
 the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter">fragment directive delimiter</a>.</p>
-   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> is part of the URL fragment. This means it must always
-  appear after a U+0023 (#) code point in a URL. </div>
+   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> is part of the URL fragment. This means it must
+  always appear after a U+0023 (#) code point in a URL. </div>
    <div class="example" id="example-aa58e32d"><a class="self-link" href="#example-aa58e32d"></a> To add a <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a> to a URL like https://example.com, a fragment
   must first be appended to the URL: https://example.com#:~:text=foo. </div>
    <p>Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser"> basic URL parser</a> steps to parse the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> in a URL:</p>
    <ul>
     <li data-md>
-     <p>In step 11 of this algorithm, amend the <a href="https://url.spec.whatwg.org/#fragment-state">fragment state</a> case:</p>
+     <p>In step 11 of this algorithm, amend the <a href="https://url.spec.whatwg.org/#fragment-state">fragment
+state</a> case:</p>
      <ul>
       <li data-md>
-       <p>In the inner switch on <a href="https://url.spec.whatwg.org/#c">c</a>, in the Otherwise case, add a step after
-step 2:</p>
+       <p>In the inner switch on <a href="https://url.spec.whatwg.org/#c">c</a>, in the Otherwise case, add a step
+after step 2:</p>
        <ul>
         <li data-md>
          <p>If <a href="https://url.spec.whatwg.org/#c">c</a> is U+003A (:) and <a href="https://url.spec.whatwg.org/#remaining">remaining</a> begins with the two consecutive code points U+007E (~) and U+003A
@@ -1681,20 +1682,21 @@ delimiter</a> minus 1.</p>
          <p>Otherwise:</p>
          <ol>
           <li data-md>
-           <p>If <a href="https://url.spec.whatwg.org/#c">c</a> is not a URL code point and not U+0025 (%), validation
-error.</p>
+           <p>If <a href="https://url.spec.whatwg.org/#c">c</a> is not a URL code point and not U+0025 (%),
+validation error.</p>
           <li data-md>
            <p>If <a href="https://url.spec.whatwg.org/#c">c</a> is U+0025 (%) and <a href="https://url.spec.whatwg.org/#remaining">remaining</a> does not start with two ASCII hex digits, validation error.</p>
           <li data-md>
-           <p>UTF-8 percent encode <a href="https://url.spec.whatwg.org/#c">c</a> using the fragment percent-encode set
-and append the result to <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive">URL’s fragment directive</a>.</p>
+           <p>UTF-8 percent encode <a href="https://url.spec.whatwg.org/#c">c</a> using the fragment
+percent-encode set and append the result to <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive">URL’s fragment
+directive</a>.</p>
          </ol>
        </ul>
      </ul>
    </ul>
-   <div class="note" role="note"> These changes make a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive delimiter</a>.
-  The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> includes all characters that follow, but not including,
-  the delimiter. </div>
+   <div class="note" role="note"> These changes make a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive
+  delimiter</a>. The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> includes all characters that follow,
+  but not including, the delimiter. </div>
    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑧">fragment directive</a> is the string
 "text=foo". </div>
@@ -1702,8 +1704,8 @@ the fragment is the string "test" and the <a data-link-type="dfn" href="#fragmen
    <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
    <ol start="8">
     <li data-md>
-     <p>If the <em>exclude fragment flag</em> is unset and <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive①">URL’s fragment directive</a> is
-non-null:</p>
+     <p>If the <em>exclude fragment flag</em> is unset and <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive①">URL’s fragment
+directive</a> is non-null:</p>
      <ol>
       <li data-md>
        <p>If <a href="https://url.spec.whatwg.org/#concept-url-fragment">url’s fragment</a> is null, append U+0023 (#)
@@ -1744,11 +1746,34 @@ directive types to be added and combined. </div>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> that
 enables specifying a piece of text on the page, that matches the production:</p>
    <dl>
-     <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt> <dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring">TextMatchString</a> ("," <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring①">TextMatchString</a>)? ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)?</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring②">TextMatchString</a> "-"</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::=</dt> <dd>"-" <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring③">TextMatchString</a></dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchstring">TextMatchString</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar">TextMatchChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchchar">TextMatchChar</dfn> ::=</dt> <dd>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd></code> 
+     <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt><dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> 
+    <p><code></code></p>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::=</code>
+    <dd><code> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring">TextMatchString</a> ("," <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring①">TextMatchString</a>)?
+("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)?</code>
+    <p></p>
+    <p><code></code></p>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</code>
+    <dd><code><a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring②">TextMatchString</a> "-"</code>
+    <p></p>
+    <p><code></code></p>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::=</code>
+    <dd><code>"-" <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring③">TextMatchString</a></code>
+    <p></p>
+    <p><code></code></p>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchstring">TextMatchString</dfn> ::=</code>
+    <dd><code>(<a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar">TextMatchChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</code>
+    <p></p>
+    <p><code></code></p>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchchar">TextMatchChar</dfn> ::=</code>
+    <dd><code>[a-zA-Z0-9] | "!" | "$" | "'" |
+"(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</code>
+    <code> </code>
+    <p></p>
     <div class="note" role="note"> A <a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar①">TextMatchChar</a> may be any <a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
-is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and ",",
-which must be percent-encoded. </div>
-     <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt> <dd>"%" [a-zA-Z0-9]+</dd></code> 
+is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and
+",", which must be percent-encoded. </div>
+     <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code> 
    </dl>
    <h3 class="heading settled" data-level="2.3" id="allow-text-fragment-directives"><span class="secno">2.3. </span><span class="content">Security and Privacy</span><a class="self-link" href="#allow-text-fragment-directives"></a></h3>
    <h4 class="heading settled" data-level="2.3.1" id="motivation"><span class="secno">2.3.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
@@ -1776,9 +1801,9 @@ invoke. </div>
      <p>If any of the following conditions are true, return false.</p>
      <ul>
       <li data-md>
-       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent">parent</a> field is non-null.</p>
+       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent"> parent</a> field is non-null.</p>
       <li data-md>
-       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener">opener</a> field is non-null.</p>
+       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener"> opener</a> field is non-null.</p>
       <li data-md>
        <p>The <a href="https://html.spec.whatwg.org/#document">Document</a> of the <a href="https://html.spec.whatwg.org/multipage/#latest-entry">latest entry</a> in <em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/#browsing-context">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/#session-history">session history</a> is equal to <em>window</em>’s
 document.</p>
@@ -1790,11 +1815,10 @@ document.</p>
      <p>Otherwise, return true.</p>
    </ol>
    <h3 class="heading settled" data-level="2.4" id="navigating-to-text-fragment"><span class="secno">2.4. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is present
-and a match is found in the page, the text fragment takes precedent over the
-element fragment as the indicated part of the document. </div>
-   <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
-indicated part of the document</a>.</p>
+   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is
+present and a match is found in the page, the text fragment takes precedent over
+the element fragment as the indicated part of the document. </div>
+   <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document"> The indicated part of the document</a>.</p>
    <ol>
     <li data-md>
      <p>Let <em>fragment directive string</em> be the document <a data-link-type="dfn" href="#urls-fragment-directive" id="ref-for-urls-fragment-directive⑤">URL’s fragment
@@ -1809,9 +1833,8 @@ activation triggering </div>
 document’s browsing context and <em>is user activated</em> is true then:</p>
      <ol>
       <li data-md>
-       <p>If <a href="#find-a-target-text">§ 2.4.1 Find a target text</a> with <em>fragment directive string</em> returns
-non-null, then the return value is the indicated part of the document;
-return.</p>
+       <p>If <a href="#find-a-target-text">§ 2.4.1 Find a target text</a> with <em>fragment directive string</em> returns non-null, then the return value is the indicated part of the
+document; return.</p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.4.1" id="find-a-target-text"><span class="secno">2.4.1. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
@@ -1822,9 +1845,10 @@ the user agent must run these steps:</p>
      <p>If <em>fragment directive input</em> does not begin with the string "text=",
 then return null.</p>
     <li data-md>
-     <p>Let <em>raw target text</em> be the substring of <em>fragment directive input</em> starting at index 5.</p>
-     <div class="note" role="note"> This is the remainder of the <em>fragment directive input</em> following, but not
-including, the "text=" prefix. </div>
+     <p>Let <em>raw target text</em> be the substring of <em>fragment directive
+input</em> starting at index 5.</p>
+     <div class="note" role="note"> This is the remainder of the <em>fragment directive input</em> following,
+but not including, the "text=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
     <li data-md>
@@ -1998,7 +2022,7 @@ copy, i.e. any modifications are performed on the caller’s instance of <em>wal
      <p>While the input <em>walker.currentNode</em> is not null and <em>walker.currentNode</em> is not a text node:</p>
      <ol>
       <li data-md>
-       <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">walker.nextNode()</a></p>
+       <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode"> walker.nextNode()</a></p>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="2.4.4" id="next-word-bounded-instance"><span class="secno">2.4.4. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
@@ -2027,9 +2051,9 @@ boundary in <em>text</em> after <em>range</em>.</p>
         <p> Limiting matching to word boundaries is one of the mitigations to
     limit cross-origin information leakage. A word boundary is as
     defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
-    text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of what
-    constitutes a word boundary, but as the specification mentions, a
-    more sophisticated algorithm should be used based on the <em>locale</em>. </p>
+    text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of
+    what constitutes a word boundary, but as the specification mentions,
+    a more sophisticated algorithm should be used based on the <em>locale</em>. </p>
         <p> Dictionary-based word bounding should take specific care in
     locales without a word-separating character (e.g. space). In
     those cases, and where the alphabet contains fewer than 100
@@ -2044,8 +2068,7 @@ bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
      <p>Return <em>null</em>.</p>
    </ol>
    <h3 class="heading settled" data-level="2.5" id="indicating-the-text-match"><span class="secno">2.5. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
-   <p>In addition to scrolling the text fragment into view as part of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
-To Scroll To The Fragment</a> steps, the UA should visually indicate the
+   <p>In addition to scrolling the text fragment into view as part of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment"> Try To Scroll To The Fragment</a> steps, the UA should visually indicate the
 matched text in some way such that the user is made aware of the text match.</p>
    <p>The UA should provide to the user some method of dismissing the match, such
 that the matched text no longer appears visually indicated.</p>
@@ -2061,8 +2084,7 @@ supports the feature.</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fragmentdirective①"><code><c- g>FragmentDirective</c-></code></dfn> {
 };
 </pre>
-   <p>We amend <a href="https://html.spec.whatwg.org/multipage/history.html#the-location-interface">The
-Location Interface</a> to include a fragmentDirective property:</p>
+   <p>We amend <a href="https://html.spec.whatwg.org/multipage/history.html#the-location-interface"> The Location Interface</a> to include a <code>fragmentDirective</code> property:</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="location"><code><c- g>Location</c-></code><a class="self-link" href="#location"></a></dfn> {
     <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fragmentdirective①" id="ref-for-fragmentdirective①"><c- n>FragmentDirective</c-></a> <dfn class="idl-code" data-dfn-for="Location" data-dfn-type="attribute" data-export data-readonly data-type="FragmentDirective" id="dom-location-fragmentdirective"><code><c- g>fragmentDirective</c-></code><a class="self-link" href="#dom-location-fragmentdirective"></a></dfn>;
 };
@@ -2070,8 +2092,9 @@ Location Interface</a> to include a fragmentDirective property:</p>
    <h2 class="heading settled" data-level="3" id="generating-text-fragment-directives"><span class="secno">3. </span><span class="content">Generating Text Fragment Directives</span><a class="self-link" href="#generating-text-fragment-directives"></a></h2>
    <div class="note" role="note"> This section is non-normative. </div>
    <p>This section contains recommendations for UAs automatically generating URLs
-with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a>. These recommendations aren’t normative but are
-provided to ensure generated URLs result in maximally stable and usable URLs.</p>
+with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a>. These recommendations aren’t normative but
+are provided to ensure generated URLs result in maximally stable and usable
+URLs.</p>
    <h3 class="heading settled" data-level="3.1" id="prefer-exact-matching-to-range-based"><span class="secno">3.1. </span><span class="content">Prefer Exact Matching To Range-based</span><a class="self-link" href="#prefer-exact-matching-to-range-based"></a></h3>
    <p>The match text can be provided either as an exact string "text=foo%20bar%20baz"
 or as a range "text=foo,bar".</p>
@@ -2104,12 +2127,12 @@ encoded using an exact match. Above this limit, the UA should encode the string
 as a range-based match.</p>
    <div class="note" role="note"> TODO:  Can we determine the above limit in some more objective way? </div>
    <h3 class="heading settled" data-level="3.2" id="use-context-only-when-necessary"><span class="secno">3.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
-   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a> to disambiguate text snippets
-on a page. However, their use can make the URL more brittle in some cases.
-Often, the desired string will start or end at an element boundary. The context
-will therefore exist in an adjacent element. Changes to the page structure
-could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a> since the context and match text
-may no longer appear to be adjacent.</p>
+   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a> to disambiguate text
+snippets on a page. However, their use can make the URL more brittle in some
+cases. Often, the desired string will start or end at an element boundary. The
+context will therefore exist in an adjacent element. Changes to the page
+structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a> since the context and
+match text may no longer appear to be adjacent.</p>
    <div class="example" id="example-735b40dc">
     <a class="self-link" href="#example-735b40dc"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
