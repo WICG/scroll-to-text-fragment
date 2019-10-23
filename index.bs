@@ -135,8 +135,8 @@ The <dfn>fragment directive</dfn> is the part of the URL fragment that follows
 the [=fragment directive delimiter=].
 
 <div class="note">
-  The [=fragment directive=] is part of the URL fragment. This means it must always
-  appear after a U+0023 (#) code point in a URL. 
+  The [=fragment directive=] is part of the URL fragment. This means it must
+  always appear after a U+0023 (#) code point in a URL. 
 </div>
 
 <div class="example">
@@ -147,9 +147,10 @@ the [=fragment directive delimiter=].
 Amend the <a href="https://url.spec.whatwg.org/#concept-basic-url-parser">
 basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
 
-  - In step 11 of this algorithm, amend the [[URL#fragment-state|fragment state]] case:
-    - In the inner switch on [[URL#c|c]], in the Otherwise case, add a step after
-        step 2:
+  - In step 11 of this algorithm, amend the [[URL#fragment-state|fragment
+    state]] case:
+    - In the inner switch on [[URL#c|c]], in the Otherwise case, add a step
+        after step 2:
         - If [[URL#c|c]] is U+003A (:) and
             <a href="https://url.spec.whatwg.org/#remaining">remaining</a>
             begins with the two consecutive code points U+007E (~) and U+003A
@@ -165,18 +166,19 @@ basic URL parser</a> steps to parse the [=fragment directive=] in a URL:
         - The EOF code point: Do nothing
         - U+0000 NULL: Validation error
         - Otherwise:
-            1. If [[URL#c|c]] is not a URL code point and not U+0025 (%), validation
-                error.
+            1. If [[URL#c|c]] is not a URL code point and not U+0025 (%),
+                validation error.
             2. If [[URL#c|c]] is U+0025 (%) and
                 <a href="https://url.spec.whatwg.org/#remaining">remaining</a>
                 does not start with two ASCII hex digits, validation error.
-            3. UTF-8 percent encode [[URL#c|c]] using the fragment percent-encode set
-                and append the result to [=URL's fragment directive=].
+            3. UTF-8 percent encode [[URL#c|c]] using the fragment
+                percent-encode set and append the result to [=URL's fragment
+                directive=].
 
 <div class="note">
-  These changes make a URL's fragment end at the [=fragment directive delimiter=].
-  The [=fragment directive=] includes all characters that follow, but not including,
-  the delimiter.
+  These changes make a URL's fragment end at the [=fragment directive
+  delimiter=]. The [=fragment directive=] includes all characters that follow,
+  but not including, the delimiter.
 </div>
 
 <div class="example">
@@ -190,11 +192,12 @@ the fragment is the string "test" and the [=fragment directive=] is the string
 Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer
 </a> steps by inserting a step after step 7:
 
-8. If the <em>exclude fragment flag</em> is unset and [=URL's fragment directive=] is
-    non-null:
+8. If the <em>exclude fragment flag</em> is unset and [=URL's fragment
+    directive=] is non-null:
     1. If [[URL#concept-url-fragment|url's fragment]] is null, append U+0023 (#)
         to <em>output</em>.
-    2. Append ":~:", followed by [=URL's fragment directive=], to <em>output</em>.
+    2. Append ":~:", followed by [=URL's fragment directive=], to
+        <em>output</em>.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
@@ -214,8 +217,11 @@ create and initialize a Document object</a> steps to store and remove the
 Replace steps 7 and 8 of this algorithm with:
 
 7. Let <em>url</em> be null
-8. If <em>request</em> is non-null, then set <em>document</em>'s [[DOM#concept-document-url|URL]] to <em>request</em>'s [[FETCH#concept-request-current-url|current URL]].
-9. Otherwise, set <em>url</em> to <em>response</em>'s [[FETCH#concept-response-url|URL]].
+8. If <em>request</em> is non-null, then set <em>document</em>'s
+    [[DOM#concept-document-url|URL]] to <em>request</em>'s
+    [[FETCH#concept-request-current-url|current URL]].
+9. Otherwise, set <em>url</em> to <em>response</em>'s
+    [[FETCH#concept-response-url|URL]].
 10. Set [=Document's fragment directive=] to [=URL's fragment directive=].
     (Note: this is stored on the document but not web-exposed)
 11. Set [=URL's fragment directive=] to null.
@@ -225,7 +231,8 @@ Replace steps 7 and 8 of this algorithm with:
 A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
 in the [=fragment directive=] that matches the production:
 <dl>
-<code><dt><dfn>FragmentDirective</dfn> ::=</dt> <dd>[=TextDirective=] ("&" [=TextDirective=])*</dd></code>
+<code><dt><dfn>FragmentDirective</dfn> ::=</dt>
+<dd>[=TextDirective=] ("&" [=TextDirective=])*</dd></code>
 </dl>
 
 <div class="note">
@@ -239,19 +246,33 @@ The <dfn>text fragment directive</dfn> is one such [=fragment directive=] that
 enables specifying a piece of text on the page, that matches the production:
 
 <dl>
-<code><dt><dfn>TextDirective</dfn> ::=</dt> <dd>"text=" [=TextDirectiveParameters=]</dd></code>
-<code><dt><dfn>TextDirectiveParameters</dfn> ::=</dt> <dd>([=TextDirectivePrefix=] ",")? [=TextMatchString=] ("," [=TextMatchString=])? ("," [=TextDirectiveSuffix=])?</dd></code>
-<code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt> <dd>[=TextMatchString=] "-"</dd></code>
-<code><dt><dfn>TextDirectiveSuffix</dfn> ::=</dt> <dd>"-" [=TextMatchString=]</dd></code>
-<code><dt><dfn>TextMatchString</dfn> ::=</dt> <dd>([=TextMatchChar=] | [=PercentEncodedChar=])+</dd></code>
-<code><dt><dfn>TextMatchChar</dfn> ::=</dt> <dd>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd></code>
+<code><dt><dfn>TextDirective</dfn> ::=</dt><dd>"text="
+[=TextDirectiveParameters=]</dd></code>
+
+<code><dt><dfn>TextDirectiveParameters</dfn> ::=</dt><dd>
+([=TextDirectivePrefix=] ",")? [=TextMatchString=] ("," [=TextMatchString=])?
+("," [=TextDirectiveSuffix=])?</dd></code>
+
+<code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt><dd>[=TextMatchString=]
+"-"</dd></code>
+
+<code><dt><dfn>TextDirectiveSuffix</dfn> ::=</dt><dd>"-"
+[=TextMatchString=]</dd></code>
+
+<code><dt><dfn>TextMatchString</dfn> ::=</dt><dd>([=TextMatchChar=] |
+[=PercentEncodedChar=])+</dd></code>
+
+<code><dt><dfn>TextMatchChar</dfn> ::=</dt><dd>[a-zA-Z0-9] | "!" | "$" | "'" |
+"(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd>
+</code>
+
 <div class = "note">
 A [=TextMatchChar=] may be any
 <a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
-is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and ",",
-which must be percent-encoded.
+is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and
+",", which must be percent-encoded.
 </div>
-<code><dt><dfn>PercentEncodedChar</dfn> ::=</dt> <dd>"%" [a-zA-Z0-9]+</dd></code>
+<code><dt><dfn>PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code>
 </dl>
 
 ## Security and Privacy ## {#allow-text-fragment-directives}
@@ -289,11 +310,11 @@ invoke.
 
 1. If any of the following conditions are true, return false.
     * <em>window</em>'s
-        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent">parent</a>
-        field is non-null.
+        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent">
+        parent</a> field is non-null.
     * <em>window</em>'s
-        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener">opener</a>
-        field is non-null.
+        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener">
+        opener</a> field is non-null.
     * The <a href="https://html.spec.whatwg.org/#document">Document</a> of the
         [[HTML#latest-entry|latest entry]] in <em>window</em>'s
         [[HTML#browsing-context|browsing context]]'s
@@ -309,14 +330,14 @@ invoke.
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
 The scroll to text specification proposes an amendment to
-[[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is present
-and a match is found in the page, the text fragment takes precedent over the
-element fragment as the indicated part of the document.
+[[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
+present and a match is found in the page, the text fragment takes precedent over
+the element fragment as the indicated part of the document.
 </div>
 
 Add the following steps to the beginning of the processing model for <a
-href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">The
-indicated part of the document</a>.
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">
+The indicated part of the document</a>.
 
 1. Let <em>fragment directive string</em> be the document [=URL's fragment
     directive=].
@@ -329,9 +350,9 @@ indicated part of the document</a>.
     </div>
 3. If the result of [[#should-allow-text-fragment]] with the window of the
     document's browsing context and <em>is user activated</em> is true then:
-    1. If [[#find-a-target-text]] with <em>fragment directive string</em> returns
-        non-null, then the return value is the indicated part of the document;
-        return.
+    1. If [[#find-a-target-text]] with <em>fragment directive string</em>
+        returns non-null, then the return value is the indicated part of the
+        document; return.
 
 ### Find a target text ### {#find-a-target-text}
 
@@ -339,11 +360,11 @@ To find the target text for a given string <em>fragment directive input</em>,
 the user agent must run these steps:
 1. If <em>fragment directive input</em> does not begin with the string "text=",
     then return null.
-2. Let <em>raw target text</em> be the substring of <em>fragment directive input</em>
-    starting at index 5.
+2. Let <em>raw target text</em> be the substring of <em>fragment directive
+    input</em> starting at index 5.
     <div class="note">
-    This is the remainder of the <em>fragment directive input</em> following, but not
-    including, the "text=" prefix.
+    This is the remainder of the <em>fragment directive input</em> following,
+    but not including, the "text=" prefix.
     </div>
 3. If <em>raw target text</em> is the empty string, return null.
 4. Let <em>tokens</em> be a [[INFRA#list|list]] of strings that is the result of
@@ -494,7 +515,8 @@ copy, i.e. any modifications are performed on the caller's instance of
 1. While the input <em>walker.currentNode</em> is not null and 
     <em>walker.currentNode</em> is not a text node:
     1. Advance the current node by calling
-        <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">walker.nextNode()</a>
+        <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode">
+        walker.nextNode()</a>
 
 ### Find the next word bounded instance ### {#next-word-bounded-instance}
 <div class="note">
@@ -527,9 +549,9 @@ API for word boundary matching.
             href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
             text segmentation annex</a>. The <a
             href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries">
-            Default Word Boundary Specification</a> defines a default set of what
-            constitutes a word boundary, but as the specification mentions, a
-            more sophisticated algorithm should be used based on the
+            Default Word Boundary Specification</a> defines a default set of
+            what constitutes a word boundary, but as the specification mentions,
+            a more sophisticated algorithm should be used based on the
             <em>locale</em>.
           </p>
           <p>
@@ -548,8 +570,8 @@ API for word boundary matching.
 ## Indicating The Text Match ## {#indicating-the-text-match}
 
 In addition to scrolling the text fragment into view as part of the <a
-href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">Try
-To Scroll To The Fragment</a> steps, the UA should visually indicate the
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">
+Try To Scroll To The Fragment</a> steps, the UA should visually indicate the
 matched text in some way such that the user is made aware of the text match.
 
 The UA should provide to the user some method of dismissing the match, such
@@ -575,8 +597,8 @@ interface FragmentDirective {
 </pre>
 
 We amend
-<a href="https://html.spec.whatwg.org/multipage/history.html#the-location-interface">The
-Location Interface</a> to include a <code>fragmentDirective</code> property:
+<a href="https://html.spec.whatwg.org/multipage/history.html#the-location-interface">
+The Location Interface</a> to include a <code>fragmentDirective</code> property:
 
 <pre class='idl'>
 interface Location {
@@ -591,8 +613,9 @@ interface Location {
 </div>
 
 This section contains recommendations for UAs automatically generating URLs
-with a [=text fragment directive=]. These recommendations aren't normative but are
-provided to ensure generated URLs result in maximally stable and usable URLs.
+with a [=text fragment directive=]. These recommendations aren't normative but
+are provided to ensure generated URLs result in maximally stable and usable
+URLs.
 
 ## Prefer Exact Matching To Range-based ## {#prefer-exact-matching-to-range-based}
 
@@ -646,12 +669,12 @@ as a range-based match.
 
 ## Use Context Only When Necessary ## {#use-context-only-when-necessary}
 
-Context terms allow the [=text fragment directive=] to disambiguate text snippets
-on a page. However, their use can make the URL more brittle in some cases.
-Often, the desired string will start or end at an element boundary. The context
-will therefore exist in an adjacent element. Changes to the page structure
-could invalidate the [=text fragment directive=] since the context and match text
-may no longer appear to be adjacent.
+Context terms allow the [=text fragment directive=] to disambiguate text
+snippets on a page. However, their use can make the URL more brittle in some
+cases. Often, the desired string will start or end at an element boundary. The
+context will therefore exist in an adjacent element. Changes to the page
+structure could invalidate the [=text fragment directive=] since the context and
+match text may no longer appear to be adjacent.
 
 <div class='example'>
   Suppose we wish to craft a URL for the following text:
