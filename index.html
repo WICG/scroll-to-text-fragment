@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-22">22 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-25">25 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1530,7 +1530,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#allow-text-fragment-directives"><span class="secno">2.3</span> <span class="content">Security and Privacy</span></a>
        <ol class="toc">
         <li><a href="#motivation"><span class="secno">2.3.1</span> <span class="content">Motivation</span></a>
-        <li><a href="#should-allow-text-fragment"><span class="secno">2.3.2</span> <span class="content">Should Allow Text Fragment</span></a>
+        <li><a href="#search-timing"><span class="secno">2.3.2</span> <span class="content">Search Timing</span></a>
+        <li><a href="#should-allow-text-fragment"><span class="secno">2.3.3</span> <span class="content">Should Allow Text Fragment</span></a>
        </ol>
       <li>
        <a href="#navigating-to-text-fragment"><span class="secno">2.4</span> <span class="content">Navigating to a Text Fragment</span></a>
@@ -1792,9 +1793,23 @@ information to the page.</p>
    <div class="example" id="example-9ced00a5"><a class="self-link" href="#example-9ced00a5"></a> A user visiting a page listing dozens of medical conditions may have gotten
   there via a link with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> containing a specific
   condition. This information must not be shared with the page. </div>
-   <h4 class="heading settled" data-level="2.3.2" id="should-allow-text-fragment"><span class="secno">2.3.2. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
+   <h4 class="heading settled" data-level="2.3.2" id="search-timing"><span class="secno">2.3.2. </span><span class="content">Search Timing</span><a class="self-link" href="#search-timing"></a></h4>
+   <p>A naive implementation of the text search algorithm could allow information
+exfiltration based on runtime duration differences between a matching and non-
+matching query. If an attacker were to find a way to synchronously navigate
+to a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑤">text fragment directive</a>-invoking URL, they would be able to determine
+the existence of a text snippet by measuring how long the navigation call takes.</p>
+   <div class="note" role="note"> The restrictions in <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> should prevent this
+  specific case; in particular, the no-same-document-navigation restriction.
+  However, these restrictions are provided as multiple layers of defence. </div>
+   <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 2.4 Navigating to a Text Fragment</a> steps does not differ based on whether a match
+has been successfully found</em>.</p>
+   <p>This specification does not specify exactly how a UA achieves this as there are
+multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.1 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
+asynchronous task to find and set the indicated part of the document.</p>
+   <h4 class="heading settled" data-level="2.3.3" id="should-allow-text-fragment"><span class="secno">2.3.3. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>window, is user triggered</em> and returns a
-boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑤">text fragment directive</a> should be allowed to
+boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> should be allowed to
 invoke. </div>
    <ol>
     <li data-md>
@@ -1815,7 +1830,7 @@ document.</p>
      <p>Otherwise, return true.</p>
    </ol>
    <h3 class="heading settled" data-level="2.4" id="navigating-to-text-fragment"><span class="secno">2.4. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is
+   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. </div>
    <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document"> The indicated part of the document</a>.</p>
@@ -1829,7 +1844,7 @@ by user activation</a></p>
      <div class="note" role="note"> TODO: This might need an additional flag somewhere to track the user
 activation triggering </div>
     <li data-md>
-     <p>If the result of <a href="#should-allow-text-fragment">§ 2.3.2 Should Allow Text Fragment</a> with the window of the
+     <p>If the result of <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> with the window of the
 document’s browsing context and <em>is user activated</em> is true then:</p>
      <ol>
       <li data-md>
@@ -2092,7 +2107,7 @@ supports the feature.</p>
    <h2 class="heading settled" data-level="3" id="generating-text-fragment-directives"><span class="secno">3. </span><span class="content">Generating Text Fragment Directives</span><a class="self-link" href="#generating-text-fragment-directives"></a></h2>
    <div class="note" role="note"> This section is non-normative. </div>
    <p>This section contains recommendations for UAs automatically generating URLs
-with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a>. These recommendations aren’t normative but
+with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a>. These recommendations aren’t normative but
 are provided to ensure generated URLs result in maximally stable and usable
 URLs.</p>
    <h3 class="heading settled" data-level="3.1" id="prefer-exact-matching-to-range-based"><span class="secno">3.1. </span><span class="content">Prefer Exact Matching To Range-based</span><a class="self-link" href="#prefer-exact-matching-to-range-based"></a></h3>
@@ -2127,18 +2142,18 @@ encoded using an exact match. Above this limit, the UA should encode the string
 as a range-based match.</p>
    <div class="note" role="note"> TODO:  Can we determine the above limit in some more objective way? </div>
    <h3 class="heading settled" data-level="3.2" id="use-context-only-when-necessary"><span class="secno">3.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
-   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a> to disambiguate text
+   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a> to disambiguate text
 snippets on a page. However, their use can make the URL more brittle in some
 cases. Often, the desired string will start or end at an element boundary. The
 context will therefore exist in an adjacent element. Changes to the page
-structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a> since the context and
+structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①⓪">text fragment directive</a> since the context and
 match text may no longer appear to be adjacent.</p>
    <div class="example" id="example-735b40dc">
     <a class="self-link" href="#example-735b40dc"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
 &lt;div class="content">Text to quote&lt;/div>
 </pre>
-    <p>We could craft the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①⓪">text fragment directive</a> as follows:</p>
+    <p>We could craft the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①①">text fragment directive</a> as follows:</p>
 <pre>text=HEADER-,Text%20to%20quote
 </pre>
     <p>However, suppose the page changes to add a "[edit]" link beside all section
@@ -2154,11 +2169,11 @@ true:</p>
    </ul>
    <div class="note" role="note"> TODO: Determine the numeric limit above in a more objective way </div>
    <h3 class="heading settled" data-level="3.3" id="determine-if-fragment-id-is-needed"><span class="secno">3.3. </span><span class="content">Determine If Fragment Id Is Needed</span><a class="self-link" href="#determine-if-fragment-id-is-needed"></a></h3>
-   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①①">text fragment directive</a>, it will
+   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①②">text fragment directive</a>, it will
 fallback to scrolling into view a regular element-id based fragment if it
 exists and the text fragment isn’t found.</p>
    <p>This can be useful to provide a fallback, in case the text in the document
-changes, invalidating the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①②">text fragment directive</a>.</p>
+changes, invalidating the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①③">text fragment directive</a>.</p>
    <div class="example" id="example-5990805b">
     <a class="self-link" href="#example-5990805b"></a> Suppose we wish to craft a URL to
   https://en.wikipedia.org/wiki/History_of_computing quoting the sentence: 
@@ -2425,11 +2440,12 @@ manipulations
    <ul>
     <li><a href="#ref-for-text-fragment-directive">2.1. Syntax</a>
     <li><a href="#ref-for-text-fragment-directive①">2.3.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a> <a href="#ref-for-text-fragment-directive③">(3)</a> <a href="#ref-for-text-fragment-directive④">(4)</a>
-    <li><a href="#ref-for-text-fragment-directive⑤">2.3.2. Should Allow Text Fragment</a>
-    <li><a href="#ref-for-text-fragment-directive⑥">2.4. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-text-fragment-directive⑦">3. Generating Text Fragment Directives</a>
-    <li><a href="#ref-for-text-fragment-directive⑧">3.2. Use Context Only When Necessary</a> <a href="#ref-for-text-fragment-directive⑨">(2)</a> <a href="#ref-for-text-fragment-directive①⓪">(3)</a>
-    <li><a href="#ref-for-text-fragment-directive①①">3.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①②">(2)</a>
+    <li><a href="#ref-for-text-fragment-directive⑤">2.3.2. Search Timing</a>
+    <li><a href="#ref-for-text-fragment-directive⑥">2.3.3. Should Allow Text Fragment</a>
+    <li><a href="#ref-for-text-fragment-directive⑦">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-text-fragment-directive⑧">3. Generating Text Fragment Directives</a>
+    <li><a href="#ref-for-text-fragment-directive⑨">3.2. Use Context Only When Necessary</a> <a href="#ref-for-text-fragment-directive①⓪">(2)</a> <a href="#ref-for-text-fragment-directive①①">(3)</a>
+    <li><a href="#ref-for-text-fragment-directive①②">3.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirective">
