@@ -300,6 +300,30 @@ information to the page.
   condition. This information must not be shared with the page.
 </div>
 
+### Search Timing
+
+A naive implementation of the text search algorithm could allow information
+exfiltration based on runtime duration differences between a matching and non-
+matching query. If an attacker were to find a way to synchronously navigate
+to a [=text fragment directive=]-invoking URL, they would be able to determine
+the existence of a text snippet by measuring how long the navigation call takes.
+
+<div class="note">
+  The restrictions in [[#should-allow-text-fragment]] should prevent this
+  specific case; in particular, the no-same-document-navigation restriction.
+  However, these restrictions are provided as multiple layers of defence.
+</div>
+
+For this reason, the implementation <em>must ensure the runtime of
+[[#navigating-to-text-fragment]] steps does not differ based on whether a match
+has been successfully found</em>.
+
+This specification does not specify exactly how a UA achieves this as there are
+multiple solutions with differing tradeoffs. For example, the UA may continue
+to walk the tree even after a match is found in [[#find-a-target-text]].
+Alternatively, it could schedule an asynchronous task to find and set the
+indicated part of the document.
+
 ### Should Allow Text Fragment ### {#should-allow-text-fragment}
 
 <div class="note">
