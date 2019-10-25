@@ -1805,10 +1805,8 @@ the existence of a text snippet by measuring how long the navigation call takes.
    <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 2.4 Navigating to a Text Fragment</a> steps does not differ based on whether a match
 has been successfully found</em>.</p>
    <p>This specification does not specify exactly how a UA achieves this as there are
-multiple solutions with differing tradeoffs. For example, the UA may continue
-to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.1 Find a target text</a>.
-Alternatively, it could schedule an asynchronous task to find and set the
-indicated part of the document.</p>
+multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.1 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
+asynchronous task to find and set the indicated part of the document.</p>
    <h4 class="heading settled" data-level="2.3.3" id="should-allow-text-fragment"><span class="secno">2.3.3. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>window, is user triggered</em> and returns a
 boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> should be allowed to

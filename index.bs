@@ -319,10 +319,10 @@ For this reason, the implementation <em>must ensure the runtime of
 has been successfully found</em>.
 
 This specification does not specify exactly how a UA achieves this as there are
-multiple solutions with differing tradeoffs. For example, the UA may continue
-to walk the tree even after a match is found in [[#find-a-target-text]].
-Alternatively, it could schedule an asynchronous task to find and set the
-indicated part of the document.
+multiple solutions with differing tradeoffs. For example, a UA <em>may</em>
+continue to walk the tree even after a match is found in
+[[#find-a-target-text]].  Alternatively, it <em>may</em> schedule an
+asynchronous task to find and set the indicated part of the document.
 
 ### Should Allow Text Fragment ### {#should-allow-text-fragment}
 
