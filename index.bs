@@ -120,7 +120,7 @@ translation-hints or enabling accessibility features.
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
 
 To the definition of
-<a href="https://dom.spec.whatwg.org/#concept-document-type">Document</a>, add:
+<a href="https://dom.spec.whatwg.org/#concept-document">Document</a>, add:
 
 <em>
 Each document has an associated <dfn>fragment directive</dfn> which is either
