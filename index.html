@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-25">25 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-28">28 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1522,8 +1522,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#the-fragment-directive"><span class="secno">2.2</span> <span class="content">The Fragment Directive</span></a>
        <ol class="toc">
         <li><a href="#parsing-the-fragment-directive"><span class="secno">2.2.1</span> <span class="content">Parsing the fragment directive</span></a>
-        <li><a href="#serializing-the-fragment-directive"><span class="secno">2.2.2</span> <span class="content">Serializing the fragment directive</span></a>
-        <li><a href="#fragment-directive-grammar"><span class="secno">2.2.3</span> <span class="content">Fragment directive grammar</span></a>
+        <li><a href="#fragment-directive-grammar"><span class="secno">2.2.2</span> <span class="content">Fragment directive grammar</span></a>
        </ol>
       <li>
        <a href="#allow-text-fragment-directives"><span class="secno">2.3</span> <span class="content">Security and Privacy</span></a>
@@ -1694,30 +1693,15 @@ web-exposed)</p>
    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> is the string
 "text=foo". </div>
-   <h4 class="heading settled" data-level="2.2.2" id="serializing-the-fragment-directive"><span class="secno">2.2.2. </span><span class="content">Serializing the fragment directive</span><a class="self-link" href="#serializing-the-fragment-directive"></a></h4>
-   <p>Amend the <a href="https://url.spec.whatwg.org/#url-serializing">URL serializer </a> steps by inserting a step after step 7:</p>
-   <ol start="8">
-    <li data-md>
-     <p>If the <em>exclude fragment flag</em> is unset and <em>url</em> has an
-associated Document <em>document</em> and <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment
-directive</a> is non-null:</p>
-     <ol>
-      <li data-md>
-       <p>If <em>url</em>’s <a href="https://url.spec.whatwg.org/#concept-url-fragment">fragment</a> is null, append
-U+0023 (#) to <em>output</em>.</p>
-      <li data-md>
-       <p>Append ":~:", followed by <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a>, to <em>output</em>.</p>
-     </ol>
-   </ol>
-   <h4 class="heading settled" data-level="2.2.3" id="fragment-directive-grammar"><span class="secno">2.2.3. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
+   <h4 class="heading settled" data-level="2.2.2" id="fragment-directive-grammar"><span class="secno">2.2.2. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
     A <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> is a sequence of characters that appears
-in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment directive</a> that matches the production: 
+in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a> that matches the production: 
    <dl> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirective">FragmentDirective</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> ("&amp;" <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a>)*</dd></code> </dl>
    <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective">FragmentDirective</a> may contain multiple directives split by the "&amp;"
 character. Currently this means we allow multiple text directives to enable
 multiple indicated strings in the page, but this also allows for future
 directive types to be added and combined. </div>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①③">fragment directive</a> that
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> that
 enables specifying a piece of text on the page, that matches the production:</p>
    <dl>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt><dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> 
@@ -1809,7 +1793,7 @@ the element fragment as the indicated part of the document. </div>
    <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document"> The indicated part of the document</a>.</p>
    <ol>
     <li data-md>
-     <p>Let <em>fragment directive string</em> be the <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①④">fragment
+     <p>Let <em>fragment directive string</em> be the <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment
 directive</a>.</p>
     <li data-md>
      <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
@@ -2333,19 +2317,19 @@ manipulations
     FragmentDirective
     <ul>
      <li><a href="#fragmentdirective①">(interface)</a><span>, in §2.6</span>
-     <li><a href="#fragmentdirective">definition of</a><span>, in §2.2.3</span>
+     <li><a href="#fragmentdirective">definition of</a><span>, in §2.2.2</span>
     </ul>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §2.2.1</span>
    <li><a href="#location">Location</a><span>, in §2.6</span>
-   <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.2.3</span>
-   <li><a href="#textdirective">TextDirective</a><span>, in §2.2.3</span>
-   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in §2.2.3</span>
-   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §2.2.3</span>
-   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §2.2.3</span>
-   <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §2.2.3</span>
-   <li><a href="#textmatchchar">TextMatchChar</a><span>, in §2.2.3</span>
-   <li><a href="#textmatchstring">TextMatchString</a><span>, in §2.2.3</span>
-   <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §2.2.3</span>
+   <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.2.2</span>
+   <li><a href="#textdirective">TextDirective</a><span>, in §2.2.2</span>
+   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in §2.2.2</span>
+   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §2.2.2</span>
+   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §2.2.2</span>
+   <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §2.2.2</span>
+   <li><a href="#textmatchchar">TextMatchChar</a><span>, in §2.2.2</span>
+   <li><a href="#textmatchstring">TextMatchString</a><span>, in §2.2.2</span>
+   <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §2.2.2</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -2368,9 +2352,8 @@ manipulations
     <li><a href="#ref-for-fragment-directive">2.1. Syntax</a>
     <li><a href="#ref-for-fragment-directive①">2.2. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a> <a href="#ref-for-fragment-directive③">(3)</a>
     <li><a href="#ref-for-fragment-directive④">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive⑤">(2)</a> <a href="#ref-for-fragment-directive⑥">(3)</a> <a href="#ref-for-fragment-directive⑦">(4)</a> <a href="#ref-for-fragment-directive⑧">(5)</a> <a href="#ref-for-fragment-directive⑨">(6)</a>
-    <li><a href="#ref-for-fragment-directive①⓪">2.2.2. Serializing the fragment directive</a> <a href="#ref-for-fragment-directive①①">(2)</a>
-    <li><a href="#ref-for-fragment-directive①②">2.2.3. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①③">(2)</a>
-    <li><a href="#ref-for-fragment-directive①④">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-fragment-directive①⓪">2.2.2. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①①">(2)</a>
+    <li><a href="#ref-for-fragment-directive①②">2.4. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragment-directive-delimiter">
@@ -2382,7 +2365,7 @@ manipulations
   <aside class="dfn-panel" data-for="fragmentdirective">
    <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective">2.2.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-fragmentdirective">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="text-fragment-directive">
@@ -2401,43 +2384,43 @@ manipulations
   <aside class="dfn-panel" data-for="textdirective">
    <b><a href="#textdirective">#textdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirective">2.2.3. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a> <a href="#ref-for-textdirective②">(3)</a>
+    <li><a href="#ref-for-textdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a> <a href="#ref-for-textdirective②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveparameters">
    <b><a href="#textdirectiveparameters">#textdirectiveparameters</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectiveparameters">2.2.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectiveparameters">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveprefix">
    <b><a href="#textdirectiveprefix">#textdirectiveprefix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectiveprefix">2.2.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectiveprefix">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectivesuffix">
    <b><a href="#textdirectivesuffix">#textdirectivesuffix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectivesuffix">2.2.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectivesuffix">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textmatchstring">
    <b><a href="#textmatchstring">#textmatchstring</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textmatchstring">2.2.3. Fragment directive grammar</a> <a href="#ref-for-textmatchstring①">(2)</a> <a href="#ref-for-textmatchstring②">(3)</a> <a href="#ref-for-textmatchstring③">(4)</a>
+    <li><a href="#ref-for-textmatchstring">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textmatchstring①">(2)</a> <a href="#ref-for-textmatchstring②">(3)</a> <a href="#ref-for-textmatchstring③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textmatchchar">
    <b><a href="#textmatchchar">#textmatchchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textmatchchar">2.2.3. Fragment directive grammar</a> <a href="#ref-for-textmatchchar①">(2)</a>
+    <li><a href="#ref-for-textmatchchar">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textmatchchar①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="percentencodedchar">
    <b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-percentencodedchar">2.2.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-percentencodedchar">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="current-locale">
