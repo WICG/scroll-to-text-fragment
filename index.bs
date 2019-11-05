@@ -320,8 +320,8 @@ The scroll to text specification proposes an amendment to
 [[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
-indicated part of the document to possibly include a [[DOM#range|Range]] that is
-scrolled into view instead of the containing element.
+indicated part of the document to optionally include a [[DOM#range|Range]] that
+is scrolled into view instead of the containing element.
 </div>
 
 Replace step 3.1 of the [[HTML#scroll-to-the-fragment-identifier|scroll to the
@@ -337,8 +337,8 @@ fragment]] algorithm with the following:
 3. Otherwise:
     3. If <em>range</em> is non-null:
         1. [=scroll a Range into view|Scroll range into view=], with
-            <em>behavior</em> set to "auto", <em>block</em> set to "start", and
-            <em>inline</em> set to "nearest".
+            containingElement <em>target</em>, <em>behavior</em> set to "auto",
+            <em>block</em> set to "start", and <em>inline</em> set to "nearest".
     4. Otherwise:
         1. [[cssom-view#scroll-an-element-into-view|Scroll target into view]],
             with <em>behavior</em> set to "auto", <em>block</em> set to "start",
@@ -385,21 +385,26 @@ Move the [[cssom-view#scroll-an-element-into-view|scroll an element into
 view]] algorithm's steps 3-14 into a new algorithm <dfn>scroll a DOMRect into
 view</dfn>, with input <a
 href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> <em>bounding
-border box</em> and
-[[cssom-view#dictdef-scrollintoviewoptions|ScrollIntoViewOptions]] dictionary
-<em>options</em>.
+box</em>, [[cssom-view#dictdef-scrollintoviewoptions|ScrollIntoViewOptions]]
+dictionary <em>options</em>, and [[DOM#element|Element]]
+<em>startingElement</em>. Also move the recursive behavior described at the top
+of the [[cssom-view#scroll-an-element-into-view|scroll an element into view]]
+algorithm to the [=scroll a DOMRect into view=] algorithm: "run these steps for
+each ancestor element or viewport <b>of <em>startingElement</em></b> that
+establishes a scrolling box <em>scrolling box</em>, in order of innermost to
+outermost scrolling box".
 <div class="note">
-<em>bounding border box</em> is renamed from <em>element bounding border
-box</em>.
+<em>bounding box</em> is renamed from <em>element bounding border box</em>.
 </div>
 
 Replace steps 3-14 of the [[cssom-view#scroll-an-element-into-view|scroll an
 element into view]] algorithm with a call to [=scroll a DOMRect into view=]:
 3. Perform [=scroll a DOMRect into view=] on <em>element bounding border
-    box</em> with <em>options</em>.
+    box</em> with options <em>options</em> and startingElement <em>element</em>.
 
 Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
-[[DOM#range|Range]] <em>range</em> and a
+[[DOM#range|Range]] <em>range</em>, [[DOM#element|Element]]
+<em>containingElement</em>, and a
 [[cssom-view#dictdef-scrollintoviewoptions|ScrollIntoViewOptions]] dictionary
 <em>options</em>:
 1. Let <em>bounding rect</em> be the <a
@@ -408,7 +413,7 @@ Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
     [[cssom-view#dom-range-getboundingclientrect|getBoundingClientRect()]]
     on <em>range</em>.
 2. Perform [=scroll a DOMRect into view=] on <em>bounding rect</em> with
-    <em>options</em>.
+    <em>options</em> and startingElement <em>containingElement</em>.
 
 ### Find a target text ### {#find-a-target-text}
 

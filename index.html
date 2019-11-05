@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version f5a6d58a6b9207b620f985d7239601eb3a483162" name="generator">
+  <meta content="Bikeshed version 2dbd5e1f0bb11704a5d90167ddaef9475f9c26b3" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-04">4 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-05">5 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1791,8 +1791,8 @@ document.</p>
    <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
-indicated part of the document to possibly include a <a href="https://dom.spec.whatwg.org/#range">Range</a> that is
-scrolled into view instead of the containing element. </div>
+indicated part of the document to optionally include a <a href="https://dom.spec.whatwg.org/#range">Range</a> that
+is scrolled into view instead of the containing element. </div>
    <p>Replace step 3.1 of the <a href="https://html.spec.whatwg.org/multipage/#scroll-to-the-fragment-identifier">scroll to the
 fragment</a> algorithm with the following:</p>
    <ol start="3">
@@ -1814,7 +1814,8 @@ fragment</a> algorithm with the following:</p>
        <p>If <em>range</em> is non-null:</p>
        <ol>
         <li data-md>
-         <p><a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
+         <p><a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
+containingElement <em>target</em>, <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
        </ol>
       <li data-md>
        <p>Otherwise:</p>
@@ -1867,23 +1868,26 @@ scroll a Range into view. </div>
    <p>Move the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an element into
 view</a> algorithm’s steps 3-14 into a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="scroll a DOMRect into view" data-noexport id="scroll-a-domrect-into-view">scroll a DOMRect into
 view</dfn>, with input <a href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> <em>bounding
-border box</em> and <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>.</p>
-   <div class="note" role="note"> <em>bounding border box</em> is renamed from <em>element bounding border
-box</em>. </div>
+box</em>, <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>, and <a href="https://dom.spec.whatwg.org/#element">Element</a> <em>startingElement</em>. Also move the recursive behavior described at the top
+of the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an element into view</a> algorithm to the <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view">scroll a DOMRect into view</a> algorithm: "run these steps for
+each ancestor element or viewport <b>of <em>startingElement</em></b> that
+establishes a scrolling box <em>scrolling box</em>, in order of innermost to
+outermost scrolling box".</p>
+   <div class="note" role="note"> <em>bounding box</em> is renamed from <em>element bounding border box</em>. </div>
    <p>Replace steps 3-14 of the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an
-element into view</a> algorithm with a call to <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view">scroll a DOMRect into view</a>:</p>
+element into view</a> algorithm with a call to <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view①">scroll a DOMRect into view</a>:</p>
    <ol start="3">
     <li data-md>
-     <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view①">scroll a DOMRect into view</a> on <em>element bounding border
-box</em> with <em>options</em>.</p>
+     <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view②">scroll a DOMRect into view</a> on <em>element bounding border
+box</em> with options <em>options</em> and startingElement <em>element</em>.</p>
    </ol>
-   <p>Define a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-range-into-view">scroll a Range into view</dfn>, with input <a href="https://dom.spec.whatwg.org/#range">Range</a> <em>range</em> and a <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>:</p>
+   <p>Define a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-range-into-view">scroll a Range into view</dfn>, with input <a href="https://dom.spec.whatwg.org/#range">Range</a> <em>range</em>, <a href="https://dom.spec.whatwg.org/#element">Element</a> <em>containingElement</em>, and a <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>:</p>
    <ol>
     <li data-md>
      <p>Let <em>bounding rect</em> be the <a href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> that is
 the return value of invoking <a href="https://www.w3.org/TR/cssom-view-1/#dom-range-getboundingclientrect">getBoundingClientRect()</a> on <em>range</em>.</p>
     <li data-md>
-     <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view②">scroll a DOMRect into view</a> on <em>bounding rect</em> with <em>options</em>.</p>
+     <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view③">scroll a DOMRect into view</a> on <em>bounding rect</em> with <em>options</em> and startingElement <em>containingElement</em>.</p>
    </ol>
    <h4 class="heading settled" data-level="2.4.2" id="find-a-target-text"><span class="secno">2.4.2. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
    <p>To find the target text for a given string <em>fragment directive input</em>,
@@ -2504,7 +2508,7 @@ manipulations
   <aside class="dfn-panel" data-for="scroll-a-domrect-into-view">
    <b><a href="#scroll-a-domrect-into-view">#scroll-a-domrect-into-view</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-scroll-a-domrect-into-view">2.4.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-a-domrect-into-view①">(2)</a> <a href="#ref-for-scroll-a-domrect-into-view②">(3)</a>
+    <li><a href="#ref-for-scroll-a-domrect-into-view">2.4.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-a-domrect-into-view①">(2)</a> <a href="#ref-for-scroll-a-domrect-into-view②">(3)</a> <a href="#ref-for-scroll-a-domrect-into-view③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="scroll-a-range-into-view">
