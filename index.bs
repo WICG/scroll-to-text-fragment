@@ -338,7 +338,7 @@ fragment]] algorithm with the following:
     3. If <em>range</em> is non-null:
         1. [=scroll a Range into view|Scroll range into view=], with
             containingElement <em>target</em>, <em>behavior</em> set to "auto",
-            <em>block</em> set to "start", and <em>inline</em> set to "nearest".
+            <em>block</em> set to "center", and <em>inline</em> set to "nearest".
     4. Otherwise:
         1. [[cssom-view#scroll-an-element-into-view|Scroll target into view]],
             with <em>behavior</em> set to "auto", <em>block</em> set to "start",
