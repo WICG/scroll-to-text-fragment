@@ -241,7 +241,7 @@ is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and
 <code><dt><dfn>PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code>
 </dl>
 
-## Security and Privacy ## {#allow-text-fragment-directives}
+## Security and Privacy ## {#security-and-privacy}
 
 ### Motivation ### {#motivation}
 
@@ -265,6 +265,13 @@ information to the page.
   there via a link with a [=text fragment directive=] containing a specific
   condition. This information must not be shared with the page.
 </div>
+
+The following subsections restrict the feature to mitigate the expected attack
+vectors. In summary, the text fragment directives are invoked only on full
+(non-same-page) navigations that are the result of a user activation.
+Additionally, navigations originating from a different origin than the
+destination will require the navigation to take place in a "noopener" context,
+such that the destination page is known to be sufficiently isolated.
 
 ### Search Timing
 
@@ -293,28 +300,65 @@ asynchronous task to find and set the indicated part of the document.
 ### Should Allow Text Fragment ### {#should-allow-text-fragment}
 
 <div class="note">
-This algorithm has input <em>window, is user triggered</em> and returns a
-boolean indicating whether a [=text fragment directive=] should be allowed to
-invoke.
+  This algorithm has input <em>is user triggered, incumbentNavigationOrigin,
+  document</em> and returns a boolean indicating whether a [=text fragment
+  directive=] should be allowed to invoke on the given Document.
 </div>
 
-1. If any of the following conditions are true, return false.
-    * <em>window</em>'s
-        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent">
-        parent</a> field is non-null.
-    * <em>window</em>'s
-        <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener">
-        opener</a> field is non-null.
-    * The <a href="https://html.spec.whatwg.org/#document">Document</a> of the
-        [[HTML#latest-entry|latest entry]] in <em>window</em>'s
-        [[HTML#browsing-context|browsing context]]'s
-        [[HTML#session-history|session history]] is equal to <em>window</em>'s
-        document.
-        <div class="note">
-        That is, this is the result of a same document navigation
-        </div>
-    * <em>is user triggered</em> is false.
-2. Otherwise, return true.
+1. If <em>is user triggered</em> is false, return false.
+2. If the <a href="https://html.spec.whatwg.org/#document">Document</a> of the
+   [[HTML#latest-entry|latest entry]] in <em>document</em>'s
+   [[HTML#browsing-context|browsing context]]'s
+   [[HTML#session-history|session history]] is equal to <em>document</em>,
+   return false.
+   <div class="note">
+     i.e. Forbidden on a same-document navigation.
+   </div>
+3. If <em>incumbentNavigationOrigin</em> is equal to the origin of
+   <em>document</em> return true.
+4. If <em>document</em>'s <em>browsingContext</em> is a top level browsing context and its
+   [[HTML#tlbc-group|group]]'s [[HTML#browsing-context-set|browsing context set]]
+   has length 1 return true.
+   <div class="note">
+     i.e. Only allow navigation from a cross-process element/script if the
+     document is loaded in a noopener context. That is, a new top level
+     browsing context group to which the navigator does not have script access
+     and which may be placed into a separate process.
+   </div>
+5. Otherwise, return false.
+
+### allowTextFragmentDirective flag ### {#allow-text-fragment-directive-flag}
+
+<div class="note">
+  The algorithm to determine whether or not a text fragment directive should be
+  allowed to invoke must be run during document navigation and creation and
+  stored as a flag since it relies on the properties of the navigation while
+  the invocation will occur as part of the
+  [[HTML#scroll-to-the-fragment-identifier|scroll to the fragment]] steps which
+  can happen outside the context of a navigation.
+</div>
+
+Amend the [[html#read-html|page load processing model for HTML files]] to insert
+a step after step 1:
+
+2. Let <em>is user activated</em> be true if the current navigation was <a
+   href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
+   by user activation</a>
+3. Set <em>document</em>'s <em>allowTextFragmentDirective</em> flag to the
+   result of running [[#should-allow-text-fragment]] with <em>is user
+   activated</em>, <em>incumbentNavigationOrigin</em>, and <em>document</em>.
+
+Amend the [[HTML#try-to-scroll-to-the-fragment|try to scroll to the fragment]]
+steps by replacing the steps of the task queued in step 2:
+
+1. If document has no parser, or its parser has stopped parsing, or the user
+   agent has reason to believe the user is no longer interested in scrolling to
+   the fragment, then clear <em>document</em>'s
+   <em>allowTextFragmentDirective</em> flag and abort these steps.
+2. Scroll to the fragment given in document's URL. If this does not find an
+   indicated part of the document, then try to scroll to the fragment for
+   document.
+3. Clear <em>document</em>'s <em>allowTextFragmentDirective</em> flag
 
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
@@ -355,15 +399,7 @@ Add the following steps to the beginning of the processing model for
 
 1. Let <em>fragment directive string</em> be the <em>document</em>'s [=fragment
     directive=].
-2. Let <em>is user activated</em> be true if the current navigation was <a
-    href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-    by user activation</a>
-    <div class="note">
-    TODO: This might need an additional flag somewhere to track the user
-    activation triggering
-    </div>
-3. If the result of [[#should-allow-text-fragment]] with the window of the
-    document's browsing context and <em>is user activated</em> is true then:
+2. If <em>document</em>'s [[#allow-text-fragment-directive-flag]] is true then:
     1. Let <em>ranges</em> be a [[INFRA#list|list]] that is the result of
         [[#find-text-matches]] with <em>fragment directive string</em>.
     2. If <em>ranges</em> is non-empty, then:
