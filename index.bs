@@ -339,7 +339,7 @@ asynchronous task to find and set the indicated part of the document.
 </div>
 
 Amend the [[html#read-html|page load processing model for HTML files]] to insert
-a step after step 1:
+these steps after step 1:
 
 2. Let <em>is user activated</em> be true if the current navigation was <a
    href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
