@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 0dd2bba6dfda6c3168490a3a3044dd1d0b1ef8e0" name="generator">
+  <meta content="Bikeshed version 60a9f27730c0c9ae3e20485f824cef3713caf5fb" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-20">20 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-27">27 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1525,11 +1525,12 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#fragment-directive-grammar"><span class="secno">2.2.2</span> <span class="content">Fragment directive grammar</span></a>
        </ol>
       <li>
-       <a href="#allow-text-fragment-directives"><span class="secno">2.3</span> <span class="content">Security and Privacy</span></a>
+       <a href="#security-and-privacy"><span class="secno">2.3</span> <span class="content">Security and Privacy</span></a>
        <ol class="toc">
         <li><a href="#motivation"><span class="secno">2.3.1</span> <span class="content">Motivation</span></a>
         <li><a href="#search-timing"><span class="secno">2.3.2</span> <span class="content">Search Timing</span></a>
         <li><a href="#should-allow-text-fragment"><span class="secno">2.3.3</span> <span class="content">Should Allow Text Fragment</span></a>
+        <li><a href="#allow-text-fragment-directive-flag"><span class="secno">2.3.4</span> <span class="content">allowTextFragmentDirective flag</span></a>
        </ol>
       <li>
        <a href="#navigating-to-text-fragment"><span class="secno">2.4</span> <span class="content">Navigating to a Text Fragment</span></a>
@@ -1736,7 +1737,7 @@ is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="
 ",", which must be percent-encoded. </div>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code> 
    </dl>
-   <h3 class="heading settled" data-level="2.3" id="allow-text-fragment-directives"><span class="secno">2.3. </span><span class="content">Security and Privacy</span><a class="self-link" href="#allow-text-fragment-directives"></a></h3>
+   <h3 class="heading settled" data-level="2.3" id="security-and-privacy"><span class="secno">2.3. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
    <h4 class="heading settled" data-level="2.3.1" id="motivation"><span class="secno">2.3.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
    <div class="note" role="note">This section is non-normative</div>
    <p>Care must be taken when implementing <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①">text fragment directive</a> so that it
@@ -1753,6 +1754,12 @@ information to the page.</p>
    <div class="example" id="example-9ced00a5"><a class="self-link" href="#example-9ced00a5"></a> A user visiting a page listing dozens of medical conditions may have gotten
   there via a link with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> containing a specific
   condition. This information must not be shared with the page. </div>
+   <p>The following subsections restrict the feature to mitigate the expected attack
+vectors. In summary, the text fragment directives are invoked only on full
+(non-same-page) navigations that are the result of a user activation.
+Additionally, navigations originating from a different origin than the
+destination will require the navigation to take place in a "noopener" context,
+such that the destination page is known to be sufficiently isolated.</p>
    <h4 class="heading settled" data-level="2.3.2" id="search-timing"><span class="secno">2.3.2. </span><span class="content">Search Timing</span><a class="self-link" href="#search-timing"></a></h4>
    <p>A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
@@ -1768,26 +1775,56 @@ has been successfully found</em>.</p>
 multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.3 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
 asynchronous task to find and set the indicated part of the document.</p>
    <h4 class="heading settled" data-level="2.3.3" id="should-allow-text-fragment"><span class="secno">2.3.3. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
-   <div class="note" role="note"> This algorithm has input <em>window, is user triggered</em> and returns a
-boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> should be allowed to
-invoke. </div>
+   <div class="note" role="note"> This algorithm has input <em>is user triggered, incumbentNavigationOrigin,
+  document</em> and returns a boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment
+  directive</a> should be allowed to invoke on the given Document. </div>
    <ol>
     <li data-md>
-     <p>If any of the following conditions are true, return false.</p>
-     <ul>
-      <li data-md>
-       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-parent"> parent</a> field is non-null.</p>
-      <li data-md>
-       <p><em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/browsers.html#dom-opener"> opener</a> field is non-null.</p>
-      <li data-md>
-       <p>The <a href="https://html.spec.whatwg.org/#document">Document</a> of the <a href="https://html.spec.whatwg.org/multipage/#latest-entry">latest entry</a> in <em>window</em>’s <a href="https://html.spec.whatwg.org/multipage/#browsing-context">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/#session-history">session history</a> is equal to <em>window</em>’s
-document.</p>
-       <div class="note" role="note"> That is, this is the result of a same document navigation </div>
-      <li data-md>
-       <p><em>is user triggered</em> is false.</p>
-     </ul>
+     <p>If <em>is user triggered</em> is false, return false.</p>
     <li data-md>
-     <p>Otherwise, return true.</p>
+     <p>If the <a href="https://html.spec.whatwg.org/#document">Document</a> of the <a href="https://html.spec.whatwg.org/multipage/#latest-entry">latest entry</a> in <em>document</em>’s <a href="https://html.spec.whatwg.org/multipage/#browsing-context">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/#session-history">session history</a> is equal to <em>document</em>,
+   return false.</p>
+     <div class="note" role="note"> i.e. Forbidden on a same-document navigation. </div>
+    <li data-md>
+     <p>If <em>incumbentNavigationOrigin</em> is equal to the origin of <em>document</em> return true.</p>
+    <li data-md>
+     <p>If <em>document</em>’s <em>browsingContext</em> is a top level browsing context and its <a href="https://html.spec.whatwg.org/multipage/#tlbc-group">group</a>'s <a href="https://html.spec.whatwg.org/multipage/#browsing-context-set">browsing context set</a> has length 1 return true.</p>
+     <div class="note" role="note"> i.e. Only allow navigation from a cross-process element/script if the
+ document is loaded in a noopener context. That is, a new top level
+ browsing context group to which the navigator does not have script access
+ and which may be placed into a separate process. </div>
+    <li data-md>
+     <p>Otherwise, return false.</p>
+   </ol>
+   <h4 class="heading settled" data-level="2.3.4" id="allow-text-fragment-directive-flag"><span class="secno">2.3.4. </span><span class="content">allowTextFragmentDirective flag</span><a class="self-link" href="#allow-text-fragment-directive-flag"></a></h4>
+   <div class="note" role="note"> The algorithm to determine whether or not a text fragment directive should be
+  allowed to invoke must be run during document navigation and creation and
+  stored as a flag since it relies on the properties of the navigation while
+  the invocation will occur as part of the <a href="https://html.spec.whatwg.org/multipage/#scroll-to-the-fragment-identifier">scroll to the fragment</a> steps which
+  can happen outside the context of a navigation. </div>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#read-html">page load processing model for HTML files</a> to insert
+a step after step 1:</p>
+   <ol start="2">
+    <li data-md>
+     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
+   by user activation</a></p>
+    <li data-md>
+     <p>Set <em>document</em>’s <em>allowTextFragmentDirective</em> flag to the
+   result of running <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> with <em>is user
+   activated</em>, <em>incumbentNavigationOrigin</em>, and <em>document</em>.</p>
+   </ol>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/#try-to-scroll-to-the-fragment">try to scroll to the fragment</a> steps by replacing the steps of the task queued in step 2:</p>
+   <ol>
+    <li data-md>
+     <p>If document has no parser, or its parser has stopped parsing, or the user
+   agent has reason to believe the user is no longer interested in scrolling to
+   the fragment, then clear <em>document</em>’s <em>allowTextFragmentDirective</em> flag and abort these steps.</p>
+    <li data-md>
+     <p>Scroll to the fragment given in document’s URL. If this does not find an
+   indicated part of the document, then try to scroll to the fragment for
+   document.</p>
+    <li data-md>
+     <p>Clear <em>document</em>’s <em>allowTextFragmentDirective</em> flag</p>
    </ol>
    <h3 class="heading settled" data-level="2.4" id="navigating-to-text-fragment"><span class="secno">2.4. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
    <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
@@ -1837,13 +1874,7 @@ step 3.3.</div>
      <p>Let <em>fragment directive string</em> be the <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment
 directive</a>.</p>
     <li data-md>
-     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-by user activation</a></p>
-     <div class="note" role="note"> TODO: This might need an additional flag somewhere to track the user
-activation triggering </div>
-    <li data-md>
-     <p>If the result of <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> with the window of the
-document’s browsing context and <em>is user activated</em> is true then:</p>
+     <p>If <em>document</em>’s <a href="#allow-text-fragment-directive-flag">§ 2.3.4 allowTextFragmentDirective flag</a> is true then:</p>
      <ol>
       <li data-md>
        <p>Let <em>ranges</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> that is the result of <a href="#find-text-matches">§ 2.4.2 Find text matches</a> with <em>fragment directive string</em>.</p>
