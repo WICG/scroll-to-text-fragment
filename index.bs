@@ -195,7 +195,7 @@ A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
 in the [=fragment directive=] that matches the production:
 <dl>
 <code><dt><dfn>FragmentDirective</dfn> ::=</dt>
-<dd>[=TextDirective=] | [=UnknownDirective=] ("&" [=FragmentDirective=])?</dd></code>
+<dd>([=TextDirective=] | [=UnknownDirective=]) ("&" [=FragmentDirective=])?</dd></code>
 <code><dt><dfn>UnknownDirective</dfn> ::=</dt>
 <dd>[=CharacterString=]</dd></code>
 </dl>
