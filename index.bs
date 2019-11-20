@@ -195,14 +195,17 @@ A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
 in the [=fragment directive=] that matches the production:
 <dl>
 <code><dt><dfn>FragmentDirective</dfn> ::=</dt>
-<dd>[=TextDirective=] ("&" [=TextDirective=])*</dd></code>
+<dd>[=TextDirective=] | [=UnknownDirective=] ("&" [=FragmentDirective=])?</dd></code>
+<code><dt><dfn>UnknownDirective</dfn> ::=</dt>
+<dd>[=CharacterString=]</dd></code>
 </dl>
 
 <div class="note">
 The [=FragmentDirective=] may contain multiple directives split by the "&"
 character. Currently this means we allow multiple text directives to enable
 multiple indicated strings in the page, but this also allows for future
-directive types to be added and combined.
+directive types to be added and combined. For extensibility, we do not fail to
+parse if an unknown directive is in the &-separated list of directives.
 </div>
 
 The <dfn>text fragment directive</dfn> is one such [=fragment directive=] that
@@ -213,24 +216,24 @@ enables specifying a piece of text on the page, that matches the production:
 [=TextDirectiveParameters=]</dd></code>
 
 <code><dt><dfn>TextDirectiveParameters</dfn> ::=</dt><dd>
-([=TextDirectivePrefix=] ",")? [=TextMatchString=] ("," [=TextMatchString=])?
+([=TextDirectivePrefix=] ",")? [=CharacterString=] ("," [=CharacterString=])?
 ("," [=TextDirectiveSuffix=])?</dd></code>
 
-<code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt><dd>[=TextMatchString=]
+<code><dt><dfn>TextDirectivePrefix</dfn> ::=</dt><dd>[=CharacterString=]
 "-"</dd></code>
 
 <code><dt><dfn>TextDirectiveSuffix</dfn> ::=</dt><dd>"-"
-[=TextMatchString=]</dd></code>
+[=CharacterString=]</dd></code>
 
-<code><dt><dfn>TextMatchString</dfn> ::=</dt><dd>([=TextMatchChar=] |
+<code><dt><dfn>CharacterString</dfn> ::=</dt><dd>([=ExplicitChar=] |
 [=PercentEncodedChar=])+</dd></code>
 
-<code><dt><dfn>TextMatchChar</dfn> ::=</dt><dd>[a-zA-Z0-9] | "!" | "$" | "'" |
+<code><dt><dfn>ExplicitChar</dfn> ::=</dt><dd>[a-zA-Z0-9] | "!" | "$" | "'" |
 "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</dd>
 </code>
 
 <div class = "note">
-A [=TextMatchChar=] may be any
+A [=ExplicitChar=] may be any
 <a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
 is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and
 ",", which must be percent-encoded.
@@ -361,16 +364,23 @@ Add the following steps to the beginning of the processing model for
     </div>
 3. If the result of [[#should-allow-text-fragment]] with the window of the
     document's browsing context and <em>is user activated</em> is true then:
-    1. Let <em>range</em> be the result of [[#find-a-target-text]] with
-        <em>fragment directive string</em>.
-    2. If <em>range</em> is non-null, then:
-        1. Let <em>node</em> be <em>range</em>'s
+    1. Let <em>ranges</em> be a [[INFRA#list|list]] that is the result of
+        [[#find-text-matches]] with <em>fragment directive string</em>.
+    2. If <em>ranges</em> is non-empty, then:
+        1. Let <em>range</em> be the first item of <em>ranges</em>.
+            <div class="note">
+            The first [[DOM#range|Range]] in <em>ranges</em> is specifically
+            scrolled into view. This [[DOM#range|Range]], along with the
+            remaining <em>ranges</em> should be visually indicated in a way that
+            is not revealed to script, which is left as UA-defined behavior.
+            </div>
+        2. Let <em>node</em> be <em>range</em>'s
             [[DOM#dom-range-commonancestorcontainer|commonAncestorContainer]].
-        2. While <em>node</em>'s [[DOM#dom-node-nodetype|nodeType]] is not
+        3. While <em>node</em>'s [[DOM#dom-node-nodetype|nodeType]] is not
             [[DOM#dom-node-element_node|ELEMENT_NODE]]:
             1. Set <em>node</em> to <em>node</em>'s
                 [[DOM#dom-node-parentnode|parentNode]].
-        3. The indicated part of the document is <em>node</em> and
+        4. The indicated part of the document is <em>node</em> and
             <em>range</em>; return.
 
 ### Scroll a DOMRect into view ### {#scroll-rect-into-view}
@@ -415,16 +425,39 @@ Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
 2. Perform [=scroll a DOMRect into view=] on <em>bounding rect</em> with
     <em>options</em> and startingElement <em>containingElement</em>.
 
+### Find text matches ### {#find-text-matches}
+
+<div class="note">
+This algorithm has input <em>fragment directive input</em>, that is the raw
+fragment directive string, and returns a [[INFRA#list|list]] of
+[[DOM#range|Range]]s that are to be visually indicated, and the first should be
+scrolled into view.
+</div>
+
+1. If <em>fragment directive input</em> does not match the [=FragmentDirective=]
+    production, then return an empty [[INFRA#list|list]].
+2. Let <em>directives</em> be a [[INFRA#list|list]] of strings that is the
+    result of [[INFRA#strictly-split|splitting]] <em>fragment directive
+    input</em> on "&".
+3. Let <em>ranges</em> be a [[INFRA#list|list]] of [[DOM#range|Range]]s that is
+    initially empty.
+4. For each string <em>directive</em> in <em>directives</em>:
+    1. If <em>directive</em> does not match the production [=TextDirective=],
+        then continue.
+    2. If the result of [[#find-a-target-text]] on <em>directive</em> is
+        non-null, then [[INFRA#list-append|append]] it to <em>ranges</em>.
+5. Return <em>ranges</em>.
+
 ### Find a target text ### {#find-a-target-text}
 
-To find the target text for a given string <em>fragment directive input</em>,
+To find the target text for a given string <em>text directive input</em>,
 the user agent must run these steps:
-1. If <em>fragment directive input</em> does not begin with the string "text=",
+1. If <em>text directive input</em> does not begin with the string "text=",
     then return null.
-2. Let <em>raw target text</em> be the substring of <em>fragment directive
+2. Let <em>raw target text</em> be the substring of <em>text directive
     input</em> starting at index 5.
     <div class="note">
-    This is the remainder of the <em>fragment directive input</em> following,
+    This is the remainder of the <em>text directive input</em> following,
     but not including, the "text=" prefix.
     </div>
 3. If <em>raw target text</em> is the empty string, return null.
