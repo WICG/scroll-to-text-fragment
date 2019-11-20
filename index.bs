@@ -319,12 +319,36 @@ invoke.
 The scroll to text specification proposes an amendment to
 [[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
 present and a match is found in the page, the text fragment takes precedent over
-the element fragment as the indicated part of the document.
+the element fragment as the indicated part of the document. We amend the
+indicated part of the document to optionally include a [[DOM#range|Range]] that
+is scrolled into view instead of the containing element.
 </div>
 
-Add the following steps to the beginning of the processing model for <a
-href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">
-The indicated part of the document</a>.
+Replace step 3.1 of the [[HTML#scroll-to-the-fragment-identifier|scroll to the
+fragment]] algorithm with the following:
+3. Otherwise:
+    1. Let <em>target, range</em> be the [[DOM#element|Element]] and
+        [[DOM#range|Range]] that is
+        [[HTML#the-indicated-part-of-the-document|the indicated part of the
+        document]].
+
+Replace step 3.3 of the [[HTML#scroll-to-the-fragment-identifier|scroll to the
+fragment]] algorithm with the following:
+3. Otherwise:
+    3. If <em>range</em> is non-null:
+        1. [=scroll a Range into view|Scroll range into view=], with
+            containingElement <em>target</em>, <em>behavior</em> set to "auto",
+            <em>block</em> set to "center", and <em>inline</em> set to "nearest".
+    4. Otherwise:
+        1. [[cssom-view#scroll-an-element-into-view|Scroll target into view]],
+            with <em>behavior</em> set to "auto", <em>block</em> set to "start",
+            and <em>inline</em> set to "nearest".
+            <div class="note">This otherwise case is the same as the current
+            step 3.3.</div>
+
+
+Add the following steps to the beginning of the processing model for
+[[HTML#the-indicated-part-of-the-document|the indicated part of the document]]:
 
 1. Let <em>fragment directive string</em> be the <em>document</em>'s [=fragment
     directive=].
@@ -337,9 +361,59 @@ The indicated part of the document</a>.
     </div>
 3. If the result of [[#should-allow-text-fragment]] with the window of the
     document's browsing context and <em>is user activated</em> is true then:
-    1. If [[#find-a-target-text]] with <em>fragment directive string</em>
-        returns non-null, then the return value is the indicated part of the
-        document; return.
+    1. Let <em>range</em> be the result of [[#find-a-target-text]] with
+        <em>fragment directive string</em>.
+    2. If <em>range</em> is non-null, then:
+        1. Let <em>node</em> be <em>range</em>'s
+            [[DOM#dom-range-commonancestorcontainer|commonAncestorContainer]].
+        2. While <em>node</em>'s [[DOM#dom-node-nodetype|nodeType]] is not
+            [[DOM#dom-node-element_node|ELEMENT_NODE]]:
+            1. Set <em>node</em> to <em>node</em>'s
+                [[DOM#dom-node-parentnode|parentNode]].
+        3. The indicated part of the document is <em>node</em> and
+            <em>range</em>; return.
+
+### Scroll a DOMRect into view ### {#scroll-rect-into-view}
+<div class="note">
+This section describes a refactoring of the CSSOMVIEW's
+[[cssom-view#scroll-an-element-into-view|scroll an element into view]] algorithm 
+to separate the steps for scrolling a DOMRect into view, so it can be used to
+scroll a Range into view.
+</div>
+
+Move the [[cssom-view#scroll-an-element-into-view|scroll an element into
+view]] algorithm's steps 3-14 into a new algorithm <dfn>scroll a DOMRect into
+view</dfn>, with input <a
+href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> <em>bounding
+box</em>, [[cssom-view#dictdef-scrollintoviewoptions|ScrollIntoViewOptions]]
+dictionary <em>options</em>, and [[DOM#element|Element]]
+<em>startingElement</em>. Also move the recursive behavior described at the top
+of the [[cssom-view#scroll-an-element-into-view|scroll an element into view]]
+algorithm to the [=scroll a DOMRect into view=] algorithm: "run these steps for
+each ancestor element or viewport <b>of <em>startingElement</em></b> that
+establishes a scrolling box <em>scrolling box</em>, in order of innermost to
+outermost scrolling box".
+<div class="note">
+<em>bounding box</em> is renamed from <em>element bounding border box</em>.
+</div>
+
+Replace steps 3-14 of the [[cssom-view#scroll-an-element-into-view|scroll an
+element into view]] algorithm with a call to [=scroll a DOMRect into view=]:
+3. Perform [=scroll a DOMRect into view=] on <em>element bounding border
+    box</em> with options <em>options</em> and startingElement <em>element</em>.
+
+Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
+[[DOM#range|Range]] <em>range</em>, [[DOM#element|Element]]
+<em>containingElement</em>, and a
+[[cssom-view#dictdef-scrollintoviewoptions|ScrollIntoViewOptions]] dictionary
+<em>options</em>:
+1. Let <em>bounding rect</em> be the <a
+    href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> that is
+    the return value of invoking
+    [[cssom-view#dom-range-getboundingclientrect|getBoundingClientRect()]]
+    on <em>range</em>.
+2. Perform [=scroll a DOMRect into view=] on <em>bounding rect</em> with
+    <em>options</em> and startingElement <em>containingElement</em>.
 
 ### Find a target text ### {#find-a-target-text}
 
