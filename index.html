@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 2dbd5e1f0bb11704a5d90167ddaef9475f9c26b3" name="generator">
+  <meta content="Bikeshed version 0dd2bba6dfda6c3168490a3a3044dd1d0b1ef8e0" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1461,7 +1461,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-05">5 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-20">20 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1535,10 +1535,11 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#navigating-to-text-fragment"><span class="secno">2.4</span> <span class="content">Navigating to a Text Fragment</span></a>
        <ol class="toc">
         <li><a href="#scroll-rect-into-view"><span class="secno">2.4.1</span> <span class="content">Scroll a DOMRect into view</span></a>
-        <li><a href="#find-a-target-text"><span class="secno">2.4.2</span> <span class="content">Find a target text</span></a>
-        <li><a href="#find-match-with-context"><span class="secno">2.4.3</span> <span class="content">Find an exact match with context</span></a>
-        <li><a href="#advance-walker-to-text"><span class="secno">2.4.4</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
-        <li><a href="#next-word-bounded-instance"><span class="secno">2.4.5</span> <span class="content">Find the next word bounded instance</span></a>
+        <li><a href="#find-text-matches"><span class="secno">2.4.2</span> <span class="content">Find text matches</span></a>
+        <li><a href="#find-a-target-text"><span class="secno">2.4.3</span> <span class="content">Find a target text</span></a>
+        <li><a href="#find-match-with-context"><span class="secno">2.4.4</span> <span class="content">Find an exact match with context</span></a>
+        <li><a href="#advance-walker-to-text"><span class="secno">2.4.5</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
+        <li><a href="#next-word-bounded-instance"><span class="secno">2.4.6</span> <span class="content">Find the next word bounded instance</span></a>
        </ol>
       <li><a href="#indicating-the-text-match"><span class="secno">2.5</span> <span class="content">Indicating The Text Match</span></a>
       <li><a href="#feature-detectability"><span class="secno">2.6</span> <span class="content">Feature Detectability</span></a>
@@ -1697,40 +1698,41 @@ the fragment is the string "test" and the <a data-link-type="dfn" href="#fragmen
    <h4 class="heading settled" data-level="2.2.2" id="fragment-directive-grammar"><span class="secno">2.2.2. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
     A <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> is a sequence of characters that appears
 in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a> that matches the production: 
-   <dl> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirective">FragmentDirective</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> ("&amp;" <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a>)*</dd></code> </dl>
-   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective">FragmentDirective</a> may contain multiple directives split by the "&amp;"
+   <dl> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirective">FragmentDirective</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective">FragmentDirective</a>)?</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective">UnknownDirective</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a></dd></code> </dl>
+   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective②">FragmentDirective</a> may contain multiple directives split by the "&amp;"
 character. Currently this means we allow multiple text directives to enable
 multiple indicated strings in the page, but this also allows for future
-directive types to be added and combined. </div>
+directive types to be added and combined. For extensibility, we do not fail to
+parse if an unknown directive is in the &amp;-separated list of directives. </div>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> that
 enables specifying a piece of text on the page, that matches the production:</p>
    <dl>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt><dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> 
     <p><code></code></p>
     <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::=</code>
-    <dd><code> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring">TextMatchString</a> ("," <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring①">TextMatchString</a>)?
+    <dd><code> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring①">CharacterString</a> ("," <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring②">CharacterString</a>)?
 ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)?</code>
     <p></p>
     <p><code></code></p>
     <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</code>
-    <dd><code><a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring②">TextMatchString</a> "-"</code>
+    <dd><code><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring③">CharacterString</a> "-"</code>
     <p></p>
     <p><code></code></p>
     <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::=</code>
-    <dd><code>"-" <a data-link-type="dfn" href="#textmatchstring" id="ref-for-textmatchstring③">TextMatchString</a></code>
+    <dd><code>"-" <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring④">CharacterString</a></code>
     <p></p>
     <p><code></code></p>
-    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchstring">TextMatchString</dfn> ::=</code>
-    <dd><code>(<a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar">TextMatchChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</code>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="characterstring">CharacterString</dfn> ::=</code>
+    <dd><code>(<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</code>
     <p></p>
     <p><code></code></p>
-    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textmatchchar">TextMatchChar</dfn> ::=</code>
+    <dt><code><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="explicitchar">ExplicitChar</dfn> ::=</code>
     <dd><code>[a-zA-Z0-9] | "!" | "$" | "'" |
 "(" | ")" | "*" | "+" | "." | "/" | ":" | ";" | "=" | "?" | "@" | "_" | "~"</code>
     <code> </code>
     <p></p>
-    <div class="note" role="note"> A <a data-link-type="dfn" href="#textmatchchar" id="ref-for-textmatchchar①">TextMatchChar</a> may be any <a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
-is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and
+    <div class="note" role="note"> A <a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar①">ExplicitChar</a> may be any <a href="https://url.spec.whatwg.org/#url-code-points">URL code point</a> that
+is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a> syntax, that is "&amp;", "-", and
 ",", which must be percent-encoded. </div>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code> 
    </dl>
@@ -1763,7 +1765,7 @@ the existence of a text snippet by measuring how long the navigation call takes.
    <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 2.4 Navigating to a Text Fragment</a> steps does not differ based on whether a match
 has been successfully found</em>.</p>
    <p>This specification does not specify exactly how a UA achieves this as there are
-multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.2 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
+multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.3 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
 asynchronous task to find and set the indicated part of the document.</p>
    <h4 class="heading settled" data-level="2.3.3" id="should-allow-text-fragment"><span class="secno">2.3.3. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>window, is user triggered</em> and returns a
@@ -1844,10 +1846,16 @@ activation triggering </div>
 document’s browsing context and <em>is user activated</em> is true then:</p>
      <ol>
       <li data-md>
-       <p>Let <em>range</em> be the result of <a href="#find-a-target-text">§ 2.4.2 Find a target text</a> with <em>fragment directive string</em>.</p>
+       <p>Let <em>ranges</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> that is the result of <a href="#find-text-matches">§ 2.4.2 Find text matches</a> with <em>fragment directive string</em>.</p>
       <li data-md>
-       <p>If <em>range</em> is non-null, then:</p>
+       <p>If <em>ranges</em> is non-empty, then:</p>
        <ol>
+        <li data-md>
+         <p>Let <em>range</em> be the first item of <em>ranges</em>.</p>
+         <div class="note" role="note"> The first <a href="https://dom.spec.whatwg.org/#range">Range</a> in <em>ranges</em> is specifically
+scrolled into view. This <a href="https://dom.spec.whatwg.org/#range">Range</a>, along with the
+remaining <em>ranges</em> should be visually indicated in a way that
+is not revealed to script, which is left as UA-defined behavior. </div>
         <li data-md>
          <p>Let <em>node</em> be <em>range</em>’s <a href="https://dom.spec.whatwg.org/#dom-range-commonancestorcontainer">commonAncestorContainer</a>.</p>
         <li data-md>
@@ -1889,17 +1897,44 @@ the return value of invoking <a href="https://www.w3.org/TR/cssom-view-1/#dom-ra
     <li data-md>
      <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view③">scroll a DOMRect into view</a> on <em>bounding rect</em> with <em>options</em> and startingElement <em>containingElement</em>.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.4.2" id="find-a-target-text"><span class="secno">2.4.2. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
-   <p>To find the target text for a given string <em>fragment directive input</em>,
+   <h4 class="heading settled" data-level="2.4.2" id="find-text-matches"><span class="secno">2.4.2. </span><span class="content">Find text matches</span><a class="self-link" href="#find-text-matches"></a></h4>
+   <div class="note" role="note"> This algorithm has input <em>fragment directive input</em>, that is the raw
+fragment directive string, and returns a <a href="https://infra.spec.whatwg.org/#list">list</a> of <a href="https://dom.spec.whatwg.org/#range">Range</a>s that are to be visually indicated, and the first should be
+scrolled into view. </div>
+   <ol>
+    <li data-md>
+     <p>If <em>fragment directive input</em> does not match the <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective③">FragmentDirective</a> production, then return an empty <a href="https://infra.spec.whatwg.org/#list">list</a>.</p>
+    <li data-md>
+     <p>Let <em>directives</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of strings that is the
+result of <a href="https://infra.spec.whatwg.org/#strictly-split">splitting</a> <em>fragment directive
+input</em> on "&amp;".</p>
+    <li data-md>
+     <p>Let <em>ranges</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of <a href="https://dom.spec.whatwg.org/#range">Range</a>s that is
+initially empty.</p>
+    <li data-md>
+     <p>For each string <em>directive</em> in <em>directives</em>:</p>
+     <ol>
+      <li data-md>
+       <p>If <em>directive</em> does not match the production <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a>,
+then continue.</p>
+      <li data-md>
+       <p>If the result of <a href="#find-a-target-text">§ 2.4.3 Find a target text</a> on <em>directive</em> is
+non-null, then <a href="https://infra.spec.whatwg.org/#list-append">append</a> it to <em>ranges</em>.</p>
+     </ol>
+    <li data-md>
+     <p>Return <em>ranges</em>.</p>
+   </ol>
+   <h4 class="heading settled" data-level="2.4.3" id="find-a-target-text"><span class="secno">2.4.3. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
+   <p>To find the target text for a given string <em>text directive input</em>,
 the user agent must run these steps:</p>
    <ol>
     <li data-md>
-     <p>If <em>fragment directive input</em> does not begin with the string "text=",
+     <p>If <em>text directive input</em> does not begin with the string "text=",
 then return null.</p>
     <li data-md>
-     <p>Let <em>raw target text</em> be the substring of <em>fragment directive
+     <p>Let <em>raw target text</em> be the substring of <em>text directive
 input</em> starting at index 5.</p>
-     <div class="note" role="note"> This is the remainder of the <em>fragment directive input</em> following,
+     <div class="note" role="note"> This is the remainder of the <em>text directive input</em> following,
 but not including, the "text=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
@@ -1950,7 +1985,7 @@ variable</a> that indicates a text offset in <em>walker.currentNode.innerText</e
      <p>If textEnd is the empty string, then:</p>
      <ol>
       <li data-md>
-       <p>Let <em>match position</em> be the result of <a href="#find-match-with-context">§ 2.4.3 Find an exact match with context</a> with input walker <em>walker</em>, search position <em>position</em>,
+       <p>Let <em>match position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with input walker <em>walker</em>, search position <em>position</em>,
 prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>suffix</em>.</p>
       <li data-md>
        <p>If <em>match position</em> is null, then return null.</p>
@@ -1961,12 +1996,12 @@ position <em>match position</em> and length equal to the length of <em>textStart
        <p>Return <em>match</em>.</p>
      </ol>
     <li data-md>
-     <p>Otherwise, let <em>potential start position</em> be the result of <a href="#find-match-with-context">§ 2.4.3 Find an exact match with context</a> with input walker <em>walker</em>, start
+     <p>Otherwise, let <em>potential start position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with input walker <em>walker</em>, start
 position <em>position</em>, prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>null</em>.</p>
     <li data-md>
      <p>If <em>potential start position</em> is null, then return null.</p>
     <li data-md>
-     <p>Let <em>end position</em> be the result of <a href="#find-match-with-context">§ 2.4.3 Find an exact match with context</a> with
+     <p>Let <em>end position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with
 input walker <em>walker</em>, search position <em>potential start
 position</em>, prefix <em>null</em>, query <em>textEnd</em>, and suffix <em>suffix</em>.</p>
     <li data-md>
@@ -1980,7 +2015,7 @@ position - start position</em>.</p>
     <li data-md>
      <p>Return <em>match</em>.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.4.3" id="find-match-with-context"><span class="secno">2.4.3. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
+   <h4 class="heading settled" data-level="2.4.4" id="find-match-with-context"><span class="secno">2.4.4. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>walker, search position, prefix, query,</em> and <em>suffix</em> and returns a text position that is the start of the match. </div>
    <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
 copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
@@ -2000,7 +2035,7 @@ copy, i.e. any modifications are performed on the caller’s instance of <em>wal
          <ol>
           <li data-md>
            <p>Advance <em>search position</em> to the position after the result
-of <a href="#next-word-bounded-instance">§ 2.4.5 Find the next word bounded instance</a> of <em>prefix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale">current
+of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>prefix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale">current
 locale</a>.</p>
           <li data-md>
            <p>If <em>search position</em> is null, then break.</p>
@@ -2010,7 +2045,7 @@ locale</a>.</p>
            <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
            <ol>
             <li data-md>
-             <p>Perform <a href="#advance-walker-to-text">§ 2.4.4 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
+             <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
             <li data-md>
              <p>If <em>walker.currentNode</em> is null, then return null.</p>
             <li data-md>
@@ -2021,11 +2056,11 @@ locale</a>.</p>
              <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
            </ol>
           <li data-md>
-           <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.5 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
+           <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
 position</em>, then continue.</p>
          </ol>
         <li data-md>
-         <p>Advance <em>search position</em> to the position after the result of <a href="#next-word-bounded-instance">§ 2.4.5 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale②">current locale</a>.</p>
+         <p>Advance <em>search position</em> to the position after the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale②">current locale</a>.</p>
          <div class="note" role="note"> If a prefix was specified, the search position is at the beginning
 of <em>query</em> and this will advance it to the end of the query
 to search for a potential suffix. Otherwise, this will find the next
@@ -2045,7 +2080,7 @@ match position</em>.</p>
           <li data-md>
            <p>Let <em>suffix_walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> that is a copy of <em>walker</em>.</p>
           <li data-md>
-           <p>Perform <a href="#advance-walker-to-text">§ 2.4.4 Advance a TreeWalker to the next text node</a> on <em>suffix_walker</em>.</p>
+           <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>suffix_walker</em>.</p>
           <li data-md>
            <p>If <em>suffix_walker.currentNode</em> is null, then return null.</p>
           <li data-md>
@@ -2056,17 +2091,17 @@ match position</em>.</p>
            <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
          </ol>
         <li data-md>
-         <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.5 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
+         <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
 locale</a> starts at <em>search position</em>, then return <em>potential match position</em>.</p>
        </ol>
       <li data-md>
-       <p>Perform <a href="#advance-walker-to-text">§ 2.4.4 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
+       <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
      </ol>
     <li data-md>
      <p>Return null.</p>
    </ol>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="current-locale">current locale</dfn> is the <a href="https://html.spec.whatwg.org/multipage/dom.html#language">language</a> of the <em>currentNode</em>.</p>
-   <h4 class="heading settled" data-level="2.4.4" id="advance-walker-to-text"><span class="secno">2.4.4. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
+   <h4 class="heading settled" data-level="2.4.5" id="advance-walker-to-text"><span class="secno">2.4.5. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
    <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
 copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
@@ -2077,7 +2112,7 @@ copy, i.e. any modifications are performed on the caller’s instance of <em>wal
        <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode"> walker.nextNode()</a></p>
      </ol>
    </ol>
-   <h4 class="heading settled" data-level="2.4.5" id="next-word-bounded-instance"><span class="secno">2.4.5. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
+   <h4 class="heading settled" data-level="2.4.6" id="next-word-bounded-instance"><span class="secno">2.4.6. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
 instance if it is found. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
@@ -2390,7 +2425,9 @@ manipulations
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#current-locale">current locale</a><span>, in §2.4.3</span>
+   <li><a href="#characterstring">CharacterString</a><span>, in §2.2.2</span>
+   <li><a href="#current-locale">current locale</a><span>, in §2.4.4</span>
+   <li><a href="#explicitchar">ExplicitChar</a><span>, in §2.2.2</span>
    <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §2.6</span>
    <li><a href="#fragment-directive">fragment directive</a><span>, in §2.2.1</span>
    <li>
@@ -2409,8 +2446,7 @@ manipulations
    <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §2.2.2</span>
    <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §2.2.2</span>
    <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §2.2.2</span>
-   <li><a href="#textmatchchar">TextMatchChar</a><span>, in §2.2.2</span>
-   <li><a href="#textmatchstring">TextMatchString</a><span>, in §2.2.2</span>
+   <li><a href="#unknowndirective">UnknownDirective</a><span>, in §2.2.2</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §2.2.2</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -2447,7 +2483,14 @@ manipulations
   <aside class="dfn-panel" data-for="fragmentdirective">
    <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-fragmentdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-fragmentdirective②">(2)</a>
+    <li><a href="#ref-for-fragmentdirective③">2.4.2. Find text matches</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="unknowndirective">
+   <b><a href="#unknowndirective">#unknowndirective</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-unknowndirective">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="text-fragment-directive">
@@ -2466,7 +2509,8 @@ manipulations
   <aside class="dfn-panel" data-for="textdirective">
    <b><a href="#textdirective">#textdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a> <a href="#ref-for-textdirective②">(3)</a>
+    <li><a href="#ref-for-textdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a>
+    <li><a href="#ref-for-textdirective②">2.4.2. Find text matches</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveparameters">
@@ -2487,16 +2531,16 @@ manipulations
     <li><a href="#ref-for-textdirectivesuffix">2.2.2. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textmatchstring">
-   <b><a href="#textmatchstring">#textmatchstring</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="characterstring">
+   <b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textmatchstring">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textmatchstring①">(2)</a> <a href="#ref-for-textmatchstring②">(3)</a> <a href="#ref-for-textmatchstring③">(4)</a>
+    <li><a href="#ref-for-characterstring">2.2.2. Fragment directive grammar</a> <a href="#ref-for-characterstring①">(2)</a> <a href="#ref-for-characterstring②">(3)</a> <a href="#ref-for-characterstring③">(4)</a> <a href="#ref-for-characterstring④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textmatchchar">
-   <b><a href="#textmatchchar">#textmatchchar</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="explicitchar">
+   <b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textmatchchar">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textmatchchar①">(2)</a>
+    <li><a href="#ref-for-explicitchar">2.2.2. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="percentencodedchar">
@@ -2520,7 +2564,7 @@ manipulations
   <aside class="dfn-panel" data-for="current-locale">
    <b><a href="#current-locale">#current-locale</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-locale">2.4.3. Find an exact match with context</a> <a href="#ref-for-current-locale①">(2)</a> <a href="#ref-for-current-locale②">(3)</a> <a href="#ref-for-current-locale③">(4)</a>
+    <li><a href="#ref-for-current-locale">2.4.4. Find an exact match with context</a> <a href="#ref-for-current-locale①">(2)</a> <a href="#ref-for-current-locale②">(3)</a> <a href="#ref-for-current-locale③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective①">
