@@ -120,7 +120,7 @@ Using this syntax
 ```
 :~:text=[prefix-,]textStart[,textEnd][,-suffix]
 
-              context  |-------match-----|  context
+         context  |-------match-----|  context
 ```
 _(Square brackets indicate an optional parameter)_
 
