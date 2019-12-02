@@ -137,7 +137,9 @@ The text directive is delimited from the rest of the fragment using the `:~:` to
 to indicate that it is a _fragment directive_ that the user agent should
 process and then remove from the URL fragment that is exposed to the site. This
 change has been [proposed](https://github.com/whatwg/html/issues/4868) to the
-HTML spec.
+HTML spec. More details below in the
+[Fragment Directive](#fragment-directive)
+section.
 
 This solves the problem of sites relying on the URL fragment for routing/state,
 see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).  This
@@ -395,7 +397,7 @@ Each target text will start searching from the top of the page independently so
 that we may allow highlighting a snippet above the one that was scrolled into
 view.
 
-### Fragment Delmiter
+### Fragment Directive
 
 We ran into an interesting challenge during development, tracked in
 [#15](https://github.com/WICG/ScrollToTextFragment/issues/15). Some existing
@@ -510,6 +512,35 @@ both a "legacy" fragment as well as a directive:
 
 In this case, if the text fragment isn't found, we can fallback to scrolling
 the element-id specified in the fragment (e.g. id="fallback" in this case).
+
+#### Compatibility and Interop
+
+There is some compatibility risk with this change. We expect the effect to be
+relatively small.
+
+User agents that haven't implemented this feature won't know how to process the
+fragment directive. Because it is part of the fragment, on most pages this will
+simply be processed as a non-existent fragment so the page will load scrolled
+to the top, as if a fragment weren't supplied. This is a graceful fallback.
+
+A more risky scenario is apps that use the fragment for state and routing. In
+these cases, the page is using the fragment in an application-defined maner and
+adding any content to it could negatively affect operation (this is one of the
+motivating cases for using the fragment delimiter for `text=`).
+
+In the worst case, such a URL on an unimplementing UA may navigate to a broken
+page. However, most such pages we've seen handle this gracefully, e.g.:
+
+https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/OOZIrtSPLeM:~:text=test
+
+Is a Google Groups post with a directive appended. Loading it in an
+unimplementing UA displays an "The input is invalid." toast in the corner but the
+page otherwise loads as if without the directive. We expect many cases will
+behave similarly but the potential of more serious breakage does exist here.
+
+Note: the fragment directive behavior (stripping everything after and including
+the `:~:` delimiter from the fragment) can be implemented independently of the
+larger proposal.
 
 ### :target
 
