@@ -1,14 +1,14 @@
 <pre class='metadata'>
 Status: CG-DRAFT
-Title: Scroll To Text Fragment
+Title: Text Fragments
 ED: wicg.github.io/ScrollToTextFragment/index.html
-Shortname: scroll-to-text
+Shortname: text-fragments
 Level: 1
 Editor: Nick Burris, Google https://www.google.com, nburris@chromium.org
 Editor: David Bokan, Google https://www.google.com, bokan@chromium.org
-Abstract: Scroll To Text adds support for specifying a text snippet in the URL
-    fragment. When navigating to a URL with such a fragment, the browser will
-    find the first instance of the text snippet and scroll it into view.
+Abstract: Text Fragments adds support for specifying a text snippet in the URL
+    fragment. When navigating to a URL with such a fragment, the user agent
+    can quickly emphasise and/or bring it to the user's attention.
 Group: wicg
 Repository: wicg/ScrollToTextFragment
 </pre>
@@ -20,22 +20,42 @@ Repository: wicg/ScrollToTextFragment
 ## Use cases ## {#use-cases}
 
 ### Web text references ### {#web-text-references}
-The core use case for scroll to text is to allow URLs to serve as an exact text
+The core use case for text fragments is to allow URLs to serve as an exact text
 reference across the web. For example, Wikipedia references could link to the
 exact text they are quoting from a page. Similarly, search engines can serve
 URLs that direct the user to the answer they are looking for in the page rather
 than linking to the top of the page.
 
 ### User sharing ### {#user-sharing}
-With scroll to text, browsers may implement an option to 'Copy URL to here'
-when the user opens the context menu on a text selection. The browser can
-then generate a URL with the text selection appropriately specified, and the
-recipient of the URL will have the text scrolled into view and visually
-indicated.  Without scroll to text, if a user wants to share a passage of text
-from a page, they would likely just copy and paste the passage, in which case
-the receiver loses the context of the page.
+With text fragments, browsers may implement an option to 'Copy URL to here'
+when the user opens the context menu on a text selection. The browser can then
+generate a URL with the text selection appropriately specified, and the
+recipient of the URL will have the specified text conveniently indicated.
+Without text fragments, if a user wants to share a passage of text from a page,
+they would likely just copy and paste the passage, in which case the receiver
+loses the context of the page.
 
 # Description # {#description}
+
+## Indication ## {#indication}
+
+<div class='note'>This section is non-normative</div>
+
+This specification intentionally doesn't define what actions a user agent
+should or could take to "indicate" a text match. There are different
+experiences and trade-offs a user agent could make. Some examples of possible
+actions:
+
+* Providing visual emphasis or highlight of the text passage
+* Automatically scrolling the passage into view when the page is navigated
+* Activating a UA's find-in-page feature on the text passage
+* Providing a "Click to scroll to text passage" notification
+* Providing a notification when the text passage isn't found in the page
+
+<div class='note'>
+The choice of action can have implications for user security and privacy.  See
+the [[#security-and-privacy]] section for details.
+</div>
 
 ## Syntax ## {#syntax}
 
@@ -95,8 +115,8 @@ for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element's text as a prefix.
 </div>
 
-The context terms are not part of the target text fragment and must not be
-visually indicated or affect the scroll position.
+The context terms are not part of the targeted text fragment and must not be
+visually indicated.
 
 <div class="example">
 <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
@@ -248,10 +268,11 @@ is not explicitly used in the [=TextDirective=] syntax, that is "&", "-", and
 <div class="note">This section is non-normative</div>
 
 Care must be taken when implementing [=text fragment directive=] so that it
-cannot be used to exfiltrate information across origins. Scripts can navigate
-a page to a cross-origin URL with a [=text fragment directive=].  If a malicious
-actor can determine that a victim page scrolled after such a navigation, they
-can infer the existence of any text on the page.
+cannot be used to exfiltrate information across origins. Scripts can navigate a
+page to a cross-origin URL with a [=text fragment directive=]. If a malicious
+actor can determine that the text fragment was successfully found in victim
+page as a result of such a navigation, they can infer the existence of any text
+on the page.
 
 In addition, the user's privacy should be ensured even from the destination
 origin.  Although scripts on that page can already learn a lot about a user's
@@ -266,12 +287,63 @@ information to the page.
   condition. This information must not be shared with the page.
 </div>
 
+<div class="note">
+  TODO: This last paragraph and example are probably not be necessary - the
+  page can already determine what the user is looking at based on the viewport
+  rect. It may not be desireable since it would prevent use cases like
+  marginalia, allowing pages to provide UA and linking based on the text
+  fragment.
+</div>
+
 The following subsections restrict the feature to mitigate the expected attack
 vectors. In summary, the text fragment directives are invoked only on full
 (non-same-page) navigations that are the result of a user activation.
 Additionally, navigations originating from a different origin than the
 destination will require the navigation to take place in a "noopener" context,
 such that the destination page is known to be sufficiently isolated.
+
+### Scroll On Navigation
+
+A UA may choose to automatically scroll a matched text passage into view. This
+can be a convenient experience for the user but does present some risks that
+implementing UAs should be aware of.
+
+There are known (and potentially unknown) ways a scroll on navigation might be
+detectable and distinguished from natural user scrolls.
+
+<div class="example">
+  An origin embedded in an iframe in the target page registers an
+  IntersectionObserver and determines in the first 500ms of page load whether
+  a scroll has occurred. This scroll can be indicative of whether the text
+  fragment was successfuly found on the page.
+</div>
+
+<div class="example">
+  Two users share the same network on which traffic is visible between them.
+  A malicious user sends the victim a link with a text fragment to a
+  page. The searched-for text appears nearby to a resource located on a unique
+  (on the page) domain. The attacker may be able to infer the success or failure
+  of the fragment search based on the order of requests for DNS lookup.
+</div>
+
+<div class="example">
+  An attacker sends a link to a victim, sending them to a page that displays
+  a private token. The attacker asks the victim to read back the token. Using
+  a text fragment, the attacker gets the page to load for the victim such that
+  warnings about keeping the token secret are scrolled out of view.
+</div>
+
+All known cases like this rely on specific circumstances about the target page
+so don't apply generally. With additional restrictions about when the text
+fragment can invoke an attacker is further restricted. Nonetheless, different
+UAs can come to different conclusions about whether these risks are acceptable.
+UAs should consider these factors when determining whether to scroll as part of
+navigating to a text fragment.
+
+Conforming UAs may choose not to scroll automatically on navigation. Such UAs
+may, instead, provide UI to initiate the scroll ("click to scroll") or none
+at all. In these cases UA should provide some indication to the user that an
+indicated passage exists further down on the page.
 
 ### Search Timing
 
@@ -299,6 +371,11 @@ asynchronous task to find and set the indicated part of the document.
 
 ### Should Allow Text Fragment ### {#should-allow-text-fragment}
 
+<div class="note">
+  TODO: This should really only prevent potentially observable side-effects like
+  automatic scrolling. Unobservable effects like a highlight should be safely
+  allowed in all cases.
+</div>
 <div class="note">
   This algorithm has input <em>is user triggered, incumbentNavigationOrigin,
   document</em> and returns a boolean indicating whether a [=text fragment
@@ -363,12 +440,12 @@ steps by replacing the steps of the task queued in step 2:
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 <div class="note">
-The scroll to text specification proposes an amendment to
+The text fragment specification proposes an amendment to
 [[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
 indicated part of the document to optionally include a [[DOM#range|Range]] that
-is scrolled into view instead of the containing element.
+may be scrolled into view instead of the containing element.
 </div>
 
 Replace step 3.1 of the [[HTML#scroll-to-the-fragment-identifier|scroll to the
@@ -383,7 +460,8 @@ Replace step 3.3 of the [[HTML#scroll-to-the-fragment-identifier|scroll to the
 fragment]] algorithm with the following:
 3. Otherwise:
     3. If <em>range</em> is non-null:
-        1. [=scroll a Range into view|Scroll range into view=], with
+        1. If the UA supports scrolling of text fragments on navigation, invoke
+            [=scroll a Range into view|Scroll range into view=], with
             containingElement <em>target</em>, <em>behavior</em> set to "auto",
             <em>block</em> set to "center", and <em>inline</em> set to "nearest".
     4. Otherwise:
@@ -421,10 +499,10 @@ Add the following steps to the beginning of the processing model for
 
 ### Scroll a DOMRect into view ### {#scroll-rect-into-view}
 <div class="note">
-This section describes a refactoring of the CSSOMVIEW's
-[[cssom-view#scroll-an-element-into-view|scroll an element into view]] algorithm 
-to separate the steps for scrolling a DOMRect into view, so it can be used to
-scroll a Range into view.
+  This section describes a refactoring of the CSSOMVIEW's
+  [[cssom-view#scroll-an-element-into-view|scroll an element into view]] algorithm 
+  to separate the steps for scrolling a DOMRect into view, so it can be used to
+  scroll a Range into view.
 </div>
 
 Move the [[cssom-view#scroll-an-element-into-view|scroll an element into
@@ -699,10 +777,13 @@ API for word boundary matching.
 
 ## Indicating The Text Match ## {#indicating-the-text-match}
 
-In addition to scrolling the text fragment into view as part of the <a
+The UA may choose to scroll the text fragment into view as part of the <a
 href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">
-Try To Scroll To The Fragment</a> steps, the UA should visually indicate the
-matched text in some way such that the user is made aware of the text match.
+Try To Scroll To The Fragment</a> steps or by some other mechanism; however, it
+is not required to scroll the match into view.
+
+The UA should visually indicate the matched text in some way such that the user
+is made aware of the text match, such as with a high-contrast highlight.
 
 The UA should provide to the user some method of dismissing the match, such
 that the matched text no longer appears visually indicated.
@@ -889,3 +970,9 @@ correct one:
   <a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations">
   https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations</a>
 </div>
+
+If a UA chooses not to scroll text fragments into view on navigation (reasons
+why a UA may make this choice are discussed in [[#security-and-privacy]]), it
+must scroll the element-id into view, if provided, regardless of whether a text
+fragment was matched. Not doing so would allow detecting the text fragment
+match based on whether the element-id was scrolled.
