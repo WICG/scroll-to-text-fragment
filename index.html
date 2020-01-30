@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>Scroll To Text Fragment</title>
+  <title>Text Fragments</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -1167,6 +1167,18 @@ Possible extra rowspan handling
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.overlarge {
+		/* Magic to create good table positioning:
+		   "content column" is 50ems wide at max; less on smaller screens.
+		   Extra space (after ToC + content) is empty on the right.
+
+		   1. When table < content column, centers table in column.
+		   2. When content < table < available, left-aligns.
+		   3. When table > available, fills available + scroll bar.
+		*/ 
+		display: grid;
+		grid-template-columns: minmax(0, 50em);
+	}
 	.overlarge > table {
 		/* limit preferred width of table */
 		max-width: 50em;
@@ -1176,7 +1188,6 @@ Possible extra rowspan handling
 
 	@media (min-width: 55em) {
 		.overlarge {
-			margin-left: calc(13px + 26.5rem - 50vw);
 			margin-right: calc(13px + 26.5rem - 50vw);
 			max-width: none;
 		}
@@ -1184,14 +1195,12 @@ Possible extra rowspan handling
 	@media screen and (min-width: 78em) {
 		body:not(.toc-inline) .overlarge {
 			/* 30.5em body padding 50em content area */
-			margin-left: calc(40em - 50vw) !important;
 			margin-right: calc(40em - 50vw) !important;
 		}
 	}
 	@media screen and (min-width: 90em) {
 		body:not(.toc-inline) .overlarge {
 			/* 4em html margin 30.5em body padding 50em content area */
-			margin-left: 0 !important;
 			margin-right: calc(84.5em - 100vw) !important;
 		}
 	}
@@ -1213,7 +1222,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 60a9f27730c0c9ae3e20485f824cef3713caf5fb" name="generator">
+  <meta content="Bikeshed version 8bc2fccb49a45a0af18c5e75ce18049d75f824b6" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
 <style>/* style-md-lists */
 
@@ -1460,8 +1469,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">Scroll To Text Fragment</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-27">27 November 2019</time></span></h2>
+   <h1 class="p-name no-ref" id="title">Text Fragments</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-01-30">30 January 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1474,16 +1483,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2019 the Contributors to the Scroll To Text Fragment Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the Text Fragments Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>Scroll To Text adds support for specifying a text snippet in the URL
+   <p>Text Fragments adds support for specifying a text snippet in the URL
 
-    fragment. When navigating to a URL with such a fragment, the browser will
-    find the first instance of the text snippet and scroll it into view.</p>
+    fragment. When navigating to a URL with such a fragment, the user agent
+    can quickly emphasise and/or bring it to the user’s attention.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">Status of this document</span></h2>
@@ -1513,37 +1522,39 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <li>
      <a href="#description"><span class="secno">2</span> <span class="content">Description</span></a>
      <ol class="toc">
+      <li><a href="#indication"><span class="secno">2.1</span> <span class="content">Indication</span></a>
       <li>
-       <a href="#syntax"><span class="secno">2.1</span> <span class="content">Syntax</span></a>
+       <a href="#syntax"><span class="secno">2.2</span> <span class="content">Syntax</span></a>
        <ol class="toc">
-        <li><a href="#context-terms"><span class="secno">2.1.1</span> <span class="content">Context Terms</span></a>
+        <li><a href="#context-terms"><span class="secno">2.2.1</span> <span class="content">Context Terms</span></a>
        </ol>
       <li>
-       <a href="#the-fragment-directive"><span class="secno">2.2</span> <span class="content">The Fragment Directive</span></a>
+       <a href="#the-fragment-directive"><span class="secno">2.3</span> <span class="content">The Fragment Directive</span></a>
        <ol class="toc">
-        <li><a href="#parsing-the-fragment-directive"><span class="secno">2.2.1</span> <span class="content">Parsing the fragment directive</span></a>
-        <li><a href="#fragment-directive-grammar"><span class="secno">2.2.2</span> <span class="content">Fragment directive grammar</span></a>
+        <li><a href="#parsing-the-fragment-directive"><span class="secno">2.3.1</span> <span class="content">Parsing the fragment directive</span></a>
+        <li><a href="#fragment-directive-grammar"><span class="secno">2.3.2</span> <span class="content">Fragment directive grammar</span></a>
        </ol>
       <li>
-       <a href="#security-and-privacy"><span class="secno">2.3</span> <span class="content">Security and Privacy</span></a>
+       <a href="#security-and-privacy"><span class="secno">2.4</span> <span class="content">Security and Privacy</span></a>
        <ol class="toc">
-        <li><a href="#motivation"><span class="secno">2.3.1</span> <span class="content">Motivation</span></a>
-        <li><a href="#search-timing"><span class="secno">2.3.2</span> <span class="content">Search Timing</span></a>
-        <li><a href="#should-allow-text-fragment"><span class="secno">2.3.3</span> <span class="content">Should Allow Text Fragment</span></a>
-        <li><a href="#allow-text-fragment-directive-flag"><span class="secno">2.3.4</span> <span class="content">allowTextFragmentDirective flag</span></a>
+        <li><a href="#motivation"><span class="secno">2.4.1</span> <span class="content">Motivation</span></a>
+        <li><a href="#scroll-on-navigation"><span class="secno">2.4.2</span> <span class="content">Scroll On Navigation</span></a>
+        <li><a href="#search-timing"><span class="secno">2.4.3</span> <span class="content">Search Timing</span></a>
+        <li><a href="#should-allow-text-fragment"><span class="secno">2.4.4</span> <span class="content">Should Allow Text Fragment</span></a>
+        <li><a href="#allow-text-fragment-directive-flag"><span class="secno">2.4.5</span> <span class="content">allowTextFragmentDirective flag</span></a>
        </ol>
       <li>
-       <a href="#navigating-to-text-fragment"><span class="secno">2.4</span> <span class="content">Navigating to a Text Fragment</span></a>
+       <a href="#navigating-to-text-fragment"><span class="secno">2.5</span> <span class="content">Navigating to a Text Fragment</span></a>
        <ol class="toc">
-        <li><a href="#scroll-rect-into-view"><span class="secno">2.4.1</span> <span class="content">Scroll a DOMRect into view</span></a>
-        <li><a href="#find-text-matches"><span class="secno">2.4.2</span> <span class="content">Find text matches</span></a>
-        <li><a href="#find-a-target-text"><span class="secno">2.4.3</span> <span class="content">Find a target text</span></a>
-        <li><a href="#find-match-with-context"><span class="secno">2.4.4</span> <span class="content">Find an exact match with context</span></a>
-        <li><a href="#advance-walker-to-text"><span class="secno">2.4.5</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
-        <li><a href="#next-word-bounded-instance"><span class="secno">2.4.6</span> <span class="content">Find the next word bounded instance</span></a>
+        <li><a href="#scroll-rect-into-view"><span class="secno">2.5.1</span> <span class="content">Scroll a DOMRect into view</span></a>
+        <li><a href="#find-text-matches"><span class="secno">2.5.2</span> <span class="content">Find text matches</span></a>
+        <li><a href="#find-a-target-text"><span class="secno">2.5.3</span> <span class="content">Find a target text</span></a>
+        <li><a href="#find-match-with-context"><span class="secno">2.5.4</span> <span class="content">Find an exact match with context</span></a>
+        <li><a href="#advance-walker-to-text"><span class="secno">2.5.5</span> <span class="content">Advance a TreeWalker to the next text node</span></a>
+        <li><a href="#next-word-bounded-instance"><span class="secno">2.5.6</span> <span class="content">Find the next word bounded instance</span></a>
        </ol>
-      <li><a href="#indicating-the-text-match"><span class="secno">2.5</span> <span class="content">Indicating The Text Match</span></a>
-      <li><a href="#feature-detectability"><span class="secno">2.6</span> <span class="content">Feature Detectability</span></a>
+      <li><a href="#indicating-the-text-match"><span class="secno">2.6</span> <span class="content">Indicating The Text Match</span></a>
+      <li><a href="#feature-detectability"><span class="secno">2.7</span> <span class="content">Feature Detectability</span></a>
      </ol>
     <li>
      <a href="#generating-text-fragment-directives"><span class="secno">3</span> <span class="content">Generating Text Fragment Directives</span></a>
@@ -1571,23 +1582,43 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <div class="note" role="note">This section is non-normative</div>
    <h3 class="heading settled" data-level="1.1" id="use-cases"><span class="secno">1.1. </span><span class="content">Use cases</span><a class="self-link" href="#use-cases"></a></h3>
    <h4 class="heading settled" data-level="1.1.1" id="web-text-references"><span class="secno">1.1.1. </span><span class="content">Web text references</span><a class="self-link" href="#web-text-references"></a></h4>
-    The core use case for scroll to text is to allow URLs to serve as an exact text
+    The core use case for text fragments is to allow URLs to serve as an exact text
 reference across the web. For example, Wikipedia references could link to the
 exact text they are quoting from a page. Similarly, search engines can serve
 URLs that direct the user to the answer they are looking for in the page rather
 than linking to the top of the page. 
    <h4 class="heading settled" data-level="1.1.2" id="user-sharing"><span class="secno">1.1.2. </span><span class="content">User sharing</span><a class="self-link" href="#user-sharing"></a></h4>
-    With scroll to text, browsers may implement an option to 'Copy URL to here'
-when the user opens the context menu on a text selection. The browser can
-then generate a URL with the text selection appropriately specified, and the
-recipient of the URL will have the text scrolled into view and visually
-indicated.  Without scroll to text, if a user wants to share a passage of text
-from a page, they would likely just copy and paste the passage, in which case
-the receiver loses the context of the page. 
+    With text fragments, browsers may implement an option to 'Copy URL to here'
+when the user opens the context menu on a text selection. The browser can then
+generate a URL with the text selection appropriately specified, and the
+recipient of the URL will have the specified text conveniently indicated.
+Without text fragments, if a user wants to share a passage of text from a page,
+they would likely just copy and paste the passage, in which case the receiver
+loses the context of the page. 
    <h2 class="heading settled" data-level="2" id="description"><span class="secno">2. </span><span class="content">Description</span><a class="self-link" href="#description"></a></h2>
-   <h3 class="heading settled" data-level="2.1" id="syntax"><span class="secno">2.1. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
+   <h3 class="heading settled" data-level="2.1" id="indication"><span class="secno">2.1. </span><span class="content">Indication</span><a class="self-link" href="#indication"></a></h3>
    <div class="note" role="note">This section is non-normative</div>
-   <p>A <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive">text fragment directive</a> is specified in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive">fragment directive</a> (see <a href="#the-fragment-directive">§ 2.2 The Fragment Directive</a>) with the following format:</p>
+   <p>This specification intentionally doesn’t define what actions a user agent
+should or could take to "indicate" a text match. There are different
+experiences and trade-offs a user agent could make. Some examples of possible
+actions:</p>
+   <ul>
+    <li data-md>
+     <p>Providing visual emphasis or highlight of the text passage</p>
+    <li data-md>
+     <p>Automatically scrolling the passage into view when the page is navigated</p>
+    <li data-md>
+     <p>Activating a UA’s find-in-page feature on the text passage</p>
+    <li data-md>
+     <p>Providing a "Click to scroll to text passage" notification</p>
+    <li data-md>
+     <p>Providing a notification when the text passage isn’t found in the page</p>
+   </ul>
+   <div class="note" role="note"> The choice of action can have implications for user security and privacy.  See
+the <a href="#security-and-privacy">§ 2.4 Security and Privacy</a> section for details. </div>
+   <h3 class="heading settled" data-level="2.2" id="syntax"><span class="secno">2.2. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
+   <div class="note" role="note">This section is non-normative</div>
+   <p>A <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive">text fragment directive</a> is specified in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive">fragment directive</a> (see <a href="#the-fragment-directive">§ 2.3 The Fragment Directive</a>) with the following format:</p>
 <pre>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
           context  |-------match-----|  context
 </pre>
@@ -1608,7 +1639,7 @@ long text directive.</p>
    <div class="example" id="example-7df2027e"><a class="self-link" href="#example-7df2027e"></a> <code>#:~:text=an%20example,text%20fragment</code> indicates that the first
 instance of "an example" until the following first instance of "text fragment"
 is the target text. </div>
-   <h4 class="heading settled" data-level="2.1.1" id="context-terms"><span class="secno">2.1.1. </span><span class="content">Context Terms</span><a class="self-link" href="#context-terms"></a></h4>
+   <h4 class="heading settled" data-level="2.2.1" id="context-terms"><span class="secno">2.2.1. </span><span class="content">Context Terms</span><a class="self-link" href="#context-terms"></a></h4>
    <div class="note" role="note">This section is non-normative</div>
    <p>The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
@@ -1622,12 +1653,12 @@ fragment, any amount of whitespace is allowed between context terms and the
 text fragment. This helps allow context terms to be across element boundaries,
 for example if the target text fragment is at the beginning of a paragraph and
 it must be disambiguated by the previous element’s text as a prefix. </div>
-   <p>The context terms are not part of the target text fragment and must not be
-visually indicated or affect the scroll position.</p>
+   <p>The context terms are not part of the targeted text fragment and must not be
+visually indicated.</p>
    <div class="example" id="example-5c87b699"><a class="self-link" href="#example-5c87b699"></a> <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
 to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text". </div>
-   <h3 class="heading settled" data-level="2.2" id="the-fragment-directive"><span class="secno">2.2. </span><span class="content">The Fragment Directive</span><a class="self-link" href="#the-fragment-directive"></a></h3>
+   <h3 class="heading settled" data-level="2.3" id="the-fragment-directive"><span class="secno">2.3. </span><span class="content">The Fragment Directive</span><a class="self-link" href="#the-fragment-directive"></a></h3>
     To avoid compatibility issues with usage of existing URL fragments, this spec
 introduces the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①">fragment directive</a>. The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive②">fragment directive</a> is a portion
 of the URL fragment delimited by the code sequence <code>:~:</code>. It is
@@ -1638,7 +1669,7 @@ for the UA rather than the document. It’s meant to avoid direct interaction wi
 author script so that future UA instructions can be added without fear of
 introducing breaking changes to existing content. Potential examples could be:
 translation-hints or enabling accessibility features.</p>
-   <h4 class="heading settled" data-level="2.2.1" id="parsing-the-fragment-directive"><span class="secno">2.2.1. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
+   <h4 class="heading settled" data-level="2.3.1" id="parsing-the-fragment-directive"><span class="secno">2.3.1. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
    <p>To the definition of <a href="https://dom.spec.whatwg.org/#concept-document">Document</a>, add:</p>
    <p><em> Each document has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive">fragment directive</dfn> which is either
 null or an ASCII string holding data used by the UA to process the resource. It
@@ -1649,19 +1680,19 @@ three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
   always appear after a U+0023 (#) code point in a URL. </div>
    <div class="example" id="example-aa58e32d"><a class="self-link" href="#example-aa58e32d"></a> To add a <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a> to a URL like https://example.com, a fragment
   must first be appended to the URL: https://example.com#:~:text=foo. </div>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to parse and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> from the Document’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a>.</p>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to parse and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> from the Document’s <span spec-section="#concept-document-url">URL</span>.</p>
    <p>Replace steps 7 and 8 of this algorithm with:</p>
    <ol start="7">
     <li data-md>
      <p>Let <em>url</em> be null</p>
     <li data-md>
-     <p>If <em>request</em> is non-null, then set <em>document</em>’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a> to <em>request</em>’s <a href="https://fetch.spec.whatwg.org/#concept-request-current-url">current URL</a>.</p>
+     <p>If <em>request</em> is non-null, then set <em>document</em>’s <span spec-section="#concept-document-url">URL</span> to <em>request</em>’s <span spec-section="#concept-request-current-url">current URL</span>.</p>
     <li data-md>
-     <p>Otherwise, set <em>url</em> to <em>response</em>’s <a href="https://fetch.spec.whatwg.org/#concept-response-url">URL</a>.</p>
+     <p>Otherwise, set <em>url</em> to <em>response</em>’s <span spec-section="#concept-response-url">URL</span>.</p>
     <li data-md>
-     <p>Let <em>raw fragment</em> be equal to <em>url</em>’s <a href="https://url.spec.whatwg.org/#concept-url-fragment">fragment</a>.</p>
+     <p>Let <em>raw fragment</em> be equal to <em>url</em>’s <span spec-section="#concept-url-fragment">fragment</span>.</p>
     <li data-md>
-     <p>Let <em>fragment directive position</em> be a <a href="https://infra.spec.whatwg.org/#string-position-variable">position variable</a> that points to the
+     <p>Let <em>fragment directive position</em> be a <span spec-section="#string-position-variable">position variable</span> that points to the
 beginning of <em>raw fragment</em>.</p>
     <li data-md>
      <p>While the string starting at position <em>fragment directive position</em> does not start with the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter">fragment directive delimiter</a> and <em>fragment
@@ -1681,14 +1712,14 @@ directive delimiter</a>.</p>
       <li data-md>
        <p>Let <em>fragment directive</em> be the substring of <em>raw fragment</em> starting at <em>fragment directive position</em>.</p>
       <li data-md>
-       <p>Set <em>url</em>’s <a href="https://url.spec.whatwg.org/#concept-url-fragment">fragment</a> to <em>fragment</em>.</p>
+       <p>Set <em>url</em>’s <span spec-section="#concept-url-fragment">fragment</span> to <em>fragment</em>.</p>
       <li data-md>
        <p>Set <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> to <em>fragment
 directive</em>. (Note: this is stored on the document but not
 web-exposed)</p>
      </ol>
     <li data-md>
-     <p>Set <em>document</em>’s <a href="https://dom.spec.whatwg.org/#concept-document-url">URL</a> to be <em>url</em>.</p>
+     <p>Set <em>document</em>’s <span spec-section="#concept-document-url">URL</span> to be <em>url</em>.</p>
    </ol>
    <div class="note" role="note"> These changes make a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive
   delimiter</a>. The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑧">fragment directive</a> includes all characters that follow,
@@ -1696,7 +1727,7 @@ web-exposed)</p>
    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> is the string
 "text=foo". </div>
-   <h4 class="heading settled" data-level="2.2.2" id="fragment-directive-grammar"><span class="secno">2.2.2. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
+   <h4 class="heading settled" data-level="2.3.2" id="fragment-directive-grammar"><span class="secno">2.3.2. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
     A <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> is a sequence of characters that appears
 in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a> that matches the production: 
    <dl> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirective">FragmentDirective</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective">FragmentDirective</a>)?</dd></code> <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective">UnknownDirective</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a></dd></code> </dl>
@@ -1737,14 +1768,15 @@ is not explicitly used in the <a data-link-type="dfn" href="#textdirective" id="
 ",", which must be percent-encoded. </div>
      <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt><dd>"%" [a-zA-Z0-9]+</dd></code> 
    </dl>
-   <h3 class="heading settled" data-level="2.3" id="security-and-privacy"><span class="secno">2.3. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
-   <h4 class="heading settled" data-level="2.3.1" id="motivation"><span class="secno">2.3.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
+   <h3 class="heading settled" data-level="2.4" id="security-and-privacy"><span class="secno">2.4. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
+   <h4 class="heading settled" data-level="2.4.1" id="motivation"><span class="secno">2.4.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
    <div class="note" role="note">This section is non-normative</div>
    <p>Care must be taken when implementing <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①">text fragment directive</a> so that it
-cannot be used to exfiltrate information across origins. Scripts can navigate
-a page to a cross-origin URL with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive②">text fragment directive</a>.  If a malicious
-actor can determine that a victim page scrolled after such a navigation, they
-can infer the existence of any text on the page.</p>
+cannot be used to exfiltrate information across origins. Scripts can navigate a
+page to a cross-origin URL with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive②">text fragment directive</a>. If a malicious
+actor can determine that the text fragment was successfully found in victim
+page as a result of such a navigation, they can infer the existence of any text
+on the page.</p>
    <p>In addition, the user’s privacy should be ensured even from the destination
 origin.  Although scripts on that page can already learn a lot about a user’s
 actions, a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive③">text fragment directive</a> can still contain sensitive information.
@@ -1754,27 +1786,64 @@ information to the page.</p>
    <div class="example" id="example-9ced00a5"><a class="self-link" href="#example-9ced00a5"></a> A user visiting a page listing dozens of medical conditions may have gotten
   there via a link with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> containing a specific
   condition. This information must not be shared with the page. </div>
+   <div class="note" role="note"> TODO: This last paragraph and example are probably not be necessary - the
+  page can already determine what the user is looking at based on the viewport
+  rect. It may not be desireable since it would prevent use cases like
+  marginalia, allowing pages to provide UA and linking based on the text
+  fragment. </div>
    <p>The following subsections restrict the feature to mitigate the expected attack
 vectors. In summary, the text fragment directives are invoked only on full
 (non-same-page) navigations that are the result of a user activation.
 Additionally, navigations originating from a different origin than the
 destination will require the navigation to take place in a "noopener" context,
 such that the destination page is known to be sufficiently isolated.</p>
-   <h4 class="heading settled" data-level="2.3.2" id="search-timing"><span class="secno">2.3.2. </span><span class="content">Search Timing</span><a class="self-link" href="#search-timing"></a></h4>
+   <h4 class="heading settled" data-level="2.4.2" id="scroll-on-navigation"><span class="secno">2.4.2. </span><span class="content">Scroll On Navigation</span><a class="self-link" href="#scroll-on-navigation"></a></h4>
+   <p>A UA may choose to automatically scroll a matched text passage into view. This
+can be a convenient experience for the user but does present some risks that
+implementing UAs should be aware of.</p>
+   <p>There are known (and potentially unknown) ways a scroll on navigation might be
+detectable and distinguished from natural user scrolls.</p>
+   <div class="example" id="example-90534c84"><a class="self-link" href="#example-90534c84"></a> An origin embedded in an iframe in the target page registers an
+  IntersectionObserver and determines in the first 500ms of page load whether
+  a scroll has occurred. This scroll can be indicative of whether the text
+  fragment was successfuly found on the page. </div>
+   <div class="example" id="example-ce37442a"><a class="self-link" href="#example-ce37442a"></a> Two users share the same network on which traffic is visible between them.
+  A malicious user sends the victim a link with a text fragment to a
+  page. The searched-for text appears nearby to a resource located on a unique
+  (on the page) domain. The attacker may be able to infer the success or failure
+  of the fragment search based on the order of requests for DNS lookup. </div>
+   <div class="example" id="example-2e4f39df"><a class="self-link" href="#example-2e4f39df"></a> An attacker sends a link to a victim, sending them to a page that displays
+  a private token. The attacker asks the victim to read back the token. Using
+  a text fragment, the attacker gets the page to load for the victim such that
+  warnings about keeping the token secret are scrolled out of view. </div>
+   <p>All known cases like this rely on specific circumstances about the target page
+so don’t apply generally. With additional restrictions about when the text
+fragment can invoke an attacker is further restricted. Nonetheless, different
+UAs can come to different conclusions about whether these risks are acceptable.
+UAs should consider these factors when determining whether to scroll as part of
+navigating to a text fragment.</p>
+   <p>Conforming UAs may choose not to scroll automatically on navigation. Such UAs
+may, instead, provide UI to initiate the scroll ("click to scroll") or none
+at all. In these cases UA should provide some indication to the user that an
+indicated passage exists further down on the page.</p>
+   <h4 class="heading settled" data-level="2.4.3" id="search-timing"><span class="secno">2.4.3. </span><span class="content">Search Timing</span><a class="self-link" href="#search-timing"></a></h4>
    <p>A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
 matching query. If an attacker were to find a way to synchronously navigate
 to a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑤">text fragment directive</a>-invoking URL, they would be able to determine
 the existence of a text snippet by measuring how long the navigation call takes.</p>
-   <div class="note" role="note"> The restrictions in <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> should prevent this
+   <div class="note" role="note"> The restrictions in <a href="#should-allow-text-fragment">§ 2.4.4 Should Allow Text Fragment</a> should prevent this
   specific case; in particular, the no-same-document-navigation restriction.
   However, these restrictions are provided as multiple layers of defence. </div>
-   <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 2.4 Navigating to a Text Fragment</a> steps does not differ based on whether a match
+   <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 2.5 Navigating to a Text Fragment</a> steps does not differ based on whether a match
 has been successfully found</em>.</p>
    <p>This specification does not specify exactly how a UA achieves this as there are
-multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.4.3 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
+multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a href="#find-a-target-text">§ 2.5.3 Find a target text</a>.  Alternatively, it <em>may</em> schedule an
 asynchronous task to find and set the indicated part of the document.</p>
-   <h4 class="heading settled" data-level="2.3.3" id="should-allow-text-fragment"><span class="secno">2.3.3. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
+   <h4 class="heading settled" data-level="2.4.4" id="should-allow-text-fragment"><span class="secno">2.4.4. </span><span class="content">Should Allow Text Fragment</span><a class="self-link" href="#should-allow-text-fragment"></a></h4>
+   <div class="note" role="note"> TODO: This should really only prevent potentially observable side-effects like
+  automatic scrolling. Unobservable effects like a highlight should be safely
+  allowed in all cases. </div>
    <div class="note" role="note"> This algorithm has input <em>is user triggered, incumbentNavigationOrigin,
   document</em> and returns a boolean indicating whether a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment
   directive</a> should be allowed to invoke on the given Document. </div>
@@ -1782,13 +1851,13 @@ asynchronous task to find and set the indicated part of the document.</p>
     <li data-md>
      <p>If <em>is user triggered</em> is false, return false.</p>
     <li data-md>
-     <p>If the <a href="https://html.spec.whatwg.org/#document">Document</a> of the <a href="https://html.spec.whatwg.org/multipage/#latest-entry">latest entry</a> in <em>document</em>’s <a href="https://html.spec.whatwg.org/multipage/#browsing-context">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/#session-history">session history</a> is equal to <em>document</em>,
+     <p>If the <a href="https://html.spec.whatwg.org/#document">Document</a> of the <span spec-section="#latest-entry">latest entry</span> in <em>document</em>’s <span spec-section="#browsing-context">browsing context</span>'s <span spec-section="#session-history">session history</span> is equal to <em>document</em>,
    return false.</p>
      <div class="note" role="note"> i.e. Forbidden on a same-document navigation. </div>
     <li data-md>
      <p>If <em>incumbentNavigationOrigin</em> is equal to the origin of <em>document</em> return true.</p>
     <li data-md>
-     <p>If <em>document</em>’s <em>browsingContext</em> is a top level browsing context and its <a href="https://html.spec.whatwg.org/multipage/#tlbc-group">group</a>'s <a href="https://html.spec.whatwg.org/multipage/#browsing-context-set">browsing context set</a> has length 1 return true.</p>
+     <p>If <em>document</em>’s <em>browsingContext</em> is a top level browsing context and its <span spec-section="#tlbc-group">group</span>'s <span spec-section="#browsing-context-set">browsing context set</span> has length 1 return true.</p>
      <div class="note" role="note"> i.e. Only allow navigation from a cross-process element/script if the
  document is loaded in a noopener context. That is, a new top level
  browsing context group to which the navigator does not have script access
@@ -1796,11 +1865,11 @@ asynchronous task to find and set the indicated part of the document.</p>
     <li data-md>
      <p>Otherwise, return false.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.3.4" id="allow-text-fragment-directive-flag"><span class="secno">2.3.4. </span><span class="content">allowTextFragmentDirective flag</span><a class="self-link" href="#allow-text-fragment-directive-flag"></a></h4>
+   <h4 class="heading settled" data-level="2.4.5" id="allow-text-fragment-directive-flag"><span class="secno">2.4.5. </span><span class="content">allowTextFragmentDirective flag</span><a class="self-link" href="#allow-text-fragment-directive-flag"></a></h4>
    <div class="note" role="note"> The algorithm to determine whether or not a text fragment directive should be
   allowed to invoke must be run during document navigation and creation and
   stored as a flag since it relies on the properties of the navigation while
-  the invocation will occur as part of the <a href="https://html.spec.whatwg.org/multipage/#scroll-to-the-fragment-identifier">scroll to the fragment</a> steps which
+  the invocation will occur as part of the <span spec-section="#scroll-to-the-fragment-identifier">scroll to the fragment</span> steps which
   can happen outside the context of a navigation. </div>
    <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#read-html">page load processing model for HTML files</a> to insert
 these steps after step 1:</p>
@@ -1810,10 +1879,10 @@ these steps after step 1:</p>
    by user activation</a></p>
     <li data-md>
      <p>Set <em>document</em>’s <em>allowTextFragmentDirective</em> flag to the
-   result of running <a href="#should-allow-text-fragment">§ 2.3.3 Should Allow Text Fragment</a> with <em>is user
+   result of running <a href="#should-allow-text-fragment">§ 2.4.4 Should Allow Text Fragment</a> with <em>is user
    activated</em>, <em>incumbentNavigationOrigin</em>, and <em>document</em>.</p>
    </ol>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/#try-to-scroll-to-the-fragment">try to scroll to the fragment</a> steps by replacing the steps of the task queued in step 2:</p>
+   <p>Amend the <span spec-section="#try-to-scroll-to-the-fragment">try to scroll to the fragment</span> steps by replacing the steps of the task queued in step 2:</p>
    <ol>
     <li data-md>
      <p>If document has no parser, or its parser has stopped parsing, or the user
@@ -1826,25 +1895,25 @@ these steps after step 1:</p>
     <li data-md>
      <p>Clear <em>document</em>’s <em>allowTextFragmentDirective</em> flag</p>
    </ol>
-   <h3 class="heading settled" data-level="2.4" id="navigating-to-text-fragment"><span class="secno">2.4. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The scroll to text specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
+   <h3 class="heading settled" data-level="2.5" id="navigating-to-text-fragment"><span class="secno">2.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
+   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
-indicated part of the document to optionally include a <a href="https://dom.spec.whatwg.org/#range">Range</a> that
-is scrolled into view instead of the containing element. </div>
-   <p>Replace step 3.1 of the <a href="https://html.spec.whatwg.org/multipage/#scroll-to-the-fragment-identifier">scroll to the
-fragment</a> algorithm with the following:</p>
+indicated part of the document to optionally include a <span spec-section="#range">Range</span> that
+may be scrolled into view instead of the containing element. </div>
+   <p>Replace step 3.1 of the <span spec-section="#scroll-to-the-fragment-identifier">scroll to the
+fragment</span> algorithm with the following:</p>
    <ol start="3">
     <li data-md>
      <p>Otherwise:</p>
      <ol>
       <li data-md>
-       <p>Let <em>target, range</em> be the <a href="https://dom.spec.whatwg.org/#element">Element</a> and <a href="https://dom.spec.whatwg.org/#range">Range</a> that is <a href="https://html.spec.whatwg.org/multipage/#the-indicated-part-of-the-document">the indicated part of the
-document</a>.</p>
+       <p>Let <em>target, range</em> be the <span spec-section="#element">Element</span> and <span spec-section="#range">Range</span> that is <span spec-section="#the-indicated-part-of-the-document">the indicated part of the
+document</span>.</p>
      </ol>
    </ol>
-   <p>Replace step 3.3 of the <a href="https://html.spec.whatwg.org/multipage/#scroll-to-the-fragment-identifier">scroll to the
-fragment</a> algorithm with the following:</p>
+   <p>Replace step 3.3 of the <span spec-section="#scroll-to-the-fragment-identifier">scroll to the
+fragment</span> algorithm with the following:</p>
    <ol start="3">
     <li data-md>
      <p>Otherwise:</p>
@@ -1853,14 +1922,14 @@ fragment</a> algorithm with the following:</p>
        <p>If <em>range</em> is non-null:</p>
        <ol>
         <li data-md>
-         <p><a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
+         <p>If the UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
 containingElement <em>target</em>, <em>behavior</em> set to "auto", <em>block</em> set to "center", and <em>inline</em> set to "nearest".</p>
        </ol>
       <li data-md>
        <p>Otherwise:</p>
        <ol>
         <li data-md>
-         <p><a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">Scroll target into view</a>,
+         <p><span spec-section="#scroll-an-element-into-view">Scroll target into view</span>,
 with <em>behavior</em> set to "auto", <em>block</em> set to "start",
 and <em>inline</em> set to "nearest".</p>
          <div class="note" role="note">This otherwise case is the same as the current
@@ -1868,79 +1937,79 @@ step 3.3.</div>
        </ol>
      </ol>
    </ol>
-   <p>Add the following steps to the beginning of the processing model for <a href="https://html.spec.whatwg.org/multipage/#the-indicated-part-of-the-document">the indicated part of the document</a>:</p>
+   <p>Add the following steps to the beginning of the processing model for <span spec-section="#the-indicated-part-of-the-document">the indicated part of the document</span>:</p>
    <ol>
     <li data-md>
      <p>Let <em>fragment directive string</em> be the <em>document</em>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①②">fragment
 directive</a>.</p>
     <li data-md>
-     <p>If <em>document</em>’s <a href="#allow-text-fragment-directive-flag">§ 2.3.4 allowTextFragmentDirective flag</a> is true then:</p>
+     <p>If <em>document</em>’s <a href="#allow-text-fragment-directive-flag">§ 2.4.5 allowTextFragmentDirective flag</a> is true then:</p>
      <ol>
       <li data-md>
-       <p>Let <em>ranges</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> that is the result of <a href="#find-text-matches">§ 2.4.2 Find text matches</a> with <em>fragment directive string</em>.</p>
+       <p>Let <em>ranges</em> be a <span spec-section="#list">list</span> that is the result of <a href="#find-text-matches">§ 2.5.2 Find text matches</a> with <em>fragment directive string</em>.</p>
       <li data-md>
        <p>If <em>ranges</em> is non-empty, then:</p>
        <ol>
         <li data-md>
          <p>Let <em>range</em> be the first item of <em>ranges</em>.</p>
-         <div class="note" role="note"> The first <a href="https://dom.spec.whatwg.org/#range">Range</a> in <em>ranges</em> is specifically
-scrolled into view. This <a href="https://dom.spec.whatwg.org/#range">Range</a>, along with the
+         <div class="note" role="note"> The first <span spec-section="#range">Range</span> in <em>ranges</em> is specifically
+scrolled into view. This <span spec-section="#range">Range</span>, along with the
 remaining <em>ranges</em> should be visually indicated in a way that
 is not revealed to script, which is left as UA-defined behavior. </div>
         <li data-md>
-         <p>Let <em>node</em> be <em>range</em>’s <a href="https://dom.spec.whatwg.org/#dom-range-commonancestorcontainer">commonAncestorContainer</a>.</p>
+         <p>Let <em>node</em> be <em>range</em>’s <span spec-section="#dom-range-commonancestorcontainer">commonAncestorContainer</span>.</p>
         <li data-md>
-         <p>While <em>node</em>’s <a href="https://dom.spec.whatwg.org/#dom-node-nodetype">nodeType</a> is not <a href="https://dom.spec.whatwg.org/#dom-node-element_node">ELEMENT_NODE</a>:</p>
+         <p>While <em>node</em>’s <span spec-section="#dom-node-nodetype">nodeType</span> is not <span spec-section="#dom-node-element_node">ELEMENT_NODE</span>:</p>
          <ol>
           <li data-md>
-           <p>Set <em>node</em> to <em>node</em>’s <a href="https://dom.spec.whatwg.org/#dom-node-parentnode">parentNode</a>.</p>
+           <p>Set <em>node</em> to <em>node</em>’s <span spec-section="#dom-node-parentnode">parentNode</span>.</p>
          </ol>
         <li data-md>
          <p>The indicated part of the document is <em>node</em> and <em>range</em>; return.</p>
        </ol>
      </ol>
    </ol>
-   <h4 class="heading settled" data-level="2.4.1" id="scroll-rect-into-view"><span class="secno">2.4.1. </span><span class="content">Scroll a DOMRect into view</span><a class="self-link" href="#scroll-rect-into-view"></a></h4>
-   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an element into view</a> algorithm 
-to separate the steps for scrolling a DOMRect into view, so it can be used to
-scroll a Range into view. </div>
-   <p>Move the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an element into
-view</a> algorithm’s steps 3-14 into a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="scroll a DOMRect into view" data-noexport id="scroll-a-domrect-into-view">scroll a DOMRect into
+   <h4 class="heading settled" data-level="2.5.1" id="scroll-rect-into-view"><span class="secno">2.5.1. </span><span class="content">Scroll a DOMRect into view</span><a class="self-link" href="#scroll-rect-into-view"></a></h4>
+   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <span spec-section="#scroll-an-element-into-view">scroll an element into view</span> algorithm 
+  to separate the steps for scrolling a DOMRect into view, so it can be used to
+  scroll a Range into view. </div>
+   <p>Move the <span spec-section="#scroll-an-element-into-view">scroll an element into
+view</span> algorithm’s steps 3-14 into a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="scroll a DOMRect into view" data-noexport id="scroll-a-domrect-into-view">scroll a DOMRect into
 view</dfn>, with input <a href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> <em>bounding
-box</em>, <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>, and <a href="https://dom.spec.whatwg.org/#element">Element</a> <em>startingElement</em>. Also move the recursive behavior described at the top
-of the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an element into view</a> algorithm to the <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view">scroll a DOMRect into view</a> algorithm: "run these steps for
+box</em>, <span spec-section="#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</span> dictionary <em>options</em>, and <span spec-section="#element">Element</span> <em>startingElement</em>. Also move the recursive behavior described at the top
+of the <span spec-section="#scroll-an-element-into-view">scroll an element into view</span> algorithm to the <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view">scroll a DOMRect into view</a> algorithm: "run these steps for
 each ancestor element or viewport <b>of <em>startingElement</em></b> that
 establishes a scrolling box <em>scrolling box</em>, in order of innermost to
 outermost scrolling box".</p>
    <div class="note" role="note"> <em>bounding box</em> is renamed from <em>element bounding border box</em>. </div>
-   <p>Replace steps 3-14 of the <a href="https://www.w3.org/TR/cssom-view-1/#scroll-an-element-into-view">scroll an
-element into view</a> algorithm with a call to <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view①">scroll a DOMRect into view</a>:</p>
+   <p>Replace steps 3-14 of the <span spec-section="#scroll-an-element-into-view">scroll an
+element into view</span> algorithm with a call to <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view①">scroll a DOMRect into view</a>:</p>
    <ol start="3">
     <li data-md>
      <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view②">scroll a DOMRect into view</a> on <em>element bounding border
 box</em> with options <em>options</em> and startingElement <em>element</em>.</p>
    </ol>
-   <p>Define a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-range-into-view">scroll a Range into view</dfn>, with input <a href="https://dom.spec.whatwg.org/#range">Range</a> <em>range</em>, <a href="https://dom.spec.whatwg.org/#element">Element</a> <em>containingElement</em>, and a <a href="https://www.w3.org/TR/cssom-view-1/#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a> dictionary <em>options</em>:</p>
+   <p>Define a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-range-into-view">scroll a Range into view</dfn>, with input <span spec-section="#range">Range</span> <em>range</em>, <span spec-section="#element">Element</span> <em>containingElement</em>, and a <span spec-section="#dictdef-scrollintoviewoptions">ScrollIntoViewOptions</span> dictionary <em>options</em>:</p>
    <ol>
     <li data-md>
      <p>Let <em>bounding rect</em> be the <a href="https://drafts.fxtf.org/geometry-1/#domrect">DOMRect</a> that is
-the return value of invoking <a href="https://www.w3.org/TR/cssom-view-1/#dom-range-getboundingclientrect">getBoundingClientRect()</a> on <em>range</em>.</p>
+the return value of invoking <span spec-section="#dom-range-getboundingclientrect">getBoundingClientRect()</span> on <em>range</em>.</p>
     <li data-md>
      <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view③">scroll a DOMRect into view</a> on <em>bounding rect</em> with <em>options</em> and startingElement <em>containingElement</em>.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.4.2" id="find-text-matches"><span class="secno">2.4.2. </span><span class="content">Find text matches</span><a class="self-link" href="#find-text-matches"></a></h4>
+   <h4 class="heading settled" data-level="2.5.2" id="find-text-matches"><span class="secno">2.5.2. </span><span class="content">Find text matches</span><a class="self-link" href="#find-text-matches"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>fragment directive input</em>, that is the raw
-fragment directive string, and returns a <a href="https://infra.spec.whatwg.org/#list">list</a> of <a href="https://dom.spec.whatwg.org/#range">Range</a>s that are to be visually indicated, and the first should be
+fragment directive string, and returns a <span spec-section="#list">list</span> of <span spec-section="#range">Range</span>s that are to be visually indicated, and the first should be
 scrolled into view. </div>
    <ol>
     <li data-md>
-     <p>If <em>fragment directive input</em> does not match the <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective③">FragmentDirective</a> production, then return an empty <a href="https://infra.spec.whatwg.org/#list">list</a>.</p>
+     <p>If <em>fragment directive input</em> does not match the <a data-link-type="dfn" href="#fragmentdirective" id="ref-for-fragmentdirective③">FragmentDirective</a> production, then return an empty <span spec-section="#list">list</span>.</p>
     <li data-md>
-     <p>Let <em>directives</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of strings that is the
-result of <a href="https://infra.spec.whatwg.org/#strictly-split">splitting</a> <em>fragment directive
+     <p>Let <em>directives</em> be a <span spec-section="#list">list</span> of strings that is the
+result of <span spec-section="#strictly-split">splitting</span> <em>fragment directive
 input</em> on "&amp;".</p>
     <li data-md>
-     <p>Let <em>ranges</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of <a href="https://dom.spec.whatwg.org/#range">Range</a>s that is
+     <p>Let <em>ranges</em> be a <span spec-section="#list">list</span> of <span spec-section="#range">Range</span>s that is
 initially empty.</p>
     <li data-md>
      <p>For each string <em>directive</em> in <em>directives</em>:</p>
@@ -1949,13 +2018,13 @@ initially empty.</p>
        <p>If <em>directive</em> does not match the production <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a>,
 then continue.</p>
       <li data-md>
-       <p>If the result of <a href="#find-a-target-text">§ 2.4.3 Find a target text</a> on <em>directive</em> is
-non-null, then <a href="https://infra.spec.whatwg.org/#list-append">append</a> it to <em>ranges</em>.</p>
+       <p>If the result of <a href="#find-a-target-text">§ 2.5.3 Find a target text</a> on <em>directive</em> is
+non-null, then <span spec-section="#list-append">append</span> it to <em>ranges</em>.</p>
      </ol>
     <li data-md>
      <p>Return <em>ranges</em>.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.4.3" id="find-a-target-text"><span class="secno">2.4.3. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
+   <h4 class="heading settled" data-level="2.5.3" id="find-a-target-text"><span class="secno">2.5.3. </span><span class="content">Find a target text</span><a class="self-link" href="#find-a-target-text"></a></h4>
    <p>To find the target text for a given string <em>text directive input</em>,
 the user agent must run these steps:</p>
    <ol>
@@ -1970,7 +2039,7 @@ but not including, the "text=" prefix. </div>
     <li data-md>
      <p>If <em>raw target text</em> is the empty string, return null.</p>
     <li data-md>
-     <p>Let <em>tokens</em> be a <a href="https://infra.spec.whatwg.org/#list">list</a> of strings that is the result of <a href="https://infra.spec.whatwg.org/#split-on-commas">splitting a string on commas</a> of <em>raw target
+     <p>Let <em>tokens</em> be a <span spec-section="#list">list</span> of strings that is the result of <span spec-section="#split-on-commas">splitting a string on commas</span> of <em>raw target
 text</em>.</p>
     <li data-md>
      <p>Let <em>prefix</em> and <em>suffix</em> and <em>textEnd</em> be the empty
@@ -1985,7 +2054,7 @@ directive. </div>
       <li data-md>
        <p>Set <em>prefix</em> to the result of removing the last character from <em>potential prefix</em>.</p>
       <li data-md>
-       <p><a href="https://infra.spec.whatwg.org/#list-remove">Remove</a> the first item of the list <em>tokens</em>.</p>
+       <p><span spec-section="#list-remove">Remove</span> the first item of the list <em>tokens</em>.</p>
      </ol>
     <li data-md>
      <p>Let <em>potential suffix</em> be the last item of <em>tokens</em>.</p>
@@ -1995,28 +2064,28 @@ directive. </div>
       <li data-md>
        <p>Set <em>suffix</em> to the result of removing the first character from <em>potential suffix</em>.</p>
       <li data-md>
-       <p><a href="https://infra.spec.whatwg.org/#list-remove">Remove</a> the last item of the list <em>tokens</em>.</p>
+       <p><span spec-section="#list-remove">Remove</span> the last item of the list <em>tokens</em>.</p>
      </ol>
     <li data-md>
-     <p class="assertion">Assert: <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 1 or <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 2.</p>
+     <p class="assertion">Assert: <em>tokens</em> has <span spec-section="#list-size">size</span> 1 or <em>tokens</em> has <span spec-section="#list-size">size</span> 2.</p>
      <div class="note" role="note"> Once the prefix and suffix are removed from tokens, tokens may either
 contain one item (textStart) or two items (textStart and textEnd). </div>
     <li data-md>
      <p>Let <em>textStart</em> be the first item of <em>tokens</em>.</p>
     <li data-md>
-     <p>If <em>tokens</em> has <a href="https://infra.spec.whatwg.org/#list-size">size</a> 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
+     <p>If <em>tokens</em> has <span spec-section="#list-size">size</span> 2, then let <em>textEnd</em> be the last item of <em>tokens</em>.</p>
      <div class="note" role="note"> The strings prefix, textStart, textEnd, and suffix now contain the
-text directive parameters as defined in <a href="#syntax">§ 2.1 Syntax</a>. </div>
+text directive parameters as defined in <a href="#syntax">§ 2.2 Syntax</a>. </div>
     <li data-md>
-     <p>Let <em>walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> equal to <a href="https://dom.spec.whatwg.org/#dom-document-createtreewalker">Document.createTreeWalker()</a>.</p>
+     <p>Let <em>walker</em> be a <span spec-section="#treewalker">TreeWalker</span> equal to <span spec-section="#dom-document-createtreewalker">Document.createTreeWalker()</span>.</p>
     <li data-md>
-     <p>Let <em>position</em> be a <a href="https://infra.spec.whatwg.org/#string-position-variable">position
-variable</a> that indicates a text offset in <em>walker.currentNode.innerText</em>.</p>
+     <p>Let <em>position</em> be a <span spec-section="#string-position-variable">position
+variable</span> that indicates a text offset in <em>walker.currentNode.innerText</em>.</p>
     <li data-md>
      <p>If textEnd is the empty string, then:</p>
      <ol>
       <li data-md>
-       <p>Let <em>match position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with input walker <em>walker</em>, search position <em>position</em>,
+       <p>Let <em>match position</em> be the result of <a href="#find-match-with-context">§ 2.5.4 Find an exact match with context</a> with input walker <em>walker</em>, search position <em>position</em>,
 prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>suffix</em>.</p>
       <li data-md>
        <p>If <em>match position</em> is null, then return null.</p>
@@ -2027,12 +2096,12 @@ position <em>match position</em> and length equal to the length of <em>textStart
        <p>Return <em>match</em>.</p>
      </ol>
     <li data-md>
-     <p>Otherwise, let <em>potential start position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with input walker <em>walker</em>, start
+     <p>Otherwise, let <em>potential start position</em> be the result of <a href="#find-match-with-context">§ 2.5.4 Find an exact match with context</a> with input walker <em>walker</em>, start
 position <em>position</em>, prefix <em>prefix</em>, query <em>textStart</em>, and suffix <em>null</em>.</p>
     <li data-md>
      <p>If <em>potential start position</em> is null, then return null.</p>
     <li data-md>
-     <p>Let <em>end position</em> be the result of <a href="#find-match-with-context">§ 2.4.4 Find an exact match with context</a> with
+     <p>Let <em>end position</em> be the result of <a href="#find-match-with-context">§ 2.5.4 Find an exact match with context</a> with
 input walker <em>walker</em>, search position <em>potential start
 position</em>, prefix <em>null</em>, query <em>textEnd</em>, and suffix <em>suffix</em>.</p>
     <li data-md>
@@ -2046,9 +2115,9 @@ position - start position</em>.</p>
     <li data-md>
      <p>Return <em>match</em>.</p>
    </ol>
-   <h4 class="heading settled" data-level="2.4.4" id="find-match-with-context"><span class="secno">2.4.4. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
+   <h4 class="heading settled" data-level="2.5.4" id="find-match-with-context"><span class="secno">2.5.4. </span><span class="content">Find an exact match with context</span><a class="self-link" href="#find-match-with-context"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>walker, search position, prefix, query,</em> and <em>suffix</em> and returns a text position that is the start of the match. </div>
-   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
+   <div class="note" role="note"> The input <em>walker</em> is a <span spec-section="#treewalker">TreeWalker</span> reference, not a
 copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
     <li data-md>
@@ -2066,17 +2135,17 @@ copy, i.e. any modifications are performed on the caller’s instance of <em>wal
          <ol>
           <li data-md>
            <p>Advance <em>search position</em> to the position after the result
-of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>prefix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale">current
+of <a href="#next-word-bounded-instance">§ 2.5.6 Find the next word bounded instance</a> of <em>prefix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale">current
 locale</a>.</p>
           <li data-md>
            <p>If <em>search position</em> is null, then break.</p>
           <li data-md>
-           <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
+           <p><span spec-section="#skip-ascii-whitespace">Skip ASCII whitespace</span> on <em>search position</em>.</p>
           <li data-md>
            <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
            <ol>
             <li data-md>
-             <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
+             <p>Perform <a href="#advance-walker-to-text">§ 2.5.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
             <li data-md>
              <p>If <em>walker.currentNode</em> is null, then return null.</p>
             <li data-md>
@@ -2084,14 +2153,14 @@ locale</a>.</p>
             <li data-md>
              <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
             <li data-md>
-             <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
+             <p><span spec-section="#skip-ascii-whitespace">Skip ASCII whitespace</span> on <em>search position</em>.</p>
            </ol>
           <li data-md>
-           <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
+           <p>If the result of <a href="#next-word-bounded-instance">§ 2.5.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale①">current locale</a> does not start at <em>search
 position</em>, then continue.</p>
          </ol>
         <li data-md>
-         <p>Advance <em>search position</em> to the position after the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale②">current locale</a>.</p>
+         <p>Advance <em>search position</em> to the position after the result of <a href="#next-word-bounded-instance">§ 2.5.6 Find the next word bounded instance</a> of <em>query</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale②">current locale</a>.</p>
          <div class="note" role="note"> If a prefix was specified, the search position is at the beginning
 of <em>query</em> and this will advance it to the end of the query
 to search for a potential suffix. Otherwise, this will find the next
@@ -2099,19 +2168,19 @@ instance of query. </div>
         <li data-md>
          <p>If <em>search position</em> is null, then break.</p>
         <li data-md>
-         <p>Let <em>potential match position</em> be a <a href="https://infra.spec.whatwg.org/#string-position-variable">position variable</a> equal to <em>search position</em> minus the length of <em>query</em>.</p>
+         <p>Let <em>potential match position</em> be a <span spec-section="#string-position-variable">position variable</span> equal to <em>search position</em> minus the length of <em>query</em>.</p>
         <li data-md>
          <p>If <em>suffix</em> is the empty string, then return <em>potential
 match position</em>.</p>
         <li data-md>
-         <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
+         <p><span spec-section="#skip-ascii-whitespace">Skip ASCII whitespace</span> on <em>search position</em>.</p>
         <li data-md>
          <p>If <em>search position</em> is at the end of <em>text</em>, then:</p>
          <ol>
           <li data-md>
-           <p>Let <em>suffix_walker</em> be a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> that is a copy of <em>walker</em>.</p>
+           <p>Let <em>suffix_walker</em> be a <span spec-section="#treewalker">TreeWalker</span> that is a copy of <em>walker</em>.</p>
           <li data-md>
-           <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>suffix_walker</em>.</p>
+           <p>Perform <a href="#advance-walker-to-text">§ 2.5.5 Advance a TreeWalker to the next text node</a> on <em>suffix_walker</em>.</p>
           <li data-md>
            <p>If <em>suffix_walker.currentNode</em> is null, then return null.</p>
           <li data-md>
@@ -2119,21 +2188,21 @@ match position</em>.</p>
           <li data-md>
            <p>Set <em>search position</em> to the beginning of <em>text</em>.</p>
           <li data-md>
-           <p><a href="https://infra.spec.whatwg.org/#skip-ascii-whitespace">Skip ASCII whitespace</a> on <em>search position</em>.</p>
+           <p><span spec-section="#skip-ascii-whitespace">Skip ASCII whitespace</span> on <em>search position</em>.</p>
          </ol>
         <li data-md>
-         <p>If the result of <a href="#next-word-bounded-instance">§ 2.4.6 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
+         <p>If the result of <a href="#next-word-bounded-instance">§ 2.5.6 Find the next word bounded instance</a> of <em>suffix</em> in <em>text</em> from <em>search position</em> with <a data-link-type="dfn" href="#current-locale" id="ref-for-current-locale③">current
 locale</a> starts at <em>search position</em>, then return <em>potential match position</em>.</p>
        </ol>
       <li data-md>
-       <p>Perform <a href="#advance-walker-to-text">§ 2.4.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
+       <p>Perform <a href="#advance-walker-to-text">§ 2.5.5 Advance a TreeWalker to the next text node</a> on <em>walker</em>.</p>
      </ol>
     <li data-md>
      <p>Return null.</p>
    </ol>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="current-locale">current locale</dfn> is the <a href="https://html.spec.whatwg.org/multipage/dom.html#language">language</a> of the <em>currentNode</em>.</p>
-   <h4 class="heading settled" data-level="2.4.5" id="advance-walker-to-text"><span class="secno">2.4.5. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
-   <div class="note" role="note"> The input <em>walker</em> is a <a href="https://dom.spec.whatwg.org/#treewalker">TreeWalker</a> reference, not a
+   <h4 class="heading settled" data-level="2.5.5" id="advance-walker-to-text"><span class="secno">2.5.5. </span><span class="content">Advance a TreeWalker to the next text node</span><a class="self-link" href="#advance-walker-to-text"></a></h4>
+   <div class="note" role="note"> The input <em>walker</em> is a <span spec-section="#treewalker">TreeWalker</span> reference, not a
 copy, i.e. any modifications are performed on the caller’s instance of <em>walker</em>. </div>
    <ol>
     <li data-md>
@@ -2143,7 +2212,7 @@ copy, i.e. any modifications are performed on the caller’s instance of <em>wal
        <p>Advance the current node by calling <a href="https://dom.spec.whatwg.org/#dom-treewalker-nextnode"> walker.nextNode()</a></p>
      </ol>
    </ol>
-   <h4 class="heading settled" data-level="2.4.6" id="next-word-bounded-instance"><span class="secno">2.4.6. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
+   <h4 class="heading settled" data-level="2.5.6" id="next-word-bounded-instance"><span class="secno">2.5.6. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
 instance if it is found. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
@@ -2185,9 +2254,11 @@ bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
     <li data-md>
      <p>Return <em>null</em>.</p>
    </ol>
-   <h3 class="heading settled" data-level="2.5" id="indicating-the-text-match"><span class="secno">2.5. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
-   <p>In addition to scrolling the text fragment into view as part of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment"> Try To Scroll To The Fragment</a> steps, the UA should visually indicate the
-matched text in some way such that the user is made aware of the text match.</p>
+   <h3 class="heading settled" data-level="2.6" id="indicating-the-text-match"><span class="secno">2.6. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
+   <p>The UA may choose to scroll the text fragment into view as part of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment"> Try To Scroll To The Fragment</a> steps or by some other mechanism; however, it
+is not required to scroll the match into view.</p>
+   <p>The UA should visually indicate the matched text in some way such that the user
+is made aware of the text match, such as with a high-contrast highlight.</p>
    <p>The UA should provide to the user some method of dismissing the match, such
 that the matched text no longer appears visually indicated.</p>
    <p>The exact appearance and mechanics of the indication are left as UA-defined.
@@ -2195,7 +2266,7 @@ However, the UA must not use the Document’s <a href="https://w3c.github.io/sel
 indicate the text match as doing so could allow attack vectors for content
 exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>
-   <h3 class="heading settled" data-level="2.6" id="feature-detectability"><span class="secno">2.6. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
+   <h3 class="heading settled" data-level="2.7" id="feature-detectability"><span class="secno">2.7. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
 that is exposed via <code>window.location.fragmentDirective</code> if the UA
 supports the feature.</p>
@@ -2306,6 +2377,11 @@ manipulations
   it should remove the fragment id from the URL:</p>
     <p><a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations"> https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations</a></p>
    </div>
+   <p>If a UA chooses not to scroll text fragments into view on navigation (reasons
+why a UA may make this choice are discussed in <a href="#security-and-privacy">§ 2.4 Security and Privacy</a>), it
+must scroll the element-id into view, if provided, regardless of whether a text
+fragment was matched. Not doing so would allow detecting the text fragment
+match based on whether the element-id was scrolled.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -2456,29 +2532,29 @@ manipulations
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#characterstring">CharacterString</a><span>, in §2.2.2</span>
-   <li><a href="#current-locale">current locale</a><span>, in §2.4.4</span>
-   <li><a href="#explicitchar">ExplicitChar</a><span>, in §2.2.2</span>
-   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §2.6</span>
-   <li><a href="#fragment-directive">fragment directive</a><span>, in §2.2.1</span>
+   <li><a href="#characterstring">CharacterString</a><span>, in §2.3.2</span>
+   <li><a href="#current-locale">current locale</a><span>, in §2.5.4</span>
+   <li><a href="#explicitchar">ExplicitChar</a><span>, in §2.3.2</span>
+   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §2.7</span>
+   <li><a href="#fragment-directive">fragment directive</a><span>, in §2.3.1</span>
    <li>
     FragmentDirective
     <ul>
-     <li><a href="#fragmentdirective①">(interface)</a><span>, in §2.6</span>
-     <li><a href="#fragmentdirective">definition of</a><span>, in §2.2.2</span>
+     <li><a href="#fragmentdirective①">(interface)</a><span>, in §2.7</span>
+     <li><a href="#fragmentdirective">definition of</a><span>, in §2.3.2</span>
     </ul>
-   <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §2.2.1</span>
-   <li><a href="#location">Location</a><span>, in §2.6</span>
-   <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.2.2</span>
-   <li><a href="#scroll-a-domrect-into-view">scroll a DOMRect into view</a><span>, in §2.4.1</span>
-   <li><a href="#scroll-a-range-into-view">scroll a Range into view</a><span>, in §2.4.1</span>
-   <li><a href="#textdirective">TextDirective</a><span>, in §2.2.2</span>
-   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in §2.2.2</span>
-   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §2.2.2</span>
-   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §2.2.2</span>
-   <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §2.2.2</span>
-   <li><a href="#unknowndirective">UnknownDirective</a><span>, in §2.2.2</span>
-   <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §2.2.2</span>
+   <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §2.3.1</span>
+   <li><a href="#location">Location</a><span>, in §2.7</span>
+   <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in §2.3.2</span>
+   <li><a href="#scroll-a-domrect-into-view">scroll a DOMRect into view</a><span>, in §2.5.1</span>
+   <li><a href="#scroll-a-range-into-view">scroll a Range into view</a><span>, in §2.5.1</span>
+   <li><a href="#textdirective">TextDirective</a><span>, in §2.3.2</span>
+   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in §2.3.2</span>
+   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §2.3.2</span>
+   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §2.3.2</span>
+   <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §2.3.2</span>
+   <li><a href="#unknowndirective">UnknownDirective</a><span>, in §2.3.2</span>
+   <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §2.3.2</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -2498,40 +2574,40 @@ manipulations
   <aside class="dfn-panel" data-for="fragment-directive">
    <b><a href="#fragment-directive">#fragment-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragment-directive">2.1. Syntax</a>
-    <li><a href="#ref-for-fragment-directive①">2.2. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a> <a href="#ref-for-fragment-directive③">(3)</a>
-    <li><a href="#ref-for-fragment-directive④">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive⑤">(2)</a> <a href="#ref-for-fragment-directive⑥">(3)</a> <a href="#ref-for-fragment-directive⑦">(4)</a> <a href="#ref-for-fragment-directive⑧">(5)</a> <a href="#ref-for-fragment-directive⑨">(6)</a>
-    <li><a href="#ref-for-fragment-directive①⓪">2.2.2. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①①">(2)</a>
-    <li><a href="#ref-for-fragment-directive①②">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-fragment-directive">2.2. Syntax</a>
+    <li><a href="#ref-for-fragment-directive①">2.3. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a> <a href="#ref-for-fragment-directive③">(3)</a>
+    <li><a href="#ref-for-fragment-directive④">2.3.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive⑤">(2)</a> <a href="#ref-for-fragment-directive⑥">(3)</a> <a href="#ref-for-fragment-directive⑦">(4)</a> <a href="#ref-for-fragment-directive⑧">(5)</a> <a href="#ref-for-fragment-directive⑨">(6)</a>
+    <li><a href="#ref-for-fragment-directive①⓪">2.3.2. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①①">(2)</a>
+    <li><a href="#ref-for-fragment-directive①②">2.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragment-directive-delimiter">
    <b><a href="#fragment-directive-delimiter">#fragment-directive-delimiter</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragment-directive-delimiter">2.2.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive-delimiter①">(2)</a> <a href="#ref-for-fragment-directive-delimiter②">(3)</a>
+    <li><a href="#ref-for-fragment-directive-delimiter">2.3.1. Parsing the fragment directive</a> <a href="#ref-for-fragment-directive-delimiter①">(2)</a> <a href="#ref-for-fragment-directive-delimiter②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective">
    <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-fragmentdirective②">(2)</a>
-    <li><a href="#ref-for-fragmentdirective③">2.4.2. Find text matches</a>
+    <li><a href="#ref-for-fragmentdirective">2.3.2. Fragment directive grammar</a> <a href="#ref-for-fragmentdirective②">(2)</a>
+    <li><a href="#ref-for-fragmentdirective③">2.5.2. Find text matches</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="unknowndirective">
    <b><a href="#unknowndirective">#unknowndirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-unknowndirective">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-unknowndirective">2.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="text-fragment-directive">
    <b><a href="#text-fragment-directive">#text-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-fragment-directive">2.1. Syntax</a>
-    <li><a href="#ref-for-text-fragment-directive①">2.3.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a> <a href="#ref-for-text-fragment-directive③">(3)</a> <a href="#ref-for-text-fragment-directive④">(4)</a>
-    <li><a href="#ref-for-text-fragment-directive⑤">2.3.2. Search Timing</a>
-    <li><a href="#ref-for-text-fragment-directive⑥">2.3.3. Should Allow Text Fragment</a>
-    <li><a href="#ref-for-text-fragment-directive⑦">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-text-fragment-directive">2.2. Syntax</a>
+    <li><a href="#ref-for-text-fragment-directive①">2.4.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a> <a href="#ref-for-text-fragment-directive③">(3)</a> <a href="#ref-for-text-fragment-directive④">(4)</a>
+    <li><a href="#ref-for-text-fragment-directive⑤">2.4.3. Search Timing</a>
+    <li><a href="#ref-for-text-fragment-directive⑥">2.4.4. Should Allow Text Fragment</a>
+    <li><a href="#ref-for-text-fragment-directive⑦">2.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-text-fragment-directive⑧">3. Generating Text Fragment Directives</a>
     <li><a href="#ref-for-text-fragment-directive⑨">3.2. Use Context Only When Necessary</a> <a href="#ref-for-text-fragment-directive①⓪">(2)</a> <a href="#ref-for-text-fragment-directive①①">(3)</a>
     <li><a href="#ref-for-text-fragment-directive①②">3.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①③">(2)</a>
@@ -2540,68 +2616,68 @@ manipulations
   <aside class="dfn-panel" data-for="textdirective">
    <b><a href="#textdirective">#textdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirective">2.2.2. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a>
-    <li><a href="#ref-for-textdirective②">2.4.2. Find text matches</a>
+    <li><a href="#ref-for-textdirective">2.3.2. Fragment directive grammar</a> <a href="#ref-for-textdirective①">(2)</a>
+    <li><a href="#ref-for-textdirective②">2.5.2. Find text matches</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveparameters">
    <b><a href="#textdirectiveparameters">#textdirectiveparameters</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectiveparameters">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectiveparameters">2.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveprefix">
    <b><a href="#textdirectiveprefix">#textdirectiveprefix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectiveprefix">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectiveprefix">2.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectivesuffix">
    <b><a href="#textdirectivesuffix">#textdirectivesuffix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-textdirectivesuffix">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-textdirectivesuffix">2.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="characterstring">
    <b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-characterstring">2.2.2. Fragment directive grammar</a> <a href="#ref-for-characterstring①">(2)</a> <a href="#ref-for-characterstring②">(3)</a> <a href="#ref-for-characterstring③">(4)</a> <a href="#ref-for-characterstring④">(5)</a>
+    <li><a href="#ref-for-characterstring">2.3.2. Fragment directive grammar</a> <a href="#ref-for-characterstring①">(2)</a> <a href="#ref-for-characterstring②">(3)</a> <a href="#ref-for-characterstring③">(4)</a> <a href="#ref-for-characterstring④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="explicitchar">
    <b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-explicitchar">2.2.2. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
+    <li><a href="#ref-for-explicitchar">2.3.2. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="percentencodedchar">
    <b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-percentencodedchar">2.2.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-percentencodedchar">2.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="scroll-a-domrect-into-view">
    <b><a href="#scroll-a-domrect-into-view">#scroll-a-domrect-into-view</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-scroll-a-domrect-into-view">2.4.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-a-domrect-into-view①">(2)</a> <a href="#ref-for-scroll-a-domrect-into-view②">(3)</a> <a href="#ref-for-scroll-a-domrect-into-view③">(4)</a>
+    <li><a href="#ref-for-scroll-a-domrect-into-view">2.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-a-domrect-into-view①">(2)</a> <a href="#ref-for-scroll-a-domrect-into-view②">(3)</a> <a href="#ref-for-scroll-a-domrect-into-view③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="scroll-a-range-into-view">
    <b><a href="#scroll-a-range-into-view">#scroll-a-range-into-view</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-scroll-a-range-into-view">2.4. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-scroll-a-range-into-view">2.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="current-locale">
    <b><a href="#current-locale">#current-locale</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-locale">2.4.4. Find an exact match with context</a> <a href="#ref-for-current-locale①">(2)</a> <a href="#ref-for-current-locale②">(3)</a> <a href="#ref-for-current-locale③">(4)</a>
+    <li><a href="#ref-for-current-locale">2.5.4. Find an exact match with context</a> <a href="#ref-for-current-locale①">(2)</a> <a href="#ref-for-current-locale②">(3)</a> <a href="#ref-for-current-locale③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective①">
    <b><a href="#fragmentdirective①">#fragmentdirective①</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective①">2.6. Feature Detectability</a>
+    <li><a href="#ref-for-fragmentdirective①">2.7. Feature Detectability</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
