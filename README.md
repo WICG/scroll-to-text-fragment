@@ -334,7 +334,7 @@ unlikely to provide anchor points, whereas they are likely to have text.
 Our solution to this is to introduce the concept of a _fragment directive_.
 The fragment directive is a specially-delimited part of the URL fragment that
 is meant for UA instructions only. It's stripped out from the URL during
-doucment loading so that it's completely invisible to the page.
+document loading so that it's completely invisible to the page.
 
 This allows specifying UA instructions like a text fragment in a way that's
 guaranteed not to interfere with page script and ensures maximal compatibility
@@ -408,7 +408,7 @@ When appending the `:~: token to a URL, it must appear inside a fragment so a
 
 `https://example.com` --> `https://example.com#:~:text=foo`
 
-However, a URL with an existing fragment can simply be appended to::
+However, a URL with an existing fragment can simply be appended to:
 
 `https://example.com#fallback:~:text=foo`
 
@@ -468,7 +468,7 @@ If an attacker can detect a side-effect of a successful match, this feature
 could be used to detect the presence of arbitrary text on the page. For
 example, if the UA scrolls to the targeted text on navigation, an attacker
 might be able to determine whether a scroll occurred by listening to network
-requests or using an IntersectionObserver from an attacker-controller iframe
+requests or using an IntersectionObserver from an attacker-controlled iframe
 embedded on the target page.
 
 A related attack is possible if the existence of a match takes significantly
