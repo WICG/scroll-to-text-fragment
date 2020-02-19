@@ -623,7 +623,7 @@ these steps:
    then return null.
 1. Let |parsed values| be the result of running
    [[#parse-a-text-directive]] on |directive|.
-1. If <em>parsed values</em> is null, return null.
+1. If |parsed values| is null, return null.
 1. Let |prefix|, |textStart|, |textEnd|, and |suffix| be the values of the
    equivalent items in |parsed values|.
 1. Let |walker| be a {{TreeWalker}} equal to
