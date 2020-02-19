@@ -738,9 +738,8 @@ The <dfn>current locale</dfn> is the <a spec=html>language</a> of the
 
 ### Find the next word bounded instance ### {#next-word-bounded-instance}
 <div class="note">
-This algorithm has input <em>query, text, start position,</em> and
-<em>locale</em> and returns a Range that specifies the word bounded text
-instance if it is found.
+This algorithm has input |query|, |text|, |start position|, and |locale| and
+returns a Range that specifies the word bounded text instance if it is found.
 </div>
 <div class="note">
 Limiting matching to word boundaries is one of the mitigations to limit
@@ -771,19 +770,17 @@ API for word boundary matching.
   alphabet as valid, one-letter words.
 </p>
 
-1. While <em>start position</em> does not point past the end of <em>text</em>:
-    1. Advance <em>start position</em> to the next instance of <em>query</em> in
-        <em>text</em>.
-    2. Let <em>range</em> be a Range with position <em>start position</em> and
-        length equal to the length of <em>query</em>.
-    3. Using locale <em>locale</em>, let <em>left bound</em> be the last word
-        boundary in <em>text</em> before <em>range</em>.
-    4. Using locale <em>locale</em>, let <em>right bound</em> be the first word
-        boundary in <em>text</em> after <em>range</em>.
-    5. If <em>left bound</em> immediately precedes <em>range</em> and <em>right
-        bound</em> immediately follows <em>range</em>, then return
-        <em>range</em>.
-2. Return <em>null</em>.
+1. While |start position| does not point past the end of |text|:
+    1. Advance |start position| to the next instance of |query| in |text|.
+    2. Let |range| be a Range with position |start position| and length equal to
+        the length of |query|.
+    3. Using locale |locale|, let |left bound| be the last word boundary in
+        |text| before |range|.
+    4. Using locale |locale|, let |right bound| be the first word boundary in
+        |text| after |range|.
+    5. If |left bound| immediately precedes |range| and |right bound|
+        immediately follows |range|, then return |range|.
+2. Return null.
 
 ## Indicating The Text Match ## {#indicating-the-text-match}
 
