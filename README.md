@@ -1,16 +1,18 @@
-# Scroll-To-Text using a URL fragment
+# Text Fragments
 
 [Draft Spec](https://wicg.github.io/ScrollToTextFragment)  
 [Web Platform Tests](https://wpt.fyi/results/scroll-to-text-fragment?label=experimental&label=master&aligned)  
 [ChromeStatus entry](https://chromestatus.com/feature/4733392803332096)  
-[Origin Trial Entry](https://developers.chrome.com/origintrials/#/view_trial/3084965744748789761)
 
 ## Introduction
 
-To enable users to easily navigate to specific content in a web page, we
-propose adding support for specifying a text snippet in the URL. When
-navigating to such a URL, the browser will find the first instance of the text
-snippet in the page and bring it into view.
+To enable users to easily link to specific content in a web page, we propose
+adding support for specifying a text snippet in the URL. When navigating to
+such a URL, the browser understands more precisely what the user is interested
+in on the destination page. It may then provide an improved experience, for
+example: visually emphasizing the text or automatically bringing it into view
+or allowing the user to jump directly to it.
+
 
 Web standards currently specify support for scrolling to anchor elements with
 name attributes, as well as DOM elements with ids, when [navigating to a
@@ -21,34 +23,8 @@ parts of pages are addressable by named anchors or elements with ids.
 
 ### Current Status
 
-This feature is currently implemented as an experimental feature in Chrome
-74.0.3706.0 and newer. It is not yet shipped to users by default. Users who
-wish to experiment with it can use chrome://flags#enable-text-fragment-anchor.
-The implementation is incomplete and doesn't necessarily match the
-specification in this document.
-
-Chrome is running an origin trial for this feature in M76, M77, and M78. Web
-authors wishing to experiment with this API can opt their origin in so that
-navigations from the origin (to the same or other origins) allow scrolling to a
-text snippet. Use [this
-page](https://developers.chrome.com/origintrials/#/view_trial/3084965744748789761)
-to opt your origin into the trial. For more information about origin trials see
-the [origin trial developer
-guide](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md).
-
-### A Note on Specifications / "Why Not Use The Standardization Process?"
-
-The current draft specification can be viewed at https://wicg.github.io/ScrollToTextFragment/.
-
-Our intent is definitely for this to be part of the standards process,
-interoperable with other browsers, with feedback and ideas from the broader
-community. This document is meant to serve as an explainer to that end and to
-serve as a __starting point__ for those discussions.
-
-Likewise, the experimental implementation is used to prove the viability of the
-concept, help us iterate on ideas, and help inform design and standards work.
-Once we're satisfied that we understand the space sufficiently, this work will
-move into the appropriate standardization forum.
+This feature, as currently [specified in this repo](https://wicg.github.io/ScrollToTextFragment),
+is shipping to stable channel in Chrome M80.
 
 ### Motivating Use Cases
 
@@ -59,11 +35,11 @@ content when scrolling through long pages or using the browser's "find in page"
 feature. Fewer than 1% of clients use the "Find in Page" feature in Chrome on
 Android.
 
-To enable scrolling directly to a specific part of a web page, we propose
-generalizing the existing support for scrolling to elements based on the
-fragment identifier. We believe this capability could be used by a variety of
-websites (e.g. search engine results pages, Wikipedia reference links), as well
-as by end users when sharing links from a browser.
+To enable users to more quickly find the content they're interested in, we
+propose generalizing the existing support for scrolling to elements based on
+the fragment identifier. We believe this capability could be used by a variety
+of websites (e.g. search engine results pages, Wikipedia reference links), as
+well as by end users when sharing links from a browser.
 
 #### Search Engines
 
@@ -87,7 +63,7 @@ id, and search engines cannot provide a "Jump to" link in such cases.
 
 Links are sometimes used as citations in web pages where the author wishes to
 substantiate a claim by referencing another page (e.g. references in
-wikipedia). These reference pages can often be large, so finding the exact
+Wikipedia). These reference pages can often be large, so finding the exact
 passage that supports the claim can be very time consuming. By linking to the
 passage that supports their underlying claim, authors can make it more
 efficient for readers to follow their overall argument.
@@ -98,20 +74,23 @@ When referencing a specific section of a web page, for example as part of
 sharing that content via email or on social media, it is desirable to be able
 to link directly to the specific section. If a section is not linkable by a
 named anchor or element with id, it is not currently possible to share a link
-directly to a specific section. Users may work around this by sharing
-screenshots of the relevant portion of the document (preventing the recipient
-of the content from engaging with the actual web page that hosts the content),
-or by including extra instructions to scroll to a specific part of the document
-(e.g. "skip to the sixth paragraph"). We would like to enable users to link to
-the relevant section of a document directly. Linking directly to the relevant
-section of a document preserves attribution, and allows the user following the
-URL to engage directly with the original publisher.
+directly to a specific section.
+
+Users may work around this by sharing screenshots of the relevant portion of
+the document (preventing the recipient of the content from engaging with the
+actual web page that hosts the content), or by including extra instructions to
+scroll to a specific part of the document (e.g. "skip to the sixth paragraph").
+
+We would like to enable users to link to the relevant section of a document
+directly. Linking directly to the relevant section of a document preserves
+attribution, and allows the user following the URL to engage directly with the
+original publisher.
 
 ## Proposed Solution
 
 ### tl;dr
 
-Allow specifying text to scroll and highlight in the URL fragment:
+Allow specifying text as part of the URL fragment:
 
 https://example.com#:~:text=prefix-,startText,endText,-suffix
 
@@ -120,38 +99,29 @@ Using this syntax
 ```
 :~:text=[prefix-,]textStart[,textEnd][,-suffix]
 
-              context  |-------match-----|  context
+         context  |-------match-----|  context
 ```
 _(Square brackets indicate an optional parameter)_
 
-Navigating to such a URL will find the first instance of the specified
-text, surrounded by the (optionally provided) prefix and suffix, and
-scroll it into view during a navigation. The snippet will be highlighted using
-a mechanism similar to the browser’s Find-In-Page feature.
+Navigating to such a URL will cause the browser to indicate the first instance
+of the matched text. The exact details of what a browser should do once it
+finds a match are mosty beyond the scope of this proposal. Browsers are mostly
+free to choose what kind of UI to surface, whether or not to scroll the text
+into view on load, and how to visually emphasize it.
 
-This will work only if the user provided a gesture, for a full “new-page”
-navigation, and be disabled in iframes. All text matching will be performed on
-word boundaries for security reasons (where possible).
+To restrict an attacker's ability to exfiltrate information across origins,
+several restrictions are applied on when such an anchor is activated. A user
+gesture is requred and consumed; text matching can only occur on word
+boundaries. Additionally, the fragment will activate only if the document is
+sufficiently isolated from other pages (is the only one in its browsing context
+group, e.g.  no window.opener or iframes).
 
-The text directive is delimited from the rest of the fragment using the `:~:` token
-to indicate that it is a _fragment directive_ that the user agent should
-process and then remove from the URL fragment that is exposed to the site. This
-change has been [proposed](https://github.com/whatwg/html/issues/4868) to the
-HTML spec.
-
-This solves the problem of sites relying on the URL fragment for routing/state,
-see [issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).  This
-also allows the URL fragment to still contain an element ID that can be
-scrolled into view in case no text match is found:
-
-https://en.wikipedia.org/wiki/Cat#Characteristics:~:text=Claws-,Like%20almost,the%20Felidae%2C,-cats
-
-Various options for delimiters have been explored, including `##`. The double
-hash was deemed too high-risk since it has potential to break existing URL
-parsers. The hash symbol is not a valid [URL code
-point](https://url.spec.whatwg.org/#url-code-points). `:~:` was chosen for
-succinctness and web-compatibility after careful analysis of web crawler data
-and usage statistics in Google Chrome.
+The text directive is delimited from the rest of the fragment using the `:~:`
+token to indicate that it is a _fragment directive_ that the user agent should
+process and then remove from the URL fragment that is exposed to the page. The
+directive syntax solves the issue of compatibility with page that rely on the
+URL fragment for routing/state, see
+[issue #15](https://github.com/WICG/ScrollToTextFragment/issues/15).
 
 ### Background
 
@@ -161,10 +131,8 @@ for scrolling to elements as part of a navigation by adding support for
 specifying a text snippet in the URL. We modify the [indicated part of the
 document](https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document)
 processing model to allow using a text snippet as the indicated part. The
-user agent would then follow the existing logic for [scrolling to the
-fragment
-identifier](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier)
-as part of performing a navigation.
+user agent may then follow the existing logic for [scrolling to the fragment identifier](https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier)
+and/or apply other UI effects.
 
 This extends the existing support for scrolling to anchor elements with name
 attributes, as well as DOM elements with ids, to scrolling to other textual
@@ -173,34 +141,40 @@ the fragment using the existing support for elements with id attributes and
 anchor elements with name attributes. If no matches are found, browsers then
 will process the text snippet specification.
 
-The Open Annotation specification already specifies a
-[TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector).
-This proposal has been made similar to the TextQuoteSelector in hopes that we
-can extend and reuse that processing model rather than inventing a new one,
-albeit with a stripped down syntax for ease of use in a URL.
+### Usability Goals
 
-### Additional Considerations
+ * Users should be able to specify multiple, non-contiguous passages. There are
+   two reasons this is important. The first is intrinsic; users sometimes want
+   to emphasise multiple snippets of a larger text. [Examples](https://twitter.com/KingJames/status/1158904415618662400)
+   [abound](https://twitter.com/surn_name/status/1205397168342716416) on
+   [Twitter](https://twitter.com/anildash/status/574389867154661377).
 
- * Highlighting - In addition to scrolling the targeted snippet into view, the
-   browser should highlight it to the user.
- * Multiple highlights - It is desirable to be able to highlight multiple
-   snippets on a page.
- * Cross-element matching - The user may wish to highlight text that spans
-   multiple paragraphs, list items, or table entries. In cases where possible,
-   we should allow specifying text snippets across these boundaries.
- * Non-uniqueness of text - The text to be highlighted may not be unique on the
-   page. The solution must account for this by allowing ways to disambiguate
+   The second is to deal with complicated DOM cases where DOM order and text
+   order doesn't align. A common example would be a column in a table, or a
+   contiguous paragraph with an inline ad.
+
+ * The user may wish to specify text that spans multiple paragraphs, list items,
+   table entries, and other structures. Our proposal aims to allow users to
+   target test crossing arbitrary DOM and visual boundaries.
+
+ * The text the user wishes to target may not be unique on the page. The
+   solution must account for this by providing ways to disambiguate multiple
    matches on a page.
 
+  * Such links should be creatable for arbitrary pages across the web. This
+    means they must be compatible with the vast majority of existing and future
+    web sites.
+
 ### Identifying a Text Snippet
-Specify a text snippet that should be scrolled into view on page load:
+
+Here's an example URL encoding some text to indicate on the destination page:
 
 https://en.wikipedia.org/wiki/Cat#:~:text=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
 ```
 :~:text=[prefix-,]textStart[,textEnd][,-suffix]
 
-              context  |-------match-----|  context
+         context  |-------match-----|  context
 ```
 _(Square brackets indicate an optional parameter)_
 
@@ -212,11 +186,11 @@ Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g.
 (e.g. #page=12) or [CSV](https://tools.ietf.org/html/rfc7111#section-2) (e.g.
 #row=4).
 
-The _text_ keyword will identify a block of text that should be scrolled into
-view. The provided text is be percent-decoded before matching. Dash (-),
+The _text_ keyword will be used to identify a block of text that should be
+indicated.  The provided text is percent-decoded before matching. Dash (-),
 ampersand (&), and comma (,) characters in text snippets must be
 percent-encoded to avoid being interpreted as part of the text fragment
-directive syntax.
+syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can
 contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as
@@ -227,29 +201,32 @@ set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent
 encoded.
 
 There are two kinds of terms specified in the text directive: the _match_ and
-the _context_. The match is the portion of text that’s to be scrolled to and
-highlighted. The context is used only to disambiguate the match and is not
-highlighted.
+the _context_. The match is the portion of text that’s to be indicated. The
+context is used only to disambiguate the match and is not highlighted.
 
 Context is optional, it need not be provided. However, the text directive must
 always specify a match term.
 
 #### Match
-A match can be specified either with one argument or two.
+A match can be specified as either a single argument or as a pair.
 
 If the match is provided using two arguments, the left argument is considered
 the starting snippet and the right argument is considered the ending snippet
-(e.g. text=_startText_,_endText_). In this case, the browser will perform
-a search for a block of text that starts with _startText_ and ends with
+(e.g. `text=_startText_,_endText_`). In this case, the browser will perform
+a "range search" for a block of text that starts with _startText_ and ends with
 _endText_. If multiple blocks match the first in DOM order is chosen (i.e. find
-the first occurence of startText, from there find the next occurence of
+the first occurence of startText, from there find the first occurence of
 endText). When a match is specified with two arguments, we allow highlighting
 text that spans multiple elements.
 
-If the match is specified as a single argument, we consider it an exact match
-search (e.g. text=_textSnippet_). The browser will highlight the first
-occurence of exactly the _textSnippet_ string. In this case, the text cannot
-span multiple elements.
+If the match is specified as a single argument, we consider it an "exact
+search" (e.g. `text=_textSnippet_`). The browser will highlight the first
+occurence of exactly the _textSnippet_ string. In this case, the specified text
+will be matched only if it is contained within a single node.
+
+Range matches are useful when the desired text match is extremely long.
+For example, selecting multiple paragraphs of text using an exact match would
+result in a very long and cumbersome URL.
 
 <table><tr><td>
 E.g. Given:
@@ -276,6 +253,7 @@ E.g. Given:
 </td></tr></table>
 
 #### Context
+
 To disambiguate non-unique snippets of text on a page, arguments can
 specify optional _prefix_ and _suffix_ terms. If provided, the match term will
 only match text that is immediately preceded by the _prefix_ text and/or
@@ -295,163 +273,96 @@ If provided, the prefix must be the first argument to the text directive.
 Similarly, the suffix must be the last argument.
 
 <table><tr><td>
-            
+
 For example, suppose we want to perform the following highlight:
 
-* header1
-  * text1
-* __header1__
-  * text2
-  * text3
+![The highlighted text appears multiple times](draft96.png)
 
-Since the text “header1” is ambiguous, we must provide a suffix to disambiguate it:
+Since the text “United States” is ambiguous, we must provide a suffix to disambiguate it:
 
-`text=header1,-text2`
+`text=United States,-Minnesota Timberwolves`
 
 </td></tr></table>
 
+### Multiple Text Directives
+
+Users can specify multiple snippets by providing additional text directives in
+the _fragment directive_, separated by the ampersand (&) character.
+
+Each `text=` directive is considered independent in the sense that success or
+failure to match in one does not affect matching of any others. Each starts
+searching from the top of the document.
+
+Only the left-most, successfully matched, directive will be the indicated part
+of the document (i.e. used as the CSS target, scrolled into view). That is, if
+“foo” did not appear anywhere on the page but “bar” does, we scroll “bar” into
+view. However, all matched directives will be visually indicated on the page.
 
 <table><tr><td>
-            
-Here’s an example where we need both pieces of context:
-
-Interstellar
-* Christopher Nolan Director
-
-Inception
-* __Christopher Nolan__ Director
-
-Inception
-* Christopher Nolan Writer
-
-`text=Inception-,Christopher Nolan,-Director`
-
-_Note: The space in “Christopher Nolan” would have to be percent-encoded since
-spaces aren’t valid in a URL. However, most browsers will do this for you
-automatically._
-
-</td></tr></table>
-
-<table><tr><td>
-
-If the snippet is unique enough, we could provide no context:
-
-Here is a __Superduper unique__ string 
-
-`text=Superduper unique`
-
-</td></tr></table>
-
-### Processing Model
-
-We'd like to reuse as much of the processing model - how the text search is
-performed, how white space is collapsed, etc. - in the Web Annotation’s
-TextQuoteSelector as possible, potentially adding enhancements to that
-specification. Notably, we’d need to add the ability to specify text using a
-starting and ending snippet to TextQuoteSelector.
-
-If we cannot find a match that meets all the requirements in the text directive
-arguments, no scrolling or highlighting is performed. 
-
-If an attacker can determine if a page has scrolled, this feature could be used
-to detect the presence of arbitrary text on the page. To prevent brute force
-attacks to guess important words on a page (e.g. passwords, pin codes), matches
-and prefix/suffix will only be matched on word boundaries. E.g. “range” will
-match “mountain range” but not “color orange” nor “forest ranger”.  Word
-boundaries are simple in languages with spaces but can become more subtle in
-languages without breaks (e.g. Chinese). A library like ICU [provides
-support](http://userguide.icu-project.org/boundaryanalysis#TOC-Word-Boundary)
-for finding word boundaries across all supported languages based on the Unicode
-Text Segmentation standard. Some browsers already allow word-boundary
-matching for the window.find API which allows specifying wholeWord as an
-argument. We hope this existing usage can be leveraged in the same way.
-
-### Highlight
-The UA will highlight the passage of text specified by the text directive. Use
-cases exist for more precise control over the highlight, ex:
- * Highlight but don’t scroll into view
- * Scroll but don’t highlight
-
-We won’t support these features in the initial version but would like to leave
-the option open for future extension.
-
-We allow highlighting multiple snippets by providing additional directives in
-the _fragment directive_, separated by the ampersand (&) character. Each
-`text=` term is considered independent in the sense that failure to find a match
-in one does not affect highlighting of any other terms. e.g.:
+For example:
 
 ```
 example.com#:~:text=foo&text=bar&text=bas
 ```
 
-will highlight “foo”, “bar”, and “baz” and scroll “foo” into view, assuming all
-appear on the page.
+will target each of “foo”, “bar”, and “baz” and use the “foo” result as the
+indicated part of the document, assuming all appear on the page.
 
-Only the left-most, successfully matched, term will be scrolled-into-view
-and used as the CSS target. That is, if “foo” did not appear anywhere on the
-page but “bar” does, we scroll “bar” into view.
+</td></tr></table>
 
-Each target text will start searching from the top of the page independently so
-that we may allow highlighting a snippet above the one that was scrolled into
-view.
+Multiple terms can be useful when the desired text has unrelated inline
+elements like images, ads, tables, etc:
 
-### Fragment Delmiter
+![Highlighted text has an unrelated table inline](baracuda.png)
 
-We ran into an interesting challenge during development, tracked in
-[#15](https://github.com/WICG/ScrollToTextFragment/issues/15). Some existing
-pages on the web use fragments for their own state/routing. These pages may
-break if an unexpected fragment is attached to its URL.
+Users may also wish to emphasize multiple passages of a larger text. We've
+found many such examples online:
+
+![Example of an screenshot with multiple highlights](twitter.png)
+
+### Fragment Directive
+
+Some existing pages on the web use fragments for their own state/routing. These
+pages may break if an unexpected fragment is provided. See
+[#15](https://github.com/WICG/ScrollToTextFragment/issues/15)
 
 Element-id based fragments also cause these pages to break; however, text
-fragments are much more likely to be user-generated and are thus more likely
-to cause unexpected breakage.
+fragments are much more likely to be user-generated and are thus more likely to
+cause unexpected breakage. Pages that rely on fragment routing are also
+unlikely to provide anchor points, whereas they are likely to have text.
 
 Our solution to this is to introduce the concept of a _fragment directive_.
 The fragment directive is a specially-delimited part of the URL fragment that
-is meant for UA instructions only. During page load it's stripped out from the
-URL so that it's completely invisible to the page.
+is meant for UA instructions only. It's stripped out from the URL during
+document loading so that it's completely invisible to the page.
 
-This has two major benefits:
-
-1) Allows specifying UA instructions like a text fragment in a way that's
-   guaranteed not to interfere with page script. This ensures maximal
-   compatibility with the existing web.
-2) Improved privacy. The text fragment may include highly sensitive information
-   about a user. This information should not be revealed, even the destination
-   domain. Consider a user visiting a page with information on multiple medical
-   conditions. If the user was sent there via a text fragment, the fragment
-   could reveal a specific condition. By hiding the directive from all WebAPIs,
-   the user's privacy is preserved.
+This allows specifying UA instructions like a text fragment in a way that's
+guaranteed not to interfere with page script and ensures maximal compatibility
+with the existing web.
 
 However, stripping arbitrary parts of a fragment may not be web compatible! We
 went through several ideas here:
 
 #### The Double-Hash
 
-We could delimit the fragment directive using `##`. This is a nice and ergonomic
-approach and works well since, if the original URL doesn't have a fragment, the
-double-hash delimiter will already be parsed as a fragment!
+We tried delimiting the fragment directive using `##`. It's ergonomic and works
+well since, if the original URL doesn't have a fragment, the double-hash
+delimiter will already be parsed as a fragment!
 
 However, `#` is [not a valid code
-point](https://url.spec.whatwg.org/#url-code-points) in the URL spec. This is
-was both good and bad news. The good news is that this made it less likely to
-collide with existing URLs. However, (in addition to changing something as
-fundamental as URLs) the bad news is that it could trip up existing parsers.
-
-As was explained in a thread on the [w3.org URI mailing
+point](https://url.spec.whatwg.org/#url-code-points) in the URL spec. As was
+explained in a thread on the [w3.org URI mailing
 list](https://lists.w3.org/Archives/Public/uri/2019Sep/0000.html), some URL
 parsers parse from right to left. Having an additional `#` character will cause
 these parsers to break. Worse, we don't have a good way to measure the risk.
 
-On top of that, use counters we added to Chrome in M77 showed that, on Windows,
-about 0.08% of page loads already have a `#` character in the fragment. While
-small, that's a non trivial percentage.
+Use counters we added to Chrome in M77 showed that, on Windows, about 0.08% of
+page loads already have a `#` character in the fragment. While small, that's a
+non trivial percentage.
 
 #### Enter :~:
 
-Given the down-sides, we abandoned `##` as a delimiter and set out in search of
-a better one. A new delimiter would have to be both spec-compliant with the URL
-spec (i.e. must be composed of valid URL fragment code-points), and have
+A new delimiter would have to be both spec-compliant with the URL spec and have
 sufficiently low usage on the existing web such that this change would be
 web-compatible.
 
@@ -475,8 +386,7 @@ We also considered using a more verbose delimiter:
 Looking through links seen in the last 5 years by the Google Search crawler, we
 eliminated some of this list. None of the "verbose" list had been seen;
 however, given valid candidates in the first list, we prefered them for
-succinctness and to avoid English-centric keywords (one could use a similar
-argument for `text=`).
+succinctness and to reduce English-centric keywords.
 
 Of the above list, the following had never been seen in a URL fragment by the
 crawler:
@@ -487,29 +397,51 @@ crawler:
 
 While this doesn't guarantee compatibility, it did give us some confidence.  We
 chose `:~:` from this list somewhat arbitrarily. However, we've also added
-Chrome use-counters to M78 for all these delimiters. Data from Canary has shown
-no collisions yet; we're currently awaiting confirmation from Beta and Stable
-channels.
+Chrome use-counters to M78 for all these delimiters. `:~:` is seen on fewer
+than 0.0000039% of page loads (or about 1 in 25 million) so we currently
+believe this is a safe choice.
 
 #### Directives and Delimiters
 
-One nice thing about the `##` idea was that you could simply append it to any
-URL:
-
-`https://example.com` --> `https://example.com##text=foo`
-
-This is less satisfying with an alternative delimiter because we still need to
-ensure we're inside a fragment:
+When appending the `:~: token to a URL, it must appear inside a fragment so a
+`#` must also be added:
 
 `https://example.com` --> `https://example.com#:~:text=foo`
 
-However, a nice benefit of the directive idea in general is that we can specify
-both a "legacy" fragment as well as a directive:
+However, a URL with an existing fragment can simply be appended to:
 
 `https://example.com#fallback:~:text=foo`
 
-In this case, if the text fragment isn't found, we can fallback to scrolling
-the element-id specified in the fragment (e.g. id="fallback" in this case).
+In this case, if the text match isn't found, the browser can fallback to
+scrolling the element-id specified in the fragment (e.g. id="fallback" in this
+case). Note that the text directive will always begin searching at the top of
+the document, even if a matching element-id fragment is provided.
+
+#### Compatibility and Interop
+
+User agents that haven't implemented this feature won't know how to process the
+fragment directive. Because it is part of the fragment, on most pages this will
+simply be processed as a non-existent fragment so the page will load scrolled
+to the top, as if a fragment weren't supplied. This is a graceful fallback.
+
+A more risky scenario is apps that use the fragment for state and routing. In
+these cases, the page is using the fragment in an application-defined maner and
+adding any content to it impact how the page operates (this is one of the
+motivating cases for using the fragment delimiter for `text=`).
+
+In the worst case, such a URL on an unimplementing UA may navigate to a broken
+page. However, most such pages we've seen handle this gracefully, e.g.:
+
+https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/OOZIrtSPLeM:~:text=test
+
+Is a Google Groups post with a directive appended. Loading it in an
+unimplementing UA displays an "The input is invalid." toast in the corner but the
+page otherwise loads as if without the directive. We expect many cases will
+behave similarly but the potential of more serious breakage does exist.
+
+Note: the fragment directive behavior (stripping everything after and including
+the `:~:` delimiter from the fragment) can be implemented independently of the
+larger proposal.
 
 ### :target
 
@@ -521,16 +453,57 @@ that’s been targeted. For example, note that navigating to a citation on a
 Wikipedia page highlights the citation text:
 https://en.wikipedia.org/wiki/Cat#cite_note-Linaeus1758-1
 
-The question is how we should treat the `:target` CSS pseudo-class with the
-text fragment directive.  An element-id fragment will target a complete
-and unique Element on the page. A text snippet may only be a portion of the
-text in an Element.
+The `:target` CSS pseudo-class can only apply to elements whereas a text
+snippet may only be a portion of the text in a node or span multiple nodes.
 
-We can start with setting :target on the parent Element of the first (i.e. the
-match we scroll to) match. If we find this causes ambiguity or confusion we can
-simply avoid setting `:target`.
+The `:target` pseudo-class is applied to the first common ancestor element that
+contains all the matching text, for the left-most matching `text=` directive.
 
-_Note: This is unimplemented in the initial version of the feature in Chrome_
+### Security Considerations
+
+_Some of the more detailed reasoning behind the security decisions is described
+in our [security review doc](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.g7hd03ifqsc)_
+
+If an attacker can detect a side-effect of a successful match, this feature
+could be used to detect the presence of arbitrary text on the page. For
+example, if the UA scrolls to the targeted text on navigation, an attacker
+might be able to determine whether a scroll occurred by listening to network
+requests or using an IntersectionObserver from an attacker-controlled iframe
+embedded on the target page.
+
+A related attack is possible if the existence of a match takes significantly
+more or less work than non-existence. An attacker can navigate to a text
+_fragment directive_ and time how busy the JS thread is; a high load may imply
+the existence or non-existence of an arbitrary text snippet. This is a
+variation of a documented
+[proof-of-concept](https://blog.sheddow.xyz/css-timing-attack/).
+
+UAs are free to determine how a successfully matched text fragment should be
+surfaced to the user based on their own assessment of how much risk certain
+actions present. For example, whether scrolling on navigation is likely to be
+detectable in enough cases.
+
+To prevent brute force attacks from guessing important words on a page (e.g.
+passwords, pin codes), matches and prefix/suffix are only matched on word
+boundaries. E.g.  “range” will match in “mountain range” but not in “color
+orange” nor “forest ranger”.
+
+Word boundaries are simple in languages with spaces but can become more subtle
+in languages without breaks (e.g. Chinese). A library like ICU [provides
+support](http://userguide.icu-project.org/boundaryanalysis#TOC-Word-Boundary)
+for finding word boundaries across all supported languages based on the Unicode
+Text Segmentation standard. Some browsers already allow word-boundary
+matching for the window.find API which allows specifying wholeWord as an
+argument. We hope this existing usage can be leveraged in the same way.
+
+Additionally, a text directive is invoked only if a user gesture occurred and
+the loaded document is the only one in its browsing context group. The latter
+restriction is effectively requiring `rel=noopener` be specified on a
+navigation.
+
+Visual emphasis is performed using a visual-only indicator (i.e. don’t cause
+selection), styled by the UA and undetectable from script. This helps prevents
+drag-and-drop or copy-paste attacks.
 
 ## Alternatives Considered
 
@@ -604,13 +577,8 @@ Future specification and implementation work could allow using selectors other
 than TextQuote to allow targetting various kinds of content.
 
 Another avenue of exploration is allowing users to specify highlighting in more
-detail. This was touched on briefly in the sections above. There are cases
-where the user may wish to highlight multiple snippets of text. For technical
-reasons, a text match across block-level elements may be difficult for a
-browser to implement. Allowing the user to specify multiple highlights would
-allow highlighting multiple paragraphs or bullet points. There are also cases
-where the user may wish to prevent highlights altogether, as in the image
-search case described above.
+detail. There are also cases where the user may wish to prevent highlights
+altogether, as in the image search case described above.
 
 We've thought about these cases insofar as making sure our proposed solution
 doesn't preclude these enhancements in the future. However, the work of
@@ -631,14 +599,16 @@ The two systems that we believe will generate the bulk of such URLs are
 browsers and search engines. We forsee users selecting text from the browser,
 with an option to "share a link to here". These links can then be shared
 further as wikipedia reference links or over channels like social media or
-email. Search engines can also generate text directive URLs as links to search
-results for user queries; these links may scroll to and highlight relevant
-passages to the user's query. Note that even though using the selected text as
-the textStart argument to the text directive may work reasonably well in
-practice as a heuristic, generating URLs that scroll to arbitrary text
-requires access to the full document text up to the desired text. Both browsers
-and search engines have access to the entire visible text of the page, so it is
-indeed possible for these systems to generate proper URLs with text directive
+email.
+
+Search engines can also generate text directive URLs as links to search results
+for user queries; these links may scroll to and highlight relevant passages to
+the user's query. Note that even though using the selected text as the
+textStart argument to the text directive may work reasonably well in practice
+as a heuristic, generating URLs targetting arbitrary text requires access to
+the full document text up to the desired text. Both browsers and search
+engines have access to the entire visible text of the page, so it is indeed
+possible for these systems to generate proper URLs with text directive
 arguments that scroll and highlight any arbitrary text.
 
 ### Web and Browser Compatibility
@@ -661,63 +631,6 @@ _fragment directive_.  If a fragment does not exist alongside the _fragment
 directive_, the browser will just load the page and won't initiate any
 scrolling.  In either case, the browser will just fall back to the default
 behavior of not scrolling the document.
-
-### Security
-
-Care must be taken when implementing this feature so that it cannot be used to
-exfiltrate information across origins. Note that an attacker can navigate a
-page to a cross-origin URL with a text _fragment directive_. If they can
-determine that the victim page scrolled, they can infer the existence of any
-text on the page.
-
-A related attack is possible if the existence of a match takes significantly
-more or less work than non-existence. An attacker can navigate to a text
-_fragment directive_ and time how busy the JS thread is; a high load may imply
-the existence or non-existence of an arbitrary text snippet. This is a
-variation of a documented
-[proof-of-concept](https://blog.sheddow.xyz/css-timing-attack/).
-
-For these reasons, we've determined a set of restrictions to ensure an attacker
-cannot use this feature to exfiltrate arbitrary information from the page:
-
-- Restrict feature to user-gesture initiated navigations
-    - This prevents programmatic, repeated guesses which could be used to probe
-      a user's data without any interaction from the user 
-- Limit the feature to top-level browsing contexts (i.e. no iframes)
-    - This prevents an attacker from embedding and hiding a sensitive page
-      which can be probed
-    - The attacker can still open a new window using `window.open`, however,
-      this is more visible to the user and less practical on mobile devices
-- Limit feature to full (non-same-page) navigations
-    - The noise of a full navigation mitigates the timing attacks somewhat 
-- Match only on word boundaries
-    - Prevents an attacker from repeatedly probing to determine a sensitive
-      word, e.g. "Password: a", "Password: ad, etc."
-    - “quick brown fox” would be matched from either “quick” or “quick brown”
-      but neither “ick brown” nor “quick brow” would match.
-    - Not all languages have visible word boundaries, for example, Chinese.
-      We'll follow the rules set out in [Unicode Standard Annex
-      #29](http://www.unicode.org/reports/tr29/#Word_Boundaries) supplemented
-      by a word dictionary as done by the ICU Project's [boundary
-      analysis](http://userguide.icu-project.org/boundaryanalysis)
-- For highlighting - a visual-only indicator should be used (i.e. don’t cause
-  selection), styled by the UA
-    - Prevents drag-and-drop or copy-paste attacks
-
-While these may seem overly-restrictive, we believe they don't impede the main
-use-cases. We'd like to start off cautious and re-examine if interesting but
-blocked use-cases arise.
-
-Some of the more detailed reasoning behind the security decisions is described
-in our [security review doc](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.g7hd03ifqsc)
-
-### Privacy
-
-While the feature itself does not expose privacy related information, the text
-fragment value may contain sensitive information. This is why the _fragment
-directive_ is designed so the user agent processes and then removes the
-_fragment directive_, so that the site does not have access to this
-information.
 
 ### Relation to existing support for navigating to a fragment
 
@@ -752,8 +665,15 @@ feature across a variety of browsers.
 The [Open Annotation Community
 Group](https://www.w3.org/community/openannotation/) aims to allow annotating
 arbitrary content. There is significant overlap in our goal of specifying a
-snippet of text in a resource. Our work has been informed specifically by prior
-efforts at selecting arbitrary textual content for an annotation.
+snippet of text in a resource. In fact, they've already specified a
+[TextQuoteSelector](https://www.w3.org/TR/annotation-model/#text-quote-selector)
+for similar purposes.
+
+This proposal has been made similar to the TextQuoteSelector in hopes that we
+can extend and reuse that processing model rather than inventing a new one,
+albeit with a stripped down syntax for ease of use in a URL. Our work has been
+informed specifically by prior efforts at selecting arbitrary textual content
+for an annotation.
 
 Scroll Anchoring
 
