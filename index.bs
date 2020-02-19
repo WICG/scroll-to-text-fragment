@@ -575,14 +575,14 @@ Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
   </p>
 </div>
 
-1. Let <var>raw target text</var> be the substring of <em>text directive
+1. Let |raw target text| be the substring of <em>text directive
    input</em> starting at index 5.
    <div class="note">
      This is the remainder of the <em>text directive input</em> following,
      but not including, the "text=" prefix.
    </div>
 1. Let <var>tokens</var> be a <a for=/>list</a> of strings that is the result of
-   <a lt="split on commas">splitting <var>raw target text</var> on commas</a>.
+   <a lt="split on commas">splitting |raw target text| on commas</a>.
 1. If <var>tokens</var> has size less than 1 or greater than 4, return null.
 1. If any of <var>tokens</var>' items are the empty string, return null.
 1. Let <var>retVal</var> be a <a spec=infra>struct</a> consisting of four strings:
@@ -630,7 +630,7 @@ these steps:
    {{Document/createTreeWalker()|document.createTreeWalker()}}.
 1. Let |position| be a <a spec=infra for=string>position variable</a>
    that indicates a text offset in <em>walker.currentNode.innerText</em>.
-1. If |textEnd| is the empty string, then:
+1. If |textEnd| is null, then:
      1. Let |match position| be the result of [[#find-match-with-context]]
         with input walker |walker|, search position |position|,
         prefix |prefix|, query |textStart|, and suffix |suffix|.
@@ -669,7 +669,7 @@ these steps:
     2. Let |text| be equal to <em>walker.currentNode.innerText</em>.
     3. While |search position| does not point past the end of
         |text|:
-        1. If |prefix| is not the empty string, then:
+        1. If |prefix| is not null, then:
             1. Advance |search position| to the position after the result
                 of [[#next-word-bounded-instance]] of |prefix| in
                 |text| from |search position| with [=current
@@ -702,7 +702,7 @@ these steps:
         4. Let |potential match position| be a
             <a spec=infra for=string>position variable</a> equal to |search
             position| minus the length of |query|.
-        5. If |suffix| is the empty string, then return |potential
+        5. If |suffix| is null, then return |potential
             match position|.
         6. <a spec=infra>Skip ASCII whitespace</a> on |search position|.
         7. If |search position| is at the end of |text|, then:

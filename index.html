@@ -2089,7 +2089,7 @@ these steps:</p>
     <li data-md>
      <p>Let <var>parsed values</var> be the result of running <a href="#parse-a-text-directive">§ 3.5.3 Parse a text directive</a> on <var>directive</var>.</p>
     <li data-md>
-     <p>If <em>parsed values</em> is null, return null.</p>
+     <p>If <var>parsed values</var> is null, return null.</p>
     <li data-md>
      <p>Let <var>prefix</var>, <var>textStart</var>, <var>textEnd</var>, and <var>suffix</var> be the values of the
    equivalent items in <var>parsed values</var>.</p>
@@ -2098,7 +2098,7 @@ these steps:</p>
     <li data-md>
      <p>Let <var>position</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-position-variable" id="ref-for-string-position-variable①">position variable</a> that indicates a text offset in <em>walker.currentNode.innerText</em>.</p>
     <li data-md>
-     <p>If <var>textEnd</var> is the empty string, then:</p>
+     <p>If <var>textEnd</var> is null, then:</p>
      <ol>
       <li data-md>
        <p>Let <var>match position</var> be the result of <a href="#find-match-with-context">§ 3.5.5 Find an exact match with context</a> with input walker <var>walker</var>, search position <var>position</var>,
@@ -2146,7 +2146,7 @@ position <var>match position</var> and length equal to the <a data-link-type="df
        <p>While <var>search position</var> does not point past the end of <var>text</var>:</p>
        <ol>
         <li data-md>
-         <p>If <var>prefix</var> is not the empty string, then:</p>
+         <p>If <var>prefix</var> is not null, then:</p>
          <ol>
           <li data-md>
            <p>Advance <var>search position</var> to the position after the result
@@ -2188,7 +2188,7 @@ position</var>, then continue.</p>
          <p>Let <var>potential match position</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-position-variable" id="ref-for-string-position-variable②">position variable</a> equal to <var>search
 position</var> minus the length of <var>query</var>.</p>
         <li data-md>
-         <p>If <var>suffix</var> is the empty string, then return <var>potential
+         <p>If <var>suffix</var> is null, then return <var>potential
 match position</var>.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#skip-ascii-whitespace" id="ref-for-skip-ascii-whitespace②">Skip ASCII whitespace</a> on <var>search position</var>.</p>
