@@ -743,6 +743,10 @@ This algorithm has input <em>query, text, start position,</em> and
 instance if it is found.
 </div>
 <div class="note">
+Limiting matching to word boundaries is one of the mitigations to limit
+cross-origin information leakage.
+</div>
+<div class="note">
 See
 <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
 a proposal to specify unicode segmentation, including word segmentation. Once
@@ -761,9 +765,7 @@ API for word boundary matching.
         boundary in <em>text</em> after <em>range</em>.
         <div class="note">
           <p>
-            Limiting matching to word boundaries is one of the mitigations to
-            limit cross-origin information leakage. A word boundary is as
-            defined in the <a
+            A word boundary is as defined in the <a
             href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
             text segmentation annex</a>. The <a
             href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries">

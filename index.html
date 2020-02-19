@@ -2234,6 +2234,8 @@ locale</a> starts at <var>search position</var>, then return <var>potential matc
    <h4 class="heading settled" data-level="3.5.7" id="next-word-bounded-instance"><span class="secno">3.5.7. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
    <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
 instance if it is found. </div>
+   <div class="note" role="note"> Limiting matching to word boundaries is one of the mitigations to limit
+cross-origin information leakage. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
 a proposal to specify unicode segmentation, including word segmentation. Once
 specified, this algorithm may be improved by making use of the Intl.Segmenter
@@ -2254,9 +2256,7 @@ boundary in <em>text</em> before <em>range</em>.</p>
        <p>Using locale <em>locale</em>, let <em>right bound</em> be the first word
 boundary in <em>text</em> after <em>range</em>.</p>
        <div class="note" role="note">
-        <p> Limiting matching to word boundaries is one of the mitigations to
-    limit cross-origin information leakage. A word boundary is as
-    defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
+        <p> A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
     text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of
     what constitutes a word boundary, but as the specification mentions,
     a more sophisticated algorithm should be used based on the <em>locale</em>. </p>
