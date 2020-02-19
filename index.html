@@ -1881,25 +1881,22 @@ return false.</p>
 these steps after step 1:</p>
    <ol start="2">
     <li data-md>
-     <p>Let <em>is user activated</em> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-   by user activation</a></p>
+     <p>Let <var>is user activated</var> be true if <var>document</var>’s associated <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window">Window</a></code> has <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">Transient activation</a>.</p>
     <li data-md>
-     <p>Set <em>document</em>’s <em>allowTextFragmentDirective</em> flag to the
-   result of running <a href="#should-allow-text-fragment">§ 3.4.4 Should Allow Text Fragment</a> with <em>is user
-   activated</em>, <em>incumbentNavigationOrigin</em>, and <em>document</em>.</p>
+     <p>Set <var>document</var>’s <var>allowTextFragmentDirective</var> flag to the result of running <a href="#should-allow-text-fragment">§ 3.4.4 Should Allow Text Fragment</a> with <var>is user activated</var>, <var>incumbentNavigationOrigin</var>, and <var>document</var>.</p>
    </ol>
    <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</a> steps by replacing the steps of the task queued in step 2:</p>
    <ol>
     <li data-md>
-     <p>If document has no parser, or its parser has stopped parsing, or the user
+     <p>If <var>document</var> has no parser, or its parser has stopped parsing, or the user
    agent has reason to believe the user is no longer interested in scrolling to
-   the fragment, then clear <em>document</em>’s <em>allowTextFragmentDirective</em> flag and abort these steps.</p>
+   the fragment, then clear <var>document</var>’s <var>allowTextFragmentDirective</var> flag and
+   abort these steps.</p>
     <li data-md>
-     <p>Scroll to the fragment given in document’s URL. If this does not find an
-   indicated part of the document, then try to scroll to the fragment for
-   document.</p>
+     <p>Scroll to the fragment given in <var>document</var>’s URL. If this does not find an
+   indicated part of the document, then try to scroll to the fragment for <var>document</var>.</p>
     <li data-md>
-     <p>Clear <em>document</em>’s <em>allowTextFragmentDirective</em> flag</p>
+     <p>Clear <var>document</var>’s <var>allowTextFragmentDirective</var> flag.</p>
    </ol>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
    <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> is
@@ -1973,7 +1970,7 @@ is not revealed to script, which is left as UA-defined behavior. </div>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="3.5.1" id="scroll-rect-into-view"><span class="secno">3.5.1. </span><span class="content">Scroll a DOMRect into view</span><a class="self-link" href="#scroll-rect-into-view"></a></h4>
-   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view①">scroll an element into view</a> algorithm 
+   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view①">scroll an element into view</a> algorithm
   to separate the steps for scrolling a DOMRect into view, so it can be used to
   scroll a Range into view. </div>
    <p>Move the <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view②">scroll an element into view</a> algorithm’s steps
@@ -2691,6 +2688,12 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-domrect">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-domrect①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-window">
+   <a href="https://html.spec.whatwg.org/multipage/window-object.html#window">https://html.spec.whatwg.org/multipage/window-object.html#window</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-window">3.4.5. allowTextFragmentDirective flag</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-browsing-context">
    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#browsing-context</a><b>Referenced in:</b>
    <ul>
@@ -2732,6 +2735,12 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-the-indicated-part-of-the-document">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-the-indicated-part-of-the-document①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-transient-activation">
+   <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-transient-activation">3.4.5. allowTextFragmentDirective flag</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-try-to-scroll-to-the-fragment">
@@ -2863,6 +2872,7 @@ match based on whether the element-id was scrolled.</p>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
      <li><span class="dfn-paneled" id="term-for-browsing-context" style="color:initial">browsing context</span>
      <li><span class="dfn-paneled" id="term-for-browsing-context-set" style="color:initial">browsing context set</span>
      <li><span class="dfn-paneled" id="term-for-language" style="color:initial">language</span>
@@ -2870,6 +2880,7 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier" style="color:initial">scroll to the fragment</span>
      <li><span class="dfn-paneled" id="term-for-session-history" style="color:initial">session history</span>
      <li><span class="dfn-paneled" id="term-for-the-indicated-part-of-the-document" style="color:initial">the indicated part of the document</span>
+     <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
      <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment" style="color:initial">try to scroll to the fragment</span>
     </ul>
    <li>

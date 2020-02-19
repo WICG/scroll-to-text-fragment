@@ -156,7 +156,7 @@ three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
 <div class="note">
   The [=fragment directive=] is part of the URL fragment. This means it must
-  always appear after a U+0023 (#) code point in a URL. 
+  always appear after a U+0023 (#) code point in a URL.
 </div>
 
 <div class="example">
@@ -421,24 +421,23 @@ asynchronous task to find and set the indicated part of the document.
 Amend the [[html#read-html|page load processing model for HTML files]] to insert
 these steps after step 1:
 
-2. Let <em>is user activated</em> be true if the current navigation was <a
-   href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-   by user activation</a>
-3. Set <em>document</em>'s <em>allowTextFragmentDirective</em> flag to the
-   result of running [[#should-allow-text-fragment]] with <em>is user
-   activated</em>, <em>incumbentNavigationOrigin</em>, and <em>document</em>.
+2. Let |is user activated| be true if |document|'s associated {{Window}} has
+   <a spec=html>Transient activation</a>.
+3. Set |document|'s |allowTextFragmentDirective| flag to the result of running
+   [[#should-allow-text-fragment]] with |is user activated|,
+   |incumbentNavigationOrigin|, and |document|.
 
 Amend the <a spec=HTML>try to scroll to the fragment</a>
 steps by replacing the steps of the task queued in step 2:
 
-1. If document has no parser, or its parser has stopped parsing, or the user
+1. If |document| has no parser, or its parser has stopped parsing, or the user
    agent has reason to believe the user is no longer interested in scrolling to
-   the fragment, then clear <em>document</em>'s
-   <em>allowTextFragmentDirective</em> flag and abort these steps.
-2. Scroll to the fragment given in document's URL. If this does not find an
+   the fragment, then clear |document|'s |allowTextFragmentDirective| flag and
+   abort these steps.
+2. Scroll to the fragment given in |document|'s URL. If this does not find an
    indicated part of the document, then try to scroll to the fragment for
-   document.
-3. Clear <em>document</em>'s <em>allowTextFragmentDirective</em> flag
+   |document|.
+3. Clear |document|'s |allowTextFragmentDirective| flag.
 
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
@@ -502,7 +501,7 @@ Add the following steps to the beginning of the processing model for
 ### Scroll a DOMRect into view ### {#scroll-rect-into-view}
 <div class="note">
   This section describes a refactoring of the CSSOMVIEW's
-  <a spec=cssom-view>scroll an element into view</a> algorithm 
+  <a spec=cssom-view>scroll an element into view</a> algorithm
   to separate the steps for scrolling a DOMRect into view, so it can be used to
   scroll a Range into view.
 </div>
@@ -686,7 +685,7 @@ these steps:
                 5. <a spec=infra>Skip ASCII whitespace</a> on |search
                     position|.
             5. If the result of [[#next-word-bounded-instance]] of
-                |query| in |text| from |search position| 
+                |query| in |text| from |search position|
                 with [=current locale=] does not start at |search
                 position|, then continue.
         2. Advance |search position| to the position after the result of
@@ -732,7 +731,7 @@ The <dfn>current locale</dfn> is the <a spec=html>language</a> of the
   <em>walker</em>.
 </div>
 
-1. While the input <em>walker.currentNode</em> is not null and 
+1. While the input <em>walker.currentNode</em> is not null and
     <em>walker.currentNode</em> is not a text node:
     1. Advance the current node by calling {{TreeWalker/nextNode()|walker.nextNode()}}.
 
