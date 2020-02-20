@@ -1973,7 +1973,7 @@ is not revealed to script, which is left as UA-defined behavior. </div>
      </ol>
    </ol>
    <h4 class="heading settled" data-level="3.5.1" id="scroll-rect-into-view"><span class="secno">3.5.1. </span><span class="content">Scroll a DOMRect into view</span><a class="self-link" href="#scroll-rect-into-view"></a></h4>
-   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view①">scroll an element into view</a> algorithm 
+   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view①">scroll an element into view</a> algorithm
   to separate the steps for scrolling a DOMRect into view, so it can be used to
   scroll a Range into view. </div>
    <p>Move the <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view②">scroll an element into view</a> algorithm’s steps
@@ -2232,46 +2232,41 @@ locale</a> starts at <var>search position</var>, then return <var>potential matc
      </ol>
    </ol>
    <h4 class="heading settled" data-level="3.5.7" id="next-word-bounded-instance"><span class="secno">3.5.7. </span><span class="content">Find the next word bounded instance</span><a class="self-link" href="#next-word-bounded-instance"></a></h4>
-   <div class="note" role="note"> This algorithm has input <em>query, text, start position,</em> and <em>locale</em> and returns a Range that specifies the word bounded text
-instance if it is found. </div>
+   <div class="note" role="note"> This algorithm has input <var>query</var>, <var>text</var>, <var>start position</var>, and <var>locale</var> and
+returns a Range that specifies the word bounded text instance if it is found. </div>
+   <div class="note" role="note"> Limiting matching to word boundaries is one of the mitigations to limit
+cross-origin information leakage. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>,
 a proposal to specify unicode segmentation, including word segmentation. Once
 specified, this algorithm may be improved by making use of the Intl.Segmenter
 API for word boundary matching. </div>
+   <p> A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
+  text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of
+  what constitutes a word boundary, but as the specification mentions,
+  a more sophisticated algorithm should be used based on the locale. </p>
+   <p> Dictionary-based word bounding should take specific care in
+  locales without a word-separating character (e.g. space). In
+  those cases, and where the alphabet contains fewer than 100
+  characters, the dictionary must not contain more than 20% of the
+  alphabet as valid, one-letter words. </p>
    <ol>
     <li data-md>
-     <p>While <em>start position</em> does not point past the end of <em>text</em>:</p>
+     <p>While <var>start position</var> does not point past the end of <var>text</var>:</p>
      <ol>
       <li data-md>
-       <p>Advance <em>start position</em> to the next instance of <em>query</em> in <em>text</em>.</p>
+       <p>Advance <var>start position</var> to the next instance of <var>query</var> in <var>text</var>.</p>
       <li data-md>
-       <p>Let <em>range</em> be a Range with position <em>start position</em> and
-length equal to the length of <em>query</em>.</p>
+       <p>Let <var>range</var> be a Range with position <var>start position</var> and length equal to
+the length of <var>query</var>.</p>
       <li data-md>
-       <p>Using locale <em>locale</em>, let <em>left bound</em> be the last word
-boundary in <em>text</em> before <em>range</em>.</p>
+       <p>Using locale <var>locale</var>, let <var>left bound</var> be the last word boundary in <var>text</var> before <var>range</var>.</p>
       <li data-md>
-       <p>Using locale <em>locale</em>, let <em>right bound</em> be the first word
-boundary in <em>text</em> after <em>range</em>.</p>
-       <div class="note" role="note">
-        <p> Limiting matching to word boundaries is one of the mitigations to
-    limit cross-origin information leakage. A word boundary is as
-    defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
-    text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of
-    what constitutes a word boundary, but as the specification mentions,
-    a more sophisticated algorithm should be used based on the <em>locale</em>. </p>
-        <p> Dictionary-based word bounding should take specific care in
-    locales without a word-separating character (e.g. space). In
-    those cases, and where the alphabet contains fewer than 100
-    characters, the dictionary must not contain more than 20% of the
-    alphabet as valid, one-letter words. </p>
-       </div>
+       <p>Using locale <var>locale</var>, let <var>right bound</var> be the first word boundary in <var>text</var> after <var>range</var>.</p>
       <li data-md>
-       <p>If <em>left bound</em> immediately precedes <em>range</em> and <em>right
-bound</em> immediately follows <em>range</em>, then return <em>range</em>.</p>
+       <p>If <var>left bound</var> immediately precedes <var>range</var> and <var>right bound</var> immediately follows <var>range</var>, then return <var>range</var>.</p>
      </ol>
     <li data-md>
-     <p>Return <em>null</em>.</p>
+     <p>Return null.</p>
    </ol>
    <h3 class="heading settled" data-level="3.6" id="indicating-the-text-match"><span class="secno">3.6. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
    <p>The UA may choose to scroll the text fragment into view as part of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment①">try to scroll to the fragment</a> steps or by some other mechanism;
