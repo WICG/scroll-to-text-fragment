@@ -348,6 +348,27 @@ may, instead, provide UI to initiate the scroll ("click to scroll") or none
 at all. In these cases UA should provide some indication to the user that an
 indicated passage exists further down on the page.
 
+The examples above illustrate that in specific circumstances, it may be
+possible for an attacker to extract 1 bit of information about content on the
+page.  However, care must be taken so that such opportunities cannot be
+exploited to extract arbitrary content from the page by repeating the attack.
+For this reason, restrictions based on user activation and browsing context
+isolation are very important and must be implemented.
+
+<div class="note">
+  Browsing context isolation ensures that no other document can script the
+  target document which helps reduce the attack surface.
+
+  However, it also ensures any malicious use is difficult to hide. A browsing
+  context that's the only one in a group must be a top level browsing context
+  (i.e. a full tab/window).
+</div>
+
+If a UA does choose to scroll automatically, it must ensure no scrolling is
+performed while the document is in the background (for example, in an inactive
+tab). This ensures any malicious usage is visible to the user and prevents
+attackers from trying to secretly automate a search in background documents.
+
 ### Search Timing
 
 A naive implementation of the text search algorithm could allow information
