@@ -687,6 +687,33 @@ To <dfn>find range from a text directive</dfn>, run the following steps:
   which case context on that side of a match is not checked. e.g. If |prefix|
   is null, text is matched without any requirement on what text precedes it.
 </div>
+<div class="note">
+  While the matching text and its prefix/suffix can span across
+  block-boundaries, the individual parameters to these steps cannot. That is,
+  each of |prefix|, |textStart|, |textEnd|, and |suffix| will only match text
+  within a single block.
+
+  <div class="example">
+    <pre>:~:text=The quick,lazy dog</pre> will fail to match in
+
+    ```
+    <div>The<div> </div>quick brown fox</div>
+    <div>jumped over the lazy dog</div>
+    ```
+
+    because the starting string "The quick" does not appear within a single,
+    uninterrupted block. The instance of "The quick" in the document has a
+    block element between "The" and "quick".
+
+    It does, however, match in this example:
+
+    ```
+    <div>The quick brown fox</div>
+    <div>jumped over the lazy dog</div>
+    ```
+
+  </div>
+</div>
 
 1. Let |searchRange| be a {{Range}} with [=range/start=] (|document|, 0) and
    [=range/end=] (|document|, |document|'s [=node/length=])
@@ -812,7 +839,10 @@ in a given {{Range}} |range|, run these steps:
     ```
   </p>
 
-  Will perform a search on "abc", then on "c", then on "e".
+  Will perform a search on "abc", then on "d", then on "e".
+
+  Thus, |query| will only match text that is continuous (i.e. uninterrupted by
+  a block-level container) within a single block-level container.
 </div>
 
 1. While |searchRange| is not [=range/collapsed=]:
