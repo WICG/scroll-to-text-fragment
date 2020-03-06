@@ -911,11 +911,11 @@ in a given [=range=] |range|, run these steps:
 A node is <dfn>search invisible</dfn> if it is in the [=HTML namespace=] and
 meets any of the following conditions:
 1. The [=computed value=] of its 'display' property is 'none'.
-1. It has a [=Element/local name=] equal to any of the following: <{area}>,
-   <{audio}>, <{base}>, <{basefont}>, <{bgsound}>, <{br}>, <{col}>, <{embed}>,
-   <{frame}>, <{hr}>, <{iframe}>, <{img}>, <{keygen}>, <{link}>, <{menuitem}>,
-   <{meta}>, <{meter}>, <{object}>, <{param}>, <{progress}>, <{script}>,
-   <{source}>, <{style}>, <{track}>, <{video}>, <{wbr}>.
+1. If the node <a spec=html>serializes as void</a>.
+1. Is any of the following types: {{HTMLIFrameElement}}, {{HTMLImageElement}},
+   {{HTMLMeterElement}}, {{HTMLObjectElement}}, {{HTMLProgressElement}},
+   {{HTMLStyleElement}}, {{HTMLScriptElement}}, {{HTMLVideoElement}},
+   {{HTMLAudioElement}}
 1. Is a <{select}> element whose <{select/multiple}> content attribute is absent.
 
 A node is part of a <dfn>non-searchable subtree</dfn> if it is or has an
