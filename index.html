@@ -2398,7 +2398,7 @@ meets any of the following conditions:</p>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has an
 ancestor that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
    <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visufx.html#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="property" data-link-type="propdesc">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="property" data-link-type="propdesc">block</a>, <a class="property" data-link-type="propdesc">table</a>, <a class="property" data-link-type="propdesc">flow-root</a>, <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-grid-1/#propdef-grid" id="ref-for-propdef-grid">grid</a>, <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-flexbox-1/#propdef-flex" id="ref-for-propdef-flex">flex</a>, <a class="property" data-link-type="propdesc">list-item</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-shapes-2/#valdef-shape-inside-display" id="ref-for-valdef-shape-inside-display">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-grid-1/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-flexbox-1/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <p>To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps:</p>
    <ol>
     <li data-md>
@@ -2894,22 +2894,52 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-computed-value">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-computed-value①">(2)</a> <a href="#ref-for-computed-value②">(3)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-block">
+   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-block">https://drafts.csswg.org/css-display-3/#valdef-display-block</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-block">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-propdef-display">
    <a href="https://drafts.csswg.org/css-display-3/#propdef-display">https://drafts.csswg.org/css-display-3/#propdef-display</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-propdef-display">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-propdef-display①">(2)</a>
+    <li><a href="#ref-for-propdef-display">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-propdef-flex">
-   <a href="https://drafts.csswg.org/css-flexbox-1/#propdef-flex">https://drafts.csswg.org/css-flexbox-1/#propdef-flex</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-flow-root">
+   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root">https://drafts.csswg.org/css-display-3/#valdef-display-flow-root</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-propdef-flex">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-flow-root">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-propdef-grid">
-   <a href="https://drafts.csswg.org/css-grid-1/#propdef-grid">https://drafts.csswg.org/css-grid-1/#propdef-grid</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-list-item">
+   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item">https://drafts.csswg.org/css-display-3/#valdef-display-list-item</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-propdef-grid">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-list-item">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-table">
+   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-table">https://drafts.csswg.org/css-display-3/#valdef-display-table</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-table">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-flex">
+   <a href="https://drafts.csswg.org/css-flexbox-1/#valdef-display-flex">https://drafts.csswg.org/css-flexbox-1/#valdef-display-flex</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-flex">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-display-grid">
+   <a href="https://drafts.csswg.org/css-grid-1/#valdef-display-grid">https://drafts.csswg.org/css-grid-1/#valdef-display-grid</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-grid">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-shape-inside-display">
+   <a href="https://drafts.csswg.org/css-shapes-2/#valdef-shape-inside-display">https://drafts.csswg.org/css-shapes-2/#valdef-shape-inside-display</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-shape-inside-display">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-propdef-visibility">
@@ -3472,17 +3502,26 @@ match based on whether the element-id was scrolled.</p>
    <li>
     <a data-link-type="biblio">[css-display-3]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-block" style="color:initial">block</span>
      <li><span class="dfn-paneled" id="term-for-propdef-display" style="color:initial">display</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-flow-root" style="color:initial">flow-root</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-list-item" style="color:initial">list-item</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-table" style="color:initial">table</span>
     </ul>
    <li>
     <a data-link-type="biblio">[css-flexbox-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-propdef-flex" style="color:initial">flex</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-flex" style="color:initial">flex</span>
     </ul>
    <li>
     <a data-link-type="biblio">[css-grid-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-propdef-grid" style="color:initial">grid</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-grid" style="color:initial">grid</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[css-shapes-2]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-valdef-shape-inside-display" style="color:initial">display</span>
     </ul>
    <li>
     <a data-link-type="biblio">[CSS2]</a> defines the following terms:
@@ -3621,6 +3660,8 @@ match based on whether the element-id was scrolled.</p>
    <dd>Tab Atkins Jr.; et al. <a href="https://www.w3.org/TR/css-flexbox-1/">CSS Flexible Box Layout Module Level 1</a>. 19 November 2018. CR. URL: <a href="https://www.w3.org/TR/css-flexbox-1/">https://www.w3.org/TR/css-flexbox-1/</a>
    <dt id="biblio-css-grid-1">[CSS-GRID-1]
    <dd>Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. <a href="https://www.w3.org/TR/css-grid-1/">CSS Grid Layout Module Level 1</a>. 14 December 2017. CR. URL: <a href="https://www.w3.org/TR/css-grid-1/">https://www.w3.org/TR/css-grid-1/</a>
+   <dt id="biblio-css-shapes-2">[CSS-SHAPES-2]
+   <dd>CSS Shapes Module Level 2 URL: <a href="https://drafts.csswg.org/css-shapes-2/">https://drafts.csswg.org/css-shapes-2/</a>
    <dt id="biblio-css2">[CSS2]
    <dd>Bert Bos; et al. <a href="https://www.w3.org/TR/CSS2/">Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification</a>. 7 June 2011. REC. URL: <a href="https://www.w3.org/TR/CSS2/">https://www.w3.org/TR/CSS2/</a>
    <dt id="biblio-cssom-view-1">[CSSOM-VIEW-1]

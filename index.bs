@@ -921,8 +921,9 @@ A node is a <dfn>visible text node</dfn> if it is a {{Text}} node, the
 spec=html>being rendered</a>.
 
 A node <dfn>has block-level display</dfn> if the [=computed value=] of its
-'display' property is any of 'block', 'table', 'flow-root', 'grid', 'flex',
-'list-item'.
+''display'' property is any of ''display/block'', ''display/table'',
+''display/flow-root'', ''display/grid'', ''display/flex'',
+''display/list-item''.
 
 To find the <dfn>nearest block ancestor</dfn> of a |node| follow the steps:
 1. While |node| is non-null
