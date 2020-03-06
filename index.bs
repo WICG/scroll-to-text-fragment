@@ -13,6 +13,11 @@ Group: wicg
 Repository: wicg/ScrollToTextFragment
 </pre>
 
+<pre class='link-defaults'>
+spec:css-display-3; type:value; for:display; text:flex
+spec:css-display-3; type:value; for:display; text:grid
+</pre>
+
 <h2 id=infrastructure>Infrastructure</h2>
 
 <p>This specification depends on the Infra Standard. [[!INFRA]]
@@ -921,7 +926,7 @@ A node is a <dfn>visible text node</dfn> if it is a {{Text}} node, the
 spec=html>being rendered</a>.
 
 A node <dfn>has block-level display</dfn> if the [=computed value=] of its
-''display'' property is any of ''display/block'', ''display/table'',
+'display' property is any of ''display/block'', ''display/table'',
 ''display/flow-root'', ''display/grid'', ''display/flex'',
 ''display/list-item''.
 
