@@ -566,8 +566,10 @@ Add the following steps to the beginning of the processing model for
              remaining |ranges| should be visually indicated in a way that
              is not revealed to script, which is left as UA-defined behavior.
            </div>
-        1. Let |node| be the [=first common ancestor=] of |range|'s start and end nodes. TODO: start and end nodes.
-        1. While |node| is not an [=Element=], set |node| to |node|'s [=tree/parent=].
+        1. Let |node| be the [=first common ancestor=] of |range|'s
+            [=range/start node=] and [=range/start node=].
+        1. While |node| is not an [=Element=], set |node| to |node|'s
+            [=tree/parent=].
         1. The indicated part of the document is |node| and |range|; return.
 
 To find the <dfn>first common ancestor</dfn> of two nodes |nodeA| and |nodeB|,
@@ -760,7 +762,9 @@ following steps:
            range=] steps given |parsedValues|'s
            [=ParsedTextFragment/textStart=] and [=ParsedTextFragment/textEnd=],
            and |searchRange|.
-           TODO: "find a string in range" doesn't take two strings!
+           <div class="note">
+             TODO: [=find a string in range=] doesn't take two strings!
+           </div>
         1. If |potentialMatch| is null or its [=range/start=] is not
            |searchRange|'s [=range/start=], [=iteration/continue=].
            <div class="note">
