@@ -318,7 +318,7 @@ in the [=fragment directive=] that matches the production:
     </dd>
   </code>
   <div class = "note">
-    A [=ExplicitChar=] may be any [=URL code point=].
+    An [=ExplicitChar=] may be any [=URL code point=].
   </div>
 </dl>
 
