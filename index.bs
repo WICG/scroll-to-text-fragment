@@ -300,6 +300,26 @@ in the [=fragment directive=] that matches the production:
       [=CharacterString=]
     </dd>
   </code>
+  <code>
+    <dt>
+      <dfn>CharacterString</dfn> ::=
+    </dt>
+    <dd>
+      ([=ExplicitChar=] | [=PercentEncodedChar=])+
+    </dd>
+  </code>
+  <code>
+    <dt>
+      <dfn>ExplicitChar</dfn> ::=
+    </dt>
+    <dd>
+      [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
+      ";" | "=" | "?" | "@" | "_" | "~" | "&" | "," | "-"
+    </dd>
+  </code>
+  <div class = "note">
+    An [=ExplicitChar=] may be any [=URL code point=].
+  </div>
 </dl>
 
 <div class="note">
@@ -314,44 +334,36 @@ The <dfn>text fragment directive</dfn> is one such [=fragment directive=] that
 enables specifying a piece of text on the page, that matches the production:
 
 <dl>
-  <code><dt><dfn>TextDirective</dfn> ::=</dt><dd>"text="
-  [=TextDirectiveParameters=]</dd></code>
+  <code>
+    <dt><dfn>TextDirective</dfn> ::=</dt>
+    <dd>"text=" [=TextDirectiveParameters=]</dd>
+  </code>
 
   <code>
-    <dt>
-      <dfn>TextDirectiveParameters</dfn> ::=
-    </dt>
+    <dt><dfn>TextDirectiveParameters</dfn> ::=</dt>
     <dd>
-      ([=TextDirectivePrefix=] ",")? [=CharacterString=] (","
-      [=CharacterString=])?  ("," [=TextDirectiveSuffix=])?
+      ([=TextDirectivePrefix=] ",")? [=TextDirectiveString=]
+      ("," [=TextDirectiveString=])?  ("," [=TextDirectiveSuffix=])?
     </dd>
   </code>
 
   <code>
     <dt><dfn>TextDirectivePrefix</dfn> ::=</dt>
-    <dd>[=CharacterString=]"-"</dd>
+    <dd>[=TextDirectiveString=]"-"</dd>
   </code>
 
   <code>
-    <dt>
-      <dfn>TextDirectiveSuffix</dfn> ::=
-    </dt>
-    <dd>"-"[=CharacterString=]</dd>
+    <dt><dfn>TextDirectiveSuffix</dfn> ::=</dt>
+    <dd>"-"[=TextDirectiveString=]</dd>
   </code>
 
   <code>
-    <dt>
-      <dfn>CharacterString</dfn> ::=
-    </dt>
-    <dd>
-      ([=ExplicitChar=] | [=PercentEncodedChar=])+
-    </dd>
+    <dt><dfn>TextDirectiveString</dfn> ::=</dt>
+    <dd>([=TextDirectiveExplicitChar=] | [=PercentEncodedChar=])+</dd>
     </code>
 
   <code>
-    <dt>
-      <dfn>ExplicitChar</dfn> ::=
-    </dt>
+    <dt><dfn>TextDirectiveExplicitChar</dfn> ::=</dt>
     <dd>
       [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
       ";" | "=" | "?" | "@" | "_" | "~"
@@ -359,18 +371,14 @@ enables specifying a piece of text on the page, that matches the production:
   </code>
 
   <div class = "note">
-    A [=ExplicitChar=] may be any [=URL code point=] that is not explicitly
-    used in the [=TextDirective=] syntax, that is "&", "-", and ",", which must
-    be percent-encoded.
+    A [=TextDirectiveExplicitChar=] may be any [=URL code point=] that is not
+    explicitly used in the [=TextDirective=] syntax, that is "&", "-", and ",",
+    which must be percent-encoded.
   </div>
 
   <code>
-    <dt>
-      <dfn>PercentEncodedChar</dfn> ::=
-    </dt>
-    <dd>
-      "%" [a-zA-Z0-9]+
-    </dd>
+    <dt><dfn>PercentEncodedChar</dfn> ::=</dt>
+    <dd>"%" [a-zA-Z0-9]+</dd>
   </code>
 </dl>
 

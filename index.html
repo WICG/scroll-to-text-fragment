@@ -1797,7 +1797,11 @@ used.</p>
    <h4 class="heading settled" data-level="3.3.2" id="fragment-directive-grammar"><span class="secno">3.3.2. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive</dfn> is a sequence of characters that appears
 in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⓪">fragment directive</a> that matches the production:</p>
-   <dl> <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirectiveproduction">FragmentDirective</dfn> ::= </dt> <dd> (<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction">FragmentDirective</a>)? </dd> </code> <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective">UnknownDirective</dfn> ::= </dt> <dd> <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a> </dd> </code> </dl>
+   <dl>
+     <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirectiveproduction">FragmentDirective</dfn> ::= </dt> <dd> (<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction">FragmentDirective</a>)? </dd> </code> <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective">UnknownDirective</dfn> ::= </dt> <dd> <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a> </dd> </code> <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="characterstring">CharacterString</dfn> ::= </dt> <dd> (<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+ </dd> </code> <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="explicitchar">ExplicitChar</dfn> ::= </dt> <dd> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
+      ";" | "=" | "?" | "@" | "_" | "~" | "&amp;" | "," | "-" </dd> </code> 
+    <div class="note" role="note"> An <a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar①">ExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points">URL code point</a>. </div>
+   </dl>
    <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction①">FragmentDirective</a> may contain multiple directives split by the "&amp;"
   character. Currently this means we allow multiple text directives to enable
   multiple indicated strings in the page, but this also allows for future
@@ -1806,23 +1810,23 @@ in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-d
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-fragment-directive">text fragment directive</dfn> is one such <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①①">fragment directive</a> that
 enables specifying a piece of text on the page, that matches the production:</p>
    <dl>
-     <code><dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt><dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd></code> 
+     <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective">TextDirective</dfn> ::=</dt> <dd>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></dd> </code> 
     <p><code></code></p>
-    <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::= </dt> <dd> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring①">CharacterString</a> ("," <a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring②">CharacterString</a>)?  ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)? </dd> </code> 
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters">TextDirectiveParameters</dfn> ::=</dt> <dd> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring">TextDirectiveString</a> ("," <a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring①">TextDirectiveString</a>)?  ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)? </dd> </code> 
     <p><code></code></p>
-    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring③">CharacterString</a>"-"</dd> </code> 
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveprefix">TextDirectivePrefix</dfn> ::=</dt> <dd><a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring②">TextDirectiveString</a>"-"</dd> </code> 
     <p><code></code></p>
-    <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::= </dt> <dd>"-"<a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring④">CharacterString</a></dd> </code> 
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix">TextDirectiveSuffix</dfn> ::=</dt> <dd>"-"<a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring③">TextDirectiveString</a></dd> </code> 
     <p><code></code></p>
-    <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="characterstring">CharacterString</dfn> ::= </dt> <dd> (<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+ </dd> </code> 
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivestring">TextDirectiveString</dfn> ::=</dt> <dd>(<a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar">TextDirectiveExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar①">PercentEncodedChar</a>)+</dd> </code> 
     <p><code></code></p>
-    <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="explicitchar">ExplicitChar</dfn> ::= </dt> <dd> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveexplicitchar">TextDirectiveExplicitChar</dfn> ::=</dt> <dd> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
       ";" | "=" | "?" | "@" | "_" | "~" </dd> </code> 
-    <div class="note" role="note"> A <a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar①">ExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points">URL code point</a> that is not explicitly
-    used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and ",", which must
-    be percent-encoded. </div>
+    <div class="note" role="note"> A <a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar①">TextDirectiveExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points①">URL code point</a> that is not
+    explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and ",",
+    which must be percent-encoded. </div>
     <p><code></code></p>
-    <code> <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::= </dt> <dd> "%" [a-zA-Z0-9]+ </dd> </code> 
+    <code> <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar">PercentEncodedChar</dfn> ::=</dt> <dd>"%" [a-zA-Z0-9]+</dd> </code> 
    </dl>
    <h3 class="heading settled" data-level="3.4" id="security-and-privacy"><span class="secno">3.4. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
    <h4 class="heading settled" data-level="3.4.1" id="motivation"><span class="secno">3.4.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
@@ -2908,8 +2912,10 @@ match based on whether the element-id was scrolled.</p>
    <li><a href="#should-allow-a-text-fragment">should allow a text fragment</a><span>, in §3.4.4</span>
    <li><a href="#parsedtextdirective-suffix">suffix</a><span>, in §3.3.1</span>
    <li><a href="#textdirective">TextDirective</a><span>, in §3.3.2</span>
+   <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in §3.3.2</span>
    <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in §3.3.2</span>
    <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in §3.3.2</span>
+   <li><a href="#textdirectivestring">TextDirectiveString</a><span>, in §3.3.2</span>
    <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in §3.3.2</span>
    <li><a href="#parsedtextdirective-textend">textEnd</a><span>, in §3.3.1</span>
    <li><a href="#text-fragment-directive">text fragment directive</a><span>, in §3.3.2</span>
@@ -3436,7 +3442,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-url-code-points">
    <a href="https://url.spec.whatwg.org/#url-code-points">https://url.spec.whatwg.org/#url-code-points</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-url-code-points">3.3.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-url-code-points">3.3.2. Fragment directive grammar</a> <a href="#ref-for-url-code-points①">(2)</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -3681,6 +3687,18 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-unknowndirective">3.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="characterstring">
+   <b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-characterstring">3.3.2. Fragment directive grammar</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="explicitchar">
+   <b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-explicitchar">3.3.2. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="text-fragment-directive">
    <b><a href="#text-fragment-directive">#text-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
@@ -3719,22 +3737,22 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-textdirectivesuffix">3.3.2. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="characterstring">
-   <b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="textdirectivestring">
+   <b><a href="#textdirectivestring">#textdirectivestring</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-characterstring">3.3.2. Fragment directive grammar</a> <a href="#ref-for-characterstring①">(2)</a> <a href="#ref-for-characterstring②">(3)</a> <a href="#ref-for-characterstring③">(4)</a> <a href="#ref-for-characterstring④">(5)</a>
+    <li><a href="#ref-for-textdirectivestring">3.3.2. Fragment directive grammar</a> <a href="#ref-for-textdirectivestring①">(2)</a> <a href="#ref-for-textdirectivestring②">(3)</a> <a href="#ref-for-textdirectivestring③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="explicitchar">
-   <b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="textdirectiveexplicitchar">
+   <b><a href="#textdirectiveexplicitchar">#textdirectiveexplicitchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-explicitchar">3.3.2. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
+    <li><a href="#ref-for-textdirectiveexplicitchar">3.3.2. Fragment directive grammar</a> <a href="#ref-for-textdirectiveexplicitchar①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="percentencodedchar">
    <b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-percentencodedchar">3.3.2. Fragment directive grammar</a>
+    <li><a href="#ref-for-percentencodedchar">3.3.2. Fragment directive grammar</a> <a href="#ref-for-percentencodedchar①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="should-allow-a-text-fragment">
