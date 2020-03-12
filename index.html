@@ -1868,6 +1868,11 @@ detectable and distinguished from natural user scrolls.</p>
   page. The searched-for text appears nearby to a resource located on a unique
   (on the page) domain. The attacker may be able to infer the success or failure
   of the fragment search based on the order of requests for DNS lookup. </div>
+   <div class="example" id="example-4d0b486d"><a class="self-link" href="#example-4d0b486d"></a> A malicious page embeds a cross-origin victim in an iframe. The victim page
+  contains information sensitive to the user. The malicious page navigates the
+  victim to a text fragment. Since a successful fragment match will cause
+  focus, the malicious page can determine if the text appears in the victim by
+  listening for a blur event in its own document. </div>
    <div class="example" id="example-2e4f39df"><a class="self-link" href="#example-2e4f39df"></a> An attacker sends a link to a victim, sending them to a page that displays
   a private token. The attacker asks the victim to read back the token. Using
   a text fragment, the attacker gets the page to load for the victim such that
