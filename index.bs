@@ -14,6 +14,7 @@ Repository: wicg/ScrollToTextFragment
 </pre>
 
 <pre class='link-defaults'>
+spec:html; type:dfn; for:/; text:origin
 spec:css-display-3; type:value; for:display; text:flex
 spec:css-display-3; type:value; for:display; text:grid
 </pre>
@@ -247,8 +248,10 @@ run these steps:
     1. Set |retVal|'s [=ParsedTextDirective/prefix=] to the result of
        removing the last character from |potential prefix|.
     1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
-1. Let |potential suffix| be the last item of |tokens|, if one exists.
-1. If the first character of |potential suffix| is U+002D (-), then:
+1. Let |potential suffix| be the last item of |tokens|, if one exists, null
+    otherwise.
+1. If |potential suffix| is non-null and its first character is U+002D (-),
+    then:
     1. Set |retVal|'s [=ParsedTextDirective/suffix=] to the result of
        removing the first character from |potential suffix|.
     1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
@@ -454,17 +457,13 @@ asynchronous task to find and set the indicated part of the document.
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
 To determine whether a navigation <dfn>should allow a text fragment</dfn>,
-follow these steps:
+given as input a boolean |is user triggered|, an [=origin=]
+|incumbentNavigationOrigin|, and [=Document=] |document|; follow these steps:
 
 <div class="note">
   TODO: This should really only prevent potentially observable side-effects like
   automatic scrolling. Unobservable effects like a highlight should be safely
   allowed in all cases.
-</div>
-<div class="note">
-  This algorithm has input |is user triggered|, |incumbentNavigationOrigin|,
-  |document| and returns a boolean indicating whether a [=text fragment
-  directive=] should be allowed to invoke on the given Document.
 </div>
 
 1. If |is user triggered| is false, return false.
@@ -573,7 +572,7 @@ Add the following steps to the beginning of the processing model for
            </div>
         1. Let |node| be the [=first common ancestor=] of |range|'s
             [=range/start node=] and [=range/start node=].
-        1. While |node| is not an [=Element=], set |node| to |node|'s
+        1. While |node| is not an [=element=], set |node| to |node|'s
             [=tree/parent=].
         1. The indicated part of the document is |node| and |range|; return.
 
@@ -660,14 +659,16 @@ Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
   list.
 </div>
 
-To <dfn>process a fragment directive</dfn>, run these steps:
+To <dfn>process a fragment directive</dfn>, given as input a <a
+spec=infra>string</a> |fragment directive input| and a [=Document=]
+|document|, run these steps:
 
 <div class="note">
-  This algorithm takes as input a <a spec=infra>string</a> |fragment directive
-  input|, that is the raw text of the fragment directive and a [=Document=]
-  |document| over which it operates. It returns a <a spec=infra>list</a> of
-  [=ranges=] that are to be visually indicated, the first of which may be
-  scrolled into view (if the UA scrolls automatically).
+  This algorithm takes as input a the |fragment directive input|, that is the
+  raw text of the fragment directive and the |document| over which it operates.
+  It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
+  indicated, the first of which may be scrolled into view (if the UA scrolls
+  automatically).
 </div>
 
 1. If |fragment directive input| does not match the [=FragmentDirective=]
@@ -742,7 +743,7 @@ following steps:
 </div>
 
 1. Let |searchRange| be a [=range=] with [=range/start=] (|document|, 0) and
-   [=range/end=] (|document|, |document|'s [=node/length=])
+   [=range/end=] (|document|, |document|'s [=Node/length=])
 1. While |searchRange| is not [=range/collapsed=]:
     1. Let |potentialMatch| be null.
     1. If |parsedValues|'s [=ParsedTextDirective/prefix=] is not null:
@@ -750,41 +751,63 @@ following steps:
            in range=] steps given |parsedValues|'s [=ParsedTextDirective/prefix=] and
            |searchRange|.
         1. If |prefixMatch| is null, return null.
-        1. Set |searchRange|'s [=range/start=] to |prefixMatch|'s [=range/end=].
-        1. Advance |searchRange|'s [=range/start=] to the
+        1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
+            [=boundary point/after=] |prefixMatch|'s [=range/start=]
+        1. Let |matchRange| be a [=range=] whose [=range/start=] is
+            |prefixMatch|'s [=range/end=] and [=range/end=] is |searchRange|'s
+            [=range/end=].
+        1. Advance |matchRange|'s [=range/start=] to the
            [=next non-whitespace position=].
-        1. If |searchRange| is [=range/collapsed=] return null.
+        1. If |matchRange| is [=range/collapsed=] return null.
            <div class="note">
              This can happen if |prefixMatch|'s [=range/end=] or its subsequent
              non-whitespace position is at the end of the document.
            </div>
-        1. [=/Assert=]: |searchRange|'s [=range/start node=] is a {{Text}} node.
+        1. [=/Assert=]: |matchRange|'s [=range/start node=] is a {{Text}} node.
            <div class="note">
-             |searchRange|'s [=range/start=] now points to the next
+             |matchRange|'s [=range/start=] now points to the next
              non-whitespace text data following a matched prefix.
            </div>
         1. Set |potentialMatch| to the result of running the [=find a string in
-           range=] steps given |parsedValues|'s
-           [=ParsedTextFragment/textStart=] and [=ParsedTextFragment/textEnd=],
-           and |searchRange|.
-           <div class="note">
-             TODO: [=find a string in range=] doesn't take two strings!
-           </div>
-        1. If |potentialMatch| is null or its [=range/start=] is not
-           |searchRange|'s [=range/start=], [=iteration/continue=].
-           <div class="note">
-             In this case, we found a prefix but it was followed by something
-             other than a matching text so we'll continue searching for the
-             next instance of [=ParsedTextDirective/prefix=].
-           </div>
+            range=] steps given |parsedValues|'s
+            [=ParsedTextDirective/textStart=] and |matchRange|.
+        1. If |potentialMatch| is null, return null.
+        1. If |potentialMatch|'s [=range/start=] is not |matchRange|'s
+            [=range/start=], then  and [=iteration/continue=].
+            <div class="note">
+              In this case, we found a prefix but it was followed by something
+              other than a matching text so we'll continue searching for the
+              next instance of [=ParsedTextDirective/prefix=].
+            </div>
+        1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
+            non-null, then:
+            1. Let |textEndRange| be a [=range=] whose [=range/start=] is
+                |potentialMatch|'s [=range/end=] and whose [=range/end=] is
+                |searchRange|'s [=range/end=].
+            1. Let |textEndMatch| be the result of running the [=find a string
+                in range=] steps given |parsedValue|'s
+                [=ParsedTextDirective/textEnd=] and |textEndRange|.
+            1. If |textEndMatch| is null then return null.
+            1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
+                [=range/end=].
     1. Otherwise:
         1. Set |potentialMatch| to the result of running the [=find a string in
            range=] steps given |parsedValues|'s
-           [=ParsedTextFragment/textStart=] and [=ParsedTextFragment/textEnd=],
-           and |searchRange|.
+           [=ParsedTextDirective/textStart=] and |searchRange|.
         1. If |potentialMatch| is null, return null.
-        1. Set |searchRange|'s [=range/start=] to |potentialMatch|'s
-           [=range/end=].
+        1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
+            [=boundary point/after=] |potentialMatch|'s [=range/start=]
+        1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
+            non-null, then:
+            1. Let |textEndRange| be a [=range=] whose [=range/start=] is
+                |potentialMatch|'s [=range/end=] and whose [=range/end=] is
+                |searchRange|'s [=range/end=].
+            1. Let |textEndMatch| be the result of running the [=find a string
+                in range=] steps given |parsedValue|'s
+                [=ParsedTextDirective/textEnd=] and |textEndRange|.
+            1. If |textEndMatch| is null then return null.
+            1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
+                [=range/end=].
     1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
        represents a range exactly containing an instance of matching text.
     1. If |parsedValues|'s [=ParsedTextDirective/suffix=] is null, return
@@ -834,7 +857,7 @@ non-whitespace position</dfn> follow the steps:
            property set, return.
         1. Add 1 to |range|'s [=range/start offset=].
     1. If |range|'s [=range/start offset=] is equal to |node|'s
-       [=node/length=], set |range|'s [=range/start node=] to the next node in
+       [=Node/length=], set |range|'s [=range/start node=] to the next node in
        [=shadow-including tree order=].
 
 To <dfn>find a string in range</dfn> for a <a spec=infra>string</a> |query|
@@ -980,7 +1003,7 @@ follow the steps
          1. Set |matchIndex| to null.
 1. Let |endInset| be 0.
 1. If the last item in |nodes| is |searchRange|'s [=range/end node=] then set
-   |endInset| to (|searchRange|'s [=range/end node=]'s [=node/length=] &minus
+   |endInset| to (|searchRange|'s [=range/end node=]'s [=Node/length=] &minus;
    |searchRange|'s [=range/end offset=])
    <div class="note">
      |endInset| is the offset from the last position in the last node in the
@@ -988,7 +1011,7 @@ follow the steps
      included in the range.
    </div>
 1. If |matchIndex| + |queryString|'s [=string/length=] is greater than or equal to
-   |searchBuffer|'s length &minus |endInset| return null.
+   |searchBuffer|'s length &minus; |endInset| return null.
    <div class="note">
      If the match runs past the end of the search range, return null.
    </div>
@@ -1014,11 +1037,11 @@ of {{Text}} nodes |nodes|, and a boolean |isEnd|, follow these steps:
 
 1. Let |counted| be 0.
 1. For each |curNode| of |nodes|:
-    1. Let |nodeEnd| be |counted| + |curNode|'s [=node/length=].
+    1. Let |nodeEnd| be |counted| + |curNode|'s [=Node/length=].
     1. If |isEnd| is true, add 1 to |nodeEnd|.
     1. If |nodeEnd| is greater than |index| then:
-        1. Return the [=/boundary point=] (|curNode|, |index| &minus |counted|).
-    1. Increment |counted| by |curNode|'s [=node/length=].
+        1. Return the [=/boundary point=] (|curNode|, |index| &minus; |counted|).
+    1. Increment |counted| by |curNode|'s [=Node/length=].
 1. Return null.
 
 ### Word Boundaries ### {#word-boundaries}
@@ -1056,8 +1079,7 @@ To determine if a substring of a larger string is <dfn>word bounded</dfn>,
 given a <a spec=infra>string</a> |text|, an integer |startPosition|, number
 |count|, and locales |startLocale| and |endLocale|, follow these steps:
 
-|startLocale| and |endLocale| must be a valid BCP 47[<a
-href="https://tools.ietf.org/html/bcp47">BCP47</a>] language tag, or the empty
+|startLocale| and |endLocale| must be a valid [[BCP47]] language tag, or the empty
 string. An empty string indicates that the primary language is unknown.
 
 <div class="note">
@@ -1090,7 +1112,7 @@ string. An empty string indicates that the primary language is unknown.
    </div>
 1. If the first [=code point=] of |text| following |left bound| is not at
    position |startPosition| return false.
-1. Let |endPosition| be (|startPosition| + |count| &minus 1).
+1. Let |endPosition| be (|startPosition| + |count| &minus; 1).
 1. Using locale |endLocale|, let |right bound| be the first word boundary in
    |text| after the |endPosition|th [=code point=].
 1. If the first [=code point=] of |text| preceding |right bound| is not at
