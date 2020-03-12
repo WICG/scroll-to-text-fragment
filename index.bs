@@ -440,6 +440,14 @@ detectable and distinguished from natural user scrolls.
 </div>
 
 <div class="example">
+  A malicious page embeds a cross-origin victim in an iframe. The victim page
+  contains information sensitive to the user. The malicious page navigates the
+  victim to a text fragment. Since a successful fragment match will cause
+  focus, the malicious page can determine if the text appears in the victim by
+  listening for a blur event in its own document.
+</div>
+
+<div class="example">
   An attacker sends a link to a victim, sending them to a page that displays
   a private token. The attacker asks the victim to read back the token. Using
   a text fragment, the attacker gets the page to load for the victim such that
