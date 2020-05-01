@@ -26,12 +26,13 @@ parts of pages are addressable by named anchors or elements with ids.
 This feature, as currently [specified in this repo](https://wicg.github.io/ScrollToTextFragment),
 is shipping to stable channel in Chrome M80.
 
-To opt out of text fragments, a [force-load-at-top Document Policy](#opting-out)
-will be available once document policies have shipped. In the meantime, websites
-can register for the [ForceLoadAtTop origin trial](https://developers.chrome.com/origintrials/#/view_trial/3253850730775183361),
+We're currently adding the ability for authors to disable this feature on their
+pages if they choose. To experiment with this opt-out today, websites can
+register for the [ForceLoadAtTop origin trial](https://developers.chrome.com/origintrials/#/view_trial/3253850730775183361),
 which will ensure that no scrolling happens on page load, including via regular
 fragment anchors and scroll restoration. For details on how to register a
 website for an origin trial, see the [Origin Trials Guide for Web Developers](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md).
+Please help shape the final API by providing feedback!
 
 ### Motivating Use Cases
 
@@ -514,7 +515,10 @@ drag-and-drop or copy-paste attacks.
 
 ### Opting Out
 
-To allow websites to opt out of text fragments, we propose adding a [Document
+For product reasons, or acute privacy restrictions, pages may wish to disallow
+scrolling to a text fragment (or regular fragment) on load, see
+[#80](https://github.com/WICG/ScrollToTextFragment/issues/80). To allow websites
+to opt out of text fragments, we propose adding a [Document
 Policy](https://github.com/w3c/webappsec-feature-policy/blob/master/document-policy-explainer.md)
 named force-load-at-top that ensures the page is loaded without any form of
 scrolling, including via text fragments, regular element fragments, and scroll
