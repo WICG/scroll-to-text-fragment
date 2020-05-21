@@ -1222,7 +1222,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 19c1873c, updated Thu Jun 4 14:44:17 2020 -0700" name="generator">
+  <meta content="Bikeshed version 40de15f9, updated Thu Jun 11 17:47:04 2020 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
 <style>/* style-autolinks */
 
@@ -1470,13 +1470,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-09">9 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-29">29 June 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
      <dd><a class="u-url" href="https://wicg.github.io/scroll-to-text-fragment/">https://wicg.github.io/scroll-to-text-fragment/</a>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/wicg/scroll-to-text-fragment/issues/">GitHub</a>
+     <dd><a href="https://github.com/wicg/ScrollToTextFragment/issues/">GitHub</a>
      <dt class="editor">Editors:
      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:nburris@chromium.org">Nick Burris</a> (<a class="p-org org" href="https://www.google.com">Google</a>)
      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:bokan@chromium.org">David Bokan</a> (<a class="p-org org" href="https://www.google.com">Google</a>)
@@ -1931,6 +1931,11 @@ given as input a boolean <var>is user triggered</var>, an <a data-link-type="dfn
   allowed in all cases. </div>
    <ol>
     <li data-md>
+     <p>If <var>incumbentNavigationOrigin</var> is null, return true.</p>
+     <div class="note" role="note"> If a navigation originates from browser UI, it’s always ok to allow it
+  since it’ll be user triggered and the page/script isn’t providing the
+  text snippet. </div>
+    <li data-md>
      <p>If <var>is user triggered</var> is false, return false.</p>
     <li data-md>
      <p>If the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">document</a> of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/history.html#latest-entry" id="ref-for-latest-entry">latest entry</a> in <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/history.html#session-history" id="ref-for-session-history">session history</a> is
@@ -1985,7 +1990,7 @@ document.</p>
      <p>Clear <em>document</em>’s <a data-link-type="dfn" href="#allowtextfragmentdirective" id="ref-for-allowtextfragmentdirective②">allowTextFragmentDirective</a> flag</p>
    </ol>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.8.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is
+   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.10.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
 indicated part of the document to optionally include a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range">range</a> that
