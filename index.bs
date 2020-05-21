@@ -566,9 +566,17 @@ To set the <dfn>allowTextFragmentDirective</dfn> flag, follow these steps:
 Amend the [[html#read-html|page load processing model for HTML files]] to insert
 these steps after step 1:
 
-2. Let |is user activated| be true if the current navigation was <a
-    href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-    by user activation</a>
+2. Let |is user activated| be true if the current navigation was initiated from
+    a window that had a <a spec="html">transient activation</a> at the time the
+    navigation was initiated.
+    <div class="note">
+      TODO: This requires tracking the user activation state through a
+      navigation which is currently unspecified. Something along these lines is
+      being specified in
+      <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
+      Perhaps we could generalize that for use here and elsewhere?
+    </div>
+
 3. Set |document|'s [=allowTextFragmentDirective=] flag to the result of
     running [=should allow a text fragment=] with |is user activated|,
     |incumbentNavigationOrigin|, and the document.

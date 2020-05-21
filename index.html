@@ -1222,93 +1222,8 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 5200e023b5b76bb01f8f0ff295f799cb9f4a94f0" name="generator">
+  <meta content="Bikeshed version 78f8c09c, updated Tue May 19 10:51:23 2020 -0700" name="generator">
   <link href="wicg.github.io/ScrollToTextFragment/index.html" rel="canonical">
-<style>/* style-md-lists */
-
-/* This is a weird hack for me not yet following the commonmark spec
-   regarding paragraph and lists. */
-[data-md] > :first-child {
-    margin-top: 0;
-}
-[data-md] > :last-child {
-    margin-bottom: 0;
-}</style>
-<style>/* style-selflinks */
-
-.heading, .issue, .note, .example, li, dt {
-    position: relative;
-}
-a.self-link {
-    position: absolute;
-    top: 0;
-    left: calc(-1 * (3.5rem - 26px));
-    width: calc(3.5rem - 26px);
-    height: 2em;
-    text-align: center;
-    border: none;
-    transition: opacity .2s;
-    opacity: .5;
-}
-a.self-link:hover {
-    opacity: 1;
-}
-.heading > a.self-link {
-    font-size: 83%;
-}
-li > a.self-link {
-    left: calc(-1 * (3.5rem - 26px) - 2em);
-}
-dfn > a.self-link {
-    top: auto;
-    left: auto;
-    opacity: 0;
-    width: 1.5em;
-    height: 1.5em;
-    background: gray;
-    color: white;
-    font-style: normal;
-    transition: opacity .2s, background-color .2s, color .2s;
-}
-dfn:hover > a.self-link {
-    opacity: 1;
-}
-dfn > a.self-link:hover {
-    color: black;
-}
-
-a.self-link::before            { content: "¶"; }
-.heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
-<style>/* style-counters */
-
-body {
-    counter-reset: example figure issue;
-}
-.issue {
-    counter-increment: issue;
-}
-.issue:not(.no-marker)::before {
-    content: "Issue " counter(issue);
-}
-
-.example {
-    counter-increment: example;
-}
-.example:not(.no-marker)::before {
-    content: "Example " counter(example);
-}
-.invalid.example:not(.no-marker)::before,
-.illegal.example:not(.no-marker)::before {
-    content: "Invalid Example" counter(example);
-}
-
-figcaption {
-    counter-increment: figure;
-}
-figcaption:not(.no-marker)::before {
-    content: "Figure " counter(figure) " ";
-}</style>
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1371,6 +1286,35 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-counters */
+
+body {
+    counter-reset: example figure issue;
+}
+.issue {
+    counter-increment: issue;
+}
+.issue:not(.no-marker)::before {
+    content: "Issue " counter(issue);
+}
+
+.example {
+    counter-increment: example;
+}
+.example:not(.no-marker)::before {
+    content: "Example " counter(example);
+}
+.invalid.example:not(.no-marker)::before,
+.illegal.example:not(.no-marker)::before {
+    content: "Invalid Example" counter(example);
+}
+
+figcaption {
+    counter-increment: figure;
+}
+figcaption:not(.no-marker)::before {
+    content: "Figure " counter(figure) " ";
+}</style>
 <style>/* style-dfn-panel */
 
 .dfn-panel {
@@ -1408,6 +1352,62 @@ pre .property::before, pre .property::after {
 
 .dfn-paneled { cursor: pointer; }
 </style>
+<style>/* style-md-lists */
+
+/* This is a weird hack for me not yet following the commonmark spec
+   regarding paragraph and lists. */
+[data-md] > :first-child {
+    margin-top: 0;
+}
+[data-md] > :last-child {
+    margin-bottom: 0;
+}</style>
+<style>/* style-selflinks */
+
+.heading, .issue, .note, .example, li, dt {
+    position: relative;
+}
+a.self-link {
+    position: absolute;
+    top: 0;
+    left: calc(-1 * (3.5rem - 26px));
+    width: calc(3.5rem - 26px);
+    height: 2em;
+    text-align: center;
+    border: none;
+    transition: opacity .2s;
+    opacity: .5;
+}
+a.self-link:hover {
+    opacity: 1;
+}
+.heading > a.self-link {
+    font-size: 83%;
+}
+li > a.self-link {
+    left: calc(-1 * (3.5rem - 26px) - 2em);
+}
+dfn > a.self-link {
+    top: auto;
+    left: auto;
+    opacity: 0;
+    width: 1.5em;
+    height: 1.5em;
+    background: gray;
+    color: white;
+    font-style: normal;
+    transition: opacity .2s, background-color .2s, color .2s;
+}
+dfn:hover > a.self-link {
+    opacity: 1;
+}
+dfn > a.self-link:hover {
+    color: black;
+}
+
+a.self-link::before            { content: "¶"; }
+.heading > a.self-link::before { content: "§"; }
+dfn > a.self-link::before      { content: "#"; }</style>
 <style>/* style-syntax-highlighting */
 pre.idl.highlight { color: #708090; }
 .highlight:not(.idl) { background: hsl(24, 20%, 95%); }
@@ -1470,7 +1470,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-12">12 March 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-21">21 May 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1959,8 +1959,13 @@ context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.htm
 these steps after step 1:</p>
    <ol start="2">
     <li data-md>
-     <p>Let <var>is user activated</var> be true if the current navigation was <a href="https://html.spec.whatwg.org/#triggered-by-user-activation"> triggered
-by user activation</a></p>
+     <p>Let <var>is user activated</var> be true if the current navigation was initiated from
+a window that had a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a> at the time the
+navigation was initiated.</p>
+     <div class="note" role="note"> TODO: This requires tracking the user activation state through a
+  navigation which is currently unspecified. Something along these lines is
+  being specified in <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
+  Perhaps we could generalize that for use here and elsewhere? </div>
     <li data-md>
      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#allowtextfragmentdirective" id="ref-for-allowtextfragmentdirective">allowTextFragmentDirective</a> flag to the result of
 running <a data-link-type="dfn" href="#should-allow-a-text-fragment" id="ref-for-should-allow-a-text-fragment">should allow a text fragment</a> with <var>is user activated</var>, <var>incumbentNavigationOrigin</var>, and the document.</p>
@@ -2431,7 +2436,7 @@ meets any of the following conditions:</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has an
 ancestor that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://www.w3.org/TR/SVG11/painting.html#VisibilityProperty" id="ref-for-VisibilityProperty">visibility</a> property is <span class="css">visible</span>, and
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visufx.html#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <span class="css">visible</span>, and
 it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
    <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <p>To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps:</p>
@@ -2886,13 +2891,13 @@ match based on whether the element-id was scrolled.</p>
    <li><a href="#find-a-string-in-range">find a string in range</a><span>, in §3.5.2</span>
    <li><a href="#first-common-ancestor">first common ancestor</a><span>, in §3.5</span>
    <li><a href="#fragment-directive">fragment directive</a><span>, in §3.3.1</span>
-   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §3.7</span>
    <li>
     FragmentDirective
     <ul>
      <li><a href="#fragmentdirective">(interface)</a><span>, in §3.7</span>
      <li><a href="#fragmentdirectiveproduction">definition of</a><span>, in §3.3.2</span>
     </ul>
+   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §3.7</span>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §3.3.1</span>
    <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in §3.5.2</span>
    <li><a href="#has-block-level-display">has block-level display</a><span>, in §3.5.2</span>
@@ -2977,6 +2982,12 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-table">https://drafts.csswg.org/css-display-3/#valdef-display-table</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-table">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-propdef-visibility">
+   <a href="https://drafts.csswg.org/css2/visufx.html#propdef-visibility">https://drafts.csswg.org/css2/visufx.html#propdef-visibility</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-propdef-visibility">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dictdef-scrollintoviewoptions">
@@ -3324,6 +3335,12 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-top-level-browsing-context">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-transient-activation">
+   <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-transient-activation">3.4.4. Restricting the Text Fragment</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-try-to-scroll-to-the-fragment">
    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment</a><b>Referenced in:</b>
    <ul>
@@ -3427,12 +3444,6 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-struct">3.3.1. Parsing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-VisibilityProperty">
-   <a href="https://www.w3.org/TR/SVG11/painting.html#VisibilityProperty">https://www.w3.org/TR/SVG11/painting.html#VisibilityProperty</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-VisibilityProperty">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-url-fragment">
    <a href="https://url.spec.whatwg.org/#concept-url-fragment">https://url.spec.whatwg.org/#concept-url-fragment</a><b>Referenced in:</b>
    <ul>
@@ -3463,6 +3474,11 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-valdef-display-list-item" style="color:initial">list-item</span>
      <li><span class="dfn-paneled" id="term-for-valdef-display-none" style="color:initial">none</span>
      <li><span class="dfn-paneled" id="term-for-valdef-display-table" style="color:initial">table</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[CSS2]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-propdef-visibility" style="color:initial">visibility</span>
     </ul>
    <li>
     <a data-link-type="biblio">[cssom-view-1]</a> defines the following terms:
@@ -3539,6 +3555,7 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-session-history" style="color:initial">session history</span>
      <li><span class="dfn-paneled" id="term-for-the-indicated-part-of-the-document" style="color:initial">the indicated part of the document</span>
      <li><span class="dfn-paneled" id="term-for-top-level-browsing-context" style="color:initial">top-level browsing context</span>
+     <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
      <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment" style="color:initial">try to scroll to the fragment</span>
     </ul>
    <li>
@@ -3561,11 +3578,6 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-struct" style="color:initial">struct</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[SVG11]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-VisibilityProperty" style="color:initial">visibility</span>
-    </ul>
-   <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-concept-url-fragment" style="color:initial">fragment</span>
@@ -3578,7 +3590,9 @@ match based on whether the element-id was scrolled.</p>
    <dt id="biblio-css-cascade-4">[CSS-CASCADE-4]
    <dd>Elika Etemad; Tab Atkins Jr.. <a href="https://www.w3.org/TR/css-cascade-4/">CSS Cascading and Inheritance Level 4</a>. 28 August 2018. CR. URL: <a href="https://www.w3.org/TR/css-cascade-4/">https://www.w3.org/TR/css-cascade-4/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
-   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 11 July 2019. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
+   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 19 May 2020. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
+   <dt id="biblio-css2">[CSS2]
+   <dd>Bert Bos; et al. <a href="https://www.w3.org/TR/CSS2/">Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification</a>. 7 June 2011. REC. URL: <a href="https://www.w3.org/TR/CSS2/">https://www.w3.org/TR/CSS2/</a>
    <dt id="biblio-cssom-view-1">[CSSOM-VIEW-1]
    <dd>Simon Pieters. <a href="https://www.w3.org/TR/cssom-view-1/">CSSOM View Module</a>. 17 March 2016. WD. URL: <a href="https://www.w3.org/TR/cssom-view-1/">https://www.w3.org/TR/cssom-view-1/</a>
    <dt id="biblio-dom">[DOM]
@@ -3593,8 +3607,6 @@ match based on whether the element-id was scrolled.</p>
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
-   <dt id="biblio-svg11">[SVG11]
-   <dd>Erik Dahlström; et al. <a href="https://www.w3.org/TR/SVG11/">Scalable Vector Graphics (SVG) 1.1 (Second Edition)</a>. 16 August 2011. REC. URL: <a href="https://www.w3.org/TR/SVG11/">https://www.w3.org/TR/SVG11/</a>
    <dt id="biblio-url">[URL]
    <dd>Anne van Kesteren. <a href="https://url.spec.whatwg.org/">URL Standard</a>. Living Standard. URL: <a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
   </dl>
@@ -3608,7 +3620,7 @@ match based on whether the element-id was scrolled.</p>
 };
 
 <c- b>interface</c-> <a href="#location"><code><c- g>Location</c-></code></a> {
-    <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fragmentdirective" id="ref-for-fragmentdirective①"><c- n>FragmentDirective</c-></a> <a data-readonly data-type="FragmentDirective" href="#dom-location-fragmentdirective"><code><c- g>fragmentDirective</c-></code></a>;
+    <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fragmentdirective"><c- n>FragmentDirective</c-></a> <a data-readonly data-type="FragmentDirective" href="#dom-location-fragmentdirective"><code><c- g>fragmentDirective</c-></code></a>;
 };
 
 </pre>
