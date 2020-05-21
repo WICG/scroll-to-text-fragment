@@ -1470,7 +1470,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-21">21 May 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-25">25 May 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2480,8 +2480,13 @@ set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn"
      <p>While <var>matchIndex</var> is null</p>
      <ol>
       <li data-md>
-       <p>Let <var>matchIndex</var> be an integer set to the  the index of the first
-instance of <var>queryString</var> in <var>searchBuffer</var>, starting at <var>searchStart</var>.</p>
+       <p>Let <var>matchIndex</var> be an integer set to the index of the first
+instance of <var>queryString</var> in <var>searchBuffer</var>, starting at <var>searchStart</var>.
+The string search must be performed using a base character comparison,
+or the <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
+level</a>, as defined in <a data-link-type="biblio" href="#biblio-uts10">[UTS10]</a>.</p>
+       <div class="note" role="note"> Intuitively, this is a case-insensitive search also ignoring accents
+  and other marks. </div>
       <li data-md>
        <p>Let <var>endIx</var> be <var>matchIndex</var> + <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length">length</a>.</p>
        <div class="note" role="note"> <var>endIx</var> is the index of the last character in the match + 1. </div>
@@ -2553,10 +2558,9 @@ index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.
   proposal to specify unicode segmentation, including word segmentation. Once
   specified, this algorithm may be improved by making use of the Intl.Segmenter
   API for word boundary matching. </div>
-   <p> A word boundary is as defined in the <a href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
-  text segmentation annex</a>. The <a href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries"> Default Word Boundary Specification</a> defines a default set of
-  what constitutes a word boundary, but as the specification mentions,
-  a more sophisticated algorithm should be used based on the locale. </p>
+   <p> A word boundary is defined in <a data-link-type="biblio" href="#biblio-uax29">[UAX29]</a> in <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Word_Boundaries">Unicode Text Segmentation §Word_Boundaries</a>. <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Default_Word_Boundaries">Unicode Text Segmentation §Default_Word_Boundaries</a> defines a default set of what constitutes a
+  word boundary, but as the specification mentions, a more sophisticated
+  algorithm should be used based on the locale. </p>
    <p> Dictionary-based word bounding should take specific care in locales without a
   word-separating character. E.g. In English, words are separated by the space
   character (' '); however, in Japanese there is no character that separates one
@@ -3607,8 +3611,12 @@ match based on whether the element-id was scrolled.</p>
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+   <dt id="biblio-uax29">[UAX29]
+   <dd>Mark Davis; Christopher Chapman. <a href="https://www.unicode.org/reports/tr29/tr29-37.html">Unicode Text Segmentation</a>. 19 February 2020. Unicode Standard Annex #29. URL: <a href="https://www.unicode.org/reports/tr29/tr29-37.html">https://www.unicode.org/reports/tr29/tr29-37.html</a>
    <dt id="biblio-url">[URL]
    <dd>Anne van Kesteren. <a href="https://url.spec.whatwg.org/">URL Standard</a>. Living Standard. URL: <a href="https://url.spec.whatwg.org/">https://url.spec.whatwg.org/</a>
+   <dt id="biblio-uts10">[UTS10]
+   <dd>Ken Whistler; Markus Scherer. <a href="https://www.unicode.org/reports/tr10/tr10-43.html">Unicode Collation Algorithm</a>. 7 February 2020. Unicode Technical Standard #10. URL: <a href="https://www.unicode.org/reports/tr10/tr10-43.html">https://www.unicode.org/reports/tr10/tr10-43.html</a>
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
