@@ -1063,8 +1063,15 @@ follow the steps
 1. Let |start| and |end| be [=/boundary points=], initially null.
 1. Let |matchIndex| be null.
 1. While |matchIndex| is null
-    1. Let |matchIndex| be an integer set to the  the index of the first
+    1. Let |matchIndex| be an integer set to the index of the first
         instance of |queryString| in |searchBuffer|, starting at |searchStart|.
+        The string search must be performed using a base character comparison,
+        or the <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
+        level</a>, as defined in [[!UTS10]].
+        <div class="note">
+          Intuitively, this is a case-insensitive search also ignoring accents
+          and other marks.
+        </div>
     1. Let |endIx| be |matchIndex| + |queryString|'s [=string/length=].
         <div class="note">
            |endIx| is the index of the last character in the match + 1.
@@ -1136,13 +1143,10 @@ of {{Text}} nodes |nodes|, and a boolean |isEnd|, follow these steps:
 </div>
 
 <p>
-  A word boundary is as defined in the <a
-  href="http://www.unicode.org/reports/tr29/#Word_Boundaries">Unicode
-  text segmentation annex</a>. The <a
-  href="http://www.unicode.org/reports/tr29/#Default_Word_Boundaries">
-  Default Word Boundary Specification</a> defines a default set of
-  what constitutes a word boundary, but as the specification mentions,
-  a more sophisticated algorithm should be used based on the locale.
+  A word boundary is defined in [[!UAX29]] in [[UAX29#Word_Boundaries]].
+  [[UAX29#Default_Word_Boundaries]] defines a default set of what constitutes a
+  word boundary, but as the specification mentions, a more sophisticated
+  algorithm should be used based on the locale.
 </p>
 <p>
   Dictionary-based word bounding should take specific care in locales without a
