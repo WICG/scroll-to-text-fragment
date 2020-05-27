@@ -1,7 +1,7 @@
 <pre class='metadata'>
 Status: CG-DRAFT
 Title: Text Fragments
-ED: wicg.github.io/ScrollToTextFragment/index.html
+ED: https://wicg.github.io/ScrollToTextFragment/
 Shortname: text-fragments
 Level: 1
 Editor: Nick Burris, Google https://www.google.com, nburris@chromium.org
