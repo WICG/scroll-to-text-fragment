@@ -1238,6 +1238,7 @@ that is exposed via <code>window.location.fragmentDirective</code> if the UA
 supports the feature.
 
 <pre class='idl'>
+  [Exposed=Window]
   interface FragmentDirective {
   };
 </pre>
@@ -1246,8 +1247,8 @@ We amend the {{Location}} interface to include a <code>fragmentDirective</code>
 property:
 
 <pre class='idl'>
-  interface Location {
-      readonly attribute FragmentDirective fragmentDirective;
+  partial interface Location {
+      [SameObject] readonly attribute FragmentDirective fragmentDirective;
   };
 </pre>
 
