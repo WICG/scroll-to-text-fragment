@@ -119,7 +119,7 @@ into view on load, and how to visually emphasize it.
 
 To restrict an attacker's ability to exfiltrate information across origins,
 several restrictions are applied on when such an anchor is activated. A user
-gesture is requred and consumed; text matching can only occur on word
+gesture is required and consumed; text matching can only occur on word
 boundaries. Additionally, the fragment will activate only if the document is
 sufficiently isolated from other pages (is the only one in its browsing context
 group, e.g.  no window.opener or iframes).
