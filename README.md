@@ -113,7 +113,7 @@ _(Square brackets indicate an optional parameter)_
 
 Navigating to such a URL will cause the browser to indicate the first instance
 of the matched text. The exact details of what a browser should do once it
-finds a match are mosty beyond the scope of this proposal. Browsers are mostly
+finds a match are mostly beyond the scope of this proposal. Browsers are mostly
 free to choose what kind of UI to surface, whether or not to scroll the text
 into view on load, and how to visually emphasize it.
 
@@ -223,13 +223,13 @@ the starting snippet and the right argument is considered the ending snippet
 (e.g. `text=_startText_,_endText_`). In this case, the browser will perform
 a "range search" for a block of text that starts with _startText_ and ends with
 _endText_. If multiple blocks match the first in DOM order is chosen (i.e. find
-the first occurence of startText, from there find the first occurence of
+the first occurrence of startText, from there find the first occurrence of
 endText). When a match is specified with two arguments, we allow highlighting
 text that spans multiple elements.
 
 If the match is specified as a single argument, we consider it an "exact
 search" (e.g. `text=_textSnippet_`). The browser will highlight the first
-occurence of exactly the _textSnippet_ string. In this case, the specified text
+occurrence of exactly the _textSnippet_ string. In this case, the specified text
 will be matched only if it is contained within a single node.
 
 Range matches are useful when the desired text match is extremely long.
@@ -433,7 +433,7 @@ simply be processed as a non-existent fragment so the page will load scrolled
 to the top, as if a fragment weren't supplied. This is a graceful fallback.
 
 A more risky scenario is apps that use the fragment for state and routing. In
-these cases, the page is using the fragment in an application-defined maner and
+these cases, the page is using the fragment in an application-defined manner and
 adding any content to it impact how the page operates (this is one of the
 motivating cases for using the fragment delimiter for `text=`).
 
