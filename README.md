@@ -707,6 +707,7 @@ Scroll to text
 * [https://indieweb.org/fragmention](https://indieweb.org/fragmention)
 * [http://zesty.ca/crit/draft-yee-url-textsearch-00.txt](http://zesty.ca/crit/draft-yee-url-textsearch-00.txt)
 * [http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html](http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html)
+* [Fragment Search - A Greasemonkey script by Gervase Markham](http://www.gerv.net/software/fragment-search/)
 
 Other
 
