@@ -177,7 +177,7 @@ will process the text snippet specification.
 
 Here's an example URL encoding some text to indicate on the destination page:
 
-https://en.wikipedia.org/wiki/Cat#:~:text=Claws-,Like%20almost,the%20Felidae%2C,-cats
+https://en.wikipedia.org/w/index.php?title=Cat&oldid=916388819#:~:text=Claws-,Like%20almost,the%20Felidae%2C,-cats
 
 ```
 :~:text=[prefix-,]textStart[,textEnd][,-suffix]
@@ -459,8 +459,7 @@ element to receive the `:target` CSS pseudo-class. This is a nice feature as it
 allows the page to add some customized highlighting or styling for an element
 that’s been targeted. For example, note that navigating to a citation on a
 Wikipedia page highlights the citation text:
-https://en.wikipedia.org/wiki/Cat#cite_note-Linaeus1758-1
-
+https://en.wikipedia.org/w/index.php?title=Cat&direction=prev&oldid=916388819#cite_note-Linaeus1758-1
 The `:target` CSS pseudo-class can only apply to elements whereas a text
 snippet may only be a portion of the text in a node or span multiple nodes.
 
