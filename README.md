@@ -1,6 +1,6 @@
 # Text Fragments
 
-[Draft Spec](https://wicg.github.io/ScrollToTextFragment)  
+[Draft Spec](https://wicg.github.io/scroll-to-text-fragment/)  
 [Web Platform Tests](https://wpt.fyi/results/scroll-to-text-fragment?label=experimental&label=master&aligned)  
 [ChromeStatus entry](https://chromestatus.com/feature/4733392803332096)  
 
@@ -23,7 +23,7 @@ parts of pages are addressable by named anchors or elements with ids.
 
 ### Current Status
 
-This feature, as currently [specified in this repo](https://wicg.github.io/ScrollToTextFragment),
+This feature, as currently [specified in this repo](https://wicg.github.io/scroll-to-text-fragment/),
 is shipping to stable channel in Chrome M80.
 
 We're currently adding the ability for authors to disable this feature on their
