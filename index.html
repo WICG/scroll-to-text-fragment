@@ -1932,9 +1932,21 @@ given as input a boolean <var>is user triggered</var>, an <a data-link-type="dfn
    <ol>
     <li data-md>
      <p>If <var>incumbentNavigationOrigin</var> is null, return true.</p>
-     <div class="note" role="note"> If a navigation originates from browser UI, it’s always ok to allow it
-  since it’ll be user triggered and the page/script isn’t providing the
-  text snippet. </div>
+     <div class="note" role="note">
+      <p> If a navigation originates from browser UI, it’s always ok to allow it
+    since it’ll be user triggered and the page/script isn’t providing the
+    text snippet. </p>
+      <p> Note: Depending on the UA, there may be cases where the <var>incumbentNavigationOrigin</var> is null but it’s not clear that the
+    navigation should be considered as initiated from browser UI. E.g. an
+    "open in new window" context menu item when right clicking on a link.
+    The intent in this item is to distinguish cases where the app/page is
+    able to set the URL from those that are fully under the user’s control.
+    In the former we want to prevent activation of the text fragment unless
+    the destination is loaded in a separate browsing context group (so that
+    the source cannot both control teh text snippet and observe
+    side-effects in the navigation). </p>
+      <p> TODO: This seems to be very similar to <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> so we may wish to integrate this with how that’s specified. </p>
+     </div>
     <li data-md>
      <p>If <var>is user triggered</var> is false, return false.</p>
     <li data-md>
