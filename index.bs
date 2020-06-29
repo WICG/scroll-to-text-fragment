@@ -10,7 +10,7 @@ Abstract: Text Fragments adds support for specifying a text snippet in the URL
     fragment. When navigating to a URL with such a fragment, the user agent
     can quickly emphasise and/or bring it to the user's attention.
 Group: wicg
-Repository: wicg/ScrollToTextFragment
+Repository: wicg/scroll-to-text-fragment
 </pre>
 
 <pre class='link-defaults'>
