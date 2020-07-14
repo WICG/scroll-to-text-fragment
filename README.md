@@ -708,8 +708,24 @@ Scroll to text
 * [http://zesty.ca/crit/draft-yee-url-textsearch-00.txt](http://zesty.ca/crit/draft-yee-url-textsearch-00.txt)
 * [http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html](http://1997.webhistory.org/www.lists/www-talk.1995q1/0284.html)
 * [Fragment Search - A Greasemonkey script by Gervase Markham](http://www.gerv.net/software/fragment-search/)
+* [NYT Emphasis](https://open.blogs.nytimes.com/2011/01/11/emphasis-update-and-source/)
 
 Other
 
 * [https://en.wikipedia.org/wiki/Fragment_identifier#Examples](https://en.wikipedia.org/wiki/Fragment_identifier#Examples)
 * [https://www.w3.org/TR/2017/REC-annotation-model-20170223/](https://www.w3.org/TR/2017/REC-annotation-model-20170223/)
+
+## Acknowledgements
+
+Many people have contributed greatly to the ideas and content in this repo, both through excellent work on linking
+to text as well as direct feedback and comments in issues on this repo which helped to improve this feature. In particular,
+we'd like to thank:
+
+ * @BigBlueHat
+ * Ivan Herman
+ * Randall Leeds
+ * Kevin Marks
+ * Isiah Meadows
+ * Wes Turner
+ * Dan Whaley
+ * And many others who've provided comments, questions, examples, and opinions. Thank you!
