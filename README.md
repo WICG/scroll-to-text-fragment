@@ -411,7 +411,7 @@ believe this is a safe choice.
 
 #### Directives and Delimiters
 
-When appending the `:~: token to a URL, it must appear inside a fragment so a
+When appending the `:~:` token to a URL, it must appear inside a fragment so a
 `#` must also be added:
 
 `https://example.com` --> `https://example.com#:~:text=foo`
