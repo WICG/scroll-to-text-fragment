@@ -1222,7 +1222,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 40de15f9, updated Thu Jun 11 17:47:04 2020 -0700" name="generator">
+  <meta content="Bikeshed version c05ebec3, updated Fri Jul 31 13:58:05 2020 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
 <style>/* style-autolinks */
 
@@ -1470,7 +1470,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-29">29 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-04">4 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1837,20 +1837,6 @@ page to a cross-origin URL with a <a data-link-type="dfn" href="#text-fragment-d
 actor can determine that the text fragment was successfully found in victim
 page as a result of such a navigation, they can infer the existence of any text
 on the page.</p>
-   <p>In addition, the user’s privacy should be ensured even from the destination
-origin.  Although scripts on that page can already learn a lot about a user’s
-actions, a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive③">text fragment directive</a> can still contain sensitive information.
-For this reason, this specification provides no way for a page to extract the
-content of the text fragment anchor. User agents must not expose this
-information to the page.</p>
-   <div class="example" id="example-9ced00a5"><a class="self-link" href="#example-9ced00a5"></a> A user visiting a page listing dozens of medical conditions may have gotten
-  there via a link with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> containing a specific
-  condition. This information must not be shared with the page. </div>
-   <div class="note" role="note"> TODO: This last paragraph and example are probably not be necessary - the
-  page can already determine what the user is looking at based on the viewport
-  rect. It may not be desirable since it would prevent use cases like
-  marginalia, allowing pages to provide UA and linking based on the text
-  fragment. </div>
    <p>The following subsections restrict the feature to mitigate the expected attack
 vectors. In summary, the text fragment directives are invoked only on full
 (non-same-page) navigations that are the result of a user activation.
@@ -1912,7 +1898,7 @@ attackers from trying to secretly automate a search in background documents.</p>
    <p>A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
 matching query. If an attacker could find a way to synchronously navigate
-to a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑤">text fragment directive</a>-invoking URL, they would be able to determine
+to a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive③">text fragment directive</a>-invoking URL, they would be able to determine
 the existence of a text snippet by measuring how long the navigation call takes.</p>
    <div class="note" role="note"> The restrictions in <a href="#restricting-the-text-fragment">§ 3.4.4 Restricting the Text Fragment</a> should prevent this
   specific case; in particular, the no-same-document-navigation restriction.
@@ -2002,7 +1988,7 @@ document.</p>
      <p>Clear <em>document</em>’s <a data-link-type="dfn" href="#allowtextfragmentdirective" id="ref-for-allowtextfragmentdirective②">allowTextFragmentDirective</a> flag</p>
    </ol>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.10.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> is
+   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid">HTML 5 §7.10.9 Navigating to a fragment</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part of the document. We amend the
 indicated part of the document to optionally include a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range">range</a> that
@@ -2453,7 +2439,7 @@ meets any of the following conditions:</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has an
 ancestor that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/visufx.html#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <span class="css">visible</span>, and
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css2/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and
 it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
    <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <p>To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps:</p>
@@ -2654,7 +2640,7 @@ supports the feature.</p>
    <h2 class="heading settled" data-level="4" id="generating-text-fragment-directives"><span class="secno">4. </span><span class="content">Generating Text Fragment Directives</span><a class="self-link" href="#generating-text-fragment-directives"></a></h2>
    <div class="note" role="note"> This section is non-normative. </div>
    <p>This section contains recommendations for UAs automatically generating URLs
-with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a>. These recommendations aren’t normative but
+with a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑤">text fragment directive</a>. These recommendations aren’t normative but
 are provided to ensure generated URLs result in maximally stable and usable
 URLs.</p>
    <h3 class="heading settled" data-level="4.1" id="prefer-exact-matching-to-range-based"><span class="secno">4.1. </span><span class="content">Prefer Exact Matching To Range-based</span><a class="self-link" href="#prefer-exact-matching-to-range-based"></a></h3>
@@ -2689,18 +2675,18 @@ encoded using an exact match. Above this limit, the UA should encode the string
 as a range-based match.</p>
    <div class="note" role="note"> TODO:  Can we determine the above limit in some less arbitrary way? </div>
    <h3 class="heading settled" data-level="4.2" id="use-context-only-when-necessary"><span class="secno">4.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
-   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a> to disambiguate text
+   <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> to disambiguate text
 snippets on a page. However, their use can make the URL more brittle in some
 cases. Often, the desired string will start or end at an element boundary. The
 context will therefore exist in an adjacent element. Changes to the page
-structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a> since the context and
+structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> since the context and
 match text may no longer appear to be adjacent.</p>
    <div class="example" id="example-735b40dc">
     <a class="self-link" href="#example-735b40dc"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
 &lt;div class="content">Text to quote&lt;/div>
 </pre>
-    <p>We could craft the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①⓪">text fragment directive</a> as follows:</p>
+    <p>We could craft the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑧">text fragment directive</a> as follows:</p>
 <pre>text=HEADER-,Text%20to%20quote
 </pre>
     <p>However, suppose the page changes to add a "[edit]" link beside all section
@@ -2716,11 +2702,11 @@ true:</p>
    </ul>
    <div class="note" role="note"> TODO: Determine the numeric limit above in less arbitrary way. </div>
    <h3 class="heading settled" data-level="4.3" id="determine-if-fragment-id-is-needed"><span class="secno">4.3. </span><span class="content">Determine If Fragment Id Is Needed</span><a class="self-link" href="#determine-if-fragment-id-is-needed"></a></h3>
-   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①①">text fragment directive</a>, it will
+   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑨">text fragment directive</a>, it will
 fallback to scrolling into view a regular element-id based fragment if it
 exists and the text fragment isn’t found.</p>
    <p>This can be useful to provide a fallback, in case the text in the document
-changes, invalidating the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①②">text fragment directive</a>.</p>
+changes, invalidating the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive①⓪">text fragment directive</a>.</p>
    <div class="example" id="example-5990805b">
     <a class="self-link" href="#example-5990805b"></a> Suppose we wish to craft a URL to
   https://en.wikipedia.org/wiki/History_of_computing quoting the sentence: 
@@ -3006,9 +2992,15 @@ match based on whether the element-id was scrolled.</p>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-propdef-visibility">
-   <a href="https://drafts.csswg.org/css2/visufx.html#propdef-visibility">https://drafts.csswg.org/css2/visufx.html#propdef-visibility</a><b>Referenced in:</b>
+   <a href="https://drafts.csswg.org/css2/#propdef-visibility">https://drafts.csswg.org/css2/#propdef-visibility</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-propdef-visibility">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-valdef-visibility-visible">
+   <a href="https://drafts.csswg.org/css2/#valdef-visibility-visible">https://drafts.csswg.org/css2/#valdef-visibility-visible</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-visibility-visible">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dictdef-scrollintoviewoptions">
@@ -3518,6 +3510,7 @@ match based on whether the element-id was scrolled.</p>
     <a data-link-type="biblio">[CSS2]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-propdef-visibility" style="color:initial">visibility</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-visibility-visible" style="color:initial">visible</span>
     </ul>
    <li>
     <a data-link-type="biblio">[cssom-view-1]</a> defines the following terms:
@@ -3768,12 +3761,12 @@ match based on whether the element-id was scrolled.</p>
    <b><a href="#text-fragment-directive">#text-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-text-fragment-directive">3.2. Syntax</a>
-    <li><a href="#ref-for-text-fragment-directive①">3.4.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a> <a href="#ref-for-text-fragment-directive③">(3)</a> <a href="#ref-for-text-fragment-directive④">(4)</a>
-    <li><a href="#ref-for-text-fragment-directive⑤">3.4.3. Search Timing</a>
-    <li><a href="#ref-for-text-fragment-directive⑥">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-text-fragment-directive⑦">4. Generating Text Fragment Directives</a>
-    <li><a href="#ref-for-text-fragment-directive⑧">4.2. Use Context Only When Necessary</a> <a href="#ref-for-text-fragment-directive⑨">(2)</a> <a href="#ref-for-text-fragment-directive①⓪">(3)</a>
-    <li><a href="#ref-for-text-fragment-directive①①">4.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①②">(2)</a>
+    <li><a href="#ref-for-text-fragment-directive①">3.4.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a>
+    <li><a href="#ref-for-text-fragment-directive③">3.4.3. Search Timing</a>
+    <li><a href="#ref-for-text-fragment-directive④">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-text-fragment-directive⑤">4. Generating Text Fragment Directives</a>
+    <li><a href="#ref-for-text-fragment-directive⑥">4.2. Use Context Only When Necessary</a> <a href="#ref-for-text-fragment-directive⑦">(2)</a> <a href="#ref-for-text-fragment-directive⑧">(3)</a>
+    <li><a href="#ref-for-text-fragment-directive⑨">4.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①⓪">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirective">
