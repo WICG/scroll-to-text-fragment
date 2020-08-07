@@ -1470,7 +1470,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-04">4 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-07">7 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1551,7 +1551,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#word-boundaries"><span class="secno">3.5.3</span> <span class="content">Word Boundaries</span></a>
        </ol>
       <li><a href="#indicating-the-text-match"><span class="secno">3.6</span> <span class="content">Indicating The Text Match</span></a>
-      <li><a href="#feature-detectability"><span class="secno">3.7</span> <span class="content">Feature Detectability</span></a>
+      <li><a href="#document-policy-integration"><span class="secno">3.7</span> <span class="content">Document Policy Integration</span></a>
+      <li><a href="#feature-detectability"><span class="secno">3.8</span> <span class="content">Feature Detectability</span></a>
      </ol>
     <li>
      <a href="#generating-text-fragment-directives"><span class="secno">4</span> <span class="content">Generating Text Fragment Directives</span></a>
@@ -2007,23 +2008,22 @@ the following:</p>
 the following:</p>
    <ol start="3">
     <li data-md>
+     <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+  the document policy value</a> of "force-load-at-top" for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a>. If the result is true, abort these steps.</p>
+    <li data-md>
+     <p>If <em>range</em> is non-null:</p>
+     <ol>
+      <li data-md>
+       <p>If the UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
+  containingElement <em>target</em>, <em>behavior</em> set to "auto", <em>block</em> set to "center", and <em>inline</em> set to "nearest".</p>
+     </ol>
+    <li data-md>
      <p>Otherwise:</p>
-     <ol start="3">
+     <ol>
       <li data-md>
-       <p>If <em>range</em> is non-null:</p>
-       <ol>
-        <li data-md>
-         <p>If the UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
-containingElement <em>target</em>, <em>behavior</em> set to "auto", <em>block</em> set to "center", and <em>inline</em> set to "nearest".</p>
-       </ol>
-      <li data-md>
-       <p>Otherwise:</p>
-       <ol>
-        <li data-md>
-         <p><a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view">Scroll target
-into view</a>, with <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
-         <div class="note" role="note"> This otherwise case is the same as the current step 3.3. </div>
-       </ol>
+       <p><a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view">Scroll target
+  into view</a>, with <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
+       <div class="note" role="note"> This otherwise case is the same as the current step 3.3. </div>
      </ol>
    </ol>
    <p>Add the following steps to the beginning of the processing model for <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document" id="ref-for-the-indicated-part-of-the-document①">the indicated part of the document</a>:</p>
@@ -2120,7 +2120,7 @@ text=bar,baz
     <p>If a directive was not matched, it does not add an item to the returned
   list.</p>
    </div>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string①">string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a> <var>document</var>, run these steps:</p>
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string①">string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document④">Document</a> <var>document</var>, run these steps:</p>
    <div class="note" role="note"> This algorithm takes as input a the <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑧">ranges</a> that are to be visually
@@ -2153,7 +2153,7 @@ directive</a> steps on <var>directive</var>.</p>
     <li data-md>
      <p>Return <var>ranges</var>.</p>
    </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective②">ParsedTextDirective</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document④">Document</a> <var>document</var>, run the
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective②">ParsedTextDirective</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑤">Document</a> <var>document</var>, run the
 following steps:</p>
    <div class="note" role="note">
      This algorithm takes as input a successfully parsed text directive and a
@@ -2624,7 +2624,32 @@ However, the UA must not use the Document’s <a href="https://w3c.github.io/sel
 indicate the text match as doing so could allow attack vectors for content
 exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>
-   <h3 class="heading settled" data-level="3.7" id="feature-detectability"><span class="secno">3.7. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
+   <h3 class="heading settled" data-level="3.7" id="document-policy-integration"><span class="secno">3.7. </span><span class="content">Document Policy Integration</span><a class="self-link" href="#document-policy-integration"></a></h3>
+   <p>This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy">Document Policy</a> with name "force-load-at-top". It is a <code>boolean</code> <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a> <code>false</code>.</p>
+   <div class="note" role="note"> When enabled, this policy disables all automatic scroll-on-load features:
+  text-fragments, element framgments, history scroll restoration. </div>
+   <div class="example" id="example-ae692635">
+    <a class="self-link" href="#example-ae692635"></a> Suppose the user navigates to <code>https://example.com#:~:text=foo</code>. The
+  example.com server response includes the header: 
+<pre>  Document-Policy: force-load-at-top
+</pre>
+    <p>When the page loads, the element containing "foo" will be marked as the
+  indicated part of the document and set as the document’s target element.
+  However, "foo" will not be scrolled into view.</p>
+   </div>
+   <p>Fragment-based scroll blocking from this policy is specified in an amendment to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier③">scroll to the fragment</a> algorithm in the <a href="#navigating-to-text-fragment">§ 3.5 Navigating to a Text Fragment</a> section of this document.</p>
+   <p>History scroll restoration is blocked by amending the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state" id="ref-for-restore-persisted-user-state">restore
+persisted user state</a> steps by inserting a new step after 2:</p>
+   <ol start="3">
+    <li data-md>
+     <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a>. If
+the result is true, then the user agent should not restore the scroll
+position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a> or any of its scrollable regions. Scroll
+positions for <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context" id="ref-for-child-browsing-context">child browsing contexts</a> should be restored based on the
+value of this policy in the child <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a>.</p>
+   </ol>
+   <h3 class="heading settled" data-level="3.8" id="feature-detectability"><span class="secno">3.8. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
 that is exposed via <code>window.location.fragmentDirective</code> if the UA
 supports the feature.</p>
@@ -2902,10 +2927,10 @@ match based on whether the element-id was scrolled.</p>
    <li>
     FragmentDirective
     <ul>
-     <li><a href="#fragmentdirective">(interface)</a><span>, in §3.7</span>
+     <li><a href="#fragmentdirective">(interface)</a><span>, in §3.8</span>
      <li><a href="#fragmentdirectiveproduction">definition of</a><span>, in §3.3.2</span>
     </ul>
-   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §3.7</span>
+   <li><a href="#dom-location-fragmentdirective">fragmentDirective</a><span>, in §3.8</span>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §3.3.1</span>
    <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in §3.5.2</span>
    <li><a href="#has-block-level-display">has block-level display</a><span>, in §3.5.2</span>
@@ -3057,7 +3082,9 @@ match based on whether the element-id was scrolled.</p>
    <ul>
     <li><a href="#ref-for-concept-document">3.3.1. Parsing the fragment directive</a>
     <li><a href="#ref-for-concept-document①">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document②">(2)</a>
-    <li><a href="#ref-for-concept-document③">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-document④">(2)</a>
+    <li><a href="#ref-for-concept-document③">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-concept-document④">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-document⑤">(2)</a>
+    <li><a href="#ref-for-concept-document⑥">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document⑦">(2)</a> <a href="#ref-for-concept-document⑧">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document-element">
@@ -3272,7 +3299,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-location">
    <a href="https://html.spec.whatwg.org/multipage/history.html#location">https://html.spec.whatwg.org/multipage/history.html#location</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-location">3.7. Feature Detectability</a> <a href="#ref-for-location①">(2)</a>
+    <li><a href="#ref-for-location">3.8. Feature Detectability</a> <a href="#ref-for-location①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-being-rendered">
@@ -3291,6 +3318,12 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context-set">https://html.spec.whatwg.org/multipage/browsers.html#browsing-context-set</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-browsing-context-set">3.4.4. Restricting the Text Fragment</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-child-browsing-context">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-child-browsing-context">3.7. Document Policy Integration</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-language">
@@ -3317,11 +3350,18 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-origin">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-restore-persisted-user-state">
+   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-restore-persisted-user-state">3.7. Document Policy Integration</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-scroll-to-the-fragment-identifier">
    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier">https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-scroll-to-the-fragment-identifier">3.4.4. Restricting the Text Fragment</a>
     <li><a href="#ref-for-scroll-to-the-fragment-identifier①">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-scroll-to-the-fragment-identifier②">(2)</a>
+    <li><a href="#ref-for-scroll-to-the-fragment-identifier③">3.7. Document Policy Integration</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-the-select-element">
@@ -3478,13 +3518,13 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-Exposed">
    <a href="https://heycam.github.io/webidl/#Exposed">https://heycam.github.io/webidl/#Exposed</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-Exposed">3.7. Feature Detectability</a>
+    <li><a href="#ref-for-Exposed">3.8. Feature Detectability</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-SameObject">
    <a href="https://heycam.github.io/webidl/#SameObject">https://heycam.github.io/webidl/#SameObject</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-SameObject">3.7. Feature Detectability</a>
+    <li><a href="#ref-for-SameObject">3.8. Feature Detectability</a>
    </ul>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
@@ -3578,10 +3618,12 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-being-rendered" style="color:initial">being rendered</span>
      <li><span class="dfn-paneled" id="term-for-concept-document-bc" style="color:initial">browsing context</span>
      <li><span class="dfn-paneled" id="term-for-browsing-context-set" style="color:initial">browsing context set</span>
+     <li><span class="dfn-paneled" id="term-for-child-browsing-context" style="color:initial">child browsing context</span>
      <li><span class="dfn-paneled" id="term-for-language" style="color:initial">language</span>
      <li><span class="dfn-paneled" id="term-for-latest-entry" style="color:initial">latest entry</span>
      <li><span class="dfn-paneled" id="term-for-attr-select-multiple" style="color:initial">multiple</span>
      <li><span class="dfn-paneled" id="term-for-concept-origin" style="color:initial">origin</span>
+     <li><span class="dfn-paneled" id="term-for-restore-persisted-user-state" style="color:initial">restore persisted user state</span>
      <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier" style="color:initial">scroll to the fragment</span>
      <li><span class="dfn-paneled" id="term-for-the-select-element" style="color:initial">select</span>
      <li><span class="dfn-paneled" id="term-for-serializes-as-void" style="color:initial">serializes as void</span>
@@ -3634,6 +3676,8 @@ match based on whether the element-id was scrolled.</p>
    <dd>Bert Bos; et al. <a href="https://www.w3.org/TR/CSS2/">Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification</a>. 7 June 2011. REC. URL: <a href="https://www.w3.org/TR/CSS2/">https://www.w3.org/TR/CSS2/</a>
    <dt id="biblio-cssom-view-1">[CSSOM-VIEW-1]
    <dd>Simon Pieters. <a href="https://www.w3.org/TR/cssom-view-1/">CSSOM View Module</a>. 17 March 2016. WD. URL: <a href="https://www.w3.org/TR/cssom-view-1/">https://www.w3.org/TR/cssom-view-1/</a>
+   <dt id="biblio-document-policy">[DOCUMENT-POLICY]
+   <dd>Ian Clelland. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">Document Policy</a>. ED. URL: <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">https://w3c.github.io/webappsec-permissions-policy/document-policy.html</a>
    <dt id="biblio-dom">[DOM]
    <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/">DOM Standard</a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-fetch">[FETCH]
@@ -3927,7 +3971,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="fragmentdirective">
    <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fragmentdirective">3.7. Feature Detectability</a>
+    <li><a href="#ref-for-fragmentdirective">3.8. Feature Detectability</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
