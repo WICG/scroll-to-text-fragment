@@ -35,7 +35,7 @@ spec:html; type:element; text:style
       "status": "ED",
       "publisher": "W3C",
       "deliveredBy": [
-        "https://w3c.github.io/webappsec-permissions-policy"
+        "https://www.w3.org/2011/webappsec/"
       ]
     }
   }
@@ -636,7 +636,7 @@ the following:
 Replace step 3.3 of the <a spec=HTML>scroll to the fragment</a> algorithm with
 the following:
   3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-      the document policy value</a> of "force-load-at-top" for the
+      the policy value</a> for `force-load-at-top` in the
       [=Document=]. If the result is true, abort these steps.
   4. If <em>range</em> is non-null:
       1. If the UA supports scrolling of text fragments on navigation, invoke
@@ -1262,8 +1262,8 @@ The UA must not visually indicate any provided context terms.
           navigating-to-text-fragment section -->
 
 This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a>
-in [[!document-policy|Document Policy]] with name "force-load-at-top". It is a
-`boolean` <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a>
+in [[!document-policy|Document Policy]] with name "force-load-at-top". Its
+<a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> is `boolean`
 with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a>
 `false`.
 

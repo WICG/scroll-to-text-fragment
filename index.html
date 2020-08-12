@@ -1222,7 +1222,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version c05ebec3, updated Fri Jul 31 13:58:05 2020 -0700" name="generator">
+  <meta content="Bikeshed version 22d05d56, updated Sun Aug 9 20:27:34 2020 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
 <style>/* style-autolinks */
 
@@ -1470,7 +1470,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-07">7 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-12">12 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2009,7 +2009,7 @@ the following:</p>
    <ol start="3">
     <li data-md>
      <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-  the document policy value</a> of "force-load-at-top" for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a>. If the result is true, abort these steps.</p>
+  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a>. If the result is true, abort these steps.</p>
     <li data-md>
      <p>If <em>range</em> is non-null:</p>
      <ol>
@@ -2625,7 +2625,7 @@ indicate the text match as doing so could allow attack vectors for content
 exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>
    <h3 class="heading settled" data-level="3.7" id="document-policy-integration"><span class="secno">3.7. </span><span class="content">Document Policy Integration</span><a class="self-link" href="#document-policy-integration"></a></h3>
-   <p>This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy">Document Policy</a> with name "force-load-at-top". It is a <code>boolean</code> <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a> <code>false</code>.</p>
+   <p>This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy">Document Policy</a> with name "force-load-at-top". Its <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> is <code>boolean</code> with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a> <code>false</code>.</p>
    <div class="note" role="note"> When enabled, this policy disables all automatic scroll-on-load features:
   text-fragments, element framgments, history scroll restoration. </div>
    <div class="example" id="example-ae692635">
