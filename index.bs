@@ -1302,23 +1302,26 @@ persisted user state</a> steps by inserting a new step after 2:
 ## Feature Detectability ## {#feature-detectability}
 
 For feature detectability, we propose adding a new FragmentDirective interface
-that is exposed via <code>window.location.fragmentDirective</code> if the UA
-supports the feature.
+that is exposed via <code>document.fragmentDirective</code> if the UA supports
+the feature.
 
 <pre class='idl'>
-  [Exposed=Window]
+  [Exposed=Document]
   interface FragmentDirective {
   };
 </pre>
 
-We amend the {{Location}} interface to include a <code>fragmentDirective</code>
+We amend the {{Document}} interface to include a <code>fragmentDirective</code>
 property:
 
 <pre class='idl'>
-  partial interface Location {
+  partial interface Document {
       [SameObject] readonly attribute FragmentDirective fragmentDirective;
   };
 </pre>
+
+This object may be used to expose additional information about the text
+fragment or other fragment directives in the future.
 
 # Generating Text Fragment Directives # {#generating-text-fragment-directives}
 

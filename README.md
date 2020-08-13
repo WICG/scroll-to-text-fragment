@@ -451,6 +451,29 @@ Note: the fragment directive behavior (stripping everything after and including
 the `:~:` delimiter from the fragment) can be implemented independently of the
 larger proposal.
 
+### Feature Detection and Future APIs
+
+An author may wish to detect whether a UA has implemented support for
+text-fragments. This can be used by pages that generate such links to avoid
+generating fragment-directives for non-implementing UAs. It can also be used by
+libraries or authors to strip the fragment-directive from user or author
+generated links.
+
+This proposal includes a new property on the `document` object:
+
+```
+document.fragmentDirective
+```
+
+Authors can check for the existence of this (currently empty) object to
+determine if a UA has implemented support for text-fragments.
+
+This also serves as an extension point for future APIs. For example, we'd like
+to expose information about the text-fragments included in the URL so that
+authors can build functionality on it. See
+[#128](https://github.com/WICG/scroll-to-text-fragment/issues/128) for more
+details.
+
 ### :target
 
 For element-id based fragments (e.g.
