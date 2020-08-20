@@ -37,6 +37,18 @@ spec:html; type:element; text:style
       "deliveredBy": [
         "https://www.w3.org/2011/webappsec/"
       ]
+    },
+    "fetch-metadata": {
+      "authors": [
+        "Mike West"
+      ],
+      "href": "https://w3c.github.io/webappsec-fetch-metadata/",
+      "title": "Fetch Metadata Request Headers",
+      "status": "WD",
+      "publisher": "W3C",
+      "deliveredBy": [
+        "https://www.w3.org/TR/fetch-metadata/"
+      ]
     }
   }
 </pre>
@@ -571,96 +583,121 @@ such that the token cannot be cloned.
   </p>
 </div>
 
-To determine whether a navigation <dfn>should allow a text fragment</dfn>,
-given as input an [=origin=] |incumbentNavigationOrigin|, and [=Document=]
-|document|; follow these steps:
+A [=Document=] has an <dfn for="document">allowTextFragmentDirective</dfn> flag
+that is used to determine whether a text fragment directive should be allowed
+to activate. If this flag is false, the text fragment must not cause any
+observable effects.
+
+<div class="note">
+  <p>
+    [=document/textFragmentToken=] is analogous to a user-activation state
+    while [=allowTextFragmentDirective=] is more comprehensive, taking into
+    account various pieces of information, one of which is the existence of a
+    textFragmentToken.
+  </p>
+  <p>
+    The reason we compute allowTextFragmentDirective and keep it as a flag,
+    rather than performing the checks at the time of use, is that it relies on
+    the properties of the navigation while the invocation will occur as part of
+    the <a spec=HTML>scroll to the fragment</a> steps which can happen outside
+    the context of a navigation.
+  </p>
+</div>
 
 <div class="note">
   TODO: This should really only prevent potentially observable side-effects like
-  automatic scrolling. Unobservable effects like a highlight should be safely
+  automatic scrolling. Unobservable effects like a highlight could be safely
   allowed in all cases.
 </div>
 
-1. If |document|'s [=fragment directive=] field is null or empty, return false.
-1. If |incumbentNavigationOrigin| is null, return true.
-    <div class="note">
-      <p>
-        If a navigation originates from browser UI, it's always ok to allow it
-        since it'll be user triggered and the page/script isn't providing the
-        text snippet.
-      </p>
-      <p>
-        Note: Depending on the UA, there may be cases where the
-        |incumbentNavigationOrigin| is null but it's not clear that the
-        navigation should be considered as initiated from browser UI. E.g. an
-        "open in new window" context menu item when right clicking on a link.
-        The intent in this item is to distinguish cases where the app/page is
-        able to set the URL from those that are fully under the user's control.
-        In the former we want to prevent activation of the text fragment unless
-        the destination is loaded in a separate browsing context group (so that
-        the source cannot both control the text snippet and observe
-        side-effects in the navigation).
-      </p>
-      <p>
-        TODO: This seems to be very similar to <a
-        href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
-        so should probably integrate with how that's specified once it's ready.
-      </p>
-    </div>
-1. If |document|'s [=document/textFragmentToken=] flag is false, return false.
-1. If the [=document=] of the <a spec=HTML>latest entry</a> in
-    |document|'s [=Document/browsing context=]'s <a spec=HTML>session history</a> is
-    equal to |document|, return false.
-    <div class="note">
-      i.e. Forbidden on a same-document navigation.
-    </div>
-1. If |incumbentNavigationOrigin| is equal to the origin of |document| return
-    true.
-1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
-    context=] and its
-    <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
-    <a spec=HTML>browsing context set</a> has length 1 return true.
-    <div class="note">
-      i.e. Only allow navigation from a cross-process element/script if the
-      document is loaded in a noopener context. That is, a new top level
-      browsing context group to which the navigator does not have script access
-      and which may be placed into a separate process.
-    </div>
-1. Otherwise, return false.
+Amend the <a
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">create
+and initialize a Document object</a> steps by adding the following steps before returning |document|:
 
-To set the <dfn>allowTextFragmentDirective</dfn> flag, follow these steps:
-
-<div class="note">
-  The algorithm to determine whether or not a text fragment directive should be
-  allowed to invoke must be run during document navigation and creation and
-  stored as a flag since it relies on the properties of the navigation while
-  the invocation will occur as part of the
-  <a spec=HTML>scroll to the fragment</a> steps which
-  can happen outside the context of a navigation.
-</div>
-
-Amend the [[html#read-html|page load processing model for HTML files]] to insert
-these steps after step 1:
-
-2. Let |is user activated| be true if the current navigation was initiated from
-    a window that had a <a spec="html">transient activation</a> at the time the
-    navigation was initiated, or the UA has reason to believe it comes from a
-    direct user gesture (e.g. user typed into the address bar).
-    <div class="note">
-      TODO: when it's ready, we should simply refer to the userActivationFlag
-      on the |request|. See
-      <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
-    </div>
-
-3. If either of |is user activated| or the [=request/textFragmentToken=] flag of
-    |navigationParam|'s |request| object is true, set the |document|'s
-    [=document/textFragmentToken=] flag to true. Otherwise, set it to false. Set the
-    [=request/textFragmentToken=] flag of |navigationParam|'s |request| object
-    to false.
-
-4. Set |document|'s [=allowTextFragmentDirective=] flag to the result of
-    running [=should allow a text fragment=] with |incumbentNavigationOrigin|,
-    and |document|.
+15. Set the [=document/textFragmentToken=] flag on |document|:
+    1. Let |is user activated| be true if the current navigation was initiated from
+        a window that had a <a spec="html">transient activation</a> at the time the
+        navigation was initiated, or the UA has reason to believe it comes from a
+        direct user gesture (e.g. user typed into the address bar).
+        <div class="note">
+          TODO: it'd be better to refer to the userActivationFlag on the
+          |request|. See
+          <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
+        </div>
+    1. If |browsing context| is a top-level browsing context and if either of |is
+        user activated| or the [=request/textFragmentToken=] flag of
+        |navigationParam|'s
+        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+        object is true, set the |document|'s [=document/textFragmentToken=]
+        flag to true. Otherwise, set it to false.
+        <div class="note">
+          It's important that the token not be copyable so that at most one token
+          is created per user-activated navigation.
+        </div>
+16. Set the [=document/allowTextFragmentDirective=] flag on |document| by
+    following these sub-steps:
+    1. If |document|'s [=fragment directive=] field is null or empty, set
+        [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
+    1. Let |textFragmentToken| be the value of |document|'s
+        [=document/textFragmentToken=] and set |document|'s
+        [=document/textFragmentToken=] to false.
+    1. If the |navigationParam|'s
+        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a>
+        header and its value is `"none"` set
+        [=document/allowTextFragmentDirective=] to true and abort these
+        sub-steps.
+        <div class="note">
+          <p>
+            If a navigation originates from browser UI, it's always ok to allow it
+            since it'll be user triggered and the page/script isn't providing the
+            text snippet.
+          </p>
+          <p>
+            Note: Depending on the UA, there may be cases where the
+            |incumbentNavigationOrigin| is null but it's not clear that the
+            navigation should be considered as initiated from browser UI. E.g. an
+            "open in new window" context menu item when right clicking on a link.
+            The intent in this item is to distinguish cases where the app/page is
+            able to set the URL from those that are fully under the user's control.
+            In the former we want to prevent activation of the text fragment unless
+            the destination is loaded in a separate browsing context group (so that
+            the source cannot both control the text snippet and observe
+            side-effects in the navigation).
+          </p>
+          <p>
+            See <a
+            href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
+            for a more detailed discussion of how this should apply.
+          </p>
+        </div>
+    1. If |textFragmentToken| is false, set
+        [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
+    1. If the [=document=] of the <a spec=HTML>latest entry</a> in
+        |document|'s [=Document/browsing context=]'s <a spec=HTML>session history</a> is
+        equal to |document|, set [=document/allowTextFragmentDirective=] to false
+        and abort these sub-steps.
+        <div class="note">
+          i.e. Forbidden on a same-document navigation.
+        </div>
+    1. If the |navigationParam|'s
+        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a>
+        header and its value is `"same-site"` set
+        [=document/allowTextFragmentDirective=] to true and abort these
+        sub-steps.
+    1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
+        context=] and its
+        <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
+        <a spec=HTML>browsing context set</a> has length 1, set
+        [=document/allowTextFragmentDirective=] to true and abort these sub-steps.
+        <div class="note">
+          i.e. Only allow navigation from a cross-process element/script if the
+          document is loaded in a noopener context. That is, a new top level
+          browsing context group to which the navigator does not have script access
+          and which may be placed into a separate process.
+        </div>
+    1. Otherwise, set [=document/allowTextFragmentDirective=] to false.
 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
