@@ -1306,7 +1306,7 @@ that is exposed via <code>document.fragmentDirective</code> if the UA supports
 the feature.
 
 <pre class='idl'>
-  [Exposed=Document]
+  [Exposed=Window]
   interface FragmentDirective {
   };
 </pre>
