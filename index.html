@@ -1996,19 +1996,20 @@ following these sub-steps:</p>
       <li data-md>
        <p>Let <var>textFragmentToken</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmenttoken" id="ref-for-document-textfragmenttoken⑦">textFragmentToken</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmenttoken" id="ref-for-document-textfragmenttoken⑧">textFragmentToken</a> to false.</p>
       <li data-md>
-       <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective③">allowTextFragmentDirective</a> to true and abort these
+       <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective③">allowTextFragmentDirective</a> to true and abort these
 sub-steps.</p>
        <div class="note" role="note">
         <p> If a navigation originates from browser UI, it’s always ok to allow it
     since it’ll be user triggered and the page/script isn’t providing the
     text snippet. </p>
-        <p> Note: Depending on the UA, there may be cases where the <var>incumbentNavigationOrigin</var> is null but it’s not clear that the
-    navigation should be considered as initiated from browser UI. E.g. an
-    "open in new window" context menu item when right clicking on a link.
-    The intent in this item is to distinguish cases where the app/page is
-    able to set the URL from those that are fully under the user’s control.
-    In the former we want to prevent activation of the text fragment unless
-    the destination is loaded in a separate browsing context group (so that
+        <p> Note: Depending on the UA, there may be cases where the <var>incumbentNavigationOrigin</var> parameter is null but
+    it’s not clear that the navigation should be considered as
+    initiated from browser UI. E.g. an "open in new window" context
+    menu item when right clicking on a link.  The intent in this item
+    is to distinguish cases where the app/page is able to set the URL
+    from those that are fully under the user’s control.  In the former
+    we want to prevent activation of the text fragment unless the
+    destination is loaded in a separate browsing context group (so that
     the source cannot both control the text snippet and observe
     side-effects in the navigation). </p>
         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> for a more detailed discussion of how this should apply. </p>
@@ -2021,7 +2022,7 @@ equal to <var>document</var>, set <a data-link-type="dfn" href="#document-allowt
 and abort these sub-steps.</p>
        <div class="note" role="note"> i.e. Forbidden on a same-document navigation. </div>
       <li data-md>
-       <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a> header and its value is <code>"same-site"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑥">allowTextFragmentDirective</a> to true and abort these
+       <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-site"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑥">allowTextFragmentDirective</a> to true and abort these
 sub-steps.</p>
       <li data-md>
        <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc" id="ref-for-concept-document-bc①">browsing context</a> is a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing

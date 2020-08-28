@@ -624,7 +624,7 @@ and initialize a Document object</a> steps by adding the following steps before 
           |request|. See
           <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
         </div>
-    1. If |browsing context| is a top-level browsing context and if either of |is
+    1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
         user activated| or the [=request/textFragmentToken=] flag of
         |navigationParam|'s
         <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
@@ -643,7 +643,7 @@ and initialize a Document object</a> steps by adding the following steps before 
         [=document/textFragmentToken=] to false.
     1. If the |navigationParam|'s
         <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
-        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a>
+        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
         header and its value is `"none"` set
         [=document/allowTextFragmentDirective=] to true and abort these
         sub-steps.
@@ -654,14 +654,15 @@ and initialize a Document object</a> steps by adding the following steps before 
             text snippet.
           </p>
           <p>
-            Note: Depending on the UA, there may be cases where the
-            |incumbentNavigationOrigin| is null but it's not clear that the
-            navigation should be considered as initiated from browser UI. E.g. an
-            "open in new window" context menu item when right clicking on a link.
-            The intent in this item is to distinguish cases where the app/page is
-            able to set the URL from those that are fully under the user's control.
-            In the former we want to prevent activation of the text fragment unless
-            the destination is loaded in a separate browsing context group (so that
+            Note: Depending on the UA, there may be cases where the <var
+            ignore=''>incumbentNavigationOrigin</var> parameter is null but
+            it's not clear that the navigation should be considered as
+            initiated from browser UI. E.g. an "open in new window" context
+            menu item when right clicking on a link.  The intent in this item
+            is to distinguish cases where the app/page is able to set the URL
+            from those that are fully under the user's control.  In the former
+            we want to prevent activation of the text fragment unless the
+            destination is loaded in a separate browsing context group (so that
             the source cannot both control the text snippet and observe
             side-effects in the navigation).
           </p>
@@ -682,7 +683,7 @@ and initialize a Document object</a> steps by adding the following steps before 
         </div>
     1. If the |navigationParam|'s
         <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
-        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">set-fetch-site</a>
+        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
         header and its value is `"same-site"` set
         [=document/allowTextFragmentDirective=] to true and abort these
         sub-steps.
