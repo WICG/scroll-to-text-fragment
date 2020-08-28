@@ -119,7 +119,7 @@ into view on load, and how to visually emphasize it.
 
 To restrict an attacker's ability to exfiltrate information across origins,
 several restrictions are applied on when such an anchor is activated. A user
-gesture is required and consumed; text matching can only occur on word
+activation is required and consumed; text matching can only occur on word
 boundaries. Additionally, the fragment will activate only if the document is
 sufficiently isolated from other pages (is the only one in its browsing context
 group, e.g.  no window.opener or iframes).
@@ -526,7 +526,7 @@ Text Segmentation standard. Some browsers already allow word-boundary
 matching for the window.find API which allows specifying wholeWord as an
 argument. We hope this existing usage can be leveraged in the same way.
 
-Additionally, a text directive is invoked only if a user gesture occurred and
+Additionally, a text directive is invoked only if a user activation occurred and
 the loaded document is the only one in its browsing context group. The latter
 restriction is effectively requiring `rel=noopener` be specified on a
 navigation.
@@ -534,6 +534,13 @@ navigation.
 Visual emphasis is performed using a visual-only indicator (i.e. don’t cause
 selection), styled by the UA and undetectable from script. This helps prevents
 drag-and-drop or copy-paste attacks.
+
+#### Client-Side Redirects
+
+Due to the prevelance of client-side redirects (i.e. loading a document that
+navigates via e.g. `window.location`), special care is taken to enable these
+scenarios, despite the fact they lack a user activation. See
+[redirects.md](redirects.md) for details.
 
 ### Opting Out
 
