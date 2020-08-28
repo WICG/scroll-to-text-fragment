@@ -1003,7 +1003,7 @@ following steps:
             |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
         1. Let |textEndMatch| be the result of running the [=find a string
-            in range=] steps given |parsedValue|'s
+            in range=] steps given |parsedValues|'s
             [=ParsedTextDirective/textEnd=] and |textEndRange|.
         1. If |textEndMatch| is null then return null.
         1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
