@@ -281,22 +281,22 @@ directive input|, run these steps:
     to null.
 1. Let |potential prefix| be the first item of |tokens|.
 1. If the last character of |potential prefix| is U+002D (-), then:
-    1. Set |retVal|'s [=ParsedTextDirective/prefix=] to the percent-decoding of
+    1. Set |retVal|'s [=ParsedTextDirective/prefix=] to the [=string/percent-decode|percent-decoding=] of
         the result of removing the last character from |potential prefix|.
     1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
 1. Let |potential suffix| be the last item of |tokens|, if one exists, null
     otherwise.
 1. If |potential suffix| is non-null and its first character is U+002D (-),
     then:
-    1. Set |retVal|'s [=ParsedTextDirective/suffix=] to the percent-decoding of
+    1. Set |retVal|'s [=ParsedTextDirective/suffix=] to the [=string/percent-decode|percent-decoding=] of
         the result of removing the first character from |potential suffix|.
     1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
 1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
     return null.
-1. Set |retVal|'s [=ParsedTextDirective/textStart=] be the percent-decoding of
+1. Set |retVal|'s [=ParsedTextDirective/textStart=] be the [=string/percent-decode|percent-decoding=] of
     the first item of |tokens|.
 1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-    [=ParsedTextDirective/textEnd=] be the percent-decoding of the last item of
+    [=ParsedTextDirective/textEnd=] be the [=string/percent-decode|percent-decoding=] of the last item of
     |tokens|.
 1. Return |retVal|.
 
@@ -1068,8 +1068,8 @@ in a given [=range=] |searchRange|, run these steps:
 
 <div class="note">
   This algorithm will return a [=range=] that represents the first [=word
-  bounded=] instance fully contained within |range| of the |query| text.
-  Returns null if none is found.
+  bounded=] instance of the |query| text that is fully contained within
+  |searchRange|. Returns null if none is found.
 </div>
 
 <div class="note">
@@ -1105,15 +1105,15 @@ in a given [=range=] |searchRange|, run these steps:
         1. [=iteration/Continue=].
     1. If |curNode| is not a [=visible text node=]:
         1. Set |searchRange|'s [=range/start node=] to the next node, in
-            [=shadow-including tree order=], that is not a [=dom/doctype=], and
+            [=shadow-including tree order=], that is not a [=doctype=], and
             set its [=range/start offset=] to 0.
         1. [=iteration/Continue=].
     1. Let |blockAncestor| be the [=nearest block ancestor=] of |curNode|.
     1. Let |textNodeList| be a <a spec=infra>list</a> of {{Text}} nodes,
         initially empty.
     1. While |curNode| is a [=shadow-including descendant=] of |blockAncestor|
-        and position of the [=/boundary point=] (|curNode|, 0) is not [=boundary
-        point/after=] |searchRange|'s [=range/end=]:
+        and the position of the [=/boundary point=] (|curNode|, 0) is not
+        [=boundary point/after=] |searchRange|'s [=range/end=]:
         1. If |curNode| [=has block-level display=] then [=iteration/break=].
         1. If |curNode| is [=search invisible=]:
             1. Set |curNode| to the next node, in [=shadow-including tree
@@ -1133,7 +1133,7 @@ in a given [=range=] |searchRange|, run these steps:
         0).
 1. Return null.
 
-A node is <dfn>search invisible</dfn> if it is an [=element=] is in the [=HTML
+A node is <dfn>search invisible</dfn> if it is an [=element=] in the [=HTML
 namespace=] and meets any of the following conditions:
 1. The [=computed value=] of its 'display' property is ''display/none''.
 1. If the node <a spec=html>serializes as void</a>.
@@ -1164,7 +1164,7 @@ To find the <dfn>nearest block ancestor</dfn> of a |node| follow the steps:
 1. Return |node|'s [=Node/node document=]'s [=document element=].
 
 To <dfn>find a range from a node list</dfn> given a search string |queryString|,
-a [=range=] |searchRange|, [=/list=] of {{Text}} nodes |nodes|, follow the
+a [=range=] |searchRange|, and a [=/list=] of {{Text}} nodes |nodes|, follow the
 steps:
 
 <div class="note">
