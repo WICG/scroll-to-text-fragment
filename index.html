@@ -1634,9 +1634,9 @@ first instance of this exact text string is the target text.</p>
 exact text "an example text fragment" is the target text. </div>
    <p>If the textEnd parameter is also specified, then the text directive refers to a
 range of text in the page. The target text range is the text range starting at
-the first instance of startText, until the first instance of endText that
-appears after startText. This is equivalent to specifying the entire text range
-in the startText parameter, but allows the URL to avoid being bloated with a
+the first instance of textStart, until the first instance of textEnd that
+appears after textStart. This is equivalent to specifying the entire text range
+in the textStart parameter, but allows the URL to avoid being bloated with a
 long text directive.</p>
    <div class="example" id="example-7df2027e"><a class="self-link" href="#example-7df2027e"></a> <code>#:~:text=an%20example,text%20fragment</code> indicates that the first
 instance of "an example" until the following first instance of "text fragment"
@@ -1694,30 +1694,37 @@ three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
     <li data-md>
      <p>Let <var>raw fragment</var> be equal to <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment">fragment</a>.</p>
     <li data-md>
-     <p>Let <var>fragmentDirectivePosition</var> be an integer initialized to 0.</p>
-    <li data-md>
-     <p>While the substring of <var>raw fragment</var> starting at position <var>fragmentDirectivePosition</var> does not begin with the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter">fragment directive
-delimiter</a> and <var>fragmentDirectivePosition</var> does not point past the end of <var>raw fragment</var>:</p>
+     <p>If <var>raw fragment</var> is non-null:</p>
      <ol>
       <li data-md>
-       <p>Increment <var>fragmentDirectivePosition</var> by 1.</p>
-     </ol>
-    <li data-md>
-     <p>If <var>fragmentDirectivePosition</var> does not point past the end of <var>raw
+       <p>Let <var>fragmentDirectivePosition</var> be an integer initialized to 0.</p>
+      <li data-md>
+       <p>While the substring of <var>raw fragment</var> starting at position <var>fragmentDirectivePosition</var> does not begin with the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter">fragment directive
+delimiter</a> and <var>fragmentDirectivePosition</var> does not point past the end
+of <var>raw fragment</var>:</p>
+       <ol>
+        <li data-md>
+         <p>Increment <var>fragmentDirectivePosition</var> by 1.</p>
+       </ol>
+      <li data-md>
+       <p>If <var>fragmentDirectivePosition</var> does not point past the end of <var>raw
 fragment</var>:</p>
-     <ol>
-      <li data-md>
-       <p>Let <var>fragment</var> be the substring of <var>raw fragment</var> starting at 0 of count <var>fragmentDirectivePosition</var>.</p>
-      <li data-md>
-       <p>Advance <var>fragmentDirectivePosition</var> by the length of <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment
+       <ol>
+        <li data-md>
+         <p>Let <var>fragment</var> be the substring of <var>raw fragment</var> starting at 0 of
+count <var>fragmentDirectivePosition</var>.</p>
+        <li data-md>
+         <p>Advance <var>fragmentDirectivePosition</var> by the length of <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment
 directive delimiter</a>.</p>
-      <li data-md>
-       <p>Let <var>fragment directive</var> be the substring of <var>raw fragment</var> starting at <var>fragmentDirectivePosition</var>.</p>
-      <li data-md>
-       <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment①">fragment</a> to <var>fragment</var>.</p>
-      <li data-md>
-       <p>Set <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> to <var>fragment directive</var>. (Note:
-this is stored on the document but not web-exposed)</p>
+        <li data-md>
+         <p>Let <var>fragment directive</var> be the substring of <var>raw fragment</var> starting
+at <var>fragmentDirectivePosition</var>.</p>
+        <li data-md>
+         <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment①">fragment</a> to <var>fragment</var>.</p>
+        <li data-md>
+         <p>Set <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> to <var>fragment directive</var>.
+(Note: this is stored on the document but not web-exposed)</p>
+       </ol>
      </ol>
     <li data-md>
      <p>Set <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url②">URL</a> to be <var>url</var>.</p>
@@ -1728,8 +1735,8 @@ this is stored on the document but not web-exposed)</p>
    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
 the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑨">fragment directive</a> is the string
 "text=foo". </div>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>textDirectiveString</var>,
-run these steps:</p>
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>text
+directive input</var>, run these steps:</p>
    <div class="note" role="note">
     <p> This algorithm takes a single text directive string as input (e.g.
     "text=prefix-,foo,bar") and attempts to parse the string into the
@@ -1740,7 +1747,7 @@ run these steps:</p>
    </div>
    <ol>
     <li data-md>
-     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert">Assert</a>: <var>textDirectiveString</var> matches the production <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a>.</p>
+     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert">Assert</a>: <var>text directive input</var> matches the production <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a>.</p>
     <li data-md>
      <p>Let <var>textDirectiveString</var> be the substring of <var>text directive
 input</var> starting at index 5.</p>
@@ -1761,8 +1768,8 @@ to null.</p>
      <p>If the last character of <var>potential prefix</var> is U+002D (-), then:</p>
      <ol>
       <li data-md>
-       <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix">prefix</a> to the result of
-removing the last character from <var>potential prefix</var>.</p>
+       <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix">prefix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> of
+the result of removing the last character from <var>potential prefix</var>.</p>
       <li data-md>
        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">Remove</a> the first item of the list <var>tokens</var>.</p>
      </ol>
@@ -1774,8 +1781,8 @@ otherwise.</p>
 then:</p>
      <ol>
       <li data-md>
-       <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix">suffix</a> to the result of
-removing the first character from <var>potential suffix</var>.</p>
+       <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix">suffix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode①">percent-decoding</a> of
+the result of removing the first character from <var>potential suffix</var>.</p>
       <li data-md>
        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove①">Remove</a> the last item of the list <var>tokens</var>.</p>
      </ol>
@@ -1783,9 +1790,10 @@ removing the first character from <var>potential suffix</var>.</p>
      <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> not equal to 1 nor 2 then
 return null.</p>
     <li data-md>
-     <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart">textStart</a> be the first item of <var>tokens</var>.</p>
+     <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart">textStart</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode②">percent-decoding</a> of
+the first item of <var>tokens</var>.</p>
     <li data-md>
-     <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend">textEnd</a> be the last item of <var>tokens</var>.</p>
+     <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend">textEnd</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode③">percent-decoding</a> of the last item of <var>tokens</var>.</p>
     <li data-md>
      <p>Return <var>retVal</var>.</p>
    </ol>
@@ -2059,33 +2067,30 @@ indicated part of the document to optionally include a <a data-link-type="dfn" h
 may be scrolled into view instead of the containing element. </div>
    <p>Replace step 3.1 of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier①">scroll to the fragment</a> algorithm with
 the following:</p>
-   <ol start="3">
+   <ol>
     <li data-md>
-     <p>Otherwise:</p>
-     <ol>
-      <li data-md>
-       <p>Let <em>target, range</em> be the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element">element</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①">range</a> that is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document" id="ref-for-the-indicated-part-of-the-document">the indicated part of the document</a>.</p>
-     </ol>
+     <p>Let <em>target, range</em> be the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element">element</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①">range</a> that is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document" id="ref-for-the-indicated-part-of-the-document">the indicated part of the document</a>.</p>
    </ol>
    <p>Replace step 3.3 of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier②">scroll to the fragment</a> algorithm with
 the following:</p>
    <ol start="3">
     <li data-md>
      <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a>. If the result is true, abort these steps.</p>
+the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a>. If the result is true, abort these steps.</p>
     <li data-md>
      <p>If <em>range</em> is non-null:</p>
      <ol>
       <li data-md>
-       <p>If the UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with
-  containingElement <em>target</em>, <em>behavior</em> set to "auto", <em>block</em> set to "center", and <em>inline</em> set to "nearest".</p>
+       <p>If the UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with range <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
+to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+"nearest".</p>
      </ol>
     <li data-md>
      <p>Otherwise:</p>
      <ol>
       <li data-md>
        <p><a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view">Scroll target
-  into view</a>, with <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
+into view</a>, with <em>behavior</em> set to "auto", <em>block</em> set to "start", and <em>inline</em> set to "nearest".</p>
        <div class="note" role="note"> This otherwise case is the same as the current step 3.3. </div>
      </ol>
    </ol>
@@ -2110,9 +2115,9 @@ string</var> and the document.</p>
   remaining <var>ranges</var> should be visually indicated in a way that
   is not revealed to script, which is left as UA-defined behavior. </div>
         <li data-md>
-         <p>Let <var>node</var> be the <a data-link-type="dfn" href="#first-common-ancestor" id="ref-for-first-common-ancestor">first common ancestor</a> of <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node">start node</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①">start node</a>.</p>
+         <p>Let <var>node</var> be the <a data-link-type="dfn" href="#first-common-ancestor" id="ref-for-first-common-ancestor">first common ancestor</a> of <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node">start node</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node">end node</a>.</p>
         <li data-md>
-         <p>While <var>node</var> is not an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element①">element</a>, set <var>node</var> to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-parent" id="ref-for-concept-tree-parent">parent</a>.</p>
+         <p>While <var>node</var> is non-null and is not an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element①">element</a>, set <var>node</var> to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-parent" id="ref-for-concept-tree-parent">parent</a>.</p>
         <li data-md>
          <p>The indicated part of the document is <var>node</var> and <var>range</var>; return.</p>
        </ol>
@@ -2124,8 +2129,8 @@ follow these steps:</p>
     <li data-md>
      <p>Let <var>commonAncestor</var> be <var>nodeA</var>.</p>
     <li data-md>
-     <p>While <var>commonAncestor</var> is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor" id="ref-for-concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>nodeB</var>, let <var>commonAncestor</var> be <var>commonAncestor</var>’s <a data-link-type="dfn" href="#shadow-including-parent" id="ref-for-shadow-including-parent">shadow-including
-parent</a>.</p>
+     <p>While <var>commonAncestor</var> is non-null and is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor" id="ref-for-concept-shadow-including-inclusive-ancestor">shadow-including inclusive
+ancestor</a> of <var>nodeB</var>, let <var>commonAncestor</var> be <var>commonAncestor</var>’s <a data-link-type="dfn" href="#shadow-including-parent" id="ref-for-shadow-including-parent">shadow-including parent</a>.</p>
     <li data-md>
      <p>Return <var>commonAncestor</var>.</p>
    </ol>
@@ -2280,7 +2285,7 @@ in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" hre
          <div class="note" role="note"> This can happen if <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end④">end</a> or its subsequent
   non-whitespace position is at the end of the document. </div>
         <li data-md>
-         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node②">start node</a> is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text">Text</a></code> node.</p>
+         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①">start node</a> is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text">Text</a></code> node.</p>
          <div class="note" role="note"> <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑤">start</a> now points to the next
   non-whitespace text data following a matched prefix. </div>
         <li data-md>
@@ -2289,49 +2294,35 @@ range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="
         <li data-md>
          <p>If <var>potentialMatch</var> is null, return null.</p>
         <li data-md>
-         <p>If <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑥">start</a> is not <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑦">start</a>, then  and <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue②">continue</a>.</p>
+         <p>If <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑥">start</a> is not <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑦">start</a>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue②">continue</a>.</p>
          <div class="note" role="note"> In this case, we found a prefix but it was followed by something
   other than a matching text so we’ll continue searching for the
   next instance of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix⑥">prefix</a>. </div>
-        <li data-md>
-         <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑥">textEnd</a> item is
-non-null, then:</p>
-         <ol>
-          <li data-md>
-           <p>Let <var>textEndRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑤">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a>.</p>
-          <li data-md>
-           <p>Let <var>textEndMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range②">find a string
-in range</a> steps given <var>parsedValue</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑦">textEnd</a> and <var>textEndRange</var>.</p>
-          <li data-md>
-           <p>If <var>textEndMatch</var> is null then return null.</p>
-          <li data-md>
-           <p>Set <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑧">end</a> to <var>textEndMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑨">end</a>.</p>
-         </ol>
        </ol>
       <li data-md>
        <p>Otherwise:</p>
        <ol>
         <li data-md>
-         <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range③">find a string in
+         <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range②">find a string in
 range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑦">textStart</a> and <var>searchRange</var>.</p>
         <li data-md>
          <p>If <var>potentialMatch</var> is null, return null.</p>
         <li data-md>
-         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑨">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp①">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after①">after</a> <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a></p>
-        <li data-md>
-         <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑧">textEnd</a> item is
+         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp①">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after①">after</a> <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑨">start</a></p>
+       </ol>
+      <li data-md>
+       <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑥">textEnd</a> item is
 non-null, then:</p>
-         <ol>
-          <li data-md>
-           <p>Let <var>textEndRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⓪">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a>.</p>
-          <li data-md>
-           <p>Let <var>textEndMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string
-in range</a> steps given <var>parsedValue</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑨">textEnd</a> and <var>textEndRange</var>.</p>
-          <li data-md>
-           <p>If <var>textEndMatch</var> is null then return null.</p>
-          <li data-md>
-           <p>Set <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a> to <var>textEndMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①④">end</a>.</p>
-         </ol>
+       <ol>
+        <li data-md>
+         <p>Let <var>textEndRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑤">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a>.</p>
+        <li data-md>
+         <p>Let <var>textEndMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range③">find a string
+in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑦">textEnd</a> and <var>textEndRange</var>.</p>
+        <li data-md>
+         <p>If <var>textEndMatch</var> is null then return null.</p>
+        <li data-md>
+         <p>Set <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑧">end</a> to <var>textEndMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑨">end</a>.</p>
        </ol>
       <li data-md>
        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert②">Assert</a>: <var>potentialMatch</var> is non-null, not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a> and
@@ -2339,37 +2330,39 @@ represents a range exactly containing an instance of matching text.</p>
       <li data-md>
        <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix③">suffix</a> is null, return <var>potentialMatch</var>.</p>
       <li data-md>
-       <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑤">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑥">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑦">end</a>.</p>
+       <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⓪">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a>.</p>
       <li data-md>
-       <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①③">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
+       <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
       <li data-md>
-       <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range⑤">find a string in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix④">suffix</a> and <var>suffixRange</var>.</p>
+       <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix④">suffix</a> and <var>suffixRange</var>.</p>
       <li data-md>
        <p>If <var>suffixMatch</var> is null then return null.</p>
        <div class="note" role="note"> If the suffix doesn’t appear in the remaining text of the document,
   there’s no possible way to make a match. </div>
       <li data-md>
-       <p>If <var>suffixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①④">start</a> is <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑤">start</a>,
+       <p>If <var>suffixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①③">start</a> is <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①④">start</a>,
 return <var>potentialMatch</var>.</p>
      </ol>
+    <li data-md>
+     <p>Return null</p>
    </ol>
-   <p>To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑥">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
+   <p>To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑤">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
 non-whitespace position</dfn> follow the steps:</p>
    <ol>
     <li data-md>
      <p>While <var>range</var> is not collapsed:</p>
      <ol>
       <li data-md>
-       <p>Let <var>node</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node③">start node</a>.</p>
+       <p>Let <var>node</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node②">start node</a>.</p>
       <li data-md>
        <p>Let <var>offset</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset">start offset</a>.</p>
       <li data-md>
        <p>If <var>node</var> is part of a <a data-link-type="dfn" href="#non-searchable-subtree" id="ref-for-non-searchable-subtree">non-searchable subtree</a> then:</p>
        <ol>
         <li data-md>
-         <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node④">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant">shadow-including
-descendant</a> of <var>node</var>.</p>
+         <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node③">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant">shadow-including
+descendant</a> of <var>node</var>, and set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset①">start offset</a> to 0.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue③">Continue</a>.</p>
        </ol>
@@ -2377,7 +2370,7 @@ descendant</a> of <var>node</var>.</p>
        <p>If <var>node</var> is not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node">visible text node</a>:</p>
        <ol>
         <li data-md>
-         <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order①">shadow-including tree order</a>.</p>
+         <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node④">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order①">shadow-including tree order</a>, and set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset②">start offset</a> to 0.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue④">Continue</a>.</p>
        </ol>
@@ -2385,13 +2378,13 @@ descendant</a> of <var>node</var>.</p>
        <p>If the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-cd-substring" id="ref-for-concept-cd-substring">substring data</a> of <var>node</var> at offset <var>offset</var> and count 6 is equal to the string "&amp;nbsp;" then:</p>
        <ol>
         <li data-md>
-         <p>Add 6 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset①">start offset</a>.</p>
+         <p>Add 6 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset③">start offset</a>.</p>
        </ol>
       <li data-md>
        <p>Otherwise, if the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-cd-substring" id="ref-for-concept-cd-substring①">substring data</a> of <var>node</var> at offset <var>offset</var> and count 5 is equal to the string "&amp;nbsp" then:</p>
        <ol>
         <li data-md>
-         <p>Add 5 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset②">start offset</a>.</p>
+         <p>Add 5 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset④">start offset</a>.</p>
        </ol>
       <li data-md>
        <p>Otherwise:</p>
@@ -2401,21 +2394,23 @@ descendant</a> of <var>node</var>.</p>
         <li data-md>
          <p>If <var>cp</var> does not have the <a href="http://www.unicode.org/reports/tr44/#White_Space">White_Space</a> property set, return.</p>
         <li data-md>
-         <p>Add 1 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset③">start offset</a>.</p>
+         <p>Add 1 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑤">start offset</a>.</p>
        </ol>
       <li data-md>
-       <p>If <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset④">start offset</a> is equal to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>, set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑥">start node</a> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>.</p>
+       <p>If <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑥">start offset</a> is equal to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>, set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>, and set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑦">start offset</a> to</p>
+       <ol start="0">
+        <li data-md>
+       </ol>
      </ol>
    </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> for a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>query</var> in a given <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> <var>range</var>, run these steps:</p>
-   <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> that represents the first <a data-link-type="dfn" href="#word-bounded" id="ref-for-word-bounded">word
-  bounded</a> instance fully contained within <var>range</var> of the <var>query</var> text.
-  Returns null if none is found. </div>
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> for a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>query</var> in a given <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> <var>searchRange</var>, run these steps:</p>
+   <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> that represents the first <a data-link-type="dfn" href="#word-bounded" id="ref-for-word-bounded">word
+  bounded</a> instance of the <var>query</var> text that is fully contained within <var>searchRange</var>. Returns null if none is found. </div>
    <div class="note" role="note">
     <p> The basic premise of this algorithm is to walk all searchable text nodes
     within a block, collecting them into a list. The list is then concatenated
     into a single string in which we can search, using the node list to
-    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a>. </p>
+    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a>. </p>
     <p> Collection breaks when we hit a block node, e.g. searching over this tree: </p>
 <pre>      &lt;div>
         a&lt;em>b&lt;/em>c&lt;div>d&lt;/div>e
@@ -2431,12 +2426,12 @@ descendant</a> of <var>node</var>.</p>
      <p>While <var>searchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed③">collapsed</a>:</p>
      <ol>
       <li data-md>
-       <p>Let <var>curNode</var> be <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑦">start node</a>.</p>
+       <p>Let <var>curNode</var> be <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑥">start node</a>.</p>
       <li data-md>
        <p>If <var>curNode</var> is part of a <a data-link-type="dfn" href="#non-searchable-subtree" id="ref-for-non-searchable-subtree①">non-searchable subtree</a>:</p>
        <ol>
         <li data-md>
-         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order③">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant①">shadow-including
+         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑦">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order③">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant①">shadow-including
 descendant</a> of <var>curNode</var>.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑤">Continue</a>.</p>
@@ -2445,51 +2440,50 @@ descendant</a> of <var>curNode</var>.</p>
        <p>If <var>curNode</var> is not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node①">visible text node</a>:</p>
        <ol>
         <li data-md>
-         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑨">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>.</p>
+         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>, that is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-doctype" id="ref-for-concept-doctype">doctype</a>, and
+set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑧">start offset</a> to 0.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑥">Continue</a>.</p>
        </ol>
       <li data-md>
-       <p>Otherwise:</p>
+       <p>Let <var>blockAncestor</var> be the <a data-link-type="dfn" href="#nearest-block-ancestor" id="ref-for-nearest-block-ancestor">nearest block ancestor</a> of <var>curNode</var>.</p>
+      <li data-md>
+       <p>Let <var>textNodeList</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑦">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text①">Text</a></code> nodes,
+initially empty.</p>
+      <li data-md>
+       <p>While <var>curNode</var> is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant②">shadow-including descendant</a> of <var>blockAncestor</var> and the position of the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp②">boundary point</a> (<var>curNode</var>, 0) is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after②">after</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a>:</p>
        <ol>
         <li data-md>
-         <p>Let <var>blockAncestor</var> be the <a data-link-type="dfn" href="#nearest-block-ancestor" id="ref-for-nearest-block-ancestor">nearest block ancestor</a> of <var>curNode</var>.</p>
+         <p>If <var>curNode</var> <a data-link-type="dfn" href="#has-block-level-display" id="ref-for-has-block-level-display">has block-level display</a> then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break">break</a>.</p>
         <li data-md>
-         <p>Let <var>textNodeList</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑦">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text①">Text</a></code> nodes,
-initially empty.</p>
-        <li data-md>
-         <p>While <var>curNode</var> is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant②">shadow-including descendant</a> of <var>blockAncestor</var> and it does not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-following" id="ref-for-concept-tree-following">follow</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node">end node</a>:</p>
+         <p>If <var>curNode</var> is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible">search invisible</a>:</p>
          <ol>
           <li data-md>
-           <p>If <var>curNode</var> <a data-link-type="dfn" href="#has-block-level-display" id="ref-for-has-block-level-display">has block-level display</a> then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break">break</a>.</p>
+           <p>Set <var>curNode</var> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order⑤">shadow-including tree
+order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant③">shadow-including descendant</a> of <var>curNode</var>.</p>
           <li data-md>
-           <p>If <var>curNode</var> is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible">search invisible</a>:</p>
-           <ol>
-            <li data-md>
-             <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order⑤">shadow-including tree
-order</a> whose ancestor is not <var>curNode</var>.</p>
-            <li data-md>
-             <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑦">Continue</a>.</p>
-           </ol>
-          <li data-md>
-           <p>If <var>curNode</var> is a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node②">visible text node</a> then append it to <var>textNodeList</var>.</p>
-          <li data-md>
-           <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order⑥">shadow-including tree
-order</a>.</p>
+           <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑦">Continue</a>.</p>
          </ol>
         <li data-md>
-         <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, and <var>textNodeList</var>, as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> is not null, then return it.</p>
+         <p>If <var>curNode</var> is a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node②">visible text node</a> then append it to <var>textNodeList</var>.</p>
         <li data-md>
-         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>curNode</var> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-following" id="ref-for-concept-tree-following①">follows</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①⓪">start node</a>.</p>
-        <li data-md>
-         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑦">start</a> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp②">boundary point</a> (<var>curNode</var>, 0).</p>
+         <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order⑥">shadow-including tree order</a>.</p>
        </ol>
+      <li data-md>
+       <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, and <var>textNodeList</var>, as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> is not null, then return it.</p>
+      <li data-md>
+       <p>If <var>curNode</var> is null, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break①">break</a>.</p>
+      <li data-md>
+       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>curNode</var> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-following" id="ref-for-concept-tree-following">follows</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑨">start node</a>.</p>
+      <li data-md>
+       <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑥">start</a> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp③">boundary point</a> (<var>curNode</var>,
+0).</p>
      </ol>
     <li data-md>
      <p>Return null.</p>
    </ol>
-   <p>A node is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="search-invisible">search invisible</dfn> if it is in the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#html-namespace" id="ref-for-html-namespace">HTML namespace</a> and
-meets any of the following conditions:</p>
+   <p>A node is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="search-invisible">search invisible</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element④">element</a> in the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#html-namespace" id="ref-for-html-namespace">HTML
+namespace</a> and meets any of the following conditions:</p>
    <ol>
     <li data-md>
      <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
@@ -2500,27 +2494,28 @@ meets any of the following conditions:</p>
     <li data-md>
      <p>Is a <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element" id="ref-for-the-select-element">select</a></code> element whose <code><a data-link-type="element-sub" href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple" id="ref-for-attr-select-multiple">multiple</a></code> content attribute is absent.</p>
    </ol>
-   <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has an
-ancestor that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css2/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and
-it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
+   <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor" id="ref-for-concept-shadow-including-ancestor">shadow-including ancestor</a> that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css2/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑤">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <p>To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps:</p>
    <ol>
     <li data-md>
-     <p>While <var>node</var> is non-null</p>
+     <p>Let <var>curNode</var> be <var>node</var>.</p>
+    <li data-md>
+     <p>While <var>curNode</var> is non-null</p>
      <ol>
       <li data-md>
-       <p>If <var>node</var> is not a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text③">Text</a></code> node and it <a data-link-type="dfn" href="#has-block-level-display" id="ref-for-has-block-level-display①">has block-level display</a> then
-return <var>node</var>.</p>
+       <p>If <var>curNode</var> is not a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text③">Text</a></code> node and it <a data-link-type="dfn" href="#has-block-level-display" id="ref-for-has-block-level-display①">has block-level display</a> then
+return <var>curNode</var>.</p>
       <li data-md>
-       <p>Otherwise, set <var>node</var> to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-parent" id="ref-for-concept-tree-parent②">parent</a>.</p>
+       <p>Otherwise, set <var>curNode</var> to <var>curNode</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-parent" id="ref-for-concept-tree-parent②">parent</a>.</p>
      </ol>
     <li data-md>
      <p>Return <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-document" id="ref-for-concept-node-document">node document</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#document-element" id="ref-for-document-element">document element</a>.</p>
    </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-node-list">find a range from a node list</dfn> given a search string <var>queryString</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> <var>searchRange</var>, and a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node" id="ref-for-concept-node">nodes</a> <var>nodes</var>,
-follow the steps</p>
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-node-list">find a range from a node list</dfn> given a search string <var>queryString</var>,
+a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> <var>searchRange</var>, and a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, follow the
+steps:</p>
    <div class="note" role="note">
      This will only return a match if the matched text falls on word boundaries.
   That is, the text match must begin and end on a word boundary. For example: 
@@ -2530,43 +2525,41 @@ follow the steps</p>
    </div>
    <ol>
     <li data-md>
-     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert④">Assert</a>: each item in <var>nodes</var> is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> node.</p>
-    <li data-md>
-     <p>Let <var>searchBuffer</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-concatenate" id="ref-for-string-concatenate">concatenation</a> of the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-cd-data" id="ref-for-concept-cd-data①">data</a> of each item in in <var>nodes</var>.</p>
+     <p>Let <var>searchBuffer</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-concatenate" id="ref-for-string-concatenate">concatenation</a> of the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-cd-data" id="ref-for-concept-cd-data①">data</a> of each item in <var>nodes</var>.</p>
     <li data-md>
      <p>Let <var>searchStart</var> be 0.</p>
     <li data-md>
-     <p>If the first item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①①">start node</a> then
-set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑤">start offset</a>.</p>
+     <p>If the first item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①⓪">start node</a> then
+set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑨">start offset</a>.</p>
     <li data-md>
-     <p>Let <var>start</var> and <var>end</var> be <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp③">boundary points</a>, initially null.</p>
+     <p>Let <var>start</var> and <var>end</var> be <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp④">boundary points</a>, initially null.</p>
     <li data-md>
      <p>Let <var>matchIndex</var> be null.</p>
     <li data-md>
      <p>While <var>matchIndex</var> is null</p>
      <ol>
       <li data-md>
-       <p>Let <var>matchIndex</var> be an integer set to the index of the first
-instance of <var>queryString</var> in <var>searchBuffer</var>, starting at <var>searchStart</var>.
-The string search must be performed using a base character comparison,
-or the <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
+       <p>Set <var>matchIndex</var> to the index of the first instance of <var>queryString</var> in <var>searchBuffer</var>, starting at <var>searchStart</var>. The string search must be
+performed using a base character comparison, or the <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
 level</a>, as defined in <a data-link-type="biblio" href="#biblio-uts10">[UTS10]</a>.</p>
        <div class="note" role="note"> Intuitively, this is a case-insensitive search also ignoring accents
   and other marks. </div>
       <li data-md>
+       <p>If <var>matchIndex</var> is null, return null.</p>
+      <li data-md>
        <p>Let <var>endIx</var> be <var>matchIndex</var> + <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length">length</a>.</p>
        <div class="note" role="note"> <var>endIx</var> is the index of the last character in the match + 1. </div>
       <li data-md>
-       <p>Set <var>start</var> be the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp④">boundary point</a> result of <a data-link-type="dfn" href="#get-boundary-point-at-index" id="ref-for-get-boundary-point-at-index">get boundary point at
+       <p>Set <var>start</var> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑤">boundary point</a> result of <a data-link-type="dfn" href="#get-boundary-point-at-index" id="ref-for-get-boundary-point-at-index">get boundary point at
 index</a> <var>matchIndex</var> run over <var>nodes</var> with <var>isEnd</var> false.</p>
       <li data-md>
-       <p>Set <var>end</var> be the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑤">boundary point</a> result of <a data-link-type="dfn" href="#get-boundary-point-at-index" id="ref-for-get-boundary-point-at-index①">get boundary point at
+       <p>Set <var>end</var> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑥">boundary point</a> result of <a data-link-type="dfn" href="#get-boundary-point-at-index" id="ref-for-get-boundary-point-at-index①">get boundary point at
 index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.</p>
       <li data-md>
        <p>If the substring of <var>searchBuffer</var> starting at <var>matchIndex</var> and of length <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length①">length</a> is not <a data-link-type="dfn" href="#word-bounded" id="ref-for-word-bounded①">word bounded</a>, given the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dom.html#language" id="ref-for-language">language</a> from each of <var>start</var> and <var>end</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#boundary-point-node" id="ref-for-boundary-point-node">nodes</a> as the <var>startLocale</var> and <var>endLocale</var>:</p>
        <ol>
         <li data-md>
-         <p>Let <var>searchStart</var> be <var>matchIndex</var> + 1.</p>
+         <p>Set <var>searchStart</var> to <var>matchIndex</var> + 1.</p>
         <li data-md>
          <p>Set <var>matchIndex</var> to null.</p>
        </ol>
@@ -2579,12 +2572,12 @@ index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.
   reverse direction. Alternatively, it is the length of the node that’s not
   included in the range. </div>
     <li data-md>
-     <p>If <var>matchIndex</var> + <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length②">length</a> is greater than or equal to <var>searchBuffer</var>’s length − <var>endInset</var> return null.</p>
+     <p>If <var>matchIndex</var> + <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length②">length</a> is greater than <var>searchBuffer</var>’s length − <var>endInset</var> return null.</p>
      <div class="note" role="note"> If the match runs past the end of the search range, return null. </div>
     <li data-md>
-     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert⑤">Assert</a>: <var>start</var> and <var>end</var> are non-null, valid <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑥">boundary points</a> in <var>searchRange</var>.</p>
+     <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert④">Assert</a>: <var>start</var> and <var>end</var> are non-null, valid <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑦">boundary points</a> in <var>searchRange</var>.</p>
     <li data-md>
-     <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②④">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑧">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑧">end</a> <var>end</var>.</p>
+     <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑦">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①④">end</a> <var>end</var>.</p>
    </ol>
    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="get-boundary-point-at-index">get boundary point at index</dfn>, given an integer <var>index</var>, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑨">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text⑤">Text</a></code> nodes <var>nodes</var>, and a boolean <var>isEnd</var>, follow these steps:</p>
    <div class="note" role="note">
@@ -2609,7 +2602,7 @@ index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.
        <p>If <var>nodeEnd</var> is greater than <var>index</var> then:</p>
        <ol>
         <li data-md>
-         <p>Return the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑦">boundary point</a> (<var>curNode</var>, <var>index</var> − <var>counted</var>).</p>
+         <p>Return the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑧">boundary point</a> (<var>curNode</var>, <var>index</var> − <var>counted</var>).</p>
        </ol>
       <li data-md>
        <p>Increment <var>counted</var> by <var>curNode</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length④">length</a>.</p>
@@ -2656,7 +2649,7 @@ string. An empty string indicates that the primary language is unknown.</p>
    <ol>
     <li data-md>
      <p>Using locale <var>startLocale</var>, let <var>left bound</var> be the last word boundary in <var>text</var> that precedes <var>startPosition</var>th <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point①">code point</a> of <var>text</var>.</p>
-     <div class="note" role="note"> A string will always contain at least 2 word boundaries before the first
+     <div class="note" role="note"> A string will always contain at least 2 word boundaries: before the first
   code point and after the last code point of the string. </div>
     <li data-md>
      <p>If the first <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point②">code point</a> of <var>text</var> following <var>left bound</var> is not at
@@ -3132,13 +3125,13 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-concept-range-bp-after">
    <a href="https://dom.spec.whatwg.org/#concept-range-bp-after">https://dom.spec.whatwg.org/#concept-range-bp-after</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-bp-after">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp-after①">(2)</a>
+    <li><a href="#ref-for-concept-range-bp-after">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp-after①">(2)</a> <a href="#ref-for-concept-range-bp-after②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-bp">
    <a href="https://dom.spec.whatwg.org/#concept-range-bp">https://dom.spec.whatwg.org/#concept-range-bp</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-bp">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp①">(2)</a> <a href="#ref-for-concept-range-bp②">(3)</a> <a href="#ref-for-concept-range-bp③">(4)</a> <a href="#ref-for-concept-range-bp④">(5)</a> <a href="#ref-for-concept-range-bp⑤">(6)</a> <a href="#ref-for-concept-range-bp⑥">(7)</a> <a href="#ref-for-concept-range-bp⑦">(8)</a>
+    <li><a href="#ref-for-concept-range-bp">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp①">(2)</a> <a href="#ref-for-concept-range-bp②">(3)</a> <a href="#ref-for-concept-range-bp③">(4)</a> <a href="#ref-for-concept-range-bp④">(5)</a> <a href="#ref-for-concept-range-bp⑤">(6)</a> <a href="#ref-for-concept-range-bp⑥">(7)</a> <a href="#ref-for-concept-range-bp⑦">(8)</a> <a href="#ref-for-concept-range-bp⑧">(9)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-range-collapsed">
@@ -3151,6 +3144,12 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://dom.spec.whatwg.org/#concept-cd-data">https://dom.spec.whatwg.org/#concept-cd-data</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-cd-data">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-data①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-doctype">
+   <a href="https://dom.spec.whatwg.org/#concept-doctype">https://dom.spec.whatwg.org/#concept-doctype</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-doctype">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-document">
@@ -3174,18 +3173,20 @@ match based on whether the element-id was scrolled.</p>
    <ul>
     <li><a href="#ref-for-concept-element">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-element①">(2)</a>
     <li><a href="#ref-for-concept-element②">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-concept-element③">(2)</a>
+    <li><a href="#ref-for-concept-element④">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-element⑤">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end">
    <a href="https://dom.spec.whatwg.org/#concept-range-end">https://dom.spec.whatwg.org/#concept-range-end</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-end">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end①">(2)</a> <a href="#ref-for-concept-range-end②">(3)</a> <a href="#ref-for-concept-range-end③">(4)</a> <a href="#ref-for-concept-range-end④">(5)</a> <a href="#ref-for-concept-range-end⑤">(6)</a> <a href="#ref-for-concept-range-end⑥">(7)</a> <a href="#ref-for-concept-range-end⑦">(8)</a> <a href="#ref-for-concept-range-end⑧">(9)</a> <a href="#ref-for-concept-range-end⑨">(10)</a> <a href="#ref-for-concept-range-end①⓪">(11)</a> <a href="#ref-for-concept-range-end①①">(12)</a> <a href="#ref-for-concept-range-end①②">(13)</a> <a href="#ref-for-concept-range-end①③">(14)</a> <a href="#ref-for-concept-range-end①④">(15)</a> <a href="#ref-for-concept-range-end①⑤">(16)</a> <a href="#ref-for-concept-range-end①⑥">(17)</a> <a href="#ref-for-concept-range-end①⑦">(18)</a> <a href="#ref-for-concept-range-end①⑧">(19)</a>
+    <li><a href="#ref-for-concept-range-end">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end①">(2)</a> <a href="#ref-for-concept-range-end②">(3)</a> <a href="#ref-for-concept-range-end③">(4)</a> <a href="#ref-for-concept-range-end④">(5)</a> <a href="#ref-for-concept-range-end⑤">(6)</a> <a href="#ref-for-concept-range-end⑥">(7)</a> <a href="#ref-for-concept-range-end⑦">(8)</a> <a href="#ref-for-concept-range-end⑧">(9)</a> <a href="#ref-for-concept-range-end⑨">(10)</a> <a href="#ref-for-concept-range-end①⓪">(11)</a> <a href="#ref-for-concept-range-end①①">(12)</a> <a href="#ref-for-concept-range-end①②">(13)</a> <a href="#ref-for-concept-range-end①③">(14)</a> <a href="#ref-for-concept-range-end①④">(15)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end-node">
    <a href="https://dom.spec.whatwg.org/#concept-range-end-node">https://dom.spec.whatwg.org/#concept-range-end-node</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-end-node">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end-node①">(2)</a> <a href="#ref-for-concept-range-end-node②">(3)</a>
+    <li><a href="#ref-for-concept-range-end-node">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-concept-range-end-node①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end-node②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end-offset">
@@ -3197,7 +3198,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-concept-tree-following">
    <a href="https://dom.spec.whatwg.org/#concept-tree-following">https://dom.spec.whatwg.org/#concept-tree-following</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-tree-following">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-tree-following①">(2)</a>
+    <li><a href="#ref-for-concept-tree-following">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-documentfragment-host">
@@ -3224,12 +3225,6 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-node-document">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-node">
-   <a href="https://dom.spec.whatwg.org/#concept-node">https://dom.spec.whatwg.org/#concept-node</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-node">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-tree-parent">
    <a href="https://dom.spec.whatwg.org/#concept-tree-parent">https://dom.spec.whatwg.org/#concept-tree-parent</a><b>Referenced in:</b>
    <ul>
@@ -3237,12 +3232,18 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-tree-parent②">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-parent-element">
+   <a href="https://dom.spec.whatwg.org/#parent-element">https://dom.spec.whatwg.org/#parent-element</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-parent-element">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range">
    <a href="https://dom.spec.whatwg.org/#concept-range">https://dom.spec.whatwg.org/#concept-range</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range①">(2)</a> <a href="#ref-for-concept-range②">(3)</a> <a href="#ref-for-concept-range③">(4)</a>
     <li><a href="#ref-for-concept-range④">3.5.1. Scroll a DOMRect into view</a>
-    <li><a href="#ref-for-concept-range⑤">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range⑥">(2)</a> <a href="#ref-for-concept-range⑦">(3)</a> <a href="#ref-for-concept-range⑧">(4)</a> <a href="#ref-for-concept-range⑨">(5)</a> <a href="#ref-for-concept-range①⓪">(6)</a> <a href="#ref-for-concept-range①①">(7)</a> <a href="#ref-for-concept-range①②">(8)</a> <a href="#ref-for-concept-range①③">(9)</a> <a href="#ref-for-concept-range①④">(10)</a> <a href="#ref-for-concept-range①⑤">(11)</a> <a href="#ref-for-concept-range①⑥">(12)</a> <a href="#ref-for-concept-range①⑦">(13)</a> <a href="#ref-for-concept-range①⑧">(14)</a> <a href="#ref-for-concept-range①⑨">(15)</a> <a href="#ref-for-concept-range②⓪">(16)</a> <a href="#ref-for-concept-range②①">(17)</a> <a href="#ref-for-concept-range②②">(18)</a> <a href="#ref-for-concept-range②③">(19)</a> <a href="#ref-for-concept-range②④">(20)</a>
+    <li><a href="#ref-for-concept-range⑤">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range⑥">(2)</a> <a href="#ref-for-concept-range⑦">(3)</a> <a href="#ref-for-concept-range⑧">(4)</a> <a href="#ref-for-concept-range⑨">(5)</a> <a href="#ref-for-concept-range①⓪">(6)</a> <a href="#ref-for-concept-range①①">(7)</a> <a href="#ref-for-concept-range①②">(8)</a> <a href="#ref-for-concept-range①③">(9)</a> <a href="#ref-for-concept-range①④">(10)</a> <a href="#ref-for-concept-range①⑤">(11)</a> <a href="#ref-for-concept-range①⑥">(12)</a> <a href="#ref-for-concept-range①⑦">(13)</a> <a href="#ref-for-concept-range①⑧">(14)</a> <a href="#ref-for-concept-range①⑨">(15)</a> <a href="#ref-for-concept-range②⓪">(16)</a> <a href="#ref-for-concept-range②①">(17)</a> <a href="#ref-for-concept-range②②">(18)</a> <a href="#ref-for-concept-range②③">(19)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-root">
@@ -3251,10 +3252,16 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-shadow-root">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-shadow-including-ancestor">
+   <a href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-ancestor</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-shadow-including-ancestor">3.5.2. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-descendant">
    <a href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant">https://dom.spec.whatwg.org/#concept-shadow-including-descendant</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-shadow-including-descendant">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-descendant①">(2)</a> <a href="#ref-for-concept-shadow-including-descendant②">(3)</a>
+    <li><a href="#ref-for-concept-shadow-including-descendant">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-descendant①">(2)</a> <a href="#ref-for-concept-shadow-including-descendant②">(3)</a> <a href="#ref-for-concept-shadow-including-descendant③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-inclusive-ancestor">
@@ -3272,20 +3279,20 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-concept-range-start">
    <a href="https://dom.spec.whatwg.org/#concept-range-start">https://dom.spec.whatwg.org/#concept-range-start</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-start">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start①">(2)</a> <a href="#ref-for-concept-range-start②">(3)</a> <a href="#ref-for-concept-range-start③">(4)</a> <a href="#ref-for-concept-range-start④">(5)</a> <a href="#ref-for-concept-range-start⑤">(6)</a> <a href="#ref-for-concept-range-start⑥">(7)</a> <a href="#ref-for-concept-range-start⑦">(8)</a> <a href="#ref-for-concept-range-start⑧">(9)</a> <a href="#ref-for-concept-range-start⑨">(10)</a> <a href="#ref-for-concept-range-start①⓪">(11)</a> <a href="#ref-for-concept-range-start①①">(12)</a> <a href="#ref-for-concept-range-start①②">(13)</a> <a href="#ref-for-concept-range-start①③">(14)</a> <a href="#ref-for-concept-range-start①④">(15)</a> <a href="#ref-for-concept-range-start①⑤">(16)</a> <a href="#ref-for-concept-range-start①⑥">(17)</a> <a href="#ref-for-concept-range-start①⑦">(18)</a> <a href="#ref-for-concept-range-start①⑧">(19)</a>
+    <li><a href="#ref-for-concept-range-start">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start①">(2)</a> <a href="#ref-for-concept-range-start②">(3)</a> <a href="#ref-for-concept-range-start③">(4)</a> <a href="#ref-for-concept-range-start④">(5)</a> <a href="#ref-for-concept-range-start⑤">(6)</a> <a href="#ref-for-concept-range-start⑥">(7)</a> <a href="#ref-for-concept-range-start⑦">(8)</a> <a href="#ref-for-concept-range-start⑧">(9)</a> <a href="#ref-for-concept-range-start⑨">(10)</a> <a href="#ref-for-concept-range-start①⓪">(11)</a> <a href="#ref-for-concept-range-start①①">(12)</a> <a href="#ref-for-concept-range-start①②">(13)</a> <a href="#ref-for-concept-range-start①③">(14)</a> <a href="#ref-for-concept-range-start①④">(15)</a> <a href="#ref-for-concept-range-start①⑤">(16)</a> <a href="#ref-for-concept-range-start①⑥">(17)</a> <a href="#ref-for-concept-range-start①⑦">(18)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-start-node">
    <a href="https://dom.spec.whatwg.org/#concept-range-start-node">https://dom.spec.whatwg.org/#concept-range-start-node</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-start-node">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range-start-node①">(2)</a>
-    <li><a href="#ref-for-concept-range-start-node②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-node③">(2)</a> <a href="#ref-for-concept-range-start-node④">(3)</a> <a href="#ref-for-concept-range-start-node⑤">(4)</a> <a href="#ref-for-concept-range-start-node⑥">(5)</a> <a href="#ref-for-concept-range-start-node⑦">(6)</a> <a href="#ref-for-concept-range-start-node⑧">(7)</a> <a href="#ref-for-concept-range-start-node⑨">(8)</a> <a href="#ref-for-concept-range-start-node①⓪">(9)</a> <a href="#ref-for-concept-range-start-node①①">(10)</a>
+    <li><a href="#ref-for-concept-range-start-node">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-concept-range-start-node①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-node②">(2)</a> <a href="#ref-for-concept-range-start-node③">(3)</a> <a href="#ref-for-concept-range-start-node④">(4)</a> <a href="#ref-for-concept-range-start-node⑤">(5)</a> <a href="#ref-for-concept-range-start-node⑥">(6)</a> <a href="#ref-for-concept-range-start-node⑦">(7)</a> <a href="#ref-for-concept-range-start-node⑧">(8)</a> <a href="#ref-for-concept-range-start-node⑨">(9)</a> <a href="#ref-for-concept-range-start-node①⓪">(10)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-start-offset">
    <a href="https://dom.spec.whatwg.org/#concept-range-start-offset">https://dom.spec.whatwg.org/#concept-range-start-offset</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-start-offset">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a>
+    <li><a href="#ref-for-concept-range-start-offset">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a> <a href="#ref-for-concept-range-start-offset⑧">(9)</a> <a href="#ref-for-concept-range-start-offset⑨">(10)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-cd-substring">
@@ -3493,13 +3500,13 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-assert">3.3.1. Parsing the fragment directive</a>
-    <li><a href="#ref-for-assert①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-assert②">(2)</a> <a href="#ref-for-assert③">(3)</a> <a href="#ref-for-assert④">(4)</a> <a href="#ref-for-assert⑤">(5)</a>
+    <li><a href="#ref-for-assert①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-assert②">(2)</a> <a href="#ref-for-assert③">(3)</a> <a href="#ref-for-assert④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-iteration-break">
    <a href="https://infra.spec.whatwg.org/#iteration-break">https://infra.spec.whatwg.org/#iteration-break</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-iteration-break">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-iteration-break">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-iteration-break①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-code-point">
@@ -3585,6 +3592,12 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-url-fragment">3.3.1. Parsing the fragment directive</a> <a href="#ref-for-concept-url-fragment①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-string-percent-decode">
+   <a href="https://url.spec.whatwg.org/#string-percent-decode">https://url.spec.whatwg.org/#string-percent-decode</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-string-percent-decode">3.3.1. Parsing the fragment directive</a> <a href="#ref-for-string-percent-decode①">(2)</a> <a href="#ref-for-string-percent-decode②">(3)</a> <a href="#ref-for-string-percent-decode③">(4)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-url-code-points">
    <a href="https://url.spec.whatwg.org/#url-code-points">https://url.spec.whatwg.org/#url-code-points</a><b>Referenced in:</b>
    <ul>
@@ -3644,6 +3657,7 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-concept-range-bp" style="color:initial">boundary point</span>
      <li><span class="dfn-paneled" id="term-for-range-collapsed" style="color:initial">collapsed</span>
      <li><span class="dfn-paneled" id="term-for-concept-cd-data" style="color:initial">data</span>
+     <li><span class="dfn-paneled" id="term-for-concept-doctype" style="color:initial">doctype</span>
      <li><span class="dfn-paneled" id="term-for-concept-document" style="color:initial">document</span>
      <li><span class="dfn-paneled" id="term-for-document-element" style="color:initial">document element</span>
      <li><span class="dfn-paneled" id="term-for-concept-element" style="color:initial">element</span>
@@ -3655,10 +3669,11 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-concept-node-length" style="color:initial">length</span>
      <li><span class="dfn-paneled" id="term-for-boundary-point-node" style="color:initial">node</span>
      <li><span class="dfn-paneled" id="term-for-concept-node-document" style="color:initial">node document</span>
-     <li><span class="dfn-paneled" id="term-for-concept-node" style="color:initial">nodes</span>
      <li><span class="dfn-paneled" id="term-for-concept-tree-parent" style="color:initial">parent</span>
+     <li><span class="dfn-paneled" id="term-for-parent-element" style="color:initial">parent element</span>
      <li><span class="dfn-paneled" id="term-for-concept-range" style="color:initial">range</span>
      <li><span class="dfn-paneled" id="term-for-concept-shadow-root" style="color:initial">shadow root</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-ancestor" style="color:initial">shadow-including ancestor</span>
      <li><span class="dfn-paneled" id="term-for-concept-shadow-including-descendant" style="color:initial">shadow-including descendant</span>
      <li><span class="dfn-paneled" id="term-for-concept-shadow-including-inclusive-ancestor" style="color:initial">shadow-including inclusive ancestor</span>
      <li><span class="dfn-paneled" id="term-for-concept-shadow-including-tree-order" style="color:initial">shadow-including tree order</span>
@@ -3733,6 +3748,7 @@ match based on whether the element-id was scrolled.</p>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-concept-url-fragment" style="color:initial">fragment</span>
+     <li><span class="dfn-paneled" id="term-for-string-percent-decode" style="color:initial">percent-decode</span>
      <li><span class="dfn-paneled" id="term-for-url-code-points" style="color:initial">url code point</span>
     </ul>
    <li>
@@ -3832,7 +3848,7 @@ match based on whether the element-id was scrolled.</p>
    <b><a href="#parsedtextdirective-textend">#parsedtextdirective-textend</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-textend">3.3.1. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a> <a href="#ref-for-parsedtextdirective-textend⑧">(8)</a> <a href="#ref-for-parsedtextdirective-textend⑨">(9)</a>
+    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-prefix">
@@ -4001,7 +4017,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="find-a-string-in-range">
    <b><a href="#find-a-string-in-range">#find-a-string-in-range</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-find-a-string-in-range">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-find-a-string-in-range①">(2)</a> <a href="#ref-for-find-a-string-in-range②">(3)</a> <a href="#ref-for-find-a-string-in-range③">(4)</a> <a href="#ref-for-find-a-string-in-range④">(5)</a> <a href="#ref-for-find-a-string-in-range⑤">(6)</a>
+    <li><a href="#ref-for-find-a-string-in-range">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-find-a-string-in-range①">(2)</a> <a href="#ref-for-find-a-string-in-range②">(3)</a> <a href="#ref-for-find-a-string-in-range③">(4)</a> <a href="#ref-for-find-a-string-in-range④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="search-invisible">
