@@ -959,8 +959,9 @@ following steps:
     1. Let |potentialMatch| be null.
     1. If |parsedValues|'s [=ParsedTextDirective/prefix=] is not null:
         1. Let |prefixMatch| be the the result of running the [=find a string
-            in range=] steps given |parsedValues|'s [=ParsedTextDirective/prefix=] and
-            |searchRange|.
+            in range=] steps with |query| |parsedValues|'s
+            [=ParsedTextDirective/prefix=], |searchRange| |searchRange|,
+            |wordStartBounded| true and |wordEndBounded| false.
         1. If |prefixMatch| is null, return null.
         1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
             [=boundary point/after=] |prefixMatch|'s [=range/start=]
@@ -979,9 +980,15 @@ following steps:
               |matchRange|'s [=range/start=] now points to the next
               non-whitespace text data following a matched prefix.
             </div>
+        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+            [=ParsedTextDirective/textEnd=] is non-null or
+            |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
+            otherwise.
         1. Set |potentialMatch| to the result of running the [=find a string in
-            range=] steps given |parsedValues|'s
-            [=ParsedTextDirective/textStart=] and |matchRange|.
+            range=] steps with |query| |parsedValues|'s
+            [=ParsedTextDirective/textStart=], |searchRange| |matchRange|,
+            |wordStartBounded| false, and |wordEndBounded|
+            |mustEndAtWordBoundary|.
         1. If |potentialMatch| is null, return null.
         1. If |potentialMatch|'s [=range/start=] is not |matchRange|'s
             [=range/start=], then [=iteration/continue=].
@@ -991,9 +998,15 @@ following steps:
               next instance of [=ParsedTextDirective/prefix=].
             </div>
     1. Otherwise:
+        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+            [=ParsedTextDirective/textEnd=] is non-null or
+            |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
+            otherwise.
         1. Set |potentialMatch| to the result of running the [=find a string in
-            range=] steps given |parsedValues|'s
-            [=ParsedTextDirective/textStart=] and |searchRange|.
+            range=] steps with |query| |parsedValues|'s
+            [=ParsedTextDirective/textStart=], |searchRange| |searchRange|,
+            |wordStartBounded| true, and |wordEndBounded|
+            |mustEndAtWordBoundary|.
         1. If |potentialMatch| is null, return null.
         1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
             [=boundary point/after=] |potentialMatch|'s [=range/start=]
@@ -1002,9 +1015,13 @@ following steps:
         1. Let |textEndRange| be a [=range=] whose [=range/start=] is
             |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
+        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+            [=ParsedTextDirective/suffix=] is null, false otherwise.
         1. Let |textEndMatch| be the result of running the [=find a string
-            in range=] steps given |parsedValues|'s
-            [=ParsedTextDirective/textEnd=] and |textEndRange|.
+            in range=] steps with |query| |parsedValues|'s
+            [=ParsedTextDirective/textEnd=], |searchRange| |textEndRange|,
+            |wordStartBounded| true, and |wordEndBounded|
+            |mustEndAtWordBoundary|.
         1. If |textEndMatch| is null then return null.
         1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
             [=range/end=].
@@ -1018,8 +1035,9 @@ following steps:
     1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
         position=].
     1. Let |suffixMatch| be result of running the [=find a string in range=]
-        steps given |parsedValues|'s [=ParsedTextDirective/suffix=] and
-        |suffixRange|.
+        steps with |query| |parsedValues|'s [=ParsedTextDirective/suffix=],
+        |searchRange| |suffixRange|, |wordStartBounded| false, and
+        |wordEndBounded| true.
     1. If |suffixMatch| is null then return null.
         <div class="note">
           If the suffix doesn't appear in the remaining text of the document,
@@ -1060,16 +1078,17 @@ non-whitespace position</dfn> follow the steps:
         1. Add 1 to |range|'s [=range/start offset=].
     1. If |range|'s [=range/start offset=] is equal to |node|'s
         [=Node/length=], set |range|'s [=range/start node=] to the next node in
-        [=shadow-including tree order=], and set its [=range/start offset=] to
-        0.
+        [=shadow-including tree order=], and set its [=range/start offset=] to 0.
 
-To <dfn>find a string in range</dfn> for a <a spec=infra>string</a> |query|
-in a given [=range=] |searchRange|, run these steps:
+To <dfn>find a string in range</dfn> given a <a spec=infra>string</a> |query|, a
+[=range=] |searchRange|, and booleans |wordStartBounded| and |wordEndBounded|,
+run these steps:
 
 <div class="note">
-  This algorithm will return a [=range=] that represents the first [=word
-  bounded=] instance of the |query| text that is fully contained within
-  |searchRange|. Returns null if none is found.
+  This algorithm will return a [=range=] that represents the first instance of
+  the |query| text that is fully contained within |searchRange|, optionally
+  restricting itself to matches that start and/or end at word boundaries (see
+  [[#word-boundaries]]). Returns null if none is found.
 </div>
 
 <div class="note">
@@ -1124,8 +1143,8 @@ in a given [=range=] |searchRange|, run these steps:
             |textNodeList|.
         1. Set |curNode| to the next node in [=shadow-including tree order=].
     1. Run the [=find a range from a node list=] steps given |query|,
-        |searchRange|, and |textNodeList|, as input. If the resulting [=range=]
-        is not null, then return it.
+        |searchRange|, |textNodeList|, |wordStartBounded| and |wordEndBounded|
+        as input. If the resulting [=range=] is not null, then return it.
     1. If |curNode| is null, then [=iteration/break=].
     1. [=/Assert=]: |curNode| [=tree/following|follows=] |searchRange|'s
         [=range/start node=].
@@ -1164,16 +1183,17 @@ To find the <dfn>nearest block ancestor</dfn> of a |node| follow the steps:
 1. Return |node|'s [=Node/node document=]'s [=document element=].
 
 To <dfn>find a range from a node list</dfn> given a search string |queryString|,
-a [=range=] |searchRange|, and a [=/list=] of {{Text}} nodes |nodes|, follow the
-steps:
+a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
+|wordStartBounded| and |wordEndBounded|, follow these steps:
 
 <div class="note">
-  This will only return a match if the matched text falls on word boundaries.
-  That is, the text match must begin and end on a word boundary. For example:
+  Optionally, this will only return a match if the matched text begins and/or
+  ends on a word boundary. For example:
 
   <div class="example">
-    “range” will match in “mountain range” but not in “color orange” nor
-    “forest ranger”.
+    The query string “range” will always match in “mountain range”, but
+    1. When requiring a word boundary at the beginning, it will not match in “color orange”.
+    2. When requiring a word boundary at the end, it will not match in “forest ranger”.
   </div>
 
   See [[#word-boundaries]] for details and more examples.
@@ -1205,10 +1225,13 @@ steps:
         index=] |matchIndex| run over |nodes| with |isEnd| false.
     1. Set |end| to the [=/boundary point=] result of [=get boundary point at
         index=] |endIx| run over |nodes| with |isEnd| true.
-    1. If the substring of |searchBuffer| starting at |matchIndex| and of length
-        |queryString|'s [=string/length=] is not [=word bounded=], given the <a
-        spec=html>language</a> from each of |start| and |end|'s [=boundary
-        point/nodes=] as the |startLocale| and |endLocale|:
+    1. If |wordStartBounded| is true and |matchIndex| is not a [=word start
+        boundary=] in |searchBuffer|, given the <a spec=html>language</a> from
+        |start|'s [=boundary point/node=] as the |locale|; or |wordEndBounded|
+        is true and |matchIndex| + |queryString|'s [=string/length=] &minus; 1
+        is not a [=word end boundary=] in |searchBuffer|, given the <a
+        spec=html>language</a> from |end|'s [=boundary point/node=] as the
+        |locale|:
         1. Set |searchStart| to |matchIndex| + 1.
         1. Set |matchIndex| to null.
 1. Let |endInset| be 0.
@@ -1282,21 +1305,14 @@ of {{Text}} nodes |nodes|, and a boolean |isEnd|, follow these steps:
   alphabet as valid, one-letter words.
 </p>
 
-To determine if a substring of a larger string is <dfn>word bounded</dfn>,
-given a <a spec=infra>string</a> |text|, an integer |startPosition|, number
-|count|, and locales |startLocale| and |endLocale|, follow these steps:
+A <dfn>locale</dfn> is a <a spec=infra>string</a> containing a valid [[BCP47]]
+language tag, or the empty string. An empty string indicates that the primary
+language is unknown.
 
-|startLocale| and |endLocale| must be a valid [[BCP47]] language tag, or the empty
-string. An empty string indicates that the primary language is unknown.
-
-<div class="note">
-  |startPosition| and |count| represent a substring in |text|. |startLocale|
-  and |endLocale| specifying the language of the string at each end of the
-  match.
-
-  |startPosition| and |count| are assumed to be valid in that they represent a
-  substring within the bounds of |text|.
-</div>
+A substring is <dfn>word bounded</dfn> in a <a spec=infra>string</a> |text|,
+given [=locales=] |startLocale| and |endLocale|, if both the position of its
+first code unit is a [=word start boundary=] given |startLocale|, and the
+position of its last code unit is a [=word end boundary=] given |endLocale|.
 
 <div class="note">
   Intuitively, a substring is word bounded if it neither begins nor ends in the
@@ -1311,20 +1327,37 @@ string. An empty string indicates that the primary language is unknown.
   determine what a valid word in the given locale is.
 </div>
 
-1. Using locale |startLocale|, let |left bound| be the last word boundary in
-    |text| that precedes |startPosition|th [=code point=] of |text|.
+To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
+<dfn>word start boundary</dfn>, given a [=locale=] |locale|, follow these steps:
+
+<div class="note">
+  |text| is assumed to be non-empty, and |position| to be within its bounds.
+</div>
+
+1. Using |locale|, let |left bound| be the last word boundary in |text| that
+    precedes |position|th [=code point=] of |text|.
     <div class="note">
-      A string will always contain at least 2 word boundaries: before the first
-      code point and after the last code point of the string.
+      There will always be at least one such boundary: at the start of |text|.
     </div>
-1. If the first [=code point=] of |text| following |left bound| is not at
-    position |startPosition| return false.
-1. Let |endPosition| be (|startPosition| + |count| &minus; 1).
-1. Using locale |endLocale|, let |right bound| be the first word boundary in
-    |text| after the |endPosition|th [=code point=].
-1. If the first [=code point=] of |text| preceding |right bound| is not at
-    position |endPosition| return false.
-1. Return true.
+1. If the first [=code point=] of |text| following |left bound| is at
+    |position| return true.
+1. Return false.
+
+To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
+<dfn>word end boundary</dfn>, given a [=locale=] |locale|, follow these steps:
+
+<div class="note">
+  |text| is assumed to be non-empty, and |position| to be within its bounds.
+</div>
+
+1. Using |locale|, let |right bound| be the first word boundary in |text| after
+    the |position|th [=code point=].
+    <div class="note">
+      There will always be at least one such boundary: at the end of |text|.
+    </div>
+1. If the first [=code point=] of |text| preceding |right bound| is at
+    |position| return true.
+1. Return false.
 
 <div class="example">
   The substring "mountain range" is word bounded within the string "An impressive
