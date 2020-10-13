@@ -1228,8 +1228,8 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
     1. If |wordStartBounded| is true and |matchIndex| is not a [=word start
         boundary=] in |searchBuffer|, given the <a spec=html>language</a> from
         |start|'s [=boundary point/node=] as the |locale|; or |wordEndBounded|
-        is true and |matchIndex| + |queryString|'s [=string/length=] &minus; 1
-        is not a [=word end boundary=] in |searchBuffer|, given the <a
+        is true and |matchIndex| + |queryString|'s [=string/length=] is not a
+        [=word end boundary=] in |searchBuffer|, given the <a
         spec=html>language</a> from |end|'s [=boundary point/node=] as the
         |locale|:
         1. Set |searchStart| to |matchIndex| + 1.
@@ -1311,8 +1311,8 @@ language is unknown.
 
 A substring is <dfn>word bounded</dfn> in a <a spec=infra>string</a> |text|,
 given [=locales=] |startLocale| and |endLocale|, if both the position of its
-first code unit is a [=word start boundary=] given |startLocale|, and the
-position of its last code unit is a [=word end boundary=] given |endLocale|.
+first character is a [=word start boundary=] given |startLocale|, and the
+position after its last character is a [=word end boundary=] given |endLocale|.
 
 <div class="note">
   Intuitively, a substring is word bounded if it neither begins nor ends in the
@@ -1331,32 +1331,32 @@ To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <dfn>word start boundary</dfn>, given a [=locale=] |locale|, follow these steps:
 
 <div class="note">
-  |text| is assumed to be non-empty, and |position| to be within its bounds.
+  |text| is assumed to be non-empty, and |position| to be a non-negative integer
+  less than or equal to its length.
 </div>
 
-1. Using |locale|, let |left bound| be the last word boundary in |text| that
-    precedes |position|th [=code point=] of |text|.
+1. Using |locale|, let |bound| be the last word boundary in |text| either before
+    or at |position|.
     <div class="note">
       There will always be at least one such boundary: at the start of |text|.
     </div>
-1. If the first [=code point=] of |text| following |left bound| is at
-    |position| return true.
+1. If |bound| is at |position| return true.
 1. Return false.
 
 To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <dfn>word end boundary</dfn>, given a [=locale=] |locale|, follow these steps:
 
 <div class="note">
-  |text| is assumed to be non-empty, and |position| to be within its bounds.
+  |text| is assumed to be non-empty, and |position| to be a non-negative integer
+  less than or equal to its length.
 </div>
 
-1. Using |locale|, let |right bound| be the first word boundary in |text| after
-    the |position|th [=code point=].
+1. Using |locale|, let |bound| be the first word boundary in |text| either at or
+    after |position|.
     <div class="note">
       There will always be at least one such boundary: at the end of |text|.
     </div>
-1. If the first [=code point=] of |text| preceding |right bound| is at
-    |position| return true.
+1. If |bound| is at |position| return true.
 1. Return false.
 
 <div class="example">
