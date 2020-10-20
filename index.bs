@@ -1330,11 +1330,12 @@ position after its last character is a [=word end boundary=] given |endLocale|.
 <div class="example">
   <p>
     Text fragments are restricted such that match terms, when combined with
-    their adjacent context terms, must be word bounded. For example, in a range
-    search like <code>prefix,textStart,textEnd,suffix</code>, both
+    their adjacent context terms, must be word bounded. For example, in an
+    exact search like <code>prefix,textStart,suffix</code>,
+    <code>"prefix+textStart+suffix"</code> must be word bounded. However, in a
+    range search like <code>prefix,textStart,textEnd,suffix</code>, both
     <code>"prefix+textStart"</code> and <code>"textEnd+suffix"</code> must be
-    word bounded. In an exact search like <code>prefix,textStart,suffix</code>,
-    <code>"prefix+textStart+suffix"</code> must be word bounded.
+    word bounded.
   </p>
 
   <p>
@@ -1344,9 +1345,16 @@ position after its last character is a [=word end boundary=] given |endLocale|.
     use this repeatedly to try and reveal a token (e.g. on a page with
     <code>"Balance: 123,456 $"</code>, a third-party could set
     <code>prefix="Balance: ", textEnd="$"</code> and vary <code>textStart</code>
-    to try and guess the numeric token.
+    to try and guess the numeric token one digit at a time).
+  </p>
+  
+  <p>
+    For more details, refer to the [Security Review Doc](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.78iny7nejmx2)
   </p>
 </div>
+
+A [=word boundary=] is at position N if it immediately precedes the code unit at
+position N.
 
 To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <dfn>word start boundary</dfn>, given a [=locale=] |locale|, follow these steps:
@@ -1354,10 +1362,6 @@ To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <div class="note">
   |text| is assumed to be non-empty, and |position| to be a non-negative integer
   less than or equal to its length.
-</div>
-
-<div class="note">
-  |position| is a word start boundary if it is the first code unit of a word.
 </div>
 
 1. Using |locale|, let |bound| be the last [=word boundary=] in |text| either
@@ -1374,10 +1378,6 @@ To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <div class="note">
   |text| is assumed to be non-empty, and |position| to be a non-negative integer
   less than or equal to its length.
-</div>
-
-<div class="note">
-  |position| is a word end boundary if it is the final code unit of a word.
 </div>
 
 1. Using |locale|, let |bound| be the first [=word boundary=] in |text| either
