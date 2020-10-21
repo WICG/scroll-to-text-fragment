@@ -1347,14 +1347,14 @@ position after its last character is a [=word end boundary=] given |endLocale|.
     <code>prefix="Balance: ", textEnd="$"</code> and vary <code>textStart</code>
     to try and guess the numeric token one digit at a time).
   </p>
-  
+
   <p>
     For more details, refer to the [Security Review Doc](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.78iny7nejmx2)
   </p>
 </div>
 
 A [=word boundary=] is at position N if it immediately precedes the code unit at
-position N.
+position N, or is at the end of a non-empty string of length N.
 
 To determine if an integer |position| in a <a spec=infra>string</a> |text| is a
 <dfn>word start boundary</dfn>, given a [=locale=] |locale|, follow these steps:
