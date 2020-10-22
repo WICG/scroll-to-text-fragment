@@ -1317,7 +1317,7 @@ after its last character [=is at a word boundary=] given |endLocale|.
 A number |position| <dfn>is at a word boundary</dfn> in a <a spec=infra>string</a>
 |text|, given a [=locale=] |locale|, if, using |locale|, either a [=word
 boundary=] immediately precedes the |position|th code unit, or |text|'s length
-equals |position| and |text| ends with a [=word boundary=].
+is more than 0 and |position| equals either 0 or |text|'s length.
 
 <div class="note">
   Intuitively, a substring is word bounded if it neither begins nor ends in the
