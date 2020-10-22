@@ -1422,7 +1422,7 @@ Fragment-based scroll blocking from this policy is specified in an amendment to 
 [[#navigating-to-text-fragment]] section of this document.
 
 History scroll restoration is blocked by amending the <a spec="HTML">restore
-persisted user state</a> steps by inserting a new step after 2:
+persisted state</a> steps by inserting a new step after 2:
 
 3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
     the document policy value</a> of the "force-load-at-top" feature for the [=Document=]. If

@@ -68,9 +68,18 @@
  *
  ******************************************************************************/
 
+/* color variables included separately for reliability */
+
 /******************************************************************************/
 /*                                   Body                                     */
 /******************************************************************************/
+
+	html {
+		color: black;
+		color: var(--text);
+		background-color: white;
+		background-color: var(--bg);
+	}
 
 	body {
 		counter-reset: example figure issue;
@@ -90,9 +99,7 @@
 		overflow-wrap: break-word;
 		hyphens: auto;
 
-		/* Colors */
-		color: black;
-		background: white top left fixed no-repeat;
+		background: transparent top left fixed no-repeat;
 		background-size: 25px auto;
 	}
 
@@ -124,10 +131,13 @@
 	.head img[src*="logos/W3C"] {
 		display: block;
 		border: solid #1a5e9a;
+		border: solid var(--logo-bg);
 		border-width: .65rem .7rem .6rem;
 		border-radius: .4rem;
 		background: #1a5e9a;
+		background: var(--logo-bg);
 		color: white;
+		color: var(--logo-text);
 		font-weight: bold;
 	}
 
@@ -138,7 +148,9 @@
 
 	.head a:active > img[src*="logos/W3C"] {
 		background: #c00;
+		background: var(--logo-active-bg);
 		border-color: #c00;
+		border-color: var(--logo-active-bg);
 	}
 
 	/* see also additional rules in Link Styling section */
@@ -165,7 +177,6 @@
 			border-top-right-radius: 2rem;
 			box-shadow: 0 0 2px;
 			font-size: 1.5em;
-			color: black;
 		}
 		#toc-nav > a {
 			display: block;
@@ -175,23 +186,32 @@
 			padding: .1em 0.3em;
 			margin: 0;
 
-			background: white;
 			box-shadow: 0 0 2px;
 			border: none;
 			border-top-right-radius: 1.33em;
+
+			color: #707070;
+			color: var(--tocnav-normal-text);
 			background: white;
+			background: var(--tocnav-normal-bg);
 		}
+		#toc-nav > a:hover,
+		#toc-nav > a:focus {
+			color: black;
+			color: var(--tocnav-hover-text);
+			background: #f8f8f8;
+			background: var(--tocnav-hover-bg);
+		}
+		#toc-nav > a:active {
+			color: #c00;
+			color: var(--tocnav-active-text);
+			background: white;
+			background: var(--tocnav-active-bg);
+		}
+
 		#toc-nav > #toc-jump {
 			padding-bottom: 2em;
 			margin-bottom: -1.9em;
-		}
-
-		#toc-nav > a:hover,
-		#toc-nav > a:focus {
-			background: #f8f8f8;
-		}
-		#toc-nav > a:not(:hover):not(:focus) {
-			color: #707070;
 		}
 
 		/* statusbar gets in the way on keyboard focus; remove once browsers fix */
@@ -205,26 +225,6 @@
 		}
 		#toc-nav > a > span + span {
 			padding-right: 0.2em;
-		}
-
-		#toc-toggle-inline {
-			vertical-align: 0.05em;
-			font-size: 80%;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-			border-style: none;
-			background: transparent;
-			position: relative;
-		}
-		#toc-toggle-inline:hover:not(:active),
-		#toc-toggle-inline:focus:not(:active) {
-			text-shadow: 1px 1px silver;
-			top: -1px;
-			left: -1px;
-		}
-
-		#toc-nav :active {
-			color: #C00;
 		}
 	}
 
@@ -243,10 +243,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body.toc-sidebar #toc h2 {
 			margin-top: .8rem;
@@ -256,6 +260,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 		body.toc-sidebar #toc-jump:not(:focus) {
 			width: 0;
@@ -283,10 +288,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body:not(.toc-inline) #toc h2 {
 			margin-top: .8rem;
@@ -296,6 +305,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 
 		body:not(.toc-inline) {
@@ -338,7 +348,7 @@
 
 	h1, h2, h3 {
 		color: #005A9C;
-		background: transparent;
+		color: var(--heading-text);
 	}
 
 	h1 { font-size: 170%; }
@@ -365,11 +375,13 @@
 
 /** Section divider ***********************************************************/
 
-	:not(.head) > hr {
+	:not(.head) > :not(.head) + hr {
 		font-size: 1.5em;
 		text-align: center;
 		margin: 1em auto;
 		height: auto;
+		color: black;
+		color: var(--hr-text);
 		border: transparent solid 0;
 		background: transparent;
 	}
@@ -412,12 +424,15 @@
 	ol.algorithm ol:not(.algorithm),
 	.algorithm > ol ol:not(.algorithm) {
 	 border-left: 0.5em solid #DEF;
+	 border-left: 0.5em solid var(--algo-border);
 	}
 
 	/* Put nice boxes around each algorithm. */
 	[data-algorithm]:not(.heading) {
 	  padding: .5em;
-	  border: thin solid #ddd; border-radius: .5em;
+	  border: thin solid #ddd;
+	  border: thin solid var(--algo-border);
+	  border-radius: .5em;
 	  margin: .5em calc(-0.5em - 1px);
 	}
 	[data-algorithm]:not(.heading) > :first-child {
@@ -478,8 +493,20 @@
 
 /** Change Marking ************************************************************/
 
-	del { color: red;  text-decoration: line-through; }
-	ins { color: #080; text-decoration: underline;    }
+	del {
+		color: red;
+		color: var(--del-text);
+		background: transparent;
+		background: var(--del-bg);
+		text-decoration: line-through;
+	}
+	ins {
+		color: #080;
+		color: var(--ins-text);
+		background: transparent;
+		background: var(--ins-bg);
+		text-decoration: underline;
+	}
 
 /** Miscellaneous improvements to inline formatting ***************************/
 
@@ -497,9 +524,14 @@
 	pre, code, samp {
 		font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
 		font-size: .9em;
-		page-break-inside: avoid;
 		hyphens: none;
 		text-transform: none;
+		text-align: left;
+		text-align: start;
+		font-variant: normal;
+		orphans: 3;
+		widows: 3;
+		page-break-before: avoid;
 	}
 	pre code,
 	code code {
@@ -525,14 +557,19 @@
 	/* We hyperlink a lot, so make it less intrusive */
 	a[href] {
 		color: #034575;
+		color: var(--a-normal-text);
 		text-decoration: none;
 		border-bottom: 1px solid #707070;
+		border-bottom: 1px solid var(--a-normal-underline);
 		/* Need a bit of extending for it to look okay */
 		padding: 0 1px 0;
 		margin: 0 -1px 0;
 	}
 	a:visited {
-		border-bottom-color: #BBB;
+		color: #034575;
+		color: var(--a-visited-text);
+		border-bottom-color: #bbb;
+		border-bottom-color: var(--a-visited-underline);
 	}
 
 	/* Use distinguishing colors when user is interacting with the link */
@@ -540,12 +577,15 @@
 	a[href]:hover {
 		background: #f8f8f8;
 		background: rgba(75%, 75%, 75%, .25);
+		background: var(--a-hover-bg);
 		border-bottom-width: 3px;
 		margin-bottom: -2px;
 	}
 	a[href]:active {
-		color: #C00;
-		border-color: #C00;
+		color: #c00;
+		color: var(--a-active-text);
+		border-color: #c00;
+		border-color: var(--a-active-underline);
 	}
 
 	/* Backout above styling for W3C logo */
@@ -564,6 +604,11 @@
 		border-style: none;
 	}
 
+	img, svg {
+		/* Intentionally not color-scheme aware. */
+		background: white;
+	}
+
 	/* For autogen numbers, add
 	   .caption::before, figcaption::before { content: "Figure " counter(figure) ". "; }
 	*/
@@ -577,6 +622,7 @@
 	.figure object, .sidefigure object, figure object {
 		max-width: 100%;
 		margin: auto;
+		height: auto;
 	}
 	.figure pre, .sidefigure pre, figure pre {
 		text-align: left;
@@ -639,25 +685,46 @@
 		margin-bottom: 0;
 	}
 
+
+	.issue::before, .issue > .marker,
+	.example::before, .example > .marker,
+	.note::before, .note > .marker,
+	details.note > summary > .marker {
+		text-transform: uppercase;
+		padding-right: 1em;
+	}
+
+	.example::before, .example > .marker {
+		display: block;
+		padding-right: 0em;
+	}
+
 /** Blockquotes ***************************************************************/
 
 	blockquote {
 		border-color: silver;
+		border-color: var(--blockquote-border);
+		background: transparent;
+		background: var(--blockquote-bg);
+		color: currentcolor;
+		color: var(--blockquote-text);
 	}
 
 /** Open issue ****************************************************************/
 
 	.issue {
-		border-color: #E05252;
-		background: #FBE9E9;
+		border-color: #e05252;
+		border-color: var(--issue-border);
+		background: #fbe9e9;
+		background: var(--issue-bg);
+		color: black;
+		color: var(--issue-text);
 		counter-increment: issue;
 		overflow: auto;
 	}
 	.issue::before, .issue > .marker {
-		text-transform: uppercase;
-		color: #AE1E1E;
-		padding-right: 1em;
-		text-transform: uppercase;
+		color: #831616;
+		color: var(--issueheading-text);
 	}
 	/* Add .issue::before { content: "Issue " counter(issue) " "; } for autogen numbers,
 	   or use class="marker" to mark up the issue number in source. */
@@ -665,17 +732,19 @@
 /** Example *******************************************************************/
 
 	.example {
-		border-color: #E0CB52;
-		background: #FCFAEE;
+		border-color: #e0cb52;
+		border-color: var(--example-border);
+		background: #fcfaee;
+		background: var(--example-bg);
+		color: black;
+		color: var(--example-text);
 		counter-increment: example;
 		overflow: auto;
 		clear: both;
 	}
 	.example::before, .example > .marker {
-		text-transform: uppercase;
-		color: #827017;
-		min-width: 7.5em;
-		display: block;
+		color: #574b0f;
+		color: var(--exampleheading-text);
 	}
 	/* Add .example::before { content: "Example " counter(example) " "; } for autogen numbers,
 	   or use class="marker" to mark up the example number in source. */
@@ -683,27 +752,26 @@
 /** Non-normative Note ********************************************************/
 
 	.note {
-		border-color: #52E052;
-		background: #E9FBE9;
+		border-color: #52e052;
+		border-color: var(--note-border);
+		background: #e9fbe9;
+		background: var(--note-bg);
+		color: black;
+		color: var(--note-text);
 		overflow: auto;
 	}
 
 	.note::before, .note > .marker,
-	details.note > summary::before,
-	details.note > summary > .marker {
-		text-transform: uppercase;
-		display: block;
+	details.note > summary {
 		color: hsl(120, 70%, 30%);
+		color: var(--noteheading-text);
 	}
-	/* Add .note::before { content: "Note"; } for autogen label,
+	/* Add .note::before { content: "Note "; } for autogen label,
 	   or use class="marker" to mark up the label in source. */
 
-	details.note > summary {
-		display: block;
-		color: hsl(120, 70%, 30%);
-	}
 	details.note[open] > summary {
 		border-bottom: 1px silver solid;
+		border-bottom: 1px var(--notesummary-underline) solid;
 	}
 
 /** Assertion Box *************************************************************/
@@ -711,7 +779,11 @@
 
 	.assertion {
 		border-color: #AAA;
+		border-color: var(--assertion-border);
 		background: #EEE;
+		background: var(--assertion-bg);
+		color: black;
+		color: var(--assertion-text);
 	}
 
 /** Advisement Box ************************************************************/
@@ -719,15 +791,20 @@
 
 	.advisement {
 		border-color: orange;
+		border-color: var(--advisement-border);
 		border-style: none solid;
-		background: #FFEECC;
+		background: #fec;
+		background: var(--advisement-bg);
+		color: black;
+		color: var(--advisement-text);
 	}
 	strong.advisement {
 		display: block;
 		text-align: center;
 	}
-	.advisement > .marker {
-		color: #B35F00;
+	.advisement::before, .advisement > .marker {
+		color: #b35f00;
+		color: var(--advisementheading-text);
 	}
 
 /** Spec Obsoletion Notice ****************************************************/
@@ -743,27 +820,30 @@
 	.annoying-warning:not(details),
 	details.annoying-warning:not([open]) > summary,
 	details.annoying-warning[open] {
-		background: #fdd;
-		color: red;
-		font-weight: bold;
+		background: hsla(40,100%,50%,0.95);
+		background: var(--warning-bg);
+		color: black;
+		color: var(--warning-text);
 		padding: .75em 1em;
-		border: thick red;
-		border-style: solid;
-		border-radius: 1em;
+		border: red;
+		border: var(--warning-border);
+		border-style: solid none;
+		box-shadow: 0 2px 8px black;
+		text-align: center;
 	}
 	.annoying-warning :last-child {
 		margin-bottom: 0;
 	}
 
-@media not print {
-	details.annoying-warning[open] {
-		position: fixed;
-		left: 1em;
-		right: 1em;
-		bottom: 1em;
-		z-index: 1000;
+	@media not print {
+		details.annoying-warning[open] {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 2em;
+			z-index: 1000;
+		}
 	}
-}
 
 	details.annoying-warning:not([open]) > summary {
 		text-align: center;
@@ -773,9 +853,13 @@
 
 	.def {
 		padding: .5em 1em;
-		background: #DEF;
+		background: #def;
+		background: var(--def-bg);
 		margin: 1.2em 0;
-		border-left: 0.5em solid #8CCBF2;
+		border-left: 0.5em solid #8ccbf2;
+		border-left: 0.5em solid var(--def-border);
+		color: black;
+		color: var(--def-text);
 	}
 
 /******************************************************************************/
@@ -800,6 +884,7 @@
 		padding: 0.5em;
 		vertical-align: baseline;
 		border-bottom: 1px solid #bbd7e9;
+		border-bottom: 1px solid var(--defrow-border);
 	}
 
 	table.def > tbody > tr:last-child th,
@@ -820,10 +905,10 @@
 	}
 
 	/* A footnote at the bottom of a def table */
-	table.def           td.footnote {
+	table.def td.footnote {
 		padding-top: 0.6em;
 	}
-	table.def           td.footnote::before {
+	table.def td.footnote::before {
 		content: " ";
 		display: block;
 		height: 0.6em;
@@ -868,6 +953,7 @@
 		padding: 0.5em 1em;
 		border-width: 1px;
 		border-color: silver;
+		border-color: var(--datacell-border);
 		border-top-style: solid;
 	}
 
@@ -892,6 +978,7 @@
 	table.index tbody th:first-child  {
 		border-right: 2px solid;
 		border-top: 1px solid silver;
+		border-top: 1px solid var(--datacell-border);
 		padding-right: 1em;
 	}
 
@@ -903,13 +990,14 @@
 	table.complex.data th,
 	table.complex.data td {
 		border: 1px solid silver;
+		border: 1px solid var(--datacell-border);
 		text-align: center;
 	}
 
 	table.data.longlastcol td:last-child,
 	table.data td.long {
-	 vertical-align: baseline;
-	 text-align: left;
+		vertical-align: baseline;
+		text-align: left;
 	}
 
 	table.data img {
@@ -967,12 +1055,15 @@ Possible extra rowspan handling
 		display: block;
 		/* Reverse color scheme */
 		color: black;
-		border-color: #3980B5;
-		border-bottom-width: 3px !important;
-		margin-bottom: 0px !important;
+		color: var(--toclink-text);
+		border-color: #3980b5;
+		border-color: var(--toclink-underline);
 	}
 	.toc a:visited {
+		color: black;
+		color: var(--toclink-visited-text);
 		border-color: #054572;
+		border-color: var(--toclink-visited-underline);
 	}
 	.toc a:not(:focus):not(:hover) {
 		/* Allow colors to cascade through from link styling */
@@ -1027,6 +1118,15 @@ Possible extra rowspan handling
 			.toc > li li li li .secno    { margin-left: -6rem; }
 			.toc > li li li li li .secno { margin-left: -7rem; }
 		}
+		/* Loosen it on wide screens */
+		@media screen and (min-width: 78em) {
+			body:not(.toc-inline) :not(li) > .toc              { margin-left:  4rem; }
+			body:not(.toc-inline) .toc .secno                  { margin-left: -4rem; }
+			body:not(.toc-inline) .toc > li li li              { margin-left:  1rem; }
+			body:not(.toc-inline) .toc > li li li .secno       { margin-left: -5rem; }
+			body:not(.toc-inline) .toc > li li li li .secno    { margin-left: -6rem; }
+			body:not(.toc-inline) .toc > li li li li li .secno { margin-left: -7rem; }
+	}
 	/* } */
 
 	@supports (display:grid) and (display:contents) {
@@ -1068,9 +1168,12 @@ Possible extra rowspan handling
 			width: auto;
 			margin-right: 1rem;
 		}
-		#toc .content:hover {
+		#toc .content:hover,
+		#toc .content:focus {
 			background: rgba(75%, 75%, 75%, .25);
+			background: var(--a-hover-bg);
 			border-bottom: 3px solid #054572;
+			border-bottom: 3px solid var(--toclink-underline);
 			margin-bottom: -3px;
 		}
 		#toc li li li .content {
@@ -1095,12 +1198,13 @@ Possible extra rowspan handling
 	ul.index ul,
 	ul.index dl { font-size: smaller; }
 	@media not print {
-		ul.index li span {
+		ul.index li span:not(.dfn-paneled) {
 			white-space: nowrap;
 			color: transparent; }
 		ul.index li a:hover + span,
 		ul.index li a:focus + span {
 			color: #707070;
+			color: var(--indexinfo-text);
 		}
 	}
 
@@ -1122,7 +1226,10 @@ Possible extra rowspan handling
 
 	table.index tr:hover td:not([rowspan]),
 	table.index tr:hover th:not([rowspan]) {
+		color: black;
+		color: var(--indextable-hover-text);
 		background: #f7f8f9;
+		background: var(--indextable-hover-bg);
 	}
 
 	/* The link in the first column in the property table (formerly a TD) */
@@ -1147,13 +1254,6 @@ Possible extra rowspan handling
 	@page {
 		margin: 1.5cm 1.1cm;
 	}
-
-/******************************************************************************/
-/*                                    Legacy                                  */
-/******************************************************************************/
-
-	/* This rule is inherited from past style sheets. No idea what it's for. */
-	.hide { display: none }
 
 
 
@@ -1222,12 +1322,18 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 5f7b0e20, updated Tue Aug 18 15:46:28 2020 -0700" name="generator">
+  <meta content="Bikeshed version 89ebb6ab, updated Fri Oct 9 15:32:07 2020 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
+<style>/* darkmode */
+
+            @media (prefers-color-scheme: dark) {
+                html { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E") !important; }
+            }
+            </style>
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
-    color: #005a9c;
+    color: var(--a-normal-text);
     font-size: inherit;
     font-family: inherit;
 }
@@ -1286,6 +1392,114 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+html {
+    color: black;
+    color: var(--text);
+    background-color: white;
+    background-color: var(--bg);
+}
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #707070;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #bbb;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}</style>
 <style>/* style-counters */
 
 body {
@@ -1317,6 +1531,10 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-dfn-panel */
 
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
@@ -1328,14 +1546,14 @@ figcaption:not(.no-marker)::before {
     overflow: auto;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: #DDDDDD;
-    color: black;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
     border: outset 0.2em;
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
 .dfn-panel > b { display: block; }
-.dfn-panel a { color: black; }
+.dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
 .dfn-panel ul { padding: 0; }
@@ -1364,6 +1582,11 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-selflinks */
 
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
 .heading, .issue, .note, .example, li, dt {
     position: relative;
 }
@@ -1393,8 +1616,8 @@ dfn > a.self-link {
     opacity: 0;
     width: 1.5em;
     height: 1.5em;
-    background: gray;
-    color: white;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
     font-style: normal;
     transition: opacity .2s, background-color .2s, color .2s;
 }
@@ -1402,17 +1625,23 @@ dfn:hover > a.self-link {
     opacity: 1;
 }
 dfn > a.self-link:hover {
-    color: black;
+    color: var(--selflink-hover-text);
 }
 
 a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
+dfn > a.self-link::before      { content: "#"; }
+</style>
 <style>/* style-syntax-highlighting */
-pre.idl.highlight { color: #708090; }
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+
+            pre.idl.highlight {
+                background: var(--borderedblock-bg, var(--def-bg));
+            }
+            
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
 c-[a] { color: #990055 } /* Keyword.Declaration */
 c-[b] { color: #990055 } /* Keyword.Type */
 c-[c] { color: #708090 } /* Comment */
@@ -1466,11 +1695,194 @@ c-[vg] { color: #0077aa } /* Name.Variable.Global */
 c-[vi] { color: #0077aa } /* Name.Variable.Instance */
 c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
-   <p data-fill-with="logo"></p>
+   <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-28">28 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-10-22">22 October 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1561,7 +1973,12 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#use-context-only-when-necessary"><span class="secno">4.2</span> <span class="content">Use Context Only When Necessary</span></a>
       <li><a href="#determine-if-fragment-id-is-needed"><span class="secno">4.3</span> <span class="content">Determine If Fragment Id Is Needed</span></a>
      </ol>
-    <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
+    <li>
+     <a href="#conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
+     <ol class="toc">
+      <li><a href="#conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
+      <li><a href="#conformant-algorithms"><span class="secno"></span> <span class="content">Conformant Algorithms</span></a>
+     </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -2271,7 +2688,7 @@ following steps:</p>
        <ol>
         <li data-md>
          <p>Let <var>prefixMatch</var> be the the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range">find a string
-in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix⑤">prefix</a> and <var>searchRange</var>.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix⑤">prefix</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true and <var>wordEndBounded</var> false.</p>
         <li data-md>
          <p>If <var>prefixMatch</var> is null, return null.</p>
         <li data-md>
@@ -2289,8 +2706,11 @@ in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" hre
          <div class="note" role="note"> <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑤">start</a> now points to the next
   non-whitespace text data following a matched prefix. </div>
         <li data-md>
+         <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑥">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix③">suffix</a> is null, false
+otherwise.</p>
+        <li data-md>
          <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range①">find a string in
-range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑥">textStart</a> and <var>matchRange</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑥">textStart</a>, <var>searchRange</var> <var>matchRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
         <li data-md>
          <p>If <var>potentialMatch</var> is null, return null.</p>
         <li data-md>
@@ -2303,22 +2723,27 @@ range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="
        <p>Otherwise:</p>
        <ol>
         <li data-md>
+         <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑦">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix④">suffix</a> is null, false
+otherwise.</p>
+        <li data-md>
          <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range②">find a string in
-range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑦">textStart</a> and <var>searchRange</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑦">textStart</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
         <li data-md>
          <p>If <var>potentialMatch</var> is null, return null.</p>
         <li data-md>
          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp①">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after①">after</a> <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑨">start</a></p>
        </ol>
       <li data-md>
-       <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑥">textEnd</a> item is
+       <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑧">textEnd</a> item is
 non-null, then:</p>
        <ol>
         <li data-md>
          <p>Let <var>textEndRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑤">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a>.</p>
         <li data-md>
+         <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑤">suffix</a> is null, false otherwise.</p>
+        <li data-md>
          <p>Let <var>textEndMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range③">find a string
-in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑦">textEnd</a> and <var>textEndRange</var>.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑨">textEnd</a>, <var>searchRange</var> <var>textEndRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
         <li data-md>
          <p>If <var>textEndMatch</var> is null then return null.</p>
         <li data-md>
@@ -2328,14 +2753,14 @@ in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" hre
        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert②">Assert</a>: <var>potentialMatch</var> is non-null, not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a> and
 represents a range exactly containing an instance of matching text.</p>
       <li data-md>
-       <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix③">suffix</a> is null, return <var>potentialMatch</var>.</p>
+       <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
       <li data-md>
        <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⓪">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a>.</p>
       <li data-md>
        <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
       <li data-md>
-       <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps given <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix④">suffix</a> and <var>suffixRange</var>.</p>
+       <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑦">suffix</a>, <var>searchRange</var> <var>suffixRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> true.</p>
       <li data-md>
        <p>If <var>suffixMatch</var> is null then return null.</p>
        <div class="note" role="note"> If the suffix doesn’t appear in the remaining text of the document,
@@ -2397,15 +2822,14 @@ descendant</a> of <var>node</var>, and set its <a data-link-type="dfn" href="htt
          <p>Add 1 to <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑤">start offset</a>.</p>
        </ol>
       <li data-md>
-       <p>If <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑥">start offset</a> is equal to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>, set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>, and set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑦">start offset</a> to</p>
-       <ol start="0">
-        <li data-md>
-       </ol>
+       <p>If <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑥">start offset</a> is equal to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>, set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>, and set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑦">start offset</a> to 0.</p>
      </ol>
    </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> for a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>query</var> in a given <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> <var>searchRange</var>, run these steps:</p>
-   <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> that represents the first <a data-link-type="dfn" href="#word-bounded" id="ref-for-word-bounded">word
-  bounded</a> instance of the <var>query</var> text that is fully contained within <var>searchRange</var>. Returns null if none is found. </div>
+   <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
+run these steps:</p>
+   <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> that represents the first instance of
+  the <var>query</var> text that is fully contained within <var>searchRange</var>, optionally
+  restricting itself to matches that start and/or end at word boundaries (see <a href="#word-boundaries">§ 3.5.3 Word Boundaries</a>). Returns null if none is found. </div>
    <div class="note" role="note">
     <p> The basic premise of this algorithm is to walk all searchable text nodes
     within a block, collecting them into a list. The list is then concatenated
@@ -2470,7 +2894,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
          <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order⑥">shadow-including tree order</a>.</p>
        </ol>
       <li data-md>
-       <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, and <var>textNodeList</var>, as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> is not null, then return it.</p>
+       <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, <var>textNodeList</var>, <var>wordStartBounded</var> and <var>wordEndBounded</var> as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> is not null, then return it.</p>
       <li data-md>
        <p>If <var>curNode</var> is null, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break①">break</a>.</p>
       <li data-md>
@@ -2486,7 +2910,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
 namespace</a> and meets any of the following conditions:</p>
    <ol>
     <li data-md>
-     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
+     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
     <li data-md>
      <p>If the node <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void" id="ref-for-serializes-as-void">serializes as void</a>.</p>
     <li data-md>
@@ -2495,8 +2919,8 @@ namespace</a> and meets any of the following conditions:</p>
      <p>Is a <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element" id="ref-for-the-select-element">select</a></code> element whose <code><a data-link-type="element-sub" href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple" id="ref-for-attr-select-multiple">multiple</a></code> content attribute is absent.</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor" id="ref-for-concept-shadow-including-ancestor">shadow-including ancestor</a> that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css2/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑤">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-4/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css2/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css2/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑤">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <p>To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps:</p>
    <ol>
     <li data-md>
@@ -2514,13 +2938,19 @@ return <var>curNode</var>.</p>
      <p>Return <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-document" id="ref-for-concept-node-document">node document</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#document-element" id="ref-for-document-element">document element</a>.</p>
    </ol>
    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-node-list">find a range from a node list</dfn> given a search string <var>queryString</var>,
-a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> <var>searchRange</var>, and a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, follow the
-steps:</p>
+a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> <var>searchRange</var>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>, follow these steps:</p>
    <div class="note" role="note">
-     This will only return a match if the matched text falls on word boundaries.
-  That is, the text match must begin and end on a word boundary. For example: 
-    <div class="example" id="example-aff7ef7a"><a class="self-link" href="#example-aff7ef7a"></a> “range” will match in “mountain range” but not in “color orange” nor
-    “forest ranger”. </div>
+     Optionally, this will only return a match if the matched text begins and/or
+  ends on a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary">word boundary</a>. For example: 
+    <div class="example" id="example-27ab4025">
+     <a class="self-link" href="#example-27ab4025"></a> The query string “range” will always match in “mountain range”, but 
+     <ol>
+      <li data-md>
+       <p>When requiring a word boundary at the beginning, it will not match in “color orange”.</p>
+      <li data-md>
+       <p>When requiring a word boundary at the end, it will not match in “forest ranger”.</p>
+     </ol>
+    </div>
     <p>See <a href="#word-boundaries">§ 3.5.3 Word Boundaries</a> for details and more examples.</p>
    </div>
    <ol>
@@ -2556,7 +2986,8 @@ index</a> <var>matchIndex</var> run over <var>nodes</var> with <var>isEnd</var> 
        <p>Set <var>end</var> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑥">boundary point</a> result of <a data-link-type="dfn" href="#get-boundary-point-at-index" id="ref-for-get-boundary-point-at-index①">get boundary point at
 index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.</p>
       <li data-md>
-       <p>If the substring of <var>searchBuffer</var> starting at <var>matchIndex</var> and of length <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length①">length</a> is not <a data-link-type="dfn" href="#word-bounded" id="ref-for-word-bounded①">word bounded</a>, given the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dom.html#language" id="ref-for-language">language</a> from each of <var>start</var> and <var>end</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#boundary-point-node" id="ref-for-boundary-point-node">nodes</a> as the <var>startLocale</var> and <var>endLocale</var>:</p>
+       <p>If <var>wordStartBounded</var> is true and <var>matchIndex</var> <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary">is
+not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dom.html#language" id="ref-for-language">language</a> from <var>start</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#boundary-point-node" id="ref-for-boundary-point-node">node</a> as the <var>locale</var>; or <var>wordEndBounded</var> is true and <var>matchIndex</var> + <var>queryString</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length①">length</a> <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary①">is not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dom.html#language" id="ref-for-language①">language</a> from <var>end</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#boundary-point-node" id="ref-for-boundary-point-node①">node</a> as the <var>locale</var>:</p>
        <ol>
         <li data-md>
          <p>Set <var>searchStart</var> to <var>matchIndex</var> + 1.</p>
@@ -2617,25 +3048,24 @@ index</a> <var>endIx</var> run over <var>nodes</var> with <var>isEnd</var> true.
   proposal to specify unicode segmentation, including word segmentation. Once
   specified, this algorithm may be improved by making use of the Intl.Segmenter
   API for word boundary matching. </div>
-   <p> A word boundary is defined in <a data-link-type="biblio" href="#biblio-uax29">[UAX29]</a> in <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Word_Boundaries">Unicode Text Segmentation §Word_Boundaries</a>. <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Default_Word_Boundaries">Unicode Text Segmentation §Default_Word_Boundaries</a> defines a default set of what constitutes a
-  word boundary, but as the specification mentions, a more sophisticated
-  algorithm should be used based on the locale. </p>
+   <p> A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="word-boundary">word boundary</dfn> is defined in <a data-link-type="biblio" href="#biblio-uax29">[UAX29]</a> in <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Word_Boundaries">Unicode Text Segmentation §Word_Boundaries</a>. <a href="https://www.unicode.org/reports/tr29/tr29-37.html#Default_Word_Boundaries">Unicode Text Segmentation §Default_Word_Boundaries</a> defines a
+  default set of what constitutes a word boundary, but as the specification
+  mentions, a more sophisticated algorithm should be used based on the locale. </p>
    <p> Dictionary-based word bounding should take specific care in locales without a
   word-separating character. E.g. In English, words are separated by the space
   character (' '); however, in Japanese there is no character that separates one
   word from the next. In such cases, and where the alphabet contains fewer
   than 100 characters, the dictionary must not contain more than 20% of the
   alphabet as valid, one-letter words. </p>
-   <p>To determine if a substring of a larger string is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="word-bounded">word bounded</dfn>,
-given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑤">string</a> <var>text</var>, an integer <var>startPosition</var>, number <var>count</var>, and locales <var>startLocale</var> and <var>endLocale</var>, follow these steps:</p>
-   <p><var>startLocale</var> and <var>endLocale</var> must be a valid <a data-link-type="biblio" href="#biblio-bcp47">[BCP47]</a> language tag, or the empty
-string. An empty string indicates that the primary language is unknown.</p>
-   <div class="note" role="note">
-     <var>startPosition</var> and <var>count</var> represent a substring in <var>text</var>. <var>startLocale</var> and <var>endLocale</var> specifying the language of the string at each end of the
-  match. 
-    <p><var>startPosition</var> and <var>count</var> are assumed to be valid in that they represent a
-  substring within the bounds of <var>text</var>.</p>
-   </div>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="locale">locale</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑤">string</a> containing a valid <a data-link-type="biblio" href="#biblio-bcp47">[BCP47]</a> language tag, or the empty string. An empty string indicates that the primary
+language is unknown.</p>
+   <p>A substring is <dfn data-dfn-type="dfn" data-noexport id="word-bounded">word bounded<a class="self-link" href="#word-bounded"></a></dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑥">string</a> <var>text</var>,
+given <a data-link-type="dfn" href="#locale" id="ref-for-locale">locales</a> <var>startLocale</var> and <var>endLocale</var>, if both the position of its
+first character <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary②">is at a word boundary</a> given <var>startLocale</var>, and the position
+after its last character <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary③">is at a word boundary</a> given <var>endLocale</var>.</p>
+   <p>A number <var>position</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="is-at-a-word-boundary">is at a word boundary</dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑦">string</a> <var>text</var>, given a <a data-link-type="dfn" href="#locale" id="ref-for-locale①">locale</a> <var>locale</var>, if, using <var>locale</var>, either a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary①">word
+boundary</a> immediately precedes the <var>position</var>th code unit, or <var>text</var>’s length
+is more than 0 and <var>position</var> equals either 0 or <var>text</var>’s length.</p>
    <div class="note" role="note">
      Intuitively, a substring is word bounded if it neither begins nor ends in the
   middle of a word. 
@@ -2646,24 +3076,19 @@ string. An empty string indicates that the primary language is unknown.</p>
   Chinese/Japanese/Korean). Languages such as these requires dictionaries to
   determine what a valid word in the given locale is.</p>
    </div>
-   <ol>
-    <li data-md>
-     <p>Using locale <var>startLocale</var>, let <var>left bound</var> be the last word boundary in <var>text</var> that precedes <var>startPosition</var>th <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point①">code point</a> of <var>text</var>.</p>
-     <div class="note" role="note"> A string will always contain at least 2 word boundaries: before the first
-  code point and after the last code point of the string. </div>
-    <li data-md>
-     <p>If the first <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point②">code point</a> of <var>text</var> following <var>left bound</var> is not at
-position <var>startPosition</var> return false.</p>
-    <li data-md>
-     <p>Let <var>endPosition</var> be (<var>startPosition</var> + <var>count</var> − 1).</p>
-    <li data-md>
-     <p>Using locale <var>endLocale</var>, let <var>right bound</var> be the first word boundary in <var>text</var> after the <var>endPosition</var>th <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point③">code point</a>.</p>
-    <li data-md>
-     <p>If the first <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point④">code point</a> of <var>text</var> preceding <var>right bound</var> is not at
-position <var>endPosition</var> return false.</p>
-    <li data-md>
-     <p>Return true.</p>
-   </ol>
+   <div class="example" id="example-1c1d8c25">
+    <a class="self-link" href="#example-1c1d8c25"></a> 
+    <p> Text fragments are restricted such that match terms, when combined with
+    their adjacent context terms, must be word bounded. For example, in an
+    exact search like <code>prefix,textStart,suffix</code>, <code>"prefix+textStart+suffix"</code> must be word bounded. However, in a
+    range search like <code>prefix,textStart,textEnd,suffix</code>, both <code>"prefix+textStart"</code> and <code>"textEnd+suffix"</code> must be
+    word bounded. </p>
+    <p> The goal is that a third-party must already know the full tokens they are
+    matching against. A range match like <code>textStart,textEnd</code> must be
+    word bounded on the inside of the two terms; otherwise a third party could
+    use this repeatedly to try and reveal a token (e.g. on a page with <code>"Balance: 123,456 $"</code>, a third-party could set <code>prefix="Balance: ", textEnd="$"</code> and vary <code>textStart</code> to try and guess the numeric token one digit at a time). </p>
+    <p> For more details, refer to the <a href="https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.78iny7nejmx2">Security Review Doc</a> </p>
+   </div>
    <div class="example" id="example-1b2a6f00"><a class="self-link" href="#example-1b2a6f00"></a> The substring "mountain range" is word bounded within the string "An impressive
   mountain range" but not within "An impressive mountain ranger". </div>
    <div class="example" id="example-c7882c95"><a class="self-link" href="#example-c7882c95"></a> In the Japanese string "ウィキペディアへようこそ" (Welcome to Wikipedia),
@@ -2694,8 +3119,8 @@ exfiltration.</p>
   However, "foo" will not be scrolled into view.</p>
    </div>
    <p>Fragment-based scroll blocking from this policy is specified in an amendment to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier③">scroll to the fragment</a> algorithm in the <a href="#navigating-to-text-fragment">§ 3.5 Navigating to a Text Fragment</a> section of this document.</p>
-   <p>History scroll restoration is blocked by amending the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state" id="ref-for-restore-persisted-user-state">restore
-persisted user state</a> steps by inserting a new step after 2:</p>
+   <p>History scroll restoration is blocked by amending the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state" id="ref-for-restore-persisted-state">restore
+persisted state</a> steps by inserting a new step after 2:</p>
    <ol start="3">
     <li data-md>
      <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
@@ -2715,7 +3140,7 @@ the feature.</p>
 </pre>
    <p>We amend the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> interface to include a <code>fragmentDirective</code> property:</p>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①"><c- g>Document</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fragmentdirective" id="ref-for-fragmentdirective"><c- n>FragmentDirective</c-></a> <dfn class="idl-code" data-dfn-for="Document" data-dfn-type="attribute" data-export data-readonly data-type="FragmentDirective" id="dom-document-fragmentdirective"><code><c- g>fragmentDirective</c-></code><a class="self-link" href="#dom-document-fragmentdirective"></a></dfn>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#fragmentdirective" id="ref-for-fragmentdirective"><c- n>FragmentDirective</c-></a> <dfn class="idl-code" data-dfn-for="Document" data-dfn-type="attribute" data-export data-readonly data-type="FragmentDirective" id="dom-document-fragmentdirective"><code><c- g>fragmentDirective</c-></code><a class="self-link" href="#dom-document-fragmentdirective"></a></dfn>;
 };
 </pre>
    <p>This object may be used to expose additional information about the text
@@ -2826,151 +3251,47 @@ fragment was matched. Not doing so would allow detecting the text fragment
 match based on whether the element-id was scrolled.</p>
   </main>
   <div data-fill-with="conformance">
-   <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
-   <p> Conformance requirements are expressed with a combination of descriptive assertions and RFC 2119 terminology.
-            The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
-            in the normative parts of this document
-            are to be interpreted as described in RFC 2119.
-            However, for readability,
-            these words do not appear in all uppercase letters in this specification. </p>
-   <p> All of the text of this specification is normative
-            except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
-   <p> Examples in this specification are introduced with the words “for example”
-            or are set apart from the normative text with <code>class="example"</code>, like this: </p>
-   <div class="example" id="example-example"><a class="self-link" href="#example-example"></a> This is an example of an informative example. </div>
-   <p> Informative notes begin with the word “Note”
-            and are set apart from the normative text with <code>class="note"</code>, like this: </p>
-   <p class="note" role="note"> Note, this is an informative note. </p>
+   <h2 class="no-ref no-num heading settled" id="conformance"><span class="content">Conformance</span><a class="self-link" href="#conformance"></a></h2>
+   <h3 class="no-ref no-num heading settled" id="conventions"><span class="content">Document conventions</span><a class="self-link" href="#conventions"></a></h3>
+   <p>Conformance requirements are expressed
+    with a combination of descriptive assertions
+    and RFC 2119 terminology.
+    The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
+    in the normative parts of this document
+    are to be interpreted as described in RFC 2119.
+    However, for readability,
+    these words do not appear in all uppercase letters in this specification. </p>
+   <p>All of the text of this specification is normative
+    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
+   <p>Examples in this specification are introduced with the words “for example”
+    or are set apart from the normative text
+    with <code>class="example"</code>,
+    like this: </p>
+   <div class="example" id="example-ae2b6bc0">
+    <a class="self-link" href="#example-ae2b6bc0"></a> 
+    <p>This is an example of an informative example. </p>
+   </div>
+   <p>Informative notes begin with the word “Note”
+    and are set apart from the normative text
+    with <code>class="note"</code>,
+    like this: </p>
+   <p class="note" role="note">Note, this is an informative note. </p>
+   <h3 class="no-ref no-num heading settled" id="conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#conformant-algorithms"></a></h3>
+   <p>Requirements phrased in the imperative as part of algorithms
+    (such as "strip any leading space characters"
+    or "return false and abort these steps")
+    are to be interpreted with the meaning of the key word
+    ("must", "should", "may", etc)
+    used in introducing the algorithm. </p>
+   <p>Conformance requirements phrased as algorithms or specific steps
+    can be implemented in any manner,
+    so long as the end result is equivalent.
+    In particular, the algorithms defined in this specification
+    are intended to be easy to understand
+    and are not intended to be performant.
+    Implementers are encouraged to optimize. </p>
   </div>
-<script>
-(function() {
-  "use strict";
-  var collapseSidebarText = '<span aria-hidden="true">←</span> '
-                          + '<span>Collapse Sidebar</span>';
-  var expandSidebarText   = '<span aria-hidden="true">→</span> '
-                          + '<span>Pop Out Sidebar</span>';
-  var tocJumpText         = '<span aria-hidden="true">↑</span> '
-                          + '<span>Jump to Table of Contents</span>';
-
-  var sidebarMedia = window.matchMedia('screen and (min-width: 78em)');
-  var autoToggle   = function(e){ toggleSidebar(e.matches) };
-  if(sidebarMedia.addListener) {
-    sidebarMedia.addListener(autoToggle);
-  }
-
-  function toggleSidebar(on) {
-    if (on == undefined) {
-      on = !document.body.classList.contains('toc-sidebar');
-    }
-
-    /* Don’t scroll to compensate for the ToC if we’re above it already. */
-    var headY = 0;
-    var head = document.querySelector('.head');
-    if (head) {
-      // terrible approx of "top of ToC"
-      headY += head.offsetTop + head.offsetHeight;
-    }
-    var skipScroll = window.scrollY < headY;
-
-    var toggle = document.getElementById('toc-toggle');
-    var tocNav = document.getElementById('toc');
-    if (on) {
-      var tocHeight = tocNav.offsetHeight;
-      document.body.classList.add('toc-sidebar');
-      document.body.classList.remove('toc-inline');
-      toggle.innerHTML = collapseSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, 0 - tocHeight);
-      }
-      tocNav.focus();
-      sidebarMedia.addListener(autoToggle); // auto-collapse when out of room
-    }
-    else {
-      document.body.classList.add('toc-inline');
-      document.body.classList.remove('toc-sidebar');
-      toggle.innerHTML = expandSidebarText;
-      if (!skipScroll) {
-        window.scrollBy(0, tocNav.offsetHeight);
-      }
-      if (toggle.matches(':hover')) {
-        /* Unfocus button when not using keyboard navigation,
-           because I don’t know where else to send the focus. */
-        toggle.blur();
-      }
-    }
-  }
-
-  function createSidebarToggle() {
-    /* Create the sidebar toggle in JS; it shouldn’t exist when JS is off. */
-    var toggle = document.createElement('a');
-      /* This should probably be a button, but appearance isn’t standards-track.*/
-    toggle.id = 'toc-toggle';
-    toggle.class = 'toc-toggle';
-    toggle.href = '#toc';
-    toggle.innerHTML = collapseSidebarText;
-
-    sidebarMedia.addListener(autoToggle);
-    var toggler = function(e) {
-      e.preventDefault();
-      sidebarMedia.removeListener(autoToggle); // persist explicit off states
-      toggleSidebar();
-      return false;
-    }
-    toggle.addEventListener('click', toggler, false);
-
-
-    /* Get <nav id=toc-nav>, or make it if we don’t have one. */
-    var tocNav = document.getElementById('toc-nav');
-    if (!tocNav) {
-      tocNav = document.createElement('p');
-      tocNav.id = 'toc-nav';
-      /* Prepend for better keyboard navigation */
-      document.body.insertBefore(tocNav, document.body.firstChild);
-    }
-    /* While we’re at it, make sure we have a Jump to Toc link. */
-    var tocJump = document.getElementById('toc-jump');
-    if (!tocJump) {
-      tocJump = document.createElement('a');
-      tocJump.id = 'toc-jump';
-      tocJump.href = '#toc';
-      tocJump.innerHTML = tocJumpText;
-      tocNav.appendChild(tocJump);
-    }
-
-    tocNav.appendChild(toggle);
-  }
-
-  var toc = document.getElementById('toc');
-  if (toc) {
-    createSidebarToggle();
-    toggleSidebar(sidebarMedia.matches);
-
-    /* If the sidebar has been manually opened and is currently overlaying the text
-       (window too small for the MQ to add the margin to body),
-       then auto-close the sidebar once you click on something in there. */
-    toc.addEventListener('click', function(e) {
-      if(e.target.tagName.toLowerCase() == "a" && document.body.classList.contains('toc-sidebar') && !sidebarMedia.matches) {
-        toggleSidebar(false);
-      }
-    }, false);
-  }
-  else {
-    console.warn("Can’t find Table of Contents. Please use <nav id='toc'> around the ToC.");
-  }
-
-  /* Wrap tables in case they overflow */
-  var tables = document.querySelectorAll(':not(.overlarge) > table.data, :not(.overlarge) > table.index');
-  var numTables = tables.length;
-  for (var i = 0; i < numTables; i++) {
-    var table = tables[i];
-    var wrapper = document.createElement('div');
-    wrapper.className = 'overlarge';
-    table.parentNode.insertBefore(wrapper, table);
-    wrapper.appendChild(table);
-  }
-
-})();
-</script>
+<script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
@@ -2992,6 +3313,8 @@ match based on whether the element-id was scrolled.</p>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in §3.3.1</span>
    <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in §3.5.2</span>
    <li><a href="#has-block-level-display">has block-level display</a><span>, in §3.5.2</span>
+   <li><a href="#is-at-a-word-boundary">is at a word boundary</a><span>, in §3.5.3</span>
+   <li><a href="#locale">locale</a><span>, in §3.5.3</span>
    <li><a href="#nearest-block-ancestor">nearest block ancestor</a><span>, in §3.5.2</span>
    <li><a href="#next-non-whitespace-position">next non-whitespace position</a><span>, in §3.5.2</span>
    <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in §3.5.2</span>
@@ -3023,10 +3346,11 @@ match based on whether the element-id was scrolled.</p>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in §3.3.2</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in §3.3.2</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in §3.5.2</span>
+   <li><a href="#word-boundary">word boundary</a><span>, in §3.5.3</span>
    <li><a href="#word-bounded">word bounded</a><span>, in §3.5.3</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-computed-value">
-   <a href="https://drafts.csswg.org/css-cascade-4/#computed-value">https://drafts.csswg.org/css-cascade-4/#computed-value</a><b>Referenced in:</b>
+   <a href="https://drafts.csswg.org/css-cascade-5/#computed-value">https://drafts.csswg.org/css-cascade-5/#computed-value</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-computed-value">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-computed-value①">(2)</a> <a href="#ref-for-computed-value②">(3)</a>
    </ul>
@@ -3216,7 +3540,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-boundary-point-node">
    <a href="https://dom.spec.whatwg.org/#boundary-point-node">https://dom.spec.whatwg.org/#boundary-point-node</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-boundary-point-node">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-boundary-point-node">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-boundary-point-node①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-node-document">
@@ -3418,7 +3742,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-language">
    <a href="https://html.spec.whatwg.org/multipage/dom.html#language">https://html.spec.whatwg.org/multipage/dom.html#language</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-language">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-language">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-language①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-latest-entry">
@@ -3433,10 +3757,10 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-attr-select-multiple">3.5.2. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-restore-persisted-user-state">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-user-state</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-restore-persisted-state">
+   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-restore-persisted-user-state">3.7. Document Policy Integration</a>
+    <li><a href="#ref-for-restore-persisted-state">3.7. Document Policy Integration</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-scroll-to-the-fragment-identifier">
@@ -3513,7 +3837,6 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://infra.spec.whatwg.org/#code-point">https://infra.spec.whatwg.org/#code-point</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-code-point">3.5.2. Finding Ranges in a Document</a>
-    <li><a href="#ref-for-code-point①">3.5.3. Word Boundaries</a> <a href="#ref-for-code-point②">(2)</a> <a href="#ref-for-code-point③">(3)</a> <a href="#ref-for-code-point④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string-concatenate">
@@ -3577,7 +3900,7 @@ match based on whether the element-id was scrolled.</p>
    <ul>
     <li><a href="#ref-for-string">3.3.1. Parsing the fragment directive</a>
     <li><a href="#ref-for-string①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-string②">(2)</a> <a href="#ref-for-string③">(3)</a> <a href="#ref-for-string④">(4)</a>
-    <li><a href="#ref-for-string⑤">3.5.3. Word Boundaries</a>
+    <li><a href="#ref-for-string⑤">3.5.3. Word Boundaries</a> <a href="#ref-for-string⑥">(2)</a> <a href="#ref-for-string⑦">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-struct">
@@ -3619,150 +3942,150 @@ match based on whether the element-id was scrolled.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
-    <a data-link-type="biblio">[css-cascade-4]</a> defines the following terms:
+    <a data-link-type="biblio">[css-cascade-5]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-computed-value" style="color:initial">computed value</span>
+     <li><span class="dfn-paneled" id="term-for-computed-value">computed value</span>
     </ul>
    <li>
     <a data-link-type="biblio">[css-display-3]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-block" style="color:initial">block</span>
-     <li><span class="dfn-paneled" id="term-for-propdef-display" style="color:initial">display</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-flex" style="color:initial">flex</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-flow-root" style="color:initial">flow-root</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-grid" style="color:initial">grid</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-list-item" style="color:initial">list-item</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-none" style="color:initial">none</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-table" style="color:initial">table</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-block">block</span>
+     <li><span class="dfn-paneled" id="term-for-propdef-display">display</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-flex">flex</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-flow-root">flow-root</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-grid">grid</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-list-item">list-item</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-none">none</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-display-table">table</span>
     </ul>
    <li>
     <a data-link-type="biblio">[CSS2]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-propdef-visibility" style="color:initial">visibility</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-visibility-visible" style="color:initial">visible</span>
+     <li><span class="dfn-paneled" id="term-for-propdef-visibility">visibility</span>
+     <li><span class="dfn-paneled" id="term-for-valdef-visibility-visible">visible</span>
     </ul>
    <li>
     <a data-link-type="biblio">[cssom-view-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dictdef-scrollintoviewoptions" style="color:initial">ScrollIntoViewOptions</span>
-     <li><span class="dfn-paneled" id="term-for-dom-range-getboundingclientrect" style="color:initial">getBoundingClientRect()</span>
-     <li><span class="dfn-paneled" id="term-for-scroll-an-element-into-view" style="color:initial">scroll an element into view</span>
+     <li><span class="dfn-paneled" id="term-for-dictdef-scrollintoviewoptions">ScrollIntoViewOptions</span>
+     <li><span class="dfn-paneled" id="term-for-dom-range-getboundingclientrect">getBoundingClientRect()</span>
+     <li><span class="dfn-paneled" id="term-for-scroll-an-element-into-view">scroll an element into view</span>
     </ul>
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-document" style="color:initial">Document</span>
-     <li><span class="dfn-paneled" id="term-for-text" style="color:initial">Text</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-bp-after" style="color:initial">after</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-bp" style="color:initial">boundary point</span>
-     <li><span class="dfn-paneled" id="term-for-range-collapsed" style="color:initial">collapsed</span>
-     <li><span class="dfn-paneled" id="term-for-concept-cd-data" style="color:initial">data</span>
-     <li><span class="dfn-paneled" id="term-for-concept-doctype" style="color:initial">doctype</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document" style="color:initial">document</span>
-     <li><span class="dfn-paneled" id="term-for-document-element" style="color:initial">document element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-element" style="color:initial">element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end" style="color:initial">end</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end-node" style="color:initial">end node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end-offset" style="color:initial">end offset</span>
-     <li><span class="dfn-paneled" id="term-for-concept-tree-following" style="color:initial">following</span>
-     <li><span class="dfn-paneled" id="term-for-concept-documentfragment-host" style="color:initial">host</span>
-     <li><span class="dfn-paneled" id="term-for-concept-node-length" style="color:initial">length</span>
-     <li><span class="dfn-paneled" id="term-for-boundary-point-node" style="color:initial">node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-node-document" style="color:initial">node document</span>
-     <li><span class="dfn-paneled" id="term-for-concept-tree-parent" style="color:initial">parent</span>
-     <li><span class="dfn-paneled" id="term-for-parent-element" style="color:initial">parent element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range" style="color:initial">range</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-root" style="color:initial">shadow root</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-ancestor" style="color:initial">shadow-including ancestor</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-descendant" style="color:initial">shadow-including descendant</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-inclusive-ancestor" style="color:initial">shadow-including inclusive ancestor</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-tree-order" style="color:initial">shadow-including tree order</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start" style="color:initial">start</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start-node" style="color:initial">start node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start-offset" style="color:initial">start offset</span>
-     <li><span class="dfn-paneled" id="term-for-concept-cd-substring" style="color:initial">substring data</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document-url" style="color:initial">url</span>
+     <li><span class="dfn-paneled" id="term-for-document">Document</span>
+     <li><span class="dfn-paneled" id="term-for-text">Text</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-bp-after">after</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-bp">boundary point</span>
+     <li><span class="dfn-paneled" id="term-for-range-collapsed">collapsed</span>
+     <li><span class="dfn-paneled" id="term-for-concept-cd-data">data</span>
+     <li><span class="dfn-paneled" id="term-for-concept-doctype">doctype</span>
+     <li><span class="dfn-paneled" id="term-for-concept-document">document</span>
+     <li><span class="dfn-paneled" id="term-for-document-element">document element</span>
+     <li><span class="dfn-paneled" id="term-for-concept-element">element</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-end">end</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-end-node">end node</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-end-offset">end offset</span>
+     <li><span class="dfn-paneled" id="term-for-concept-tree-following">following</span>
+     <li><span class="dfn-paneled" id="term-for-concept-documentfragment-host">host</span>
+     <li><span class="dfn-paneled" id="term-for-concept-node-length">length</span>
+     <li><span class="dfn-paneled" id="term-for-boundary-point-node">node</span>
+     <li><span class="dfn-paneled" id="term-for-concept-node-document">node document</span>
+     <li><span class="dfn-paneled" id="term-for-concept-tree-parent">parent</span>
+     <li><span class="dfn-paneled" id="term-for-parent-element">parent element</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range">range</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-root">shadow root</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-ancestor">shadow-including ancestor</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-descendant">shadow-including descendant</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</span>
+     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-tree-order">shadow-including tree order</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-start">start</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-start-node">start node</span>
+     <li><span class="dfn-paneled" id="term-for-concept-range-start-offset">start offset</span>
+     <li><span class="dfn-paneled" id="term-for-concept-cd-substring">substring data</span>
+     <li><span class="dfn-paneled" id="term-for-concept-document-url">url</span>
     </ul>
    <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-request-current-url" style="color:initial">current url</span>
-     <li><span class="dfn-paneled" id="term-for-concept-request" style="color:initial">request</span>
-     <li><span class="dfn-paneled" id="term-for-concept-response-url" style="color:initial">url</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request-current-url">current url</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
+     <li><span class="dfn-paneled" id="term-for-concept-response-url">url</span>
     </ul>
    <li>
     <a data-link-type="biblio">[geometry-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-domrect" style="color:initial">DOMRect</span>
+     <li><span class="dfn-paneled" id="term-for-domrect">DOMRect</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-htmlaudioelement" style="color:initial">HTMLAudioElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmliframeelement" style="color:initial">HTMLIFrameElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlimageelement" style="color:initial">HTMLImageElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlmeterelement" style="color:initial">HTMLMeterElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlobjectelement" style="color:initial">HTMLObjectElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlprogresselement" style="color:initial">HTMLProgressElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlscriptelement" style="color:initial">HTMLScriptElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlstyleelement" style="color:initial">HTMLStyleElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlvideoelement" style="color:initial">HTMLVideoElement</span>
-     <li><span class="dfn-paneled" id="term-for-active-document" style="color:initial">active document</span>
-     <li><span class="dfn-paneled" id="term-for-being-rendered" style="color:initial">being rendered</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document-bc" style="color:initial">browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-browsing-context-set" style="color:initial">browsing context set</span>
-     <li><span class="dfn-paneled" id="term-for-child-browsing-context" style="color:initial">child browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-language" style="color:initial">language</span>
-     <li><span class="dfn-paneled" id="term-for-latest-entry" style="color:initial">latest entry</span>
-     <li><span class="dfn-paneled" id="term-for-attr-select-multiple" style="color:initial">multiple</span>
-     <li><span class="dfn-paneled" id="term-for-restore-persisted-user-state" style="color:initial">restore persisted user state</span>
-     <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier" style="color:initial">scroll to the fragment</span>
-     <li><span class="dfn-paneled" id="term-for-the-select-element" style="color:initial">select</span>
-     <li><span class="dfn-paneled" id="term-for-serializes-as-void" style="color:initial">serializes as void</span>
-     <li><span class="dfn-paneled" id="term-for-session-history" style="color:initial">session history</span>
-     <li><span class="dfn-paneled" id="term-for-the-indicated-part-of-the-document" style="color:initial">the indicated part of the document</span>
-     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context" style="color:initial">top-level browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
-     <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment" style="color:initial">try to scroll to the fragment</span>
+     <li><span class="dfn-paneled" id="term-for-htmlaudioelement">HTMLAudioElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmliframeelement">HTMLIFrameElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlimageelement">HTMLImageElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlmeterelement">HTMLMeterElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlobjectelement">HTMLObjectElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlprogresselement">HTMLProgressElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlscriptelement">HTMLScriptElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlstyleelement">HTMLStyleElement</span>
+     <li><span class="dfn-paneled" id="term-for-htmlvideoelement">HTMLVideoElement</span>
+     <li><span class="dfn-paneled" id="term-for-active-document">active document</span>
+     <li><span class="dfn-paneled" id="term-for-being-rendered">being rendered</span>
+     <li><span class="dfn-paneled" id="term-for-concept-document-bc">browsing context</span>
+     <li><span class="dfn-paneled" id="term-for-browsing-context-set">browsing context set</span>
+     <li><span class="dfn-paneled" id="term-for-child-browsing-context">child browsing context</span>
+     <li><span class="dfn-paneled" id="term-for-language">language</span>
+     <li><span class="dfn-paneled" id="term-for-latest-entry">latest entry</span>
+     <li><span class="dfn-paneled" id="term-for-attr-select-multiple">multiple</span>
+     <li><span class="dfn-paneled" id="term-for-restore-persisted-state">restore persisted state</span>
+     <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier">scroll to the fragment</span>
+     <li><span class="dfn-paneled" id="term-for-the-select-element">select</span>
+     <li><span class="dfn-paneled" id="term-for-serializes-as-void">serializes as void</span>
+     <li><span class="dfn-paneled" id="term-for-session-history">session history</span>
+     <li><span class="dfn-paneled" id="term-for-the-indicated-part-of-the-document">the indicated part of the document</span>
+     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context">top-level browsing context</span>
+     <li><span class="dfn-paneled" id="term-for-transient-activation">transient activation</span>
+     <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-list-append" style="color:initial">append</span>
-     <li><span class="dfn-paneled" id="term-for-assert" style="color:initial">assert</span>
-     <li><span class="dfn-paneled" id="term-for-iteration-break" style="color:initial">break</span>
-     <li><span class="dfn-paneled" id="term-for-code-point" style="color:initial">code point</span>
-     <li><span class="dfn-paneled" id="term-for-string-concatenate" style="color:initial">concatenate</span>
-     <li><span class="dfn-paneled" id="term-for-iteration-continue" style="color:initial">continue</span>
-     <li><span class="dfn-paneled" id="term-for-html-namespace" style="color:initial">html namespace</span>
-     <li><span class="dfn-paneled" id="term-for-string-length" style="color:initial">length</span>
-     <li><span class="dfn-paneled" id="term-for-list" style="color:initial">list</span>
-     <li><span class="dfn-paneled" id="term-for-list-remove" style="color:initial">remove</span>
-     <li><span class="dfn-paneled" id="term-for-list-size" style="color:initial">size</span>
-     <li><span class="dfn-paneled" id="term-for-split-on-commas" style="color:initial">split on commas</span>
-     <li><span class="dfn-paneled" id="term-for-strictly-split" style="color:initial">strictly split a string</span>
-     <li><span class="dfn-paneled" id="term-for-string" style="color:initial">string</span>
-     <li><span class="dfn-paneled" id="term-for-struct" style="color:initial">struct</span>
+     <li><span class="dfn-paneled" id="term-for-list-append">append</span>
+     <li><span class="dfn-paneled" id="term-for-assert">assert</span>
+     <li><span class="dfn-paneled" id="term-for-iteration-break">break</span>
+     <li><span class="dfn-paneled" id="term-for-code-point">code point</span>
+     <li><span class="dfn-paneled" id="term-for-string-concatenate">concatenate</span>
+     <li><span class="dfn-paneled" id="term-for-iteration-continue">continue</span>
+     <li><span class="dfn-paneled" id="term-for-html-namespace">html namespace</span>
+     <li><span class="dfn-paneled" id="term-for-string-length">length</span>
+     <li><span class="dfn-paneled" id="term-for-list">list</span>
+     <li><span class="dfn-paneled" id="term-for-list-remove">remove</span>
+     <li><span class="dfn-paneled" id="term-for-list-size">size</span>
+     <li><span class="dfn-paneled" id="term-for-split-on-commas">split on commas</span>
+     <li><span class="dfn-paneled" id="term-for-strictly-split">strictly split a string</span>
+     <li><span class="dfn-paneled" id="term-for-string">string</span>
+     <li><span class="dfn-paneled" id="term-for-struct">struct</span>
     </ul>
    <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-url-fragment" style="color:initial">fragment</span>
-     <li><span class="dfn-paneled" id="term-for-string-percent-decode" style="color:initial">percent-decode</span>
-     <li><span class="dfn-paneled" id="term-for-url-code-points" style="color:initial">url code point</span>
+     <li><span class="dfn-paneled" id="term-for-concept-url-fragment">fragment</span>
+     <li><span class="dfn-paneled" id="term-for-string-percent-decode">percent-decode</span>
+     <li><span class="dfn-paneled" id="term-for-url-code-points">url code point</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-Exposed" style="color:initial">Exposed</span>
-     <li><span class="dfn-paneled" id="term-for-SameObject" style="color:initial">SameObject</span>
+     <li><span class="dfn-paneled" id="term-for-Exposed">Exposed</span>
+     <li><span class="dfn-paneled" id="term-for-SameObject">SameObject</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
-   <dt id="biblio-css-cascade-4">[CSS-CASCADE-4]
-   <dd>Elika Etemad; Tab Atkins Jr.. <a href="https://www.w3.org/TR/css-cascade-4/">CSS Cascading and Inheritance Level 4</a>. 18 August 2020. WD. URL: <a href="https://www.w3.org/TR/css-cascade-4/">https://www.w3.org/TR/css-cascade-4/</a>
+   <dt id="biblio-css-cascade-5">[CSS-CASCADE-5]
+   <dd>CSS Cascading and Inheritance Level 5 URL: <a href="https://www.w3.org/TR/css-cascade-5/">https://www.w3.org/TR/css-cascade-5/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
    <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 19 May 2020. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
    <dt id="biblio-css2">[CSS2]
@@ -3803,7 +4126,7 @@ match based on whether the element-id was scrolled.</p>
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://dom.spec.whatwg.org/#document"><c- g>Document</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fragmentdirective"><c- n>FragmentDirective</c-></a> <a data-readonly data-type="FragmentDirective" href="#dom-document-fragmentdirective"><code><c- g>fragmentDirective</c-></code></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#fragmentdirective"><c- n>FragmentDirective</c-></a> <a data-readonly data-type="FragmentDirective" href="#dom-document-fragmentdirective"><code><c- g>fragmentDirective</c-></code></a>;
 };
 
 </pre>
@@ -3848,7 +4171,7 @@ match based on whether the element-id was scrolled.</p>
    <b><a href="#parsedtextdirective-textend">#parsedtextdirective-textend</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-textend">3.3.1. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a>
+    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a> <a href="#ref-for-parsedtextdirective-textend⑧">(8)</a> <a href="#ref-for-parsedtextdirective-textend⑨">(9)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-prefix">
@@ -3862,7 +4185,7 @@ match based on whether the element-id was scrolled.</p>
    <b><a href="#parsedtextdirective-suffix">#parsedtextdirective-suffix</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-suffix">3.3.1. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-suffix①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-suffix②">(2)</a> <a href="#ref-for-parsedtextdirective-suffix③">(3)</a> <a href="#ref-for-parsedtextdirective-suffix④">(4)</a>
+    <li><a href="#ref-for-parsedtextdirective-suffix①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-suffix②">(2)</a> <a href="#ref-for-parsedtextdirective-suffix③">(3)</a> <a href="#ref-for-parsedtextdirective-suffix④">(4)</a> <a href="#ref-for-parsedtextdirective-suffix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-suffix⑥">(6)</a> <a href="#ref-for-parsedtextdirective-suffix⑦">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="valid-fragment-directive">
@@ -4062,10 +4385,24 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-get-boundary-point-at-index">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-get-boundary-point-at-index①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="word-bounded">
-   <b><a href="#word-bounded">#word-bounded</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="word-boundary">
+   <b><a href="#word-boundary">#word-boundary</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-word-bounded">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-word-bounded①">(2)</a>
+    <li><a href="#ref-for-word-boundary">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-word-boundary①">3.5.3. Word Boundaries</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="locale">
+   <b><a href="#locale">#locale</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-locale">3.5.3. Word Boundaries</a> <a href="#ref-for-locale①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="is-at-a-word-boundary">
+   <b><a href="#is-at-a-word-boundary">#is-at-a-word-boundary</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-is-at-a-word-boundary">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-is-at-a-word-boundary①">(2)</a>
+    <li><a href="#ref-for-is-at-a-word-boundary②">3.5.3. Word Boundaries</a> <a href="#ref-for-is-at-a-word-boundary③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective">
