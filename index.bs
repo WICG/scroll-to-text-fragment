@@ -187,11 +187,13 @@ translation-hints or enabling accessibility features.
 
 To the definition of [=Document=], add:
 
-<em>
-  Each document has an associated <dfn>fragment directive</dfn> which is either
-  null or an ASCII string holding data used by the UA to process the resource. It
-  is initially null.
-</em>
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   <em>
+>     Each document has an associated <dfn>fragment directive</dfn> which is
+>     either null or an ASCII string holding data used by the UA to process the
+>     resource. It is initially null.
+>   </em>
 
 The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
@@ -206,6 +208,7 @@ three consecutive code points U+003A (:), U+007E (~), U+003A (:).
   must first be appended to the URL: https://example.com#:~:text=foo.
 </div>
 
+
 Amend the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
 create and initialize a Document object</a> steps to parse and remove the
@@ -213,30 +216,32 @@ create and initialize a Document object</a> steps to parse and remove the
 
 Replace steps 7 and 8 of this algorithm with:
 
-7. Let |url| be null
-8. If |request| is non-null, then set |document|'s [=Document/URL=] to
-    |request|'s [=request/current URL=].
-9. Otherwise, set |url| to <var ignore=''>response</var>'s [=response/URL=].
-10. Let |raw fragment| be equal to |url|'s [=url/fragment=].
-11. If |raw fragment| is non-null:
-    1. Let |fragmentDirectivePosition| be an integer initialized to 0.
-    2. While the substring of |raw fragment| starting at position
-        |fragmentDirectivePosition| does not begin with the [=fragment directive
-        delimiter=] and |fragmentDirectivePosition| does not point past the end
-        of |raw fragment|:
-        1. Increment |fragmentDirectivePosition| by 1.
-    3. If |fragmentDirectivePosition| does not point past the end of |raw
-        fragment|:
-        1. Let |fragment| be the substring of |raw fragment| starting at 0 of
-            count |fragmentDirectivePosition|.
-        1. Advance |fragmentDirectivePosition| by the length of [=fragment
-            directive delimiter=].
-        1. Let |fragment directive| be the substring of |raw fragment| starting
-            at |fragmentDirectivePosition|.
-        1. Set |url|'s [=url/fragment=] to |fragment|.
-        1. Set |document|'s [=fragment directive=] to |fragment directive|.
-            (Note: this is stored on the document but not web-exposed)
-12. Set |document|'s [=Document/URL=] to be |url|.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   7. Let |url| be null
+>   8. If |request| is non-null, then set |document|'s [=Document/URL=] to
+>       |request|'s [=request/current URL=].
+>   9. Otherwise, set |url| to <var ignore=''>response</var>'s [=response/URL=].
+>   10. Let |raw fragment| be equal to |url|'s [=url/fragment=].
+>   11. If |raw fragment| is non-null:
+>       1. Let |fragmentDirectivePosition| be an integer initialized to 0.
+>       2. While the substring of |raw fragment| starting at position
+>           |fragmentDirectivePosition| does not begin with the [=fragment directive
+>           delimiter=] and |fragmentDirectivePosition| does not point past the end
+>           of |raw fragment|:
+>           1. Increment |fragmentDirectivePosition| by 1.
+>       3. If |fragmentDirectivePosition| does not point past the end of |raw
+>           fragment|:
+>           1. Let |fragment| be the substring of |raw fragment| starting at 0 of
+>               count |fragmentDirectivePosition|.
+>           1. Advance |fragmentDirectivePosition| by the length of [=fragment
+>               directive delimiter=].
+>           1. Let |fragment directive| be the substring of |raw fragment| starting
+>               at |fragmentDirectivePosition|.
+>           1. Set |url|'s [=url/fragment=] to |fragment|.
+>           1. Set |document|'s [=fragment directive=] to |fragment directive|.
+>               (Note: this is stored on the document but not web-exposed)
+>   12. Set |document|'s [=Document/URL=] to be |url|.
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive
@@ -249,6 +254,8 @@ Replace steps 7 and 8 of this algorithm with:
 the fragment is the string "test" and the [=fragment directive=] is the string
 "text=foo".
 </div>
+
+<div algorithm="parse a text directive">
 
 To <dfn>parse a text directive</dfn>, on a <a spec="infra">string</a> |text
 directive input|, run these steps:
@@ -267,39 +274,44 @@ directive input|, run these steps:
   </p>
 </div>
 
-1. [=/Assert=]: |text directive input| matches the production [=TextDirective=].
-1. Let |textDirectiveString| be the substring of |text directive
-    input| starting at index 5.
-    <div class="note">
-      This is the remainder of the |text directive input| following,
-      but not including, the "text=" prefix.
-    </div>
-1. Let |tokens| be a <a for=/>list</a> of strings that is the result of
-    <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
-1. If |tokens| has size less than 1 or greater than 4, return null.
-1. If any of |tokens|'s items are the empty string, return null.
-1. Let |retVal| be a [=ParsedTextDirective=] with each of its items initialized
-    to null.
-1. Let |potential prefix| be the first item of |tokens|.
-1. If the last character of |potential prefix| is U+002D (-), then:
-    1. Set |retVal|'s [=ParsedTextDirective/prefix=] to the [=string/percent-decode|percent-decoding=] of
-        the result of removing the last character from |potential prefix|.
-    1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
-1. Let |potential suffix| be the last item of |tokens|, if one exists, null
-    otherwise.
-1. If |potential suffix| is non-null and its first character is U+002D (-),
-    then:
-    1. Set |retVal|'s [=ParsedTextDirective/suffix=] to the [=string/percent-decode|percent-decoding=] of
-        the result of removing the first character from |potential suffix|.
-    1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
-1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
-    return null.
-1. Set |retVal|'s [=ParsedTextDirective/textStart=] be the [=string/percent-decode|percent-decoding=] of
-    the first item of |tokens|.
-1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-    [=ParsedTextDirective/textEnd=] be the [=string/percent-decode|percent-decoding=] of the last item of
-    |tokens|.
-1. Return |retVal|.
+  <ol class="algorithm">
+    1. [=/Assert=]: |text directive input| matches the production [=TextDirective=].
+    1. Let |textDirectiveString| be the substring of |text directive
+        input| starting at index 5.
+        <div class="note">
+          This is the remainder of the |text directive input| following,
+          but not including, the "text=" prefix.
+        </div>
+    1. Let |tokens| be a <a for=/>list</a> of strings that is the result of
+        <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
+    1. If |tokens| has size less than 1 or greater than 4, return null.
+    1. If any of |tokens|'s items are the empty string, return null.
+    1. Let |retVal| be a [=ParsedTextDirective=] with each of its items initialized
+        to null.
+    1. Let |potential prefix| be the first item of |tokens|.
+    1. If the last character of |potential prefix| is U+002D (-), then:
+        1. Set |retVal|'s [=ParsedTextDirective/prefix=] to the
+            [=string/percent-decode|percent-decoding=] of the result of removing the
+            last character from |potential prefix|.
+        1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
+    1. Let |potential suffix| be the last item of |tokens|, if one exists, null
+        otherwise.
+    1. If |potential suffix| is non-null and its first character is U+002D (-),
+        then:
+        1. Set |retVal|'s [=ParsedTextDirective/suffix=] to the
+            [=string/percent-decode|percent-decoding=] of the result of removing the
+            first character from |potential suffix|.
+        1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
+    1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
+        return null.
+    1. Set |retVal|'s [=ParsedTextDirective/textStart=] be the
+        [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
+    1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
+        [=ParsedTextDirective/textEnd=] be the
+        [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
+    1. Return |retVal|.
+  </ol>
+</div>
 
 A <dfn>ParsedTextDirective</dfn> is a <a spec=infra>struct</a> that consists of
 four strings: <dfn for="ParsedTextDirective">textStart</dfn>,
@@ -534,20 +546,28 @@ to find and set the indicated part of the document.
 
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
-A [=Document=] has a <dfn for="document">textFragmentToken</dfn> flag that is
-consumed in order to allow a single activation of a text fragment. This flag is
-generated only during loading if the navigation occurs as a result of a user
-activation.
+Amend the definition of a [=/request=] and of a [=Document=] to include a new
+field for the [=document/textFragmentToken=]:
 
-If the [=Document=]'s [=document/textFragmentToken=] isn't consumed to activate
-a text fragment, it may be consumed to set the <dfn for="request">
-textFragmentToken</dfn> flag of a [=/request=]. In this way, a
-textFragmentToken can be propagated from one [=Document=] to another across a
-navigation.
+>   <strong>Monkeypatching [[FETCH]]:</strong>
+>
+>   A [=/request=] has an associated <dfn for="request">textFragmentToken</dfn> flag
 
-Reading either the [=Document=]'s [=document/textFragmentToken=] or the
-[=/request=]'s [=request/textFragmentToken=] must always consume the value,
-such that the token cannot be cloned.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   A [=Document=] has a <dfn for="document">textFragmentToken</dfn> flag that is
+>   consumed in order to allow a single activation of a text fragment. This flag is
+>   generated only during loading if the navigation occurs as a result of a user
+>   activation.
+>
+>   If the [=Document=]'s [=document/textFragmentToken=] isn't consumed to activate
+>   a text fragment, it may be consumed to set the [=request/textFragmentToken=]
+>   flag of a navigation [=/request=]. In this way, a [=document/textFragmentToken=]
+>   can be propagated from one [=Document=] to another across a navigation.
+>
+>   Reading either the [=Document=]'s [=document/textFragmentToken=] or the
+>   [=/request=]'s [=request/textFragmentToken=] must always consume the value,
+>   such that the token cannot be cloned.
 
 <div class="note">
   <p>
@@ -587,10 +607,12 @@ such that the token cannot be cloned.
   </p>
 </div>
 
-A [=Document=] has an <dfn for="document">allowTextFragmentDirective</dfn> flag
-that is used to determine whether a text fragment directive should be allowed
-to activate. If this flag is false, the text fragment must not cause any
-observable effects.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   A [=Document=] has an <dfn for="document">allowTextFragmentDirective</dfn>
+>   flag that is used to determine whether a text fragment directive should be
+>   allowed to activate. If this flag is false, the text fragment must not
+>   cause any observable effects.
 
 <div class="note">
   <p>
@@ -618,91 +640,91 @@ Amend the <a
 href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning |document|:
 
-15. Set the [=document/textFragmentToken=] flag on |document|:
-    1. Let |is user activated| be true if the current navigation was initiated from
-        a window that had a <a spec="html">transient activation</a> at the time the
-        navigation was initiated, or the UA has reason to believe it comes from a
-        direct user gesture (e.g. user typed into the address bar).
-        <div class="note">
-          TODO: it'd be better to refer to the userActivationFlag on the
-          |request|. See
-          <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a>.
-        </div>
-    1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
-        user activated| or the [=request/textFragmentToken=] flag of
-        |navigationParam|'s
-        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
-        object is true, set the |document|'s [=document/textFragmentToken=]
-        flag to true. Otherwise, set it to false.
-        <div class="note">
-          It's important that the token not be copyable so that at most one token
-          is created per user-activated navigation.
-        </div>
-16. Set the [=document/allowTextFragmentDirective=] flag on |document| by
-    following these sub-steps:
-    1. If |document|'s [=fragment directive=] field is null or empty, set
-        [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
-    1. Let |textFragmentToken| be the value of |document|'s
-        [=document/textFragmentToken=] and set |document|'s
-        [=document/textFragmentToken=] to false.
-    1. If the |navigationParam|'s
-        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
-        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
-        header and its value is `"none"` set
-        [=document/allowTextFragmentDirective=] to true and abort these
-        sub-steps.
-        <div class="note">
-          <p>
-            If a navigation originates from browser UI, it's always ok to allow it
-            since it'll be user triggered and the page/script isn't providing the
-            text snippet.
-          </p>
-          <p>
-            Note: Depending on the UA, there may be cases where the <var
-            ignore=''>incumbentNavigationOrigin</var> parameter is null but
-            it's not clear that the navigation should be considered as
-            initiated from browser UI. E.g. an "open in new window" context
-            menu item when right clicking on a link.  The intent in this item
-            is to distinguish cases where the app/page is able to set the URL
-            from those that are fully under the user's control.  In the former
-            we want to prevent activation of the text fragment unless the
-            destination is loaded in a separate browsing context group (so that
-            the source cannot both control the text snippet and observe
-            side-effects in the navigation).
-          </p>
-          <p>
-            See <a
-            href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
-            for a more detailed discussion of how this should apply.
-          </p>
-        </div>
-    1. If |textFragmentToken| is false, set
-        [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
-    1. If the [=document=] of the <a spec=HTML>latest entry</a> in
-        |document|'s [=Document/browsing context=]'s <a spec=HTML>session history</a> is
-        equal to |document|, set [=document/allowTextFragmentDirective=] to false
-        and abort these sub-steps.
-        <div class="note">
-          i.e. Forbidden on a same-document navigation.
-        </div>
-    1. If the |navigationParam|'s
-        <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
-        has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
-        header and its value is `"same-site"` set
-        [=document/allowTextFragmentDirective=] to true and abort these
-        sub-steps.
-    1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
-        context=] and its
-        <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
-        <a spec=HTML>browsing context set</a> has length 1, set
-        [=document/allowTextFragmentDirective=] to true and abort these sub-steps.
-        <div class="note">
-          i.e. Only allow navigation from a cross-process element/script if the
-          document is loaded in a noopener context. That is, a new top level
-          browsing context group to which the navigator does not have script access
-          and which may be placed into a separate process.
-        </div>
-    1. Otherwise, set [=document/allowTextFragmentDirective=] to false.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   15. Set the [=document/textFragmentToken=] flag on |document|:
+>       1. Let |is user activated| be true if the current navigation was initiated from
+>           a window that had a <a spec="html">transient activation</a> at the time the
+>           navigation was initiated, or the UA has reason to believe it comes from a
+>           direct user gesture (e.g. user typed into the address bar).
+>           <div class="note">
+>             TODO: it'd be better to refer to the userActivationFlag on the
+>             |request|. See
+>             <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in [[FETCH-METADATA]].
+>           </div>
+>       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
+>           user activated| or the [=request/textFragmentToken=] flag of
+>           |navigationParam|'s
+>           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+>           object is true, set the |document|'s [=document/textFragmentToken=]
+>           flag to true. Otherwise, set it to false.
+>           <div class="note">
+>             It's important that the token not be copyable so that at most one token
+>             is created per user-activated navigation.
+>           </div>
+>   16. Set the [=document/allowTextFragmentDirective=] flag on |document| by
+>       following these sub-steps:
+>       1. If |document|'s [=fragment directive=] field is null or empty, set
+>           [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
+>       1. Let |textFragmentToken| be the value of |document|'s
+>           [=document/textFragmentToken=] and set |document|'s
+>           [=document/textFragmentToken=] to false.
+>       1. If the |navigationParam|'s
+>           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+>           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
+>           header and its value is `"none"` set [=document/allowTextFragmentDirective=] to true and abort these sub-steps.
+>           <div class="note">
+>             <p>
+>               If a navigation originates from browser UI, it's always ok to allow it
+>               since it'll be user triggered and the page/script isn't providing the
+>               text snippet.
+>             </p>
+>             <p>
+>               Note: Depending on the UA, there may be cases where the <var
+>               ignore=''>incumbentNavigationOrigin</var> parameter is null but
+>               it's not clear that the navigation should be considered as
+>               initiated from browser UI. E.g. an "open in new window" context
+>               menu item when right clicking on a link.  The intent in this item
+>               is to distinguish cases where the app/page is able to set the URL
+>               from those that are fully under the user's control.  In the former
+>               we want to prevent activation of the text fragment unless the
+>               destination is loaded in a separate browsing context group (so that
+>               the source cannot both control the text snippet and observe
+>               side-effects in the navigation).
+>             </p>
+>             <p>
+>               See <a
+>               href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
+>               for a more detailed discussion of how this should apply.
+>             </p>
+>           </div>
+>       1. If |textFragmentToken| is false, set
+>           [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
+>       1. If the [=document=] of the <a spec=HTML>latest entry</a> in
+>           |document|'s [=Document/browsing context=]'s <a spec=HTML>session history</a> is
+>           equal to |document|, set [=document/allowTextFragmentDirective=] to false
+>           and abort these sub-steps.
+>           <div class="note">
+>             i.e. Forbidden on a same-document navigation.
+>           </div>
+>       1. If the |navigationParam|'s
+>           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
+>           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
+>           header and its value is `"same-site"` set
+>           [=document/allowTextFragmentDirective=] to true and abort these
+>           sub-steps.
+>       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
+>           context=] and its
+>           <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
+>           <a spec=HTML>browsing context set</a> has length 1, set
+>           [=document/allowTextFragmentDirective=] to true and abort these sub-steps.
+>           <div class="note">
+>             i.e. Only allow navigation from a cross-process element/script if the
+>             document is loaded in a noopener context. That is, a new top level
+>             browsing context group to which the navigator does not have script access
+>             and which may be placed into a separate process.
+>           </div>
+>       1. Otherwise, set [=document/allowTextFragmentDirective=] to false.
 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
@@ -711,17 +733,31 @@ process a navigate fetch</a> steps to additionally set |request|'s
 [=document/textFragmentToken=] and set the [=active document=]'s value to
 false.
 
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   2. Set request's client to sourceBrowsingContext's active document's relevant
+>       settings object, destination to "document", mode to "navigate", credentials
+>       mode to "include", use-URL-credentials flag, redirect mode to "manual",
+>       replaces client id to browsingContext's active document's relevant settings
+>       object's id, and [=request/textFragmentToken=] to
+>       sourceBrowsingContext's active document's
+>       [=document/textFragmentToken=]. Set sourceBrowsingContext's active
+>       document's [=document/textFragmentToken=] to false.
+
+
 Amend the <a spec=HTML>try to scroll to the fragment</a> steps by replacing the
 steps of the task queued in step 2:
 
-1. If document has no parser, or its parser has stopped parsing, or the user
-    agent has reason to believe the user is no longer interested in scrolling to
-    the fragment, then clear <em>document</em>'s
-    [=allowTextFragmentDirective=] flag and abort these steps.
-2. Scroll to the fragment given in document's URL. If this does not find an
-    indicated part of the document, then try to scroll to the fragment for
-    document.
-3. Clear <em>document</em>'s [=allowTextFragmentDirective=] flag
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   1. If document has no parser, or its parser has stopped parsing, or the user
+>       agent has reason to believe the user is no longer interested in scrolling to
+>       the fragment, then clear <em>document</em>'s
+>       [=allowTextFragmentDirective=] flag and abort these steps.
+>   2. Scroll to the fragment given in document's URL. If this does not find an
+>       indicated part of the document, then try to scroll to the fragment for
+>       document.
+>   3. Clear <em>document</em>'s [=allowTextFragmentDirective=] flag
 
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
@@ -738,65 +774,79 @@ may be scrolled into view instead of the containing element.
 Replace step 3.1 of the <a spec=HTML>scroll to the fragment</a> algorithm with
 the following:
 
-1. Let <em>target, range</em> be the [=/element=] and [=range=] that is
-    <a spec=HTML>the indicated part of the document</a>.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   1. Let <em>target, range</em> be the [=/element=] and [=range=] that is
+>       <a spec=HTML>the indicated part of the document</a>.
 
 Replace step 3.3 of the <a spec=HTML>scroll to the fragment</a> algorithm with
 the following:
 
-3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-    the policy value</a> for `force-load-at-top` in the
-    [=Document=]. If the result is true, abort these steps.
-4. If <em>range</em> is non-null:
-    1. If the UA supports scrolling of text fragments on navigation, invoke
-        [=scroll a Range into view|Scroll range into view=], with range
-        <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
-        to "auto", <em>block</em> set to "center", and <em>inline</em> set to
-        "nearest".
-5. Otherwise:
-    1. <a spec=cssom-view lt="scroll an element into view">Scroll target
-        into view</a>, with <em>behavior</em> set to "auto", <em>block</em>
-        set to "start", and <em>inline</em> set to "nearest".
-        <div class="note">
-            This otherwise case is the same as the current step 3.3.
-        </div>
-
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+>       the policy value</a> for `force-load-at-top` in the
+>       [=Document=]. If the result is true, abort these steps.
+>   4. If <em>range</em> is non-null:
+>       1. If the UA supports scrolling of text fragments on navigation, invoke
+>           [=scroll a Range into view|Scroll range into view=], with range
+>           <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
+>           to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+>           "nearest".
+>   5. Otherwise:
+>       1. <a spec=cssom-view lt="scroll an element into view">Scroll target
+>           into view</a>, with <em>behavior</em> set to "auto", <em>block</em>
+>           set to "start", and <em>inline</em> set to "nearest".
+>           <div class="note">
+>               This otherwise case is the same as the current step 3.3.
+>           </div>
 
 Add the following steps to the beginning of the processing model for
 <a spec=HTML>the indicated part of the document</a>:
 
-1. Let |fragment directive string| be the document's [=fragment directive=].
-1. If the document's [=allowTextFragmentDirective=] flag is true then:
-    1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
-        the [=process a fragment directive=] steps with |fragment directive
-        string| and the document.
-    1. If |ranges| is non-empty, then:
-        1. Let |range| be the first item of |ranges|.
-            <div class="note">
-              The first [=range=] in |ranges| is specifically
-              scrolled into view. This [=range=], along with the
-              remaining |ranges| should be visually indicated in a way that
-              is not revealed to script, which is left as UA-defined behavior.
-            </div>
-        1. Let |node| be the [=first common ancestor=] of |range|'s
-            [=range/start node=] and [=range/end node=].
-        1. While |node| is non-null and is not an [=element=], set |node| to
-            |node|'s [=tree/parent=].
-        1. The indicated part of the document is |node| and |range|; return.
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   1. Let |fragment directive string| be the document's [=fragment directive=].
+>   1. If the document's [=allowTextFragmentDirective=] flag is true then:
+>       1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
+>           the [=process a fragment directive=] steps with |fragment directive
+>           string| and the document.
+>       1. If |ranges| is non-empty, then:
+>           1. Let |range| be the first item of |ranges|.
+>               <div class="note">
+>                 The first [=range=] in |ranges| is specifically
+>                 scrolled into view. This [=range=], along with the
+>                 remaining |ranges| should be visually indicated in a way that
+>                 is not revealed to script, which is left as UA-defined behavior.
+>               </div>
+>           1. Let |node| be the [=first common ancestor=] of |range|'s
+>               [=range/start node=] and [=range/end node=].
+>           1. While |node| is non-null and is not an [=element=], set |node| to
+>               |node|'s [=tree/parent=].
+>           1. The indicated part of the document is |node| and |range|; return.
 
+<div algorithm="first common ancestor">
 To find the <dfn>first common ancestor</dfn> of two nodes |nodeA| and |nodeB|,
 follow these steps:
 
-1. Let |commonAncestor| be |nodeA|.
-1. While |commonAncestor| is non-null and is not a [=shadow-including inclusive
-    ancestor=] of |nodeB|, let |commonAncestor| be |commonAncestor|’s
-    [=shadow-including parent=].
-1. Return |commonAncestor|.
 
+  <ol class="algorithm">
+    1. Let |commonAncestor| be |nodeA|.
+    1. While |commonAncestor| is non-null and is not a [=shadow-including inclusive
+        ancestor=] of |nodeB|, let |commonAncestor| be |commonAncestor|’s
+        [=shadow-including parent=].
+    1. Return |commonAncestor|.
+  </ol>
+</div>
+
+<div algorithm="shadow-including parent">
 To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
 
-1. If |node| is a [=/shadow root=], return |node|'s [=DocumentFragment/host=].
-1. Otherwise, return |node|'s [=tree/parent=].
+  <ol class="algorithm">
+    1. If |node| is a [=/shadow root=], return |node|'s [=DocumentFragment/host=].
+    1. Otherwise, return |node|'s [=tree/parent=].
+  </ol>
+</div>
 
 ### Scroll a DOMRect into view ### {#scroll-rect-into-view}
 <div class="note">
@@ -821,20 +871,53 @@ ignore=''>scrolling box</var>, in order of innermost to outermost scrolling box"
   |bounding box| is renamed from |element bounding border box|.
 </div>
 
+>   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
+>
+>   To scroll a DOMRect into view given a {{DOMRect}} |bounding box|,
+>   a scroll behavior |behavior|,
+>   a block flow direction position |block|,
+>   and an inline base direction position |inline|,
+>   and [=element=] |startingElement|, means to run these steps for each ancestor element or viewport of |startingElement| that establishes
+>   a scrolling box <var ignore=''>scrolling box</var>, in order of innermost to outermost scrolling box:
+>
+>   <em>OMITTED</em>
+>
+>   <div class="note">
+>     TODO: There's more to do here since the |bounding box| needs to be
+>     transformed with each step to an ancestor element or viewport.
+>   </div>
+
+
 Replace steps 3-14 of the <a spec=cssom-view>scroll an element into view</a>
 algorithm with a call to [=scroll a DOMRect into view=]:
 
-3. Perform [=scroll a DOMRect into view=] given |element bounding border box|,
-    |options| and <var ignore=''>element</var>.
+>   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
+>
+>   To scroll an element into view |element|,
+>   with a scroll behavior |behavior|,
+>   a block flow direction position |block|,
+>   and an inline base direction position |inline|,
+>   means to run these steps:
+>
+>   1. If the {{Document}} associated with |element| is not same origin with the {{Document}} associated with the element or viewport associated with <var ignore=''>box</var>, terminate these steps.
+>   1. Let |element bounding border box| be the box that the return value of invoking {{Element/getBoundingClientRect()}} on |element| represents.
+>   1. Perform [=scroll a DOMRect into view=] given |element bounding border box|,
+>       |options| and |element|.
 
-Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
-[=range=] |range|, [=element=] |containingElement|, and a
-{{ScrollIntoViewOptions}} dictionary |options|:
+Define a new algorithm for scrolling [=Range=] into view:
 
-1. Let |bounding rect| be the {{DOMRect}} that is the return value of
-    invoking {{Range/getBoundingClientRect()}} on |range|.
-2. Perform [=scroll a DOMRect into view=] given |bounding rect|, |options|, and
-    |containingElement|.
+>   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
+>
+>   To <dfn>scroll a Range into view</dfn>, with input
+>   [=range=] |range|,
+>   scroll behavior |behavior|,
+>   a block flow direction position |block|,
+>   an inline base direction position |inline|,
+>   and an [=element=] |containingElement|:
+>   1. Let |bounding rect| be the {{DOMRect}} that is the return value of
+>       invoking {{Range/getBoundingClientRect()}} on |range|.
+>   2. Perform [=scroll a DOMRect into view=] given |bounding rect|, |behavior|, |block|, |inline|, and
+>       |containingElement|.
 
 ### Finding Ranges in a Document ### {#finding-ranges-in-a-document}
 
@@ -871,6 +954,7 @@ Define a new algorithm <dfn>scroll a Range into view</dfn>, with input
   list.
 </div>
 
+<div algorithm="process a fragment directive">
 To <dfn>process a fragment directive</dfn>, given as input a <a
 spec=infra>string</a> |fragment directive input| and a [=Document=]
 |document|, run these steps:
@@ -883,23 +967,27 @@ spec=infra>string</a> |fragment directive input| and a [=Document=]
   automatically).
 </div>
 
-1. If |fragment directive input| is not a [=valid fragment directive=], then
-    return an empty <a spec=infra>list</a>.
-2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>string</a>s
-    that is the result of [=strictly split a string|strictly splitting the
-    string=] |fragment directive input| on "&".
-3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
-4. For each <a spec=infra>string</a> |directive| of |directives|:
-    1. If |directive| does not match the production [=TextDirective=],
-        then [=iteration/continue=].
-    1. Let |parsedValues| be the result of running the [=parse a text
-        directive=] steps on |directive|.
-    1. If |parsedValues| is null then [=iteration/continue=].
-    1. If the result of running [=find a range from a text directive=] given
-        |parsedValues| and |document| is non-null, then [=list/append=] it to
-        |ranges|.
-5. Return |ranges|.
+  <ol class="algorithm">
+    1. If |fragment directive input| is not a [=valid fragment directive=], then
+        return an empty <a spec=infra>list</a>.
+    2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>string</a>s
+        that is the result of [=strictly split a string|strictly splitting the
+        string=] |fragment directive input| on "&".
+    3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
+    4. For each <a spec=infra>string</a> |directive| of |directives|:
+        1. If |directive| does not match the production [=TextDirective=],
+            then [=iteration/continue=].
+        1. Let |parsedValues| be the result of running the [=parse a text
+            directive=] steps on |directive|.
+        1. If |parsedValues| is null then [=iteration/continue=].
+        1. If the result of running [=find a range from a text directive=] given
+            |parsedValues| and |document| is non-null, then [=list/append=] it to
+            |ranges|.
+    5. Return |ranges|.
+  </ol>
+</div>
 
+<div algorithm="find a range from a text directive">
 To <dfn>find a range from a text directive</dfn>, given a
 [=ParsedTextDirective=] |parsedValues| and [=Document=] |document|, run the
 following steps:
@@ -953,138 +1041,146 @@ following steps:
 
   </div>
 </div>
-
-1. Let |searchRange| be a [=range=] with [=range/start=] (|document|, 0) and
-    [=range/end=] (|document|, |document|'s [=Node/length=])
-1. While |searchRange| is not [=range/collapsed=]:
-    1. Let |potentialMatch| be null.
-    1. If |parsedValues|'s [=ParsedTextDirective/prefix=] is not null:
-        1. Let |prefixMatch| be the the result of running the [=find a string
-            in range=] steps with |query| |parsedValues|'s
-            [=ParsedTextDirective/prefix=], |searchRange| |searchRange|,
-            |wordStartBounded| true and |wordEndBounded| false.
-        1. If |prefixMatch| is null, return null.
-        1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
-            [=boundary point/after=] |prefixMatch|'s [=range/start=]
-        1. Let |matchRange| be a [=range=] whose [=range/start=] is
-            |prefixMatch|'s [=range/end=] and [=range/end=] is |searchRange|'s
-            [=range/end=].
-        1. Advance |matchRange|'s [=range/start=] to the
-            [=next non-whitespace position=].
-        1. If |matchRange| is [=range/collapsed=] return null.
-            <div class="note">
-              This can happen if |prefixMatch|'s [=range/end=] or its subsequent
-              non-whitespace position is at the end of the document.
-            </div>
-        1. [=/Assert=]: |matchRange|'s [=range/start node=] is a {{Text}} node.
-            <div class="note">
-              |matchRange|'s [=range/start=] now points to the next
-              non-whitespace text data following a matched prefix.
-            </div>
-        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-            [=ParsedTextDirective/textEnd=] is non-null or
-            |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
-            otherwise.
-        1. Set |potentialMatch| to the result of running the [=find a string in
-            range=] steps with |query| |parsedValues|'s
-            [=ParsedTextDirective/textStart=], |searchRange| |matchRange|,
-            |wordStartBounded| false, and |wordEndBounded|
-            |mustEndAtWordBoundary|.
-        1. If |potentialMatch| is null, return null.
-        1. If |potentialMatch|'s [=range/start=] is not |matchRange|'s
-            [=range/start=], then [=iteration/continue=].
-            <div class="note">
-              In this case, we found a prefix but it was followed by something
-              other than a matching text so we'll continue searching for the
-              next instance of [=ParsedTextDirective/prefix=].
-            </div>
-    1. Otherwise:
-        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-            [=ParsedTextDirective/textEnd=] is non-null or
-            |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
-            otherwise.
-        1. Set |potentialMatch| to the result of running the [=find a string in
-            range=] steps with |query| |parsedValues|'s
-            [=ParsedTextDirective/textStart=], |searchRange| |searchRange|,
-            |wordStartBounded| true, and |wordEndBounded|
-            |mustEndAtWordBoundary|.
-        1. If |potentialMatch| is null, return null.
-        1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
-            [=boundary point/after=] |potentialMatch|'s [=range/start=]
-    1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
-        non-null, then:
-        1. Let |textEndRange| be a [=range=] whose [=range/start=] is
-            |potentialMatch|'s [=range/end=] and whose [=range/end=] is
+  <ol class="algorithm">
+    1. Let |searchRange| be a [=range=] with [=range/start=] (|document|, 0) and
+        [=range/end=] (|document|, |document|'s [=Node/length=])
+    1. While |searchRange| is not [=range/collapsed=]:
+        1. Let |potentialMatch| be null.
+        1. If |parsedValues|'s [=ParsedTextDirective/prefix=] is not null:
+            1. Let |prefixMatch| be the the result of running the [=find a string
+                in range=] steps with |query| |parsedValues|'s
+                [=ParsedTextDirective/prefix=], |searchRange| |searchRange|,
+                |wordStartBounded| true and |wordEndBounded| false.
+            1. If |prefixMatch| is null, return null.
+            1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
+                [=boundary point/after=] |prefixMatch|'s [=range/start=]
+            1. Let |matchRange| be a [=range=] whose [=range/start=] is
+                |prefixMatch|'s [=range/end=] and [=range/end=] is |searchRange|'s
+                [=range/end=].
+            1. Advance |matchRange|'s [=range/start=] to the
+                [=next non-whitespace position=].
+            1. If |matchRange| is [=range/collapsed=] return null.
+                <div class="note">
+                  This can happen if |prefixMatch|'s [=range/end=] or its subsequent
+                  non-whitespace position is at the end of the document.
+                </div>
+            1. [=/Assert=]: |matchRange|'s [=range/start node=] is a {{Text}} node.
+                <div class="note">
+                  |matchRange|'s [=range/start=] now points to the next
+                  non-whitespace text data following a matched prefix.
+                </div>
+            1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+                [=ParsedTextDirective/textEnd=] is non-null or
+                |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
+                otherwise.
+            1. Set |potentialMatch| to the result of running the [=find a string in
+                range=] steps with |query| |parsedValues|'s
+                [=ParsedTextDirective/textStart=], |searchRange| |matchRange|,
+                |wordStartBounded| false, and |wordEndBounded|
+                |mustEndAtWordBoundary|.
+            1. If |potentialMatch| is null, return null.
+            1. If |potentialMatch|'s [=range/start=] is not |matchRange|'s
+                [=range/start=], then [=iteration/continue=].
+                <div class="note">
+                  In this case, we found a prefix but it was followed by something
+                  other than a matching text so we'll continue searching for the
+                  next instance of [=ParsedTextDirective/prefix=].
+                </div>
+        1. Otherwise:
+            1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+                [=ParsedTextDirective/textEnd=] is non-null or
+                |parsedValues|'s [=ParsedTextDirective/suffix=] is null, false
+                otherwise.
+            1. Set |potentialMatch| to the result of running the [=find a string in
+                range=] steps with |query| |parsedValues|'s
+                [=ParsedTextDirective/textStart=], |searchRange| |searchRange|,
+                |wordStartBounded| true, and |wordEndBounded|
+                |mustEndAtWordBoundary|.
+            1. If |potentialMatch| is null, return null.
+            1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
+                [=boundary point/after=] |potentialMatch|'s [=range/start=]
+        1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
+            non-null, then:
+            1. Let |textEndRange| be a [=range=] whose [=range/start=] is
+                |potentialMatch|'s [=range/end=] and whose [=range/end=] is
+                |searchRange|'s [=range/end=].
+            1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+                [=ParsedTextDirective/suffix=] is null, false otherwise.
+            1. Let |textEndMatch| be the result of running the [=find a string
+                in range=] steps with |query| |parsedValues|'s
+                [=ParsedTextDirective/textEnd=], |searchRange| |textEndRange|,
+                |wordStartBounded| true, and |wordEndBounded|
+                |mustEndAtWordBoundary|.
+            1. If |textEndMatch| is null then return null.
+            1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
+                [=range/end=].
+        1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
+            represents a range exactly containing an instance of matching text.
+        1. If |parsedValues|'s [=ParsedTextDirective/suffix=] is null, return
+            |potentialMatch|.
+        1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
+            |potentialMatch|'s [=range/end=] and [=range/end=] equal to
             |searchRange|'s [=range/end=].
-        1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-            [=ParsedTextDirective/suffix=] is null, false otherwise.
-        1. Let |textEndMatch| be the result of running the [=find a string
-            in range=] steps with |query| |parsedValues|'s
-            [=ParsedTextDirective/textEnd=], |searchRange| |textEndRange|,
-            |wordStartBounded| true, and |wordEndBounded|
-            |mustEndAtWordBoundary|.
-        1. If |textEndMatch| is null then return null.
-        1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
-            [=range/end=].
-    1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
-        represents a range exactly containing an instance of matching text.
-    1. If |parsedValues|'s [=ParsedTextDirective/suffix=] is null, return
-        |potentialMatch|.
-    1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
-        |potentialMatch|'s [=range/end=] and [=range/end=] equal to
-        |searchRange|'s [=range/end=].
-    1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
-        position=].
-    1. Let |suffixMatch| be result of running the [=find a string in range=]
-        steps with |query| |parsedValues|'s [=ParsedTextDirective/suffix=],
-        |searchRange| |suffixRange|, |wordStartBounded| false, and
-        |wordEndBounded| true.
-    1. If |suffixMatch| is null then return null.
-        <div class="note">
-          If the suffix doesn't appear in the remaining text of the document,
-          there's no possible way to make a match.
-        </div>
-    1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
-        return |potentialMatch|.
-1. Return null
+        1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
+            position=].
+        1. Let |suffixMatch| be result of running the [=find a string in range=]
+            steps with |query| |parsedValues|'s [=ParsedTextDirective/suffix=],
+            |searchRange| |suffixRange|, |wordStartBounded| false, and
+            |wordEndBounded| true.
+        1. If |suffixMatch| is null then return null.
+            <div class="note">
+              If the suffix doesn't appear in the remaining text of the document,
+              there's no possible way to make a match.
+            </div>
+        1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
+            return |potentialMatch|.
+    1. Return null
+  </ol>
+
+</div>
 
 <wpt>
   /scroll-to-text-fragment/find-range-from-text-directive.html
 </wpt>
 
+<div algorithm="advance range start to next non-whitespace position">
 To advance a [=range=] |range|'s [=range/start=] to the <dfn>next
 non-whitespace position</dfn> follow the steps:
 
-1. While |range| is not collapsed:
-    1. Let |node| be |range|'s [=range/start node=].
-    1. Let |offset| be |range|'s [=range/start offset=].
-    1. If |node| is part of a [=non-searchable subtree=] then:
-        1. Set |range|'s [=range/start node=] to the next node, in
-            [=shadow-including tree order=], that isn't a [=shadow-including
-            descendant=] of |node|, and set its [=range/start offset=] to 0.
-        1. [=iteration/Continue=].
-    1. If |node| is not a [=visible text node=]:
-        1. Set |range|'s [=range/start node=] to the next node, in
-            [=shadow-including tree order=], and set its [=range/start offset=]
-            to 0.
-        1. [=iteration/Continue=].
-    1. If the [=Text/substring data=] of |node| at offset |offset|
-        and count 6 is equal to the string "&amp;nbsp;" then:
-        1. Add 6 to |range|'s [=range/start offset=].
-    1. Otherwise, if the [=Text/substring data=] of |node| at offset |offset|
-        and count 5 is equal to the string "&amp;nbsp" then:
-        1. Add 5 to |range|'s [=range/start offset=].
-    1. Otherwise:
-        1. Let |cp| be the [=code point=] at the |offset| index in |node|'s
-            [=CharacterData/data=].
-        1. If |cp| does not have the <a
-            href="http://www.unicode.org/reports/tr44/#White_Space">White_Space</a>
-            property set, return.
-        1. Add 1 to |range|'s [=range/start offset=].
-    1. If |range|'s [=range/start offset=] is equal to |node|'s
-        [=Node/length=], set |range|'s [=range/start node=] to the next node in
-        [=shadow-including tree order=], and set its [=range/start offset=] to 0.
+  <ol class="algorithm">
+    1. While |range| is not collapsed:
+        1. Let |node| be |range|'s [=range/start node=].
+        1. Let |offset| be |range|'s [=range/start offset=].
+        1. If |node| is part of a [=non-searchable subtree=] then:
+            1. Set |range|'s [=range/start node=] to the next node, in
+                [=shadow-including tree order=], that isn't a [=shadow-including
+                descendant=] of |node|, and set its [=range/start offset=] to 0.
+            1. [=iteration/Continue=].
+        1. If |node| is not a [=visible text node=]:
+            1. Set |range|'s [=range/start node=] to the next node, in
+                [=shadow-including tree order=], and set its [=range/start offset=]
+                to 0.
+            1. [=iteration/Continue=].
+        1. If the [=Text/substring data=] of |node| at offset |offset|
+            and count 6 is equal to the string "&amp;nbsp;" then:
+            1. Add 6 to |range|'s [=range/start offset=].
+        1. Otherwise, if the [=Text/substring data=] of |node| at offset |offset|
+            and count 5 is equal to the string "&amp;nbsp" then:
+            1. Add 5 to |range|'s [=range/start offset=].
+        1. Otherwise:
+            1. Let |cp| be the [=code point=] at the |offset| index in |node|'s
+                [=CharacterData/data=].
+            1. If |cp| does not have the <a
+                href="http://www.unicode.org/reports/tr44/#White_Space">White_Space</a>
+                property set, return.
+            1. Add 1 to |range|'s [=range/start offset=].
+        1. If |range|'s [=range/start offset=] is equal to |node|'s
+            [=Node/length=], set |range|'s [=range/start node=] to the next node in
+            [=shadow-including tree order=], and set its [=range/start offset=] to 0.
+  </ol>
+</div>
 
+<div algorithm="find a string in a range">
 To <dfn>find a string in range</dfn> given a <a spec=infra>string</a> |query|, a
 [=range=] |searchRange|, and booleans |wordStartBounded| and |wordEndBounded|,
 run these steps:
@@ -1120,42 +1216,45 @@ run these steps:
   a block-level container) within a single block-level container.
 </div>
 
-1. While |searchRange| is not [=range/collapsed=]:
-    1. Let |curNode| be |searchRange|'s [=range/start node=].
-    1. If |curNode| is part of a [=non-searchable subtree=]:
-        1. Set |searchRange|'s [=range/start node=] to the next node, in
-            [=shadow-including tree order=], that isn't a [=shadow-including
-            descendant=] of |curNode|.
-        1. [=iteration/Continue=].
-    1. If |curNode| is not a [=visible text node=]:
-        1. Set |searchRange|'s [=range/start node=] to the next node, in
-            [=shadow-including tree order=], that is not a [=doctype=], and
-            set its [=range/start offset=] to 0.
-        1. [=iteration/Continue=].
-    1. Let |blockAncestor| be the [=nearest block ancestor=] of |curNode|.
-    1. Let |textNodeList| be a <a spec=infra>list</a> of {{Text}} nodes,
-        initially empty.
-    1. While |curNode| is a [=shadow-including descendant=] of |blockAncestor|
-        and the position of the [=/boundary point=] (|curNode|, 0) is not
-        [=boundary point/after=] |searchRange|'s [=range/end=]:
-        1. If |curNode| [=has block-level display=] then [=iteration/break=].
-        1. If |curNode| is [=search invisible=]:
-            1. Set |curNode| to the next node, in [=shadow-including tree
-                order=], that isn't a [=shadow-including descendant=] of
-                |curNode|.
-            2. [=iteration/Continue=].
-        1. If |curNode| is a [=visible text node=] then append it to
-            |textNodeList|.
-        1. Set |curNode| to the next node in [=shadow-including tree order=].
-    1. Run the [=find a range from a node list=] steps given |query|,
-        |searchRange|, |textNodeList|, |wordStartBounded| and |wordEndBounded|
-        as input. If the resulting [=range=] is not null, then return it.
-    1. If |curNode| is null, then [=iteration/break=].
-    1. [=/Assert=]: |curNode| [=tree/following|follows=] |searchRange|'s
-        [=range/start node=].
-    1. Set |searchRange|'s [=range/start=] to the [=/boundary point=] (|curNode|,
-        0).
-1. Return null.
+  <ol class="algorithm">
+    1. While |searchRange| is not [=range/collapsed=]:
+        1. Let |curNode| be |searchRange|'s [=range/start node=].
+        1. If |curNode| is part of a [=non-searchable subtree=]:
+            1. Set |searchRange|'s [=range/start node=] to the next node, in
+                [=shadow-including tree order=], that isn't a [=shadow-including
+                descendant=] of |curNode|.
+            1. [=iteration/Continue=].
+        1. If |curNode| is not a [=visible text node=]:
+            1. Set |searchRange|'s [=range/start node=] to the next node, in
+                [=shadow-including tree order=], that is not a [=doctype=], and
+                set its [=range/start offset=] to 0.
+            1. [=iteration/Continue=].
+        1. Let |blockAncestor| be the [=nearest block ancestor=] of |curNode|.
+        1. Let |textNodeList| be a <a spec=infra>list</a> of {{Text}} nodes,
+            initially empty.
+        1. While |curNode| is a [=shadow-including descendant=] of |blockAncestor|
+            and the position of the [=/boundary point=] (|curNode|, 0) is not
+            [=boundary point/after=] |searchRange|'s [=range/end=]:
+            1. If |curNode| [=has block-level display=] then [=iteration/break=].
+            1. If |curNode| is [=search invisible=]:
+                1. Set |curNode| to the next node, in [=shadow-including tree
+                    order=], that isn't a [=shadow-including descendant=] of
+                    |curNode|.
+                2. [=iteration/Continue=].
+            1. If |curNode| is a [=visible text node=] then append it to
+                |textNodeList|.
+            1. Set |curNode| to the next node in [=shadow-including tree order=].
+        1. Run the [=find a range from a node list=] steps given |query|,
+            |searchRange|, |textNodeList|, |wordStartBounded| and |wordEndBounded|
+            as input. If the resulting [=range=] is not null, then return it.
+        1. If |curNode| is null, then [=iteration/break=].
+        1. [=/Assert=]: |curNode| [=tree/following|follows=] |searchRange|'s
+            [=range/start node=].
+        1. Set |searchRange|'s [=range/start=] to the [=/boundary point=] (|curNode|,
+            0).
+    1. Return null.
+  </ol>
+</div>
 
 A node is <dfn>search invisible</dfn> if it is an [=element=] in the [=HTML
 namespace=] and meets any of the following conditions:
@@ -1179,14 +1278,19 @@ A node <dfn>has block-level display</dfn> if it is an [=element=] and the [=comp
 ''display/flow-root'', ''display/grid'', ''display/flex'',
 ''display/list-item''.
 
+<div algorithm="nearest block ancestor">
 To find the <dfn>nearest block ancestor</dfn> of a |node| follow the steps:
-1. Let |curNode| be |node|.
-1. While |curNode| is non-null
-    1. If |curNode| is not a {{Text}} node and it [=has block-level display=] then
-        return |curNode|.
-    1. Otherwise, set |curNode| to |curNode|'s [=tree/parent=].
-1. Return |node|'s [=Node/node document=]'s [=document element=].
+  <ol class="algorithm">
+    1. Let |curNode| be |node|.
+    1. While |curNode| is non-null
+        1. If |curNode| is not a {{Text}} node and it [=has block-level display=] then
+            return |curNode|.
+        1. Otherwise, set |curNode| to |curNode|'s [=tree/parent=].
+    1. Return |node|'s [=Node/node document=]'s [=document element=].
+  </ol>
+</div>
 
+<div algorithm="range from node list">
 To <dfn>find a range from a node list</dfn> given a search string |queryString|,
 a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
 |wordStartBounded| and |wordEndBounded|, follow these steps:
@@ -1204,59 +1308,63 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
   See [[#word-boundaries]] for details and more examples.
 </div>
 
-1. Let |searchBuffer| be the [=string/concatenate|concatenation=] of the
-    [=CharacterData/data=] of each item in |nodes|.
-1. Let |searchStart| be 0.
-1. If the first item in |nodes| is |searchRange|'s [=range/start node=] then
-    set |searchStart| to |searchRange|'s [=range/start offset=].
-1. Let |start| and |end| be [=/boundary points=], initially null.
-1. Let |matchIndex| be null.
-1. While |matchIndex| is null
-    1. Set |matchIndex| to the index of the first instance of |queryString| in
-        |searchBuffer|, starting at |searchStart|. The string search must be
-        performed using a base character comparison, or the
-        <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
-        level</a>, as defined in [[!UTS10]].
+  <ol class="algorithm">
+    1. Let |searchBuffer| be the [=string/concatenate|concatenation=] of the
+        [=CharacterData/data=] of each item in |nodes|.
+    1. Let |searchStart| be 0.
+    1. If the first item in |nodes| is |searchRange|'s [=range/start node=] then
+        set |searchStart| to |searchRange|'s [=range/start offset=].
+    1. Let |start| and |end| be [=/boundary points=], initially null.
+    1. Let |matchIndex| be null.
+    1. While |matchIndex| is null
+        1. Set |matchIndex| to the index of the first instance of |queryString| in
+            |searchBuffer|, starting at |searchStart|. The string search must be
+            performed using a base character comparison, or the
+            <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
+            level</a>, as defined in [[!UTS10]].
+            <div class="note">
+              Intuitively, this is a case-insensitive search also ignoring accents
+              and other marks.
+            </div>
+        1. If |matchIndex| is null, return null.
+        1. Let |endIx| be |matchIndex| + |queryString|'s [=string/length=].
+            <div class="note">
+               |endIx| is the index of the last character in the match + 1.
+            </div>
+        1. Set |start| to the [=/boundary point=] result of [=get boundary point at
+            index=] |matchIndex| run over |nodes| with |isEnd| false.
+        1. Set |end| to the [=/boundary point=] result of [=get boundary point at
+            index=] |endIx| run over |nodes| with |isEnd| true.
+        1. If |wordStartBounded| is true and |matchIndex| [=is at a word boundary|is
+            not at a word boundary=] in |searchBuffer|, given the <a
+            spec=html>language</a> from |start|'s [=boundary point/node=] as the
+            |locale|; or |wordEndBounded| is true and |matchIndex| + |queryString|'s
+            [=string/length=] [=is at a word boundary|is not at a word boundary=] in
+            |searchBuffer|, given the <a spec=html>language</a> from |end|'s
+            [=boundary point/node=] as the |locale|:
+            1. Set |searchStart| to |matchIndex| + 1.
+            1. Set |matchIndex| to null.
+    1. Let |endInset| be 0.
+    1. If the last item in |nodes| is |searchRange|'s [=range/end node=] then set
+        |endInset| to (|searchRange|'s [=range/end node=]'s [=Node/length=] &minus;
+        |searchRange|'s [=range/end offset=])
         <div class="note">
-          Intuitively, this is a case-insensitive search also ignoring accents
-          and other marks.
+          |endInset| is the offset from the last position in the last node in the
+          reverse direction. Alternatively, it is the length of the node that's not
+          included in the range.
         </div>
-    1. If |matchIndex| is null, return null.
-    1. Let |endIx| be |matchIndex| + |queryString|'s [=string/length=].
+    1. If |matchIndex| + |queryString|'s [=string/length=] is greater than
+        |searchBuffer|'s length &minus; |endInset| return null.
         <div class="note">
-           |endIx| is the index of the last character in the match + 1.
+          If the match runs past the end of the search range, return null.
         </div>
-    1. Set |start| to the [=/boundary point=] result of [=get boundary point at
-        index=] |matchIndex| run over |nodes| with |isEnd| false.
-    1. Set |end| to the [=/boundary point=] result of [=get boundary point at
-        index=] |endIx| run over |nodes| with |isEnd| true.
-    1. If |wordStartBounded| is true and |matchIndex| [=is at a word boundary|is
-        not at a word boundary=] in |searchBuffer|, given the <a
-        spec=html>language</a> from |start|'s [=boundary point/node=] as the
-        |locale|; or |wordEndBounded| is true and |matchIndex| + |queryString|'s
-        [=string/length=] [=is at a word boundary|is not at a word boundary=] in
-        |searchBuffer|, given the <a spec=html>language</a> from |end|'s
-        [=boundary point/node=] as the |locale|:
-        1. Set |searchStart| to |matchIndex| + 1.
-        1. Set |matchIndex| to null.
-1. Let |endInset| be 0.
-1. If the last item in |nodes| is |searchRange|'s [=range/end node=] then set
-    |endInset| to (|searchRange|'s [=range/end node=]'s [=Node/length=] &minus;
-    |searchRange|'s [=range/end offset=])
-    <div class="note">
-      |endInset| is the offset from the last position in the last node in the
-      reverse direction. Alternatively, it is the length of the node that's not
-      included in the range.
-    </div>
-1. If |matchIndex| + |queryString|'s [=string/length=] is greater than
-    |searchBuffer|'s length &minus; |endInset| return null.
-    <div class="note">
-      If the match runs past the end of the search range, return null.
-    </div>
-1. [=/Assert=]: |start| and |end| are non-null, valid [=/boundary points=] in
-    |searchRange|.
-1. Return a [=range=] with [=range/start=] |start| and [=range/end=] |end|.
+    1. [=/Assert=]: |start| and |end| are non-null, valid [=/boundary points=] in
+        |searchRange|.
+    1. Return a [=range=] with [=range/start=] |start| and [=range/end=] |end|.
+  </ol>
+</div>
 
+<div algorithm="boundary point at index">
 To <dfn>get boundary point at index</dfn>, given an integer |index|, [=/list=]
 of {{Text}} nodes |nodes|, and a boolean |isEnd|, follow these steps:
 
@@ -1273,14 +1381,17 @@ of {{Text}} nodes |nodes|, and a boolean |isEnd|, follow these steps:
   </p>
 </div>
 
-1. Let |counted| be 0.
-1. For each |curNode| of |nodes|:
-    1. Let |nodeEnd| be |counted| + |curNode|'s [=Node/length=].
-    1. If |isEnd| is true, add 1 to |nodeEnd|.
-    1. If |nodeEnd| is greater than |index| then:
-        1. Return the [=/boundary point=] (|curNode|, |index| &minus; |counted|).
-    1. Increment |counted| by |curNode|'s [=Node/length=].
-1. Return null.
+  <ol class="algorithm">
+    1. Let |counted| be 0.
+    1. For each |curNode| of |nodes|:
+        1. Let |nodeEnd| be |counted| + |curNode|'s [=Node/length=].
+        1. If |isEnd| is true, add 1 to |nodeEnd|.
+        1. If |nodeEnd| is greater than |index| then:
+            1. Return the [=/boundary point=] (|curNode|, |index| &minus; |counted|).
+        1. Increment |counted| by |curNode|'s [=Node/length=].
+    1. Return null.
+  </ol>
+</div>
 
 ### Word Boundaries ### {#word-boundaries}
 <div class="note">
@@ -1325,8 +1436,8 @@ boundary=] immediately precedes the |position|th code unit, or |text|'s length
 is more than 0 and |position| equals either 0 or |text|'s length.
 
 <div class="note">
-  Intuitively, a substring is word bounded if it neither begins nor ends in the
-  middle of a word.
+  Intuitively, a substring is [=word bounded=] if it neither begins nor ends in
+  the middle of a word.
 
   In languages with a word separator (e.g. " " space) this is (mostly)
   straightforward; though there are details covered by the above technical
