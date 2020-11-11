@@ -16,13 +16,14 @@ WPT Display: inline
 </pre>
 
 <pre class='link-defaults'>
-spec:html; type:dfn; for:/; text:origin
 spec:css-display-3; type:value; for:display; text:flex
 spec:css-display-3; type:value; for:display; text:grid
 spec:dom; type:dfn; for:/; text:element
 spec:html; type:element; text:link
+spec:html; type:dfn; for:/; text:origin
 spec:html; type:element; text:script
 spec:html; type:element; text:style
+spec:url; type:dfn; text:fragment
 </pre>
 
 <pre class="biblio">
@@ -173,27 +174,7 @@ example" in "here is an example text".
 
 To avoid compatibility issues with usage of existing URL fragments, this spec
 introduces the [=fragment directive=]. The [=fragment directive=] is a portion
-of the URL fragment delimited by the code sequence <code>:~:</code>. It is
-reserved for UA instructions, such as text=, and is stripped from the URL
-during loading so that author scripts can't directly interact with it.
-
-The [=fragment directive=] is a mechanism for URLs to specify instructions meant
-for the UA rather than the document. It's meant to avoid direct interaction with
-author script so that future UA instructions can be added without fear of
-introducing breaking changes to existing content. Potential examples could be:
-translation-hints or enabling accessibility features.
-
-### Parsing the fragment directive ### {#parsing-the-fragment-directive}
-
-To the definition of [=Document=], add:
-
->   <strong>Monkeypatching [[HTML]]:</strong>
->
->   <em>
->     Each document has an associated <dfn>fragment directive</dfn> which is
->     either null or an ASCII string holding data used by the UA to process the
->     resource. It is initially null.
->   </em>
+of the URL [=url/fragment=] that follows the [=fragment directive delimiter=].
 
 The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
@@ -208,40 +189,56 @@ three consecutive code points U+003A (:), U+007E (~), U+003A (:).
   must first be appended to the URL: https://example.com#:~:text=foo.
 </div>
 
+The fragment directive is meant to carry instructions, such as
+<code>text=</code>, for the UA rather than for the document.
 
-Amend the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
-create and initialize a Document object</a> steps to parse and remove the
-[=fragment directive=] from the Document's [=Document/URL=].
+To prevent impacting page operation, it is stripped from a [=Document=]'s
+[=Document/URL=] so that author scripts can't directly interact with it. This
+also ensures future directives could be added without introducing breaking
+changes to existing content.  Potential examples could be: image-fragments,
+translation-hints.
 
-Replace steps 7 and 8 of this algorithm with:
+
+### Processing the fragment directive ### {#processing-the-fragment-directive}
+
+The fragment directive is processed and removed from the fragment whenever the
+UA sets the [=Document/URL=] on a [=Document=]. This is defined with the
+following additions and changes.
+
+To the definition of [=Document=], add:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   7. Let |url| be null
->   8. If |request| is non-null, then set |document|'s [=Document/URL=] to
->       |request|'s [=request/current URL=].
->   9. Otherwise, set |url| to <var ignore=''>response</var>'s [=response/URL=].
->   10. Let |raw fragment| be equal to |url|'s [=url/fragment=].
->   11. If |raw fragment| is non-null:
->       1. Let |fragmentDirectivePosition| be an integer initialized to 0.
->       2. While the substring of |raw fragment| starting at position
->           |fragmentDirectivePosition| does not begin with the [=fragment directive
->           delimiter=] and |fragmentDirectivePosition| does not point past the end
->           of |raw fragment|:
->           1. Increment |fragmentDirectivePosition| by 1.
->       3. If |fragmentDirectivePosition| does not point past the end of |raw
->           fragment|:
->           1. Let |fragment| be the substring of |raw fragment| starting at 0 of
->               count |fragmentDirectivePosition|.
->           1. Advance |fragmentDirectivePosition| by the length of [=fragment
->               directive delimiter=].
->           1. Let |fragment directive| be the substring of |raw fragment| starting
->               at |fragmentDirectivePosition|.
->           1. Set |url|'s [=url/fragment=] to |fragment|.
->           1. Set |document|'s [=fragment directive=] to |fragment directive|.
->               (Note: this is stored on the document but not web-exposed)
->   12. Set |document|'s [=Document/URL=] to be |url|.
+>   <em>
+>     Each document has an associated <dfn>fragment directive</dfn> which is
+>     either null or an ASCII string holding data used by the UA to process the
+>     resource. It is initially null.
+>   </em>
+
+Whenever the fragment directive is stripped from the URL, it is set to the
+Document's [=fragment directive=].
+
+Add a series of steps that will process a fragment directive on a [=Document/URL=]:
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   To <dfn>process and consume fragment directive</dfn> from a [=/URL=]
+>   |url| and [=Document=] |document|, run these steps:
+>   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
+>   1. If |raw fragment| is non-null and contains the [=fragment directive
+>       delimiter=] as a substring:
+>       1. Let |fragmentDirectivePosition| be the index of the first instance
+>           of the [=fragment directive delimiter=] in |raw fragment|.
+>       1. Let |fragment| be the substring of |raw fragment| starting at 0 of
+>           count |fragmentDirectivePosition|.
+>       1. Advance |fragmentDirectivePosition| by the length of [=fragment
+>           directive delimiter=].
+>       1. Let |fragment directive| be the substring of |raw fragment| starting
+>           at |fragmentDirectivePosition|.
+>       1. Set |url|'s [=url/fragment=] to |fragment|.
+>       1. Set |document|'s [=fragment directive=] to |fragment directive|.
+>           <div class="note">This is stored on the document but currently not
+>           web-exposed</div>
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive
@@ -254,6 +251,145 @@ Replace steps 7 and 8 of this algorithm with:
 the fragment is the string "test" and the [=fragment directive=] is the string
 "text=foo".
 </div>
+
+
+Amend the
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
+create and initialize a Document object</a> steps to parse and remove the
+[=fragment directive=] by inserting the following steps right before the
+setting |document|'s [=Document/URL=]
+(<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#initialise-the-document-object">currently</a>
+step 9):
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   9. Run the [=process and consume fragment directive=] steps on
+>     |creationURL| and |document|.
+>   10. Set |document|'s [=Document/URL=] to be |creationURL|.
+
+Amend the
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history">
+traverse the history</a> steps to process the [=fragment directive=]
+during a history navigation by inserting steps before setting the |newDocument|'s URL (<a
+href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#traverse-the-history">currently</a>
+step 6).
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   6. Let |processedURL| be a copy of <var ignore="">entry</var>'s URL.
+>   7. Run the [=process and consume fragment directive=] steps on
+>       |processedURL| and |document|.
+>   8. Set |newDocument|'s URL to |processedURL|.
+
+<div class="note">
+  <p>
+    The changes in this section imply that a URL is only stripped of its fragment
+    directive when it is set on a Document. Notably, since a window's
+    {{Location}} object is a representation of the [=/URL=] of the [=active
+    document=], all getters on it will show a fragment-directive-stripped
+    version of the URL.
+  </p>
+
+  <p>
+    Some examples should help clarify various edge cases.
+  </p>
+</div>
+
+<div class="example">
+  ```
+  window.location = 'https://example.com#foo:~:bar';
+  ```
+
+  The page loads and when the document's URL is set the fragment directive is
+  stripped out during the "create and initialize a Document object" steps.
+
+  ```
+  console.log(window.location.href); // 'https://example.com#foo'
+  console.log(window.location.hash); // '#foo'
+  ```
+
+  Since same document navigations are made by adding a new session history
+  entry and using the "traverse the history" steps, the the fragment directive
+  will be stripped here as well.
+
+  ```
+  window.location.hash = 'fizz:~:buzz';
+  console.log(window.location.href); // 'https://example.com#fizz'
+  console.log(window.location.hash); // '#fizz'
+  ```
+
+  The hashchange event is dispatched when only the fragment directive changes
+  because the comparison for it is done on the URLs in the session history
+  entries, where the fragment directive hasn't been removed.
+
+  ```
+  onhashchange = () => {console.log('HASHCHANGE');};
+  window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
+  console.log(window.location.href); // 'https://example.com#fizz'
+  console.log(window.location.hash); // '#fizz'
+  ```
+</div>
+
+<div class="example">
+  In other cases where a Document's URL is not set by the UA, there is no
+  fragment directive stripping.
+
+  For URL objects:
+
+  ```
+  let url = new URL('https://example.com#foo:~:bar');
+  console.log(url.href); // 'https://example.com#foo:~:bar'
+  console.log(url.hash); // '#foo:~:bar'
+
+  document.url = url;
+  console.log(document.url.href); // 'https://example.com#foo:~:bar'
+  console.log(document.url.hash); // '#foo:~:bar'
+
+  ```
+
+  The `<a>` or `<area>` elements:
+
+  ```
+  <a id='anchor' href="https://example.com#foo:~:bar">Anchor</a>
+  <script>
+    console.log(anchor.href); // 'https://example.com#foo:~:bar'
+    console.log(anchor.hash); // '#foo:~:bar'
+  </script>
+  ```
+</div>
+
+<div class="example">
+  History pushState will create a session history entry where the URL's
+  fragment directive isn't stripped. However, traversing to the entry will
+  cause it to set its URL on the document which will process the fragment
+  directive before setting it on the Document (but the fragment directive
+  remains on the entry).
+
+
+  ```
+  history.pushState({}, 'title', 'index.html#foo:~:bar');
+  window.location = 'newpage.html';
+  // on newpage.html
+  history.back();
+  ```
+
+  Results in the current document having "bar" as the fragment directive.
+</div>
+
+
+### Parsing the fragment directive ### {#parsing-the-fragment-directive}
+
+A <dfn>ParsedTextDirective</dfn> is a <a spec=infra>struct</a> that consists of
+four strings: <dfn for="ParsedTextDirective">textStart</dfn>,
+<dfn for="ParsedTextDirective">textEnd</dfn>,
+<dfn for="ParsedTextDirective">prefix</dfn>, and
+<dfn for="ParsedTextDirective">suffix</dfn>. [=ParsedTextDirective/textStart=]
+is required to be non-null. The other three items may be set to null,
+indicating they weren't provided. The empty string is not a valid value for any
+of these items.
+
+See [[#syntax]] for the what each of these components means and how they're
+used.
 
 <div algorithm="parse a text directive">
 
@@ -312,18 +448,6 @@ directive input|, run these steps:
     1. Return |retVal|.
   </ol>
 </div>
-
-A <dfn>ParsedTextDirective</dfn> is a <a spec=infra>struct</a> that consists of
-four strings: <dfn for="ParsedTextDirective">textStart</dfn>,
-<dfn for="ParsedTextDirective">textEnd</dfn>,
-<dfn for="ParsedTextDirective">prefix</dfn>, and
-<dfn for="ParsedTextDirective">suffix</dfn>. [=ParsedTextDirective/textStart=]
-is required to be non-null. The other three items may be set to null,
-indicating they weren't provided. The empty string is not a valid value for any
-of these items.
-
-See [[#syntax]] for the what each of these components means and how they're
-used.
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 
