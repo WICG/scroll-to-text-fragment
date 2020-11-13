@@ -12,6 +12,7 @@ Abstract: Text Fragments adds support for specifying a text snippet in the URL
 Group: wicg
 Repository: wicg/scroll-to-text-fragment
 Markup Shorthands: markdown yes
+WPT Display: inline
 </pre>
 
 <pre class='link-defaults'>
@@ -1046,6 +1047,10 @@ following steps:
     1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
         return |potentialMatch|.
 1. Return null
+
+<wpt>
+  /scroll-to-text-fragment/find-range-from-text-directive.html
+</wpt>
 
 To advance a [=range=] |range|'s [=range/start=] to the <dfn>next
 non-whitespace position</dfn> follow the steps:
