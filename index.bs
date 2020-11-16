@@ -1743,7 +1743,7 @@ with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy
 
 <div class="note">
   When enabled, this policy disables all automatic scroll-on-load features:
-  text-fragments, element framgments, history scroll restoration.
+  text-fragments, element fragments, history scroll restoration.
 </div>
 <div class='example'>
   Suppose the user navigates to `https://example.com#:~:text=foo`. The
