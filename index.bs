@@ -1628,6 +1628,107 @@ exfiltration.
 
 The UA must not visually indicate any provided context terms.
 
+Since the indicator is not part of the document's content, UAs should consider
+ways to differentiate it from the page's content as perceived by the user.
+
+<div class="example">
+  The UA could provide an in-product help prompt the first few times the
+  indicator appears to help train the user that it comes from the linking page
+  and is provided by the UA.
+</div>
+
+### URLs in UA features ### {#urls-in-ua-features}
+
+<div class='note'>
+  This section is non-normative.
+</div>
+
+UAs provide a number of consumers for a document's URL (outside of programmatic
+APIs like <code>window.location</code>). Examples include a location bar
+indicating the URL of the currently visible document, or the URL used when a
+user requests to create a bookmark for the current page.
+
+To avoid user confusion, UAs should be consistent in whether such URLs include
+the [=fragment directive=]. This section provides a default set of
+recommendations for how UAs should handle these cases.
+
+<div class='note'>
+  <p>
+  We provide these as a baseline for consistent behavior; however, as these
+  features don't affect cross-UA interoperability, they are not strict
+  conformance requirements.
+  </p>
+
+  <p>
+  Exact behavior is left up to the implementing UA which may have differing
+  constraints or reasons for modifying the behavior. e.g. UAs may allow users
+  to configure defaults or expose UI options so users can choose whether they
+  prefer to include fragment directives in these URLs.
+
+  It's also useful to allow UAs to experiment with providing a better
+  experience. E.g. perhaps a URL should elide the text fragment if the user
+  scrolls it out of view?
+  </p>
+</div>
+
+The general principle is that a URL should include the [=fragment directive=]
+only while the visual indicator is visible (i.e. not dismissed). If the user
+dismisses the indicator, the URL should not include the [=fragment directive=].
+
+If the URL includes a text fragment but a match wasn't found in the current
+page, the UA may choose to omit it from the exposed URL.
+
+<div class='note'>
+  <p>
+  A text fragment that isn't found on the page may be useful information to
+  surface to a user to indicate that the page may have changed since the link
+  was created.
+  </p>
+
+  <p>
+  However, it's unlikely to be useful to the user in a bookmark.
+  </p>
+</div>
+
+A few common examples are provided below.
+
+<div class='note'>
+  We use "text fragment" and "fragment directive" interchangeably here as text
+  fragments are assumed to be the only kind of directive. Should additional
+  directives be added in the future, the UX in these cases may have to be
+  re-evaluated separately for new directive types.
+</div>
+
+#### Location Bar #### {#urls-in-location-bar}
+
+The location bar's URL should include a text fragment while it is visually
+indicated. The [=fragment directive=] should be stripped from the location bar
+URL when the user dismisses the indication.
+
+It is recommended that the text fragment be displayed in the location bar's URL
+even if a match wasn't located in the document.
+
+#### Bookmarks #### {#urls-in-bookmarks}
+
+Many UAs provide a "bookmark" feature allowing users to store a convenient link
+to the current page in the UA's interface.
+
+A newly created bookmark should, by default, include the [=fragment directive=]
+in the URL if, and only if, a match was found and the visual indicator hasn't
+been dismissed.
+
+Navigating to a URL from a bookmark should process a [=fragment directive=] as
+if it were navigated to in a typical navigation.
+
+#### Sharing #### {#urls-in-sharing}
+
+Some UAs provide a method for users to share the current page with others,
+typically by providing the URL to another app or messaging service.
+
+When providing a URL in these situations, it should include the [=fragment
+directive=] if, and only if, a match was found and the visual indicator hasn't
+been dismissed.
+
 ## Document Policy Integration ## {#document-policy-integration}
 
 <!-- TODO:Replace manual links with autolinks to document-policy definitions
