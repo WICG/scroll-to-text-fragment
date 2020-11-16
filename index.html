@@ -1485,14 +1485,8 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 89ebb6ab, updated Fri Oct 9 15:32:07 2020 -0700" name="generator">
+  <meta content="Bikeshed version ef9d3c0a, updated Fri Nov 13 17:14:48 2020 -0800" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
-<style>/* darkmode */
-
-            @media (prefers-color-scheme: dark) {
-                html { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E") !important; }
-            }
-            </style>
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1554,6 +1548,115 @@ pre .property::before, pre .property::after {
 
 [data-link-type=biblio] {
     white-space: pre;
+}</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --unofficial-watermark: url(https://www.w3.org/StyleSheets/TR/2016/logos/UD-watermark);
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #707070;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #bbb;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --amendment-border: #330099;
+    --amendment-bg: #F5F0FF;
+    --amendment-text: var(--text);
+    --amendmentheading-text: #220066;
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
 }</style>
 <style>/* style-counters */
 
@@ -1801,11 +1904,201 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 	border: none;
 }
 </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --amendment-border: #330099;
+        --amendment-bg: #080010;
+        --amendment-text: var(--text);
+        --amendmentheading-text: #cc00ff;
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-11-13">13 November 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-11-16">16 November 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1886,7 +2179,17 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#finding-ranges-in-a-document"><span class="secno">3.5.2</span> <span class="content">Finding Ranges in a Document</span></a>
         <li><a href="#word-boundaries"><span class="secno">3.5.3</span> <span class="content">Word Boundaries</span></a>
        </ol>
-      <li><a href="#indicating-the-text-match"><span class="secno">3.6</span> <span class="content">Indicating The Text Match</span></a>
+      <li>
+       <a href="#indicating-the-text-match"><span class="secno">3.6</span> <span class="content">Indicating The Text Match</span></a>
+       <ol class="toc">
+        <li>
+         <a href="#urls-in-ua-features"><span class="secno">3.6.1</span> <span class="content">URLs in UA features</span></a>
+         <ol class="toc">
+          <li><a href="#urls-in-location-bar"><span class="secno">3.6.1.1</span> <span class="content">Location Bar</span></a>
+          <li><a href="#urls-in-bookmarks"><span class="secno">3.6.1.2</span> <span class="content">Bookmarks</span></a>
+          <li><a href="#urls-in-sharing"><span class="secno">3.6.1.3</span> <span class="content">Sharing</span></a>
+         </ol>
+       </ol>
       <li><a href="#document-policy-integration"><span class="secno">3.7</span> <span class="content">Document Policy Integration</span></a>
       <li><a href="#feature-detectability"><span class="secno">3.8</span> <span class="content">Feature Detectability</span></a>
      </ol>
@@ -3200,6 +3503,67 @@ However, the UA must not use the Document’s <a href="https://w3c.github.io/sel
 indicate the text match as doing so could allow attack vectors for content
 exfiltration.</p>
    <p>The UA must not visually indicate any provided context terms.</p>
+   <p>Since the indicator is not part of the document’s content, UAs should consider
+ways to differentiate it from the page’s content as perceived by the user.</p>
+   <div class="example" id="example-30d9320e"><a class="self-link" href="#example-30d9320e"></a> The UA could provide an in-product help prompt the first few times the
+  indicator appears to help train the user that it comes from the linking page
+  and is provided by the UA. </div>
+   <h4 class="heading settled" data-level="3.6.1" id="urls-in-ua-features"><span class="secno">3.6.1. </span><span class="content">URLs in UA features</span><a class="self-link" href="#urls-in-ua-features"></a></h4>
+   <div class="note" role="note"> This section is non-normative. </div>
+   <p>UAs provide a number of consumers for a document’s URL (outside of programmatic
+APIs like <code>window.location</code>). Examples include a location bar
+indicating the URL of the currently visible document, or the URL used when a
+user requests to create a bookmark for the current page.</p>
+   <p>To avoid user confusion, UAs should be consistent in whether such URLs include
+the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑤">fragment directive</a>. This section provides a default set of
+recommendations for how UAs should handle these cases.</p>
+   <div class="note" role="note">
+    <p> We provide these as a baseline for consistent behavior; however, as these
+  features don’t affect cross-UA interoperability, they are not strict
+  conformance requirements. </p>
+    <p> Exact behavior is left up to the implementing UA which may have differing
+  constraints or reasons for modifying the behavior. e.g. UAs may allow users
+  to configure defaults or expose UI options so users can choose whether they
+  prefer to include fragment directives in these URLs. </p>
+    <p>It’s also useful to allow UAs to experiment with providing a better
+  experience. E.g. perhaps a URL should elide the text fragment if the user
+  scrolls it out of view?</p>
+    <p></p>
+   </div>
+   <p>The general principle is that a URL should include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑥">fragment directive</a> only while the visual indicator is visible (i.e. not dismissed). If the user
+dismisses the indicator, the URL should not include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑦">fragment directive</a>.</p>
+   <p>If the URL includes a text fragment but a match wasn’t found on in the current
+page, the UA may choose to omit it from the exposed URL.</p>
+   <div class="note" role="note">
+    <p> A text fragment that isn’t found on the page may be useful information to
+  surface to a user to indicate that the page may have changed since the link
+  was created. </p>
+    <p> However, it’s unlikely to be useful to the user in a bookmark. </p>
+   </div>
+   <p>A few common examples are provided below.</p>
+   <div class="note" role="note"> We use "text fragment" and "fragment directive" interchangeably here as text
+  fragments are assumed to be the only kind of directive. Should additional
+  directives be added in the future, the UX in these cases may have to be
+  re-evaluated separately for new directive types. </div>
+   <h5 class="heading settled" data-level="3.6.1.1" id="urls-in-location-bar"><span class="secno">3.6.1.1. </span><span class="content">Location Bar</span><a class="self-link" href="#urls-in-location-bar"></a></h5>
+   <p>The location bar’s URL should include a text fragment while it is visually
+indicated. The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑧">fragment directive</a> should be stripped from the location bar
+URL when the user dismisses the indication.</p>
+   <p>It is recommended that the text fragment be displayed in the location bar’s URL
+even if a match wasn’t located in the document.</p>
+   <h5 class="heading settled" data-level="3.6.1.2" id="urls-in-bookmarks"><span class="secno">3.6.1.2. </span><span class="content">Bookmarks</span><a class="self-link" href="#urls-in-bookmarks"></a></h5>
+   <p>Many UAs provide a "bookmark" feature allowing users to store a convenient link
+to the current page in the UA’s interface.</p>
+   <p>A newly created bookmark should, by default, include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑨">fragment directive</a> in the URL if, and only if, a match was found and the visual indicator hasn’t
+been dismissed.</p>
+   <p>Navigating to a URL from a bookmarks should process a <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive②⓪">fragment directive</a> as
+if it were navigated to in a typical navigation.</p>
+   <h5 class="heading settled" data-level="3.6.1.3" id="urls-in-sharing"><span class="secno">3.6.1.3. </span><span class="content">Sharing</span><a class="self-link" href="#urls-in-sharing"></a></h5>
+   <p>Some UAs provide a method for users to share the current page with others,
+typically by providing the URL to another app or messaging service.</p>
+   <p>When providing a URL in these situations, it should include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive②①">fragment
+directive</a> if, and only if, a match was found and the visual indicator hasn’t
+been dismissed.</p>
    <h3 class="heading settled" data-level="3.7" id="document-policy-integration"><span class="secno">3.7. </span><span class="content">Document Policy Integration</span><a class="self-link" href="#document-policy-integration"></a></h3>
    <p>This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy">Document Policy</a> with name "force-load-at-top". Its <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> is <code>boolean</code> with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a> <code>false</code>.</p>
    <div class="note" role="note"> When enabled, this policy disables all automatic scroll-on-load features:
@@ -4249,6 +4613,10 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-fragment-directive①①">3.3.3. Fragment directive grammar</a> <a href="#ref-for-fragment-directive①②">(2)</a>
     <li><a href="#ref-for-fragment-directive①③">3.4.4. Restricting the Text Fragment</a>
     <li><a href="#ref-for-fragment-directive①④">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-fragment-directive①⑤">3.6.1. URLs in UA features</a> <a href="#ref-for-fragment-directive①⑥">(2)</a> <a href="#ref-for-fragment-directive①⑦">(3)</a>
+    <li><a href="#ref-for-fragment-directive①⑧">3.6.1.1. Location Bar</a>
+    <li><a href="#ref-for-fragment-directive①⑨">3.6.1.2. Bookmarks</a> <a href="#ref-for-fragment-directive②⓪">(2)</a>
+    <li><a href="#ref-for-fragment-directive②①">3.6.1.3. Sharing</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="process-and-consume-fragment-directive">
