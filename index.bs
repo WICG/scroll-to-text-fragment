@@ -1675,7 +1675,7 @@ The general principle is that a URL should include the [=fragment directive=]
 only while the visual indicator is visible (i.e. not dismissed). If the user
 dismisses the indicator, the URL should not include the [=fragment directive=].
 
-If the URL includes a text fragment but a match wasn't found on in the current
+If the URL includes a text fragment but a match wasn't found in the current
 page, the UA may choose to omit it from the exposed URL.
 
 <div class='note'>
@@ -1717,7 +1717,7 @@ A newly created bookmark should, by default, include the [=fragment directive=]
 in the URL if, and only if, a match was found and the visual indicator hasn't
 been dismissed.
 
-Navigating to a URL from a bookmarks should process a [=fragment directive=] as
+Navigating to a URL from a bookmark should process a [=fragment directive=] as
 if it were navigated to in a typical navigation.
 
 #### Sharing #### {#urls-in-sharing}
