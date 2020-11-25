@@ -170,6 +170,59 @@ to "an example" in "this is an example text fragment", but not match to "an
 example" in "here is an example text".
 </div>
 
+### BiDi Considerations ### {#bidi-considerations}
+
+<div class='note'>This section is non-normative</div>
+
+<div class='note'>
+  See <a
+  href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics.en">Unicode
+  Bidirectional Algorithm basics</a> for a good overview of how Bidirectional
+  text works.
+</div>
+
+Since URL strings are ASCII encoded, they provide no built-in support for
+bi-directional text. However, the content that we wish to target on a page may
+be LTR (left-to-right), RTL (right-to-left) or both (Bidirectional/BiDi). This
+section provides an intuitive description the behavior implicitly described by
+the normative sections further in this spec.
+
+The characters of each term in the text fragment are in <em>logical order</em>,
+that is, the order in which a native reader would read them in (and also the
+order in which characters are stored in memory).
+
+Similarly, the <code>prefix</code> and <code>textStart</code> terms identify
+text coming before another term in logical order, while <code>suffix</code> and
+<code>textEnd</code> follow other terms in logical order.
+
+Note: user agents may visually render URLs in a manner friendlier to a native
+reader, for example, by converting the displayed string to Unicode. However, the
+string representation of a URL remains plain ASCII characters.
+
+<div class="example">
+  Suppose we want to select the text <code>مِصر‎</code> (Egypt, in Arabic),
+  that's preceeded by <code>البحرين‎</code> (Bahrain, in Arabic). We would
+  first percent encode each term:
+
+  <code>مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
+  [0xD9,0x85] is the first (right-most) character of the Arabic word.)
+
+  <code>البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"
+
+  The text fragment would then become:
+
+  <code>
+    :~:text=%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86-,%D9%85%D8%B5%D8%B1
+  </code>
+
+  When displayed in a browser's address bar, the browser may visually render the
+  text in its natural RTL direction, appearing to the user:
+
+  <code>
+    :~:text=البحرين-,مِصر
+  </code>
+</div>
+
 ## The Fragment Directive ## {#the-fragment-directive}
 
 To avoid compatibility issues with usage of existing URL fragments, this spec
@@ -207,7 +260,7 @@ following additions and changes.
 
 To the definition of [=Document=], add:
 
->   <strong>Monkeypatching [[HTML]]:</strong>
+>   <strong>Monkeypatching [[DOM]]:</strong>
 >
 >   <em>
 >     Each document has an associated <dfn>fragment directive</dfn> which is
@@ -220,7 +273,7 @@ Document's [=fragment directive=].
 
 Add a series of steps that will process a fragment directive on a [=Document/URL=]:
 
->   <strong>Monkeypatching [[HTML]]:</strong>
+>   <strong>Monkeypatching [[DOM]]:</strong>
 >
 >   To <dfn>process and consume fragment directive</dfn> from a [=/URL=]
 >   |url| and [=Document=] |document|, run these steps:
@@ -393,7 +446,7 @@ used.
 
 <div algorithm="parse a text directive">
 
-To <dfn>parse a text directive</dfn>, on a <a spec="infra">string</a> |text
+To <dfn>parse a text directive</dfn>, on an <a spec="infra">ASCII string</a> |text
 directive input|, run these steps:
 
 <div class="note">
@@ -1079,8 +1132,8 @@ Define a new algorithm for scrolling [=Range=] into view:
 </div>
 
 <div algorithm="process a fragment directive">
-To <dfn>process a fragment directive</dfn>, given as input a <a
-spec=infra>string</a> |fragment directive input| and a [=Document=]
+To <dfn>process a fragment directive</dfn>, given as input an <a
+spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 |document|, run these steps:
 
 <div class="note">
@@ -1094,11 +1147,11 @@ spec=infra>string</a> |fragment directive input| and a [=Document=]
   <ol class="algorithm">
     1. If |fragment directive input| is not a [=valid fragment directive=], then
         return an empty <a spec=infra>list</a>.
-    2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>string</a>s
+    2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>ASCII string</a>s
         that is the result of [=strictly split a string|strictly splitting the
         string=] |fragment directive input| on "&".
     3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
-    4. For each <a spec=infra>string</a> |directive| of |directives|:
+    4. For each <a spec=infra>ASCII string</a> |directive| of |directives|:
         1. If |directive| does not match the production [=TextDirective=],
             then [=iteration/continue=].
         1. Let |parsedValues| be the result of running the [=parse a text
