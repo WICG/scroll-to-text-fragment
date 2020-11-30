@@ -3,14 +3,14 @@
 ## Introduction
 
 The existing [scroll-to-text-fragment
-spec](https://github.com/flackr/scroll-to-text-fragment.git) enables links to
+spec](https://wicg.github.io/scroll-to-text-fragment/) enables links to
 specific textual content within a page, however there are many kinds of
 non-textual content which may also be of interest. This document explores
 several use cases and proposes methods by which they may be addressed.
 
 ## Use cases
 
-There are several content types users may be trying to view When following a
+There are several content types users may be trying to view when following a
 link to see some particular content. Primarily, these are:
 
 * Text
@@ -20,6 +20,13 @@ link to see some particular content. Primarily, these are:
 In addition to the [use cases presented for text
 content](README.md#motivating-use-cases), there are many use cases where the
 content of interest is images, video, or some element on the page.
+
+### Image aggregation or attribution
+
+Images are often collected from other sites with attribution (e.g. Wikipedia
+articles, Pinterest, Edge collections) and link back to the original content
+page. Having the ability to scroll to the image would greatly decrease the
+friction in finding that image in its original context.
 
 ### Image search engines
 
@@ -45,28 +52,27 @@ the same delimiter established by scroll-to-text:
 
 https://example.com#:~:selector=img[url="example.png"]
 
-Navigating to the above URL would be roughly equivalent to inserting the
-following script:
+Navigating to the above URL would cause the browser to indicate the first
+instance of the matched element. The exact details of what a browser should do
+once it finds the match are beyond the scope of this proposal. However, browsers
+would be free to emphasize the selected element in some way as to direct the
+user's attention to it.
 
-```js
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('img[url="example.png"]').scrollIntoView();
-});
-```
-
-However, browsers would be free to emphasize the selected element in some way as
-to direct the user's attention to it.
+As with the scroll-to-text fragment directive, the user agent should process and
+remove the directive from the URL fragment which is exposed to the page.
 
 ## Extensions and alternatives
 
 ### Video timestamps
 
-When linking to video sources it may be desirable to specify a timestamp to seek
-to. Some video services provide this capability by parsing a parameter in the
-URL, but for arbitrary video sites we could allow adding a seek parameter to
-seek to a given timestamp in the video. For example:
+When linking to video sources it may be desirable to specify additional
+properties such as a time range to seek to or a specific track of a media
+element to play. Some video services provide this capability by parsing a
+parameter in the URL, but for arbitrary video sites we could allow adding [Media
+Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) to specify
+these parameters for arbitrary videos. For example:
 
-https://example.com#:~:selector=video[url="movie.mp4"],seek=123
+https://example.com#:~:selector=video[url="movie.mp4"]&t=123
 
 Navigating to the above URL would not only scroll the video in to view, but also
 seek it to 123s.
