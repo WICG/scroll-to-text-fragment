@@ -1488,6 +1488,11 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
   <ol class="algorithm">
     1. Let |searchBuffer| be the [=string/concatenate|concatenation=] of the
         [=CharacterData/data=] of each item in |nodes|.
+
+        ISSUE(WICG/scroll-to-text-fragment#98): [=CharacterData/data=] is not
+        correct here since that's the text data as it exists in the DOM. This
+        algorithm means to run over the text as rendered (and then convert back
+        to Ranges in the DOM).
     1. Let |searchStart| be 0.
     1. If the first item in |nodes| is |searchRange|'s [=range/start node=] then
         set |searchStart| to |searchRange|'s [=range/start offset=].
