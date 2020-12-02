@@ -50,7 +50,7 @@ interest after navigating.
 Allow specifying a limited form of selector as part of the URL fragment using
 the same delimiter established by scroll-to-text:
 
-https://example.com#:~:selector=img[url="example.png"]
+https://example.com#:~:selector=img[src="example.png"]
 
 Navigating to the above URL would cause the browser to indicate the first
 instance of the matched element. The exact details of what a browser should do
@@ -72,10 +72,10 @@ parameter in the URL, but for arbitrary video sites we could allow adding [Media
 Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) to specify
 these parameters for arbitrary videos. For example:
 
-https://example.com#:~:selector=video[url="movie.mp4"]&t=123
+https://example.com#:~:selector=video[src="movie.mp4%23t=123"]
 
 Navigating to the above URL would not only scroll the video in to view, but also
-seek it to 123s.
+seek it to 123s (`#` is percent-encoded as `%23`).
 
 ### Content-based matching
 
