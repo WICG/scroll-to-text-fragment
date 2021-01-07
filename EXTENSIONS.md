@@ -4,7 +4,7 @@
 
 The existing [scroll-to-text-fragment
 spec](https://wicg.github.io/scroll-to-text-fragment/) enables links to
-specific textual content within a page, however there are many kinds of
+specific textual content within a page. However there are many kinds of
 non-textual content which may also be of interest. This document explores
 several use cases and proposes methods by which they may be addressed.
 
@@ -44,6 +44,20 @@ Just as with text, when referencing some rich content on a web page it is
 desirable to be able to link directly to it. It is often the case on sites with
 many images or videos that it could be non-trivial to find the content of
 interest after navigating.
+
+## Principles
+
+To enable links to non-textual content, we need to specify the content to scroll
+to. Here we follow the same principles as with textual content:
+
+1.   Specify the content to scroll to, rather than where the content lies in the
+     structure of the page.
+1.   The simplest form of the specifier should work for most content and
+     web pages.
+1.   However, additional syntax may be necessary to work for other cases. This
+     additional syntax should only be used when necessary and may not be able to
+     specify contrived or manufactured examples, but should extend coverage
+     considerably past the most simple syntax.
 
 ## Proposed solution
 
