@@ -887,7 +887,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"same-origin"` or `"none"` set
+>           header and its value is `"same-origin"` set
 >           [=document/allowTextFragmentDirective=] to true and abort these
 >           sub-steps.
 >       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
