@@ -887,7 +887,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"same-site"` set
+>           header and its value is `"same-origin"` set
 >           [=document/allowTextFragmentDirective=] to true and abort these
 >           sub-steps.
 >       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
@@ -896,7 +896,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >           <a spec=HTML>browsing context set</a> has length 1, set
 >           [=document/allowTextFragmentDirective=] to true and abort these sub-steps.
 >           <div class="note">
->             i.e. Only allow navigation from a cross-process element/script if the
+>             i.e. Only allow navigation from a cross-origin element/script if the
 >             document is loaded in a noopener context. That is, a new top level
 >             browsing context group to which the navigator does not have script access
 >             and which may be placed into a separate process.
