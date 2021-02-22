@@ -99,10 +99,12 @@ https://example.org#:~:selector(type=CssSelector,value=img[src$="example.org"])
 The [Selectors and States as Fragment Identifiers](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#h-frags)
 section of the above Reference Note describes the functional “selector(...)” syntax
 and [CSS Selector](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#CssSelector_def)
-defines specifically how CSS Selectors are defined.
+defines specifically how CSS Selectors are defined. The same note also
+[describes](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#json-examples-converted-to-fragment-identifiers)
+how to map the selectors into the fragment identifier syntax.
 
-The proposal here is to implement only type=CssSelector and start with interpreting
-only the value key.
+The proposal here is to levarage this work but implement only type=CssSelector
+and start with interpreting only the `value` key.
 
 The fragment directive allows these selectors to co-exist with pages that use the
 fragment for routing or other reasons and is already shipped in Chrome as part of
