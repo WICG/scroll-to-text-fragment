@@ -115,9 +115,13 @@ text-fragments or other, future directives. E.g.
 https://example.org#:~:text=foo&selector(type=CssSelector…)&newThing
 ```
 
-The same handling as text-fragments should be used in this case. Only the first
-matching selector (from left to right in the URL) is scrolled into view (the rest
-may or may not be indicated by the UA).
+The same handling as [specified in text-fragments](https://github.com/WICG/scroll-to-text-fragment#multiple-text-directives)
+should be used in this case.
+
+_Note_: Currently, the behavior is that only the first selector (from left to
+right in the URL) is scrolled into view (the rest may or may not be indicated
+by the UA). We may wish to amend this to scroll into view the first match in
+_document order_ rather than the current _selector order_.
 
 ### CSS Selector Restrictions
 
