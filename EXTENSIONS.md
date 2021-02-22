@@ -58,38 +58,154 @@ to. Here we follow the same principles as with textual content:
      additional syntax should only be used when necessary and may not be able to
      specify contrived or manufactured examples, but should extend coverage
      considerably past the most simple syntax.
+     
+## Security
+
+The issues here are analogous to those described in
+[Restrictions for scroll-to-CSS-selectors](https://docs.google.com/document/d/15HVLD6nddA0OaI8Dd0ayBP2jlGw5JpRD-njAyY1oNZo/edit#heading=h.s4z585kmzt11) and
+[Text-Fragment Security Issues](https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.uoiwg23pt0tx).
+If an attacker can navigate or convince a user to navigate to a URL with a
+“scroll-to-image” url, and if they can determine that the page scrolled automatically
+on load (or some other side effect like longer load time), they may be able to infer
+the existence of the resource on the page (with enough CSS selector syntax they could
+also infer arbitrary properties of the DOM, e.g.
+https://blog.sheddow.xyz/css-timing-attack/ ).
+
+Similar to the issues with text fragments, there may be cases where an attacker might
+be able to determine the value of an attribute value. For this reason, we provide a
+limited list of attributes which we’ll allow matching; hence the Restrictions section below.
+
+Note: We're still iterating on the potential consequences and mitigations here. The
+below proposal is a vision of where we'd like to get to but the details are still
+being decided.
 
 ## Proposed solution
 
-Allow specifying a limited form of selector as part of the URL fragment using
-the same delimiter established by scroll-to-text:
+We propose a restricted CSS selector syntax in the
+[fragment directive](https://wicg.github.io/scroll-to-text-fragment/#the-fragment-directive)
+of the URL. The selector syntax is severely restricted to avoid allowing selection
+based on arbitrary attributes or page structure.
 
-https://example.com#:~:selector=img[src="example.png"]
+### Fragment Directive Syntax
 
-Navigating to the above URL would cause the browser to indicate the first
-instance of the matched element. The exact details of what a browser should do
-once it finds the match are beyond the scope of this proposal. However, browsers
-would be free to emphasize the selected element in some way as to direct the
-user's attention to it.
+Use a slightly adapted (to fragment directives) syntax from the W3C Selectors and
+States Reference Note for the WebAnnotations [CssSelector](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#FragmentSelector_frag).
+Here’s an example:
 
-As with the scroll-to-text fragment directive, the user agent should process and
-remove the directive from the URL fragment which is exposed to the page.
+```
+https://example.org#:~:selector(type=CssSelector,value=img[src$="example.org"])
+```
 
-## Extensions and alternatives
+The [Selectors and States as Fragment Identifiers](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#h-frags)
+section of the above Reference Note describes the functional “selector(...)” syntax
+and [CSS Selector](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#CssSelector_def)
+defines specifically how CSS Selectors are defined. The same note also
+[describes](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#json-examples-converted-to-fragment-identifiers)
+how to map the selectors into the fragment identifier syntax.
+
+The proposal here is to levarage this work but implement only type=CssSelector
+and start with interpreting only the `value` key.
+
+The fragment directive allows these selectors to co-exist with pages that use the
+fragment for routing or other reasons and is already shipped in Chrome as part of
+text-fragments.
+
+Like text-fragments, multiple such directives can be supplied, mixed with
+text-fragments or other, future directives. E.g.
+
+```
+https://example.org#:~:text=foo&selector(type=CssSelector…)&newThing
+```
+
+The same handling as [specified in text-fragments](https://github.com/WICG/scroll-to-text-fragment#multiple-text-directives)
+should be used in this case.
+
+_Note_: Currently, the behavior is that only the first selector (from left to
+right in the URL) is scrolled into view (the rest may or may not be indicated
+by the UA). We may wish to amend this to scroll into view the first match in
+_document order_ rather than the current _selector order_.
+
+### CSS Selector Restrictions
+
+The CSS selector specified in the `value=` key is restricted to a small subset of
+the selector syntax. This prevents a potential attacker from being able to reason
+about unrelated parts of a page or produce selectors with long runtimes.
+
+Selectors that do not meet the below restrictions will be blocked and the directive
+will not be invoked.
+
+Restrictions:
+* Must be a [simple](https://www.w3.org/TR/selectors/#simple) or
+  [compound](https://www.w3.org/TR/selectors/#compound) selector
+* Uses only the following selectors:
+  * [Type](https://www.w3.org/TR/selectors/#type-selector) (i.e. element name like
+    `img`, `video`, etc.)
+  * [Class](https://www.w3.org/TR/selectors/#class-html)
+  * [Id](https://www.w3.org/TR/selectors/#id-selectors)
+  * [Attribute](https://www.w3.org/TR/selectors/#attribute-selectors)
+    * Strictly limited to: `alt`, `href`, `poster`, `src`, `srcset`, `style` attributes
+    * All [presence and value](https://www.w3.org/TR/selectors/#attribute-representation)
+      selectors allowed (i.e. `[src]`, `[src=val]`, `[src~=val]`, `[src|=val]`)
+    * All [substring matching](https://www.w3.org/TR/selectors/#attribute-substrings)
+      selectors allowed (i.e. `[src^=val]`, `[src$=val]`, `[src*=val]`)
+    
+### Invocation Restrictions
+
+For the same security reasons as text-fragments required, as well as to align with
+it on the basic processing model, we suggest using the same restrictions as text
+fragments (detailed in [spec](https://wicg.github.io/scroll-to-text-fragment/#restricting-the-text-fragment)).
+In summary:
+
+* Requires a user gesture/activation to have occurred
+  * Or to have occurred and been specially passed-through a
+    [client-side redirect](https://github.com/WICG/scroll-to-text-fragment/blob/master/redirects.md)
+* Requires document to be in a top-level browsing contexts (i.e. no iframes)
+* Requires cross-document navigation, unless initiated by user from browser UI
+  (i.e. no same-document navigation)
+* For cross-origin navigation, requires that the browsing context be the [only
+  one in its browsing context group](https://wicg.github.io/scroll-to-text-fragment/#ref-for-document-allowtextfragmentdirective⑥:~:text=If%20document%E2%80%99s%20browsing%20context%20is%20a,to%20true%20and%20abort%20these%20sub%2Dsteps.)
+  (i.e. no other windows can script the document)
+
+### Limitations
+
+Some use cases remain difficult/impossible to select. Notably, a common pattern
+is CSS background-image specified via CSS selectors
+([example](https://www.tutorialspoint.com/how-to-create-a-hero-image-with-css)).
+It’s not clear how important/common these cases are and supporting them would either
+require an expanded CSS selector syntax (based on DOM structure) or a new syntax
+which would be less useful for other cases.
+
+Our hypothesis is that most of these cases will actually have an `id` or `class`
+attribute we could match on, or set the `background-image` using inline style.
+
+
+## Extensions and Alternatives Considered
 
 ### Video timestamps
 
-When linking to video sources it may be desirable to specify additional
-properties such as a time range to seek to or a specific track of a media
-element to play. Some video services provide this capability by parsing a
-parameter in the URL, but for arbitrary video sites we could allow adding [Media
-Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) to specify
-these parameters for arbitrary videos. For example:
+When linking to video sources it may be desirable to specify additional properties
+such as a time range to seek to or a specific track of a media element to play.
+Some video services provide this capability by parsing a parameter in the URL, but
+for arbitrary video sites we could allow adding
+[Media Fragments](https://www.w3.org/TR/media-frags/#naming-time) to specify these
+parameters for arbitrary videos. This could work by adding the `refinedBy`
+capability (shown here outside a URL fragment context for clarity):
 
-https://example.com#:~:selector=video[src="movie.mp4%23t=123"]
+```
+"selector": {
+  "type": "CssSelector",
+  "value": "video[src=example.mp4]",
+  "refinedBy": {
+    "type": "Fragment",
+    "value": "t=123"
+}
+```
 
-Navigating to the above URL would not only scroll the video in to view, but also
-seek it to 123s (`#` is percent-encoded as `%23`).
+The interpretation being that an inner Fragment selector of a media element be
+applied to its inner resource.
+
+Navigating to the above selector, encoded in the `#:~:selector(...)` URL would not
+only scroll the video in to view, but also seek it to 123s.
 
 ### Content-based matching
 
@@ -100,3 +216,60 @@ of the result using some form of image summarization.
 
 This has the disadvantage that it would require loading the external resources
 first before we could know whether it matches.
+
+## FAQs
+
+### Why use the WebAnnotations syntax?
+
+There's a few advantages to reusing the already existing syntax offered by
+WebAnnotations:
+
+* We could decide to add more selectors in the future, either from the existing
+ WebAnnotation set or new ones - this provides a well thought out and extensible
+ framework
+* Some of the more advanced features may prove useful, for example, the `refinedBy`
+  field. This could be used to select a video, then refine the selection using a
+  media-fragment to specify the seek time. A future extension could be to also allow
+  the spatial dimension to highlight, for example, only one particular face in a group
+  picture, apart from the media fragment temporal dimension.
+* The functional syntax does have some nice advantages over the `key=value` syntax in
+  that it’s easier to extend and nest.
+* It already exists so we don't have to reinvent the wheel.
+
+The main downsides are that it's quite verbose and departs from the `key=value` syntax
+of text fragments. We expect that CSS selectors are much less likely to be hand crafted
+so compactness is less of an issue here than in text fragments. The fact that it differs
+from text fragments' syntax is unfortunate seems limited to aesthetic consequences.
+
+
+### Why such limiting restrictions on CSS Selector?
+
+Mainly for security reasons. See [Scroll-To-Text Fragment Navigation Security
+Issues](https://docs.google.com/document/d/15HVLD6nddA0OaI8Dd0ayBP2jlGw5JpRD-njAyY1oNZo/edit).
+
+Though the syntax is highly restricted, between this and text-fragments, this
+should allow users to target most kinds of content they’re interested in.
+
+Much of CSS Selector syntax has to do with structural properties of a page which
+are very powerful but may actually be harmful to the creation of resilient URLs
+since structural properties of pages are more likely to change over time.
+
+### Why Not Allow Combinators?
+
+We expect [combinators](https://www.w3.org/TR/selectors/#selector-combinator)
+could be supported without compromising security. However, we expect this may
+add more complexity than we need and may allow creation of more brittle URLs
+that may break when pages change.
+
+On the other hand, allowing combinators may allow more resilient URLs if ancestors
+of the real target have better identifying features.
+
+We’ve currently left this out pending data that would indicate their necessity.
+
+### What about ambiguous cases like the same image repeated on a page?
+
+We’re not sure how common this case is.
+
+If this does turn out to be an issue, one potential option is to implement the
+`refinedBy` field and allow restricting the selector to a subtree based on another
+element’s attribute.
