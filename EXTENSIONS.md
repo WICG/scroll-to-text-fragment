@@ -80,7 +80,7 @@ be able to determine the value of an attribute value. For this reason, we provid
 limited list of attributes which we'll allow matching; hence the
 [Restrictions](#css-selector-restrictions) section below.
 
-Note: We're still iterating on the potential consequences and mitigations here. The
+Note: We are still iterating on the potential consequences and mitigations here. The
 below proposal is a vision of where we'd like to get to but the details are still
 being decided.
 
@@ -96,7 +96,7 @@ based on arbitrary attributes or page structure.
 Use a slightly adapted (to fragment directives) syntax from the W3C Selectors and
 States Reference Note for the WebAnnotations
 [CSS Selector](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#FragmentSelector_frag).
-Here's an example:
+Here is an example:
 
 ```
 https://example.org#:~:selector(type=CssSelector,value=img[src$="example.org"])
@@ -182,7 +182,7 @@ In summary:
 Some use cases remain difficult/impossible to select. Notably, a common pattern
 is CSS background-image specified via CSS selectors
 ([example](https://www.tutorialspoint.com/how-to-create-a-hero-image-with-css)).
-It's not clear how important/common these cases are and supporting them would either
+It is not clear how important/common these cases are and supporting them would either
 require an expanded CSS selector syntax (based on DOM structure) or a new syntax
 which would be less useful for other cases.
 
@@ -231,7 +231,7 @@ first before we could know whether it matches.
 
 ### Why use the WebAnnotations syntax?
 
-There're a few advantages to reusing the already existing syntax offered by
+There are a few advantages to reusing the already existing syntax offered by
 WebAnnotations:
 
 * We could decide to add more selectors in the future, either from the existing
@@ -244,10 +244,10 @@ WebAnnotations:
   to highlight, for example, only one particular face in a group
   picture, apart from the media fragment temporal dimension.
 * The functional syntax does have some nice advantages over the `key=value` syntax in
-  that it's easier to extend and nest.
+  that it is easier to extend and nest.
 * It already exists, so we don't have to reinvent the wheel.
 
-The main downsides are that it's quite verbose and departs from the `key=value` syntax
+The main downsides are that it is quite verbose and departs from the `key=value` syntax
 of text fragments. We expect that CSS selectors are much less likely to be hand crafted,
 so compactness is less of an issue here than in text fragments. The fact that it differs
 from text fragments' syntax is unfortunate, but seems limited to aesthetic consequences.
@@ -258,7 +258,7 @@ Mainly for security reasons. See
 [Scroll-To-Text Fragment Navigation Security Issues](https://docs.google.com/document/d/15HVLD6nddA0OaI8Dd0ayBP2jlGw5JpRD-njAyY1oNZo/edit).
 
 Though the syntax is highly restricted, between this and text fragments, this
-should allow users to target most kinds of content they're interested in.
+should allow users to target most kinds of content they are interested in.
 
 Much of the CSS Selector syntax has to do with structural properties of a page which
 are very powerful but may actually be harmful to the creation of resilient URLs
@@ -278,7 +278,7 @@ We've currently left this out pending data that would indicate their necessity.
 
 ### What about ambiguous cases like the same image repeated on a page?
 
-We're not sure how common this case is.
+We are not sure how common this case is.
 
 If this does turn out to be an issue, one potential option is to implement the
 `refinedBy` field and allow restricting the selector to a subtree based on another
