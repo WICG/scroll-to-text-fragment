@@ -102,7 +102,7 @@ Here is an example:
 https://example.org#:~:selector(type=CssSelector,value=img[src$="example.org"])
 ```
 
-![CSS Selector example showing two images in a mobile device frame with the second being selected with a CSS Selector.](https://user-images.githubusercontent.com/145676/109510528-69029680-7aa2-11eb-8dda-cad0648d867d.png)
+![CSS Selector example showing two images in a mobile device frame with the second being selected with a CSS Selector.](https://user-images.githubusercontent.com/105274/109564641-6760bf00-7af2-11eb-805e-6bfe82a18b3d.png)
 
 The [Selectors and States as Fragment Identifiers](https://www.w3.org/TR/2017/NOTE-selectors-states-20170223/#h-frags)
 section of the above Reference Note describes the functional `selector(...)` syntax
