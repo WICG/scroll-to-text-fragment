@@ -477,7 +477,7 @@ details.
 ### :target
 
 For element-id based fragments (e.g.
-https://en.wikipedia.org/wiki/Cat#Anatomy), navigation causes the identified
+https://en.wikipedia.org/wiki/Cat#References), navigation causes the identified
 element to receive the `:target` CSS pseudo-class. This is a nice feature as it
 allows the page to add some customized highlighting or styling for an element
 that’s been targeted. For example, note that navigating to a citation on a
