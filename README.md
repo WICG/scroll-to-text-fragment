@@ -26,14 +26,6 @@ parts of pages are addressable by named anchors or elements with ids.
 This feature, as currently [specified in this repo](https://wicg.github.io/scroll-to-text-fragment/),
 is shipping to stable channel in Chrome M80.
 
-We're currently adding the ability for authors to disable this feature on their
-pages if they choose. To experiment with this opt-out today, websites can
-register for the [ForceLoadAtTop origin trial](https://developers.chrome.com/origintrials/#/view_trial/3253850730775183361),
-which will ensure that no scrolling happens on page load, including via regular
-fragment anchors and scroll restoration. For details on how to register a
-website for an origin trial, see the [Origin Trials Guide for Web Developers](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md).
-Please help shape the final API by providing feedback!
-
 ### Motivating Use Cases
 
 When following a link to read a specific part of a web page, finding the
