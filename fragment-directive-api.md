@@ -20,11 +20,13 @@ Providing a structured API allows the browser to expose enough information and f
 
 ## Use cases
 
-* Attach comments/responses to specific parts of text on a page or provide helpful UI - e.g. [Marginalia](https://indieweb.org/marginalia)
+* Attach comments/responses to specific parts of text on a page - e.g. [Marginalia](https://indieweb.org/marginalia)
 
 * Enable pages to easily create text directive links. The rules for how text is matched are [necessarily complicated](https://wicg.github.io/scroll-to-text-fragment/#find-a-range-from-a-text-directive); they must consider word boundaries, DOM node display types and visibility, and various nuances of how DOM is traversed. This API allows an author to let the browser generate a valid text directive URL for a given Range.
 
 * Enable text directives in cross-origin iframes. To prevent [XS-Search attacks](https://wicg.github.io/scroll-to-text-fragment/#example-4d0b486d:~:text=A%20malicious%20page%20embeds%20a%20cross%2Dorigin%20victim%20in%20an%20iframe,its%20own%20document.), text directives are not applied when navigated from a cross-origin initiator. However, an iframe can navigate itself to a text directive. By allowing an embedder page to read the text directive, it can `postMessage()` it to a cross-origin document that's opted-in to this behavior, enabling deep linking to the inner frame (see examples section below).
+
+* Provide application specific helpful UI. E.g. a sublime like editor might highlight sections of the preview containing notes, or an application could provide an arrow that points to the fact that there are notes / text to be read further down, possibly also jumping to that note when clicked.
 
 ## WebIDL
 
