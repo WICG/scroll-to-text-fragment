@@ -8,23 +8,23 @@ As of Oct 29, 2021: The API described below is available for experimentation in 
 
 This document proposes a programmatic API through which authors can interact with text (and future) directives.
 
-Today, when a page is loaded with a text directive such as `https://example.org#:~:text=foo,bar`, the author has no way<sup>1</sup> to tell that a text directive was set or what text was highlighted. The fragment directive portion of the URL (everything in the fragment after and including `:~:`) is stripped from the URL when the document is loaded. This is done for two reasons:
+Today, when a page is loaded with a text directive such as `https://example.org#:~:text=foo,bar`, the author has no way[^1] to tell that a text directive was set or what text was highlighted. The fragment directive portion of the URL (everything in the fragment after and including `:~:`) is stripped from the URL when the document is loaded. This is done for two reasons:
 
-1. _Compatibility_ - some pages assume the fragment will always be of an expected form or entirely absent. Without stripping the fragment directive, these pages may break with a user-supplied directive feature.
+1. _Compatibility_ - Some pages assume the fragment will always be of an expected form or entirely absent. Without stripping the fragment directive, these pages may break with a user-supplied directive feature.
 
 2. _Privacy_ - Some directives may contain data that shouldn't be visible to page script. This isn't a concern for text directives since the directive will only contain content already on the page (and the page can tell where it's scrolled to). However, as an example, the [proposed](https://github.com/bokand/web-annotations/blob/main/URL-based-annotation.md) note directive uses the fragment directive to allow users to share comments with a friend. In that case, the destination page should not have access to the content.
 
 Providing a structured API allows the browser to expose enough information and functionality to enable authors to extend and customize how different directives behave without violating either of the above goals.
 
-<sup>_1. As noted in https://crbug.com/1096983, this is accidentally exposed via the performance API. This is a bug that we'd like to fix but some use cases are currently relying on this._</sup>
+[^1]: As noted in https://crbug.com/1096983, this is accidentally exposed via the performance API. This is a bug that we'd like to fix but some use cases are currently relying on this._</sup>
 
 ## Use cases
 
 * Attach comments/responses to specific parts of text on a page or provide helpful UI - e.g. [Marginalia](https://indieweb.org/marginalia)
 
-* Enable pages to easily create text directive links. The rules for how text is matched are [necessarily complicated](https://wicg.github.io/scroll-to-text-fragment/#find-a-range-from-a-text-directive); they must consider word boundaries, DOM node display types and visibility and various nuances of how DOM is traversed. This API allows an author let the browser generate a valid text directive URL for a given Range.
+* Enable pages to easily create text directive links. The rules for how text is matched are [necessarily complicated](https://wicg.github.io/scroll-to-text-fragment/#find-a-range-from-a-text-directive); they must consider word boundaries, DOM node display types and visibility, and various nuances of how DOM is traversed. This API allows an author to let the browser generate a valid text directive URL for a given Range.
 
-* Enable text directives in cross-origin iframes. To prevent [XS-Search attacks](https://wicg.github.io/scroll-to-text-fragment/#example-4d0b486d:~:text=A%20malicious%20page%20embeds%20a%20cross%2Dorigin%20victim%20in%20an%20iframe,its%20own%20document.), text directives are not applied when navigated from a cross-origin initiator. However, an iframe can navigate itself to a text directive. By allowing an embedder page to read the text directive, it can postMessage it to a cross-origin document that's opted-in to this behavior, enabling deep linking to the inner frame (see examples section below).
+* Enable text directives in cross-origin iframes. To prevent [XS-Search attacks](https://wicg.github.io/scroll-to-text-fragment/#example-4d0b486d:~:text=A%20malicious%20page%20embeds%20a%20cross%2Dorigin%20victim%20in%20an%20iframe,its%20own%20document.), text directives are not applied when navigated from a cross-origin initiator. However, an iframe can navigate itself to a text directive. By allowing an embedder page to read the text directive, it can `postMessage()` it to a cross-origin document that's opted-in to this behavior, enabling deep linking to the inner frame (see examples section below).
 
 ## WebIDL
 
@@ -76,9 +76,9 @@ interface TextDirective : SelectorDirective {
 };
 ```
 
-Why a SelectorDirective base-class, in addition to Directive? The [proposed](https://github.com/WICG/scroll-to-text-fragment/blob/main/EXTENSIONS.md#proposed-solution) CSS selector directive would behave very similarly to a text directive and allows createSelectorDirective to return a SelectorDirective. OTOH, the proposed [note selector](https://github.com/bokand/web-annotations/blob/main/URL-based-annotation.md) would not fit this interface.
+Why a `SelectorDirective` base-class, in addition to `Directive`? The [proposed](https://github.com/WICG/scroll-to-text-fragment/blob/main/EXTENSIONS.md#proposed-solution) CSS selector directive would behave very similarly to a text directive and allows `createSelectorDirective()` to return a `SelectorDirective`. OTOH, the proposed [note selector](https://github.com/bokand/web-annotations/blob/main/URL-based-annotation.md) would not fit this interface.
 
-_TODO: Maybe SelectorDirective is unnecessary? Callers could always determine the directive type using `Directive.type` if they need. Also, it may actually make sense for `note` to provide `getMatchingRange`...)_
+_TODO: Maybe `SelectorDirective` is unnecessary? Callers could always determine the directive type using `Directive.type` if they need to. Also, it may actually make sense for `note` to provide `getMatchingRange()`...)_
 
 ## Examples
 
@@ -115,7 +115,7 @@ document.onselectionchange = () => {
 ```JS
 // Embedder document
 const text_directives =
-    document.fragmentDirectives.items.filter(i => i.type == "text"));
+    document.fragmentDirectives.items.filter(i => i.type === "text"));
 
 const message = {
   type: 'text-directives',
@@ -130,7 +130,7 @@ In the cross-origin document:
 ```JS
 //Embedee document
 window.onmessage = (e) => {
-  if (e.type == 'text-directives') {
+  if (e.type === 'text-directives') {
     const strings = e.directives.map(i => i.toString());
     window.location.hash = `:~:${strings.join('&')}`;
   }
@@ -141,7 +141,7 @@ _TODO: setting `location.hash` isn't great. Consider adding `fragmentDirective.a
 
 ## FragmentDirective.items
 
-The `items` array reflects the currently active directives on the page. Using text directives as an example, an entry should exist in `items` for a text directive as long a highlight is showing. If the user dismisses the highlight it is removed from the array. Conversely, if the directive is removed from `items` programmatically (see next section), the highlight should be removed from the page.
+The `items` array reflects the currently active directives on the page. Using text directives as an example, an entry should exist in `items` for a text directive as long a highlight is showing. If the user dismisses the highlight, it is removed from the array. Conversely, if the directive is removed from `items` programmatically (see next section), the highlight should be removed from the page.
 
 ## FragmentDirective as part of location.hash
 
@@ -151,7 +151,7 @@ Currently, script can add a directive by writing to `location.hash`:
 location.hash = ":~:text=foo%20bar";
 ```
 
-Will add a text directive to the page, highlighting "foo bar" and adding a `TextDirective` to `fragmentDirective.items`. However, this still runs the [fragment directive stripping steps](https://wicg.github.io/scroll-to-text-fragment/#process-and-consume-fragment-directive):
+The snippet above will add a text directive to the page, highlighting "foo bar" and adding a `TextDirective` to `fragmentDirective.items`. However, this still runs the [fragment directive stripping steps](https://wicg.github.io/scroll-to-text-fragment/#process-and-consume-fragment-directive):
 
 ```JS
 const value = ":~:text=foo%20bar";
@@ -164,7 +164,7 @@ This is rather unintuitive and surprising.
 There's also the question of what happens to existing directives in `fragmentDirective.items` when the hash is modified. In the cases below, suppose the user navigated to `https://example.org/blog.html#:~:text=acme`.
 
 1. What should happen when script sets a hash with no fragment directive? (e.g. `location.hash = 'page1';`).
-2. What should happen when script sets a hash with an unrelated directive? (e.g. `location.hash = ':~:note(href=notes.example.org);'`)
+2. What should happen when script sets a hash with an unrelated directive? (e.g. `location.hash = ':~:note(href=notes.example.org)';`)
 3. What should happen when script sets a hash with a text directive? (e.g. `location.hash = ':~:text=blog%20title';`)
 
 That is, are changes to `location.hash` additive or do they replace existing directives?
@@ -173,7 +173,7 @@ For case 1, we almost certainly shouldn't affect existing directives as this wou
 
 For case 2, it also seems like we shouldn't remove the text directive. Directives of different types should behave independently. That is, adding an annotation to a page shouldn't clear text highlights.
 
-In case 3 either behavior could work: a new highlight should be added and the existing one kept OR the new highlight replaces all existing ones. Though, if additive, it means there's no way to remove directives.
+In case 3, either behavior could work: a new highlight should be added and the existing one kept OR the new highlight replaces all existing ones. Though, if additive, it means there's no way to remove directives.
 
 Another consideration: _Given that a page can add new directives, there should be a way to remove existing ones_. Using `location.hash` for this will necessarily lead to violating our intuition for how at least one of the above cases works.
 
