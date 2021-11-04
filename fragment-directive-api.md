@@ -16,7 +16,7 @@ Today, when a page is loaded with a text directive such as `https://example.org#
 
 Providing a structured API allows the browser to expose enough information and functionality to enable authors to extend and customize how different directives behave without violating either of the above goals.
 
-[^1]: As noted in https://crbug.com/1096983, this is accidentally exposed via the performance API. This is a bug that we'd like to fix but some use cases are currently relying on this._</sup>
+[^1]: As noted in https://crbug.com/1096983, this is accidentally exposed via the performance API. This is a bug that we'd like to fix but some use cases are currently relying on this.
 
 ## Use cases
 
@@ -31,11 +31,27 @@ Providing a structured API allows the browser to expose enough information and f
 This is the IDL as implemented behind a flag in Chrome.
 
 ```WebIDL
+// The following build on the existing but empty document.fragmentDirective
+// See https://wicg.github.io/scroll-to-text-fragment/#feature-detectability
+
+// === Current ===
+
+[Exposed=Window]
+interface FragmentDirective {
+};
+
+partial interface Document {
+    [SameObject] readonly attribute FragmentDirective fragmentDirective;
+};
+
+// === Changes/Additions ===
+
+[Exposed=Window]
 interface FragmentDirective {
   // Array of parsed Directive objects, one for each term in the fragment
   // directive (i.e. currently, each `text=` term)
   readonly attribute FrozenArray<Directive> items;
-  
+
   // TODO: add(Directive)?
 
   // Creates a SelectorDirective object that can be used to select the given
@@ -46,6 +62,7 @@ interface FragmentDirective {
 enum DirectiveType { "text" };
 
 // Interface common to all future Directive types.
+[Exposed=Window]
 interface Directive {
   readonly attribute DirectiveType type;
   DOMString toString();
@@ -54,6 +71,7 @@ interface Directive {
 
 // Interface common to all selector Directive types (i.e. those that
 // scroll/indicate some sub-portion of the document).
+[Exposed=Window]
 interface SelectorDirective : Directive {
   Promise<Range> getMatchingRange();
 }
@@ -66,6 +84,7 @@ dictionary TextDirectiveOptions {
 };
 
 // TODO: [Serializable]
+[Exposed=Window]
 interface TextDirective : SelectorDirective {
   constructor(TextDirectiveOptions);
   // TODO: constructor(DOMString directive_string);
@@ -183,8 +202,8 @@ Managing directives using `location.hash` leads to complicated, difficult-to-exp
 
 ```JS
 // Add a directive to the page
-document.fragmentDirective.add(new TextDirective("text=foo%20bar"));
-document.fragmentDirective.add(new TextDirective("text=second%20highlight"));
+document.fragmentDirective.add(new TextDirective("foo%20bar"));
+document.fragmentDirective.add(new TextDirective("second%20highlight"));
 
 // Remove a directive
 document.fragmentDirective.items[1].remove();
