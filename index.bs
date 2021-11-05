@@ -1251,41 +1251,57 @@ following steps:
             1. If |potentialMatch| is null, return null.
             1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
                 [=boundary point/after=] |potentialMatch|'s [=range/start=]
-        1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
-            non-null, then:
-            1. Let |textEndRange| be a [=range=] whose [=range/start=] is
-                |potentialMatch|'s [=range/end=] and whose [=range/end=] is
-                |searchRange|'s [=range/end=].
-            1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=ParsedTextDirective/suffix=] is null, false otherwise.
-            1. Let |textEndMatch| be the result of running the [=find a string
-                in range=] steps with |query| |parsedValues|'s
-                [=ParsedTextDirective/textEnd=], |searchRange| |textEndRange|,
-                |wordStartBounded| true, and |wordEndBounded|
-                |mustEndAtWordBoundary|.
-            1. If |textEndMatch| is null then return null.
-            1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
-                [=range/end=].
-        1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
-            represents a range exactly containing an instance of matching text.
-        1. If |parsedValues|'s [=ParsedTextDirective/suffix=] is null, return
-            |potentialMatch|.
-        1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
-            |potentialMatch|'s [=range/end=] and [=range/end=] equal to
+        1. Let |rangeEndSearchRange| be a [=range=] whose [=range/start=] is
+            |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
-        1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
-            position=].
-        1. Let |suffixMatch| be result of running the [=find a string in range=]
-            steps with |query| |parsedValues|'s [=ParsedTextDirective/suffix=],
-            |searchRange| |suffixRange|, |wordStartBounded| false, and
-            |wordEndBounded| true.
-        1. If |suffixMatch| is null then return null.
-            <div class="note">
-              If the suffix doesn't appear in the remaining text of the document,
-              there's no possible way to make a match.
-            </div>
-        1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
-            return |potentialMatch|.
+        1. While |rangeEndSearchRange| is not [=range/collapsed=]:
+            1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is
+                non-null, then:
+                1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
+                    [=ParsedTextDirective/suffix=] is null, false otherwise.
+                1. Let |textEndMatch| be the result of running the [=find a string
+                    in range=] steps with |query| |parsedValues|'s
+                    [=ParsedTextDirective/textEnd=], |searchRange| |rangeEndSearchRange|,
+                    |wordStartBounded| true, and |wordEndBounded|
+                    |mustEndAtWordBoundary|.
+                1. If |textEndMatch| is null then return null.
+                1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
+                    [=range/end=].
+            1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
+                represents a range exactly containing an instance of matching text.
+            1. If |parsedValues|'s [=ParsedTextDirective/suffix=] is null, return
+                |potentialMatch|.
+            1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
+                |potentialMatch|'s [=range/end=] and [=range/end=] equal to
+                |searchRange|'s [=range/end=].
+            1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
+                position=].
+            1. Let |suffixMatch| be result of running the [=find a string in range=]
+                steps with |query| |parsedValues|'s [=ParsedTextDirective/suffix=],
+                |searchRange| |suffixRange|, |wordStartBounded| false, and
+                |wordEndBounded| true.
+            1. If |suffixMatch| is null then return null.
+                <div class="note">
+                  If the suffix doesn't appear in the remaining text of the document,
+                  there's no possible way to make a match.
+                </div>
+            1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
+                return |potentialMatch|.
+            1. If |parsedValues|'s [=ParsedTextDirective/textEnd=] item is null
+                then [=iteration/break=];
+                <div class="note">
+                  If this is an exact match and the suffix doesn't match,
+                  start searching for the next potentialMatch by starting at
+                  the top of the outer loop.
+                </div>
+            1. Set |rangeEndSearchRange|'s [=range/end=] to |potentialMatch|'s
+                [=range/end=].
+                <div class="note">
+                  Otherwise, it is possible that we found the correct range
+                  start, but not the correct range end. Continue the inner
+                  loop to keep searching for another matching instance of
+                  rangeEnd.
+                </div>
     1. Return null
   </ol>
 
