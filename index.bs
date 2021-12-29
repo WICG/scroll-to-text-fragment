@@ -1291,16 +1291,28 @@ following steps:
                 then [=iteration/break=];
                 <div class="note">
                   If this is an exact match and the suffix doesn't match,
-                  start searching for the next potentialMatch by starting at
-                  the top of the outer loop.
+                  start searching for the next range start by breaking out
+                  of this loop without |rangeEndSearchRange| being collapsed.
+                  If we're looking for a range match, we'll continue iterating
+                  this inner loop since the range start must already be correct.
                 </div>
-            1. Set |rangeEndSearchRange|'s [=range/end=] to |potentialMatch|'s
+            1. Set |rangeEndSearchRange|'s [=range/start=] to |potentialMatch|'s
                 [=range/end=].
                 <div class="note">
                   Otherwise, it is possible that we found the correct range
                   start, but not the correct range end. Continue the inner
                   loop to keep searching for another matching instance of
                   rangeEnd.
+                </div>
+        1. If |rangeEndSearchRange| is [=range/collapsed=] then:
+            1. [=/Assert=]: |parsedValues|'s [=ParsedTextDirective/textEnd=] item is non-null
+            1. Return null
+                <div class="note">
+                    This can only happen for range matches due to the
+                    [=iteration/break=] for exact matches in step 9 of the
+                    above loop. If we couldn't find a valid rangeEnd+suffix
+                    pair anywhere in the doc then there's no possible way to
+                    make a match.
                 </div>
     1. Return null
   </ol>
