@@ -164,6 +164,10 @@ Restrictions:
       selectors allowed (i.e. `[src^=val]`, `[src$=val]`, `[src*=val]`)
     * The [case sensitivity](https://www.w3.org/TR/selectors-4/#attribute-case) attribute
       is allowed
+  * Within the constraints above, the
+    [`:has()`](https://drafts.csswg.org/selectors/#relational) pseudo-class, which is
+    useful for matching nested structures like `<video><source src="foo" /></video>`
+    based on the `src` attribute.
 
 ### Invocation restrictions
 
