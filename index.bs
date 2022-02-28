@@ -1508,7 +1508,7 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
             <a href="http://www.unicode.org/reports/tr10/#Multi_Level_Comparison">primary
             level</a>, as defined in [[!UTS10]].
             <div class="note">
-              Intuitively, this is a case-insensitive search also ignoring accents
+              Intuitively, this is a case-insensitive search also ignoring accents, umlauts,
               and other marks.
             </div>
         1. If |matchIndex| is null, return null.
