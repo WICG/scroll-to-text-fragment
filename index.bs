@@ -1331,15 +1331,10 @@ non-whitespace position</dfn> follow the steps:
     1. While |range| is not collapsed:
         1. Let |node| be |range|'s [=range/start node=].
         1. Let |offset| be |range|'s [=range/start offset=].
-        1. If |node| is part of a [=non-searchable subtree=] then:
-            1. Set |range|'s [=range/start node=] to the next node, in
-                [=shadow-including tree order=], that isn't a [=shadow-including
-                descendant=] of |node|, and set its [=range/start offset=] to 0.
-            1. [=iteration/Continue=].
-        1. If |node| is not a [=visible text node=]:
-            1. Set |range|'s [=range/start node=] to the next node, in
-                [=shadow-including tree order=], and set its [=range/start offset=]
-                to 0.
+        1. If |node| is part of a [=non-searchable subtree=] or if |node| is
+            not a [=visible text node=] or if |offset| is equal to |node|'s [=Node/length=] then:
+            1. Set |range|'s [=range/start node=] to the next node, in [=shadow-including tree order=].
+            1. Set |range|'s [=range/start offset=] to 0.
             1. [=iteration/Continue=].
         1. If the [=Text/substring data=] of |node| at offset |offset|
             and count 6 is equal to the string "&amp;nbsp;" then:
@@ -1354,9 +1349,6 @@ non-whitespace position</dfn> follow the steps:
                 href="http://www.unicode.org/reports/tr44/#White_Space">White_Space</a>
                 property set, return.
             1. Add 1 to |range|'s [=range/start offset=].
-        1. If |range|'s [=range/start offset=] is equal to |node|'s
-            [=Node/length=], set |range|'s [=range/start node=] to the next node in
-            [=shadow-including tree order=], and set its [=range/start offset=] to 0.
   </ol>
 </div>
 
