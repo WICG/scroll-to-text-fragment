@@ -4,7 +4,7 @@
   <title>Text Fragments</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
+  <meta content="Bikeshed version 459f867, updated Mon Aug 8 13:55:11 2022 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
 <style>/* style-autolinks */
 
@@ -725,7 +725,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-29">29 December 2021</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-08-09">9 August 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -741,7 +741,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2021 the Contributors to the Text Fragments Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the Text Fragments Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1065,48 +1065,48 @@ setting <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.w
    </div>
    <div class="example" id="example-609a3312">
     <a class="self-link" href="#example-609a3312"></a> 
-<pre>  window.location = 'https://example.com#foo:~:bar';
+<pre>window.location = 'https://example.com#foo:~:bar';
 </pre>
     <p>The page loads and when the document’s URL is set the fragment directive is
   stripped out during the "create and initialize a Document object" steps.</p>
-<pre>  console.log(window.location.href); // 'https://example.com#foo'
-  console.log(window.location.hash); // '#foo'
+<pre>console.log(window.location.href); // 'https://example.com#foo'
+console.log(window.location.hash); // '#foo'
 </pre>
     <p>Since same document navigations are made by adding a new session history
   entry and using the "traverse the history" steps, the the fragment directive
   will be stripped here as well.</p>
-<pre>  window.location.hash = 'fizz:~:buzz';
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+<pre>window.location.hash = 'fizz:~:buzz';
+console.log(window.location.href); // 'https://example.com#fizz'
+console.log(window.location.hash); // '#fizz'
 </pre>
     <p>The hashchange event is dispatched when only the fragment directive changes
   because the comparison for it is done on the URLs in the session history
   entries, where the fragment directive hasn’t been removed.</p>
-<pre>  onhashchange = () => {console.log('HASHCHANGE');};
-  window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+<pre>onhashchange = () => {console.log('HASHCHANGE');};
+window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
+console.log(window.location.href); // 'https://example.com#fizz'
+console.log(window.location.hash); // '#fizz'
 </pre>
    </div>
    <div class="example" id="example-42953739">
     <a class="self-link" href="#example-42953739"></a> In other cases where a Document’s URL is not set by the UA, there is no
   fragment directive stripping. 
     <p>For URL objects:</p>
-<pre>  let url = new URL('https://example.com#foo:~:bar');
-  console.log(url.href); // 'https://example.com#foo:~:bar'
-  console.log(url.hash); // '#foo:~:bar'
+<pre>let url = new URL('https://example.com#foo:~:bar');
+console.log(url.href); // 'https://example.com#foo:~:bar'
+console.log(url.hash); // '#foo:~:bar'
 
-  document.url = url;
-  console.log(document.url.href); // 'https://example.com#foo:~:bar'
-  console.log(document.url.hash); // '#foo:~:bar'
+document.url = url;
+console.log(document.url.href); // 'https://example.com#foo:~:bar'
+console.log(document.url.hash); // '#foo:~:bar'
 
 </pre>
     <p>The <code>&lt;a></code> or <code>&lt;area></code> elements:</p>
-<pre>  &lt;a id='anchor' href="https://example.com#foo:~:bar">Anchor&lt;/a>
-  &lt;script>
-    console.log(anchor.href); // 'https://example.com#foo:~:bar'
-    console.log(anchor.hash); // '#foo:~:bar'
-  &lt;/script>
+<pre>&lt;a id='anchor' href="https://example.com#foo:~:bar">Anchor&lt;/a>
+&lt;script>
+  console.log(anchor.href); // 'https://example.com#foo:~:bar'
+  console.log(anchor.hash); // '#foo:~:bar'
+&lt;/script>
 </pre>
    </div>
    <div class="example" id="example-c1edb88d">
@@ -1115,10 +1115,10 @@ setting <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.w
   cause it to set its URL on the document which will process the fragment
   directive before setting it on the Document (but the fragment directive
   remains on the entry). 
-<pre>  history.pushState({}, 'title', 'index.html#foo:~:bar');
-  window.location = 'newpage.html';
-  // on newpage.html
-  history.back();
+<pre>history.pushState({}, 'title', 'index.html#foo:~:bar');
+window.location = 'newpage.html';
+// on newpage.html
+history.back();
 </pre>
     <p>Results in the current document having "bar" as the fragment directive.</p>
    </div>
@@ -1720,15 +1720,15 @@ following steps:
       <a class="self-link" href="#example-73638554"></a> 
 <pre>:~:text=The quick,lazy dog</pre>
        will fail to match in 
-<pre>    &lt;div>The&lt;div> &lt;/div>quick brown fox&lt;/div>
-    &lt;div>jumped over the lazy dog&lt;/div>
+<pre>&lt;div>The&lt;div> &lt;/div>quick brown fox&lt;/div>
+&lt;div>jumped over the lazy dog&lt;/div>
 </pre>
       <p>because the starting string "The quick" does not appear within a single,
     uninterrupted block. The instance of "The quick" in the document has a
     block element between "The" and "quick".</p>
       <p>It does, however, match in this example:</p>
-<pre>    &lt;div>The quick brown fox&lt;/div>
-    &lt;div>jumped over the lazy dog&lt;/div>
+<pre>&lt;div>The quick brown fox&lt;/div>
+&lt;div>jumped over the lazy dog&lt;/div>
 </pre>
      </div>
     </div>
@@ -1933,9 +1933,9 @@ run these steps:
     into a single string in which we can search, using the node list to
     determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a>. </p>
      <p> Collection breaks when we hit a block node, e.g. searching over this tree: </p>
-<pre>      &lt;div>
-        a&lt;em>b&lt;/em>c&lt;div>d&lt;/div>e
-      &lt;/div>
+<pre>&lt;div>
+  a&lt;em>b&lt;/em>c&lt;div>d&lt;/div>e
+&lt;/div>
 </pre>
      <p></p>
      <p>Will perform a search on "abc", then on "d", then on "e".</p>
@@ -1955,14 +1955,17 @@ run these steps:
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑦">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order③">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant①">shadow-including
 descendant</a> of <var>curNode</var>.</p>
          <li data-md>
+          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑧">start offset</a> to 0.</p>
+         <li data-md>
           <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑤">Continue</a>.</p>
         </ol>
        <li data-md>
         <p>If <var>curNode</var> is not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node①">visible text node</a>:</p>
         <ol>
          <li data-md>
-          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>, that is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-doctype" id="ref-for-concept-doctype">doctype</a>, and
-set its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑧">start offset</a> to 0.</p>
+          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>, that is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-doctype" id="ref-for-concept-doctype">doctype</a>.</p>
+         <li data-md>
+          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑨">start offset</a> to 0.</p>
          <li data-md>
           <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue⑥">Continue</a>.</p>
         </ol>
@@ -2008,7 +2011,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
 namespace</a> and meets any of the following conditions:</p>
    <ol>
     <li data-md>
-     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
+     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
     <li data-md>
      <p>If the node <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void" id="ref-for-serializes-as-void">serializes as void</a>.</p>
     <li data-md>
@@ -2017,8 +2020,8 @@ namespace</a> and meets any of the following conditions:</p>
      <p>Is a <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element" id="ref-for-the-select-element">select</a></code> element whose <code><a data-link-type="element-sub" href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple" id="ref-for-attr-select-multiple">multiple</a></code> content attribute is absent.</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor" id="ref-for-concept-shadow-including-ancestor">shadow-including ancestor</a> that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑥">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property" data-link-type="propdesc" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑥">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <div class="algorithm" data-algorithm="nearest block ancestor">
      To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps: 
     <ol class="algorithm">
@@ -2065,7 +2068,7 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
       <p>Let <var>searchStart</var> be 0.</p>
      <li data-md>
       <p>If the first item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①⓪">start node</a> then
-set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑨">start offset</a>.</p>
+set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset①⓪">start offset</a>.</p>
      <li data-md>
       <p>Let <var>start</var> and <var>end</var> be <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp④">boundary points</a>, initially null.</p>
      <li data-md>
@@ -2281,7 +2284,7 @@ been dismissed.</p>
    <div class="example" id="example-ae692635">
     <a class="self-link" href="#example-ae692635"></a> Suppose the user navigates to <code>https://example.com#:~:text=foo</code>. The
   example.com server response includes the header: 
-<pre>  Document-Policy: force-load-at-top
+<pre>Document-Policy: force-load-at-top
 </pre>
     <p>When the page loads, the element containing "foo" will be marked as the
   indicated part of the document and set as the document’s target element.
@@ -2444,17 +2447,15 @@ match based on whether the element-id was scrolled.</p>
     and are set apart from the normative text
     with <code>class="note"</code>,
     like this: </p>
-   <p class="note" role="note">
-    Note, this is an informative note. 
-    <details class="wpt-tests-block" dir="ltr" lang="en" open>
-     <summary>Tests</summary>
-     <p>Tests relating to the content of this specification
+   <p class="note" role="note">Note, this is an informative note.</p>
+   <details class="wpt-tests-block" dir="ltr" lang="en" open>
+    <summary>Tests</summary>
+    <p>Tests relating to the content of this specification
                      may be documented in “Tests” blocks like this one.
                      Any such block is non-normative.</p>
-     <ul class="wpt-tests-list"></ul>
-     <hr>
-    </details>
-   </p>
+    <ul class="wpt-tests-list"></ul>
+    <hr>
+   </details>
    <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
    <p>Requirements phrased in the imperative as part of algorithms
     (such as "strip any leading space characters"
@@ -2798,7 +2799,7 @@ match based on whether the element-id was scrolled.</p>
   <aside class="dfn-panel" data-for="term-for-concept-range-start-offset">
    <a href="https://dom.spec.whatwg.org/#concept-range-start-offset">https://dom.spec.whatwg.org/#concept-range-start-offset</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-start-offset">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a> <a href="#ref-for-concept-range-start-offset⑧">(9)</a> <a href="#ref-for-concept-range-start-offset⑨">(10)</a>
+    <li><a href="#ref-for-concept-range-start-offset">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a> <a href="#ref-for-concept-range-start-offset⑧">(9)</a> <a href="#ref-for-concept-range-start-offset⑨">(10)</a> <a href="#ref-for-concept-range-start-offset①⓪">(11)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-cd-substring">
@@ -2824,172 +2825,6 @@ match based on whether the element-id was scrolled.</p>
    <a href="https://drafts.fxtf.org/geometry-1/#domrect">https://drafts.fxtf.org/geometry-1/#domrect</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-domrect">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-domrect①">(2)</a> <a href="#ref-for-domrect②">(3)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlaudioelement">
-   <a href="https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement">https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlaudioelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmliframeelement">
-   <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmliframeelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlimageelement">
-   <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement">https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlimageelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlmeterelement">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlmeterelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlobjectelement">
-   <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlobjectelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlprogresselement">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlprogresselement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlscriptelement">
-   <a href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement">https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlscriptelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlstyleelement">
-   <a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement">https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlstyleelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlvideoelement">
-   <a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlvideoelement">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-location">
-   <a href="https://html.spec.whatwg.org/multipage/history.html#location">https://html.spec.whatwg.org/multipage/history.html#location</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-location">3.3.1. Processing the fragment directive</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-active-document">
-   <a href="https://html.spec.whatwg.org/multipage/browsers.html#active-document">https://html.spec.whatwg.org/multipage/browsers.html#active-document</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-active-document">3.3.1. Processing the fragment directive</a>
-    <li><a href="#ref-for-active-document①">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-active-document②">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-being-rendered">
-   <a href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered">https://html.spec.whatwg.org/multipage/rendering.html#being-rendered</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-being-rendered">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-document-bc">
-   <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc">https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-document-bc">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document-bc①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-browsing-context-set">
-   <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context-set">https://html.spec.whatwg.org/multipage/browsers.html#browsing-context-set</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-browsing-context-set">3.4.4. Restricting the Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-child-browsing-context">
-   <a href="https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-child-browsing-context">3.7. Document Policy Integration</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-language">
-   <a href="https://html.spec.whatwg.org/multipage/dom.html#language">https://html.spec.whatwg.org/multipage/dom.html#language</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-language">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-language①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-latest-entry">
-   <a href="https://html.spec.whatwg.org/multipage/history.html#latest-entry">https://html.spec.whatwg.org/multipage/history.html#latest-entry</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-latest-entry">3.4.4. Restricting the Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-attr-select-multiple">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple">https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-attr-select-multiple">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-restore-persisted-state">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-restore-persisted-state">3.7. Document Policy Integration</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-scroll-to-the-fragment-identifier">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier">https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-scroll-to-the-fragment-identifier">3.4.4. Restricting the Text Fragment</a>
-    <li><a href="#ref-for-scroll-to-the-fragment-identifier①">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-scroll-to-the-fragment-identifier②">(2)</a>
-    <li><a href="#ref-for-scroll-to-the-fragment-identifier③">3.7. Document Policy Integration</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-the-select-element">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element">https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-the-select-element">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-serializes-as-void">
-   <a href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void">https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-serializes-as-void">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-session-history">
-   <a href="https://html.spec.whatwg.org/multipage/history.html#session-history">https://html.spec.whatwg.org/multipage/history.html#session-history</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-session-history">3.4.4. Restricting the Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-the-indicated-part-of-the-document">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-the-indicated-part-of-the-document">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-the-indicated-part-of-the-document①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-top-level-browsing-context">
-   <a href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-top-level-browsing-context">3.4.4. Restricting the Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-transient-activation">
-   <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-transient-activation">3.4.4. Restricting the Text Fragment</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-try-to-scroll-to-the-fragment">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-try-to-scroll-to-the-fragment">3.4.4. Restricting the Text Fragment</a>
-    <li><a href="#ref-for-try-to-scroll-to-the-fragment①">3.6. Indicating The Text Match</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-append">
@@ -3133,12 +2968,12 @@ match based on whether the element-id was scrolled.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
-    <a data-link-type="biblio">[css-cascade-5]</a> defines the following terms:
+    <a data-link-type="biblio">[CSS-CASCADE-5]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-computed-value">computed value</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[css-display-3]</a> defines the following terms:
+    <a data-link-type="biblio">[CSS-DISPLAY-3]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-valdef-display-block">block</span>
      <li><span class="dfn-paneled" id="term-for-propdef-display">display</span>
@@ -3199,40 +3034,9 @@ match based on whether the element-id was scrolled.</p>
      <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[geometry-1]</a> defines the following terms:
+    <a data-link-type="biblio">[GEOMETRY-1]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-domrect">DOMRect</span>
-    </ul>
-   <li>
-    <a data-link-type="biblio">[HTML]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-htmlaudioelement">HTMLAudioElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmliframeelement">HTMLIFrameElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlimageelement">HTMLImageElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlmeterelement">HTMLMeterElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlobjectelement">HTMLObjectElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlprogresselement">HTMLProgressElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlscriptelement">HTMLScriptElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlstyleelement">HTMLStyleElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlvideoelement">HTMLVideoElement</span>
-     <li><span class="dfn-paneled" id="term-for-location">Location</span>
-     <li><span class="dfn-paneled" id="term-for-active-document">active document</span>
-     <li><span class="dfn-paneled" id="term-for-being-rendered">being rendered</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document-bc">browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-browsing-context-set">browsing context set</span>
-     <li><span class="dfn-paneled" id="term-for-child-browsing-context">child browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-language">language</span>
-     <li><span class="dfn-paneled" id="term-for-latest-entry">latest entry</span>
-     <li><span class="dfn-paneled" id="term-for-attr-select-multiple">multiple</span>
-     <li><span class="dfn-paneled" id="term-for-restore-persisted-state">restore persisted state</span>
-     <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier">scroll to the fragment</span>
-     <li><span class="dfn-paneled" id="term-for-the-select-element">select</span>
-     <li><span class="dfn-paneled" id="term-for-serializes-as-void">serializes as void</span>
-     <li><span class="dfn-paneled" id="term-for-session-history">session history</span>
-     <li><span class="dfn-paneled" id="term-for-the-indicated-part-of-the-document">the indicated part of the document</span>
-     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context">top-level browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-transient-activation">transient activation</span>
-     <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
@@ -3273,11 +3077,11 @@ match based on whether the element-id was scrolled.</p>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-css-cascade-5">[CSS-CASCADE-5]
-   <dd>Elika Etemad; Miriam Suzanne; Tab Atkins Jr.. <a href="https://www.w3.org/TR/css-cascade-5/"><cite>CSS Cascading and Inheritance Level 5</cite></a>. 3 December 2021. WD. URL: <a href="https://www.w3.org/TR/css-cascade-5/">https://www.w3.org/TR/css-cascade-5/</a>
+   <dd>Elika Etemad; Miriam Suzanne; Tab Atkins Jr.. <a href="https://drafts.csswg.org/css-cascade-5/"><cite>CSS Cascading and Inheritance Level 5</cite></a>. URL: <a href="https://drafts.csswg.org/css-cascade-5/">https://drafts.csswg.org/css-cascade-5/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
-   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/"><cite>CSS Display Module Level 3</cite></a>. 3 September 2021. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
+   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://drafts.csswg.org/css-display/"><cite>CSS Display Module Level 3</cite></a>. URL: <a href="https://drafts.csswg.org/css-display/">https://drafts.csswg.org/css-display/</a>
    <dt id="biblio-cssom-view">[CSSOM-VIEW]
-   <dd>Simon Pieters. <a href="https://www.w3.org/TR/cssom-view-1/"><cite>CSSOM View Module</cite></a>. 17 March 2016. WD. URL: <a href="https://www.w3.org/TR/cssom-view-1/">https://www.w3.org/TR/cssom-view-1/</a>
+   <dd>Simon Pieters. <a href="https://drafts.csswg.org/cssom-view/"><cite>CSSOM View Module</cite></a>. URL: <a href="https://drafts.csswg.org/cssom-view/">https://drafts.csswg.org/cssom-view/</a>
    <dt id="biblio-document-policy">[DOCUMENT-POLICY]
    <dd>Ian Clelland. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html"><cite>Document Policy</cite></a>. ED. URL: <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">https://w3c.github.io/webappsec-permissions-policy/document-policy.html</a>
    <dt id="biblio-dom">[DOM]
@@ -3285,7 +3089,7 @@ match based on whether the element-id was scrolled.</p>
    <dt id="biblio-fetch">[FETCH]
    <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/"><cite>Fetch Standard</cite></a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-geometry-1">[GEOMETRY-1]
-   <dd>Simon Pieters; Chris Harrelson. <a href="https://www.w3.org/TR/geometry-1/"><cite>Geometry Interfaces Module Level 1</cite></a>. 4 December 2018. CR. URL: <a href="https://www.w3.org/TR/geometry-1/">https://www.w3.org/TR/geometry-1/</a>
+   <dd>Simon Pieters; Chris Harrelson. <a href="https://drafts.fxtf.org/geometry/"><cite>Geometry Interfaces Module Level 1</cite></a>. URL: <a href="https://drafts.fxtf.org/geometry/">https://drafts.fxtf.org/geometry/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-infra">[INFRA]
@@ -3773,7 +3577,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     const runsUrl = "https://wpt.fyi/api/runs?label=master&label=stable&max-count=1&product=chrome&product=firefox&product=safari&product=edge";
     const runs = await (await fetch(runsUrl)).json();
 
-    const testResults = await( await fetch("https://wpt.fyi/api/search", {
+    const testResults = await (await fetch("https://wpt.fyi/api/search", {
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -3790,18 +3594,19 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         const passes = result.legacy_status.map(x=>[x.passes, x.total]);
         return [testPath, passes];
     }));
+    const seenTests = new Set();
     document.querySelectorAll(".wpt-name").forEach(nameEl=>{
         const passData = resultsFromPath.get("/" + nameEl.getAttribute("title"));
+        if(!passData) {
+            console.log("Couldn't find test in results:", nameEl);
+            return
+        }
         const numTests = passData[0][1];
         if(numTests > 1) {
             nameEl.insertAdjacentElement("beforeend",
                 el("small", {}, ` (${numTests} tests)`));
         }
         if(passData == undefined) return;
-        passData.forEach((p,i) => {
-            browsers[i].passes += p[0];
-            browsers[i].total += p[1];
-        })
         const resultsEl = el("span",{"class":"wpt-results"},
             ...passData.map((p,i) => el("span",
             {
@@ -3811,6 +3616,17 @@ document.addEventListener("DOMContentLoaded", async ()=>{
             })),
         );
         nameEl.insertAdjacentElement("afterend", resultsEl);
+
+        // Only update the summary pass/total count if we haven't seen this
+        // test before, to support authors listing the same test multiple times
+        // in a spec.
+        if (!seenTests.has(nameEl.getAttribute("title"))) {
+            seenTests.add(nameEl.getAttribute("title"));
+            passData.forEach((p,i) => {
+                browsers[i].passes += p[0];
+                browsers[i].total += p[1];
+            });
+        }
     });
     const overview = document.querySelector(".wpt-overview");
     if(overview) {
@@ -3857,14 +3673,15 @@ function formatWptResult({name, version, passes, total}) {
     const shortVersion = /^\d+/.exec(version);
     const icon = []
 
-    if(name == "Chrome") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/chrome-dev_64x64.png"}));
-    if(name == "Edge") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/edge-dev_64x64.png"}));
-    if(name == "Safari") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/safari-preview_64x64.png"}));
-    if(name == "Firefox") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/firefox-nightly_64x64.png"}));
+    if(name == "Chrome") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/chrome_64x64.png"}));
+    if(name == "Edge") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/edge_64x64.png"}));
+    if(name == "Safari") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/safari_64x64.png"}));
+    if(name == "Firefox") icon.push(el('img', {alt:"", src:"https://wpt.fyi/static/firefox_64x64.png"}));
 
     return el('li', {"class":passClass},
         el('nobr', {'class':'browser'}, ...icon, ` ${name} ${shortVersion}`),
         el('br', {}),
         el('nobr', {'class':'pass-rate'}, `${passes}/${total}`)
     );
-}</script>
+}
+</script>

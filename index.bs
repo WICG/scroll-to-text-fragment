@@ -1403,11 +1403,12 @@ run these steps:
             1. Set |searchRange|'s [=range/start node=] to the next node, in
                 [=shadow-including tree order=], that isn't a [=shadow-including
                 descendant=] of |curNode|.
+            1. Set |searchRange|'s [=range/start offset=] to 0.
             1. [=iteration/Continue=].
         1. If |curNode| is not a [=visible text node=]:
             1. Set |searchRange|'s [=range/start node=] to the next node, in
-                [=shadow-including tree order=], that is not a [=doctype=], and
-                set its [=range/start offset=] to 0.
+                [=shadow-including tree order=], that is not a [=doctype=].
+            1. Set |searchRange|'s [=range/start offset=] to 0.
             1. [=iteration/Continue=].
         1. Let |blockAncestor| be the [=nearest block ancestor=] of |curNode|.
         1. Let |textNodeList| be a <a spec=infra>list</a> of {{Text}} nodes,
