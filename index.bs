@@ -694,7 +694,7 @@ This specification does not specify exactly how a UA achieves this as there are
 multiple solutions with differing tradeoffs. For example, a UA <em>may</em>
 continue to walk the tree even after a match is found in [=find a range from a
 text directive=].  Alternatively, it <em>may</em> schedule an asynchronous task
-to find and set the indicated part of the document.
+to find and set the [=Document=]'s indicated part.
 
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
@@ -789,7 +789,7 @@ field for the [=document/textFragmentToken=]:
 </div>
 
 Amend the <a
-href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">create
+href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning |document|:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
@@ -852,13 +852,6 @@ and initialize a Document object</a> steps by adding the following steps before 
 >           </div>
 >       1. If |textFragmentToken| is false, set
 >           [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
->       1. If the [=document=] of the <a spec=HTML>latest entry</a> in
->           |document|'s [=Document/browsing context=]'s <a spec=HTML>session history</a> is
->           equal to |document|, set [=document/allowTextFragmentDirective=] to false
->           and abort these sub-steps.
->           <div class="note">
->             i.e. Forbidden on a same-document navigation.
->           </div>
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
@@ -907,7 +900,7 @@ steps of the task queued in step 2:
 >       the fragment, then clear <em>document</em>'s
 >       [=allowTextFragmentDirective=] flag and abort these steps.
 >   2. Scroll to the fragment given in document's URL. If this does not find an
->       indicated part of the document, then try to scroll to the fragment for
+>       indicated part, then try to scroll to the fragment for
 >       document.
 >   3. Clear <em>document</em>'s [=allowTextFragmentDirective=] flag
 
@@ -918,43 +911,55 @@ steps of the task queued in step 2:
 The text fragment specification proposes an amendment to
 [[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
 present and a match is found in the page, the text fragment takes precedent over
-the element fragment as the indicated part of the document. We amend the
-indicated part of the document to optionally include a [=range=] that
+the element fragment as the indicated part. We amend the HTML Document's
+indicated part processing model to optionally include a [=range=] that
 may be scrolled into view instead of the containing element.
 </div>
 
-Replace step 3.1 of the <a spec=HTML>scroll to the fragment</a> algorithm with
-the following:
+Replace step 3 of the <a spec=HTML>scroll to the fragment</a> algorithm as follows:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
+>   Replace:
+>
+>   1. <strike>Assert: document's indicated part is an element.</strike>
+>   1. <strike>Let target be document's indicated part.</strike>
+>   1. <strike>Set document's target element to target.</strike>
+>   1. <strike>Run the ancestor details revealing algorithm on target.</strike>
+>   1. <strike>Run the ancestor hidden-until-found revealing algorithm on target.</strike>
+>   1. <strike>Scroll target into view, with behavior set to "auto", block set to "start", and inline set to "nearest".</strike>
+>   1. <strike>Run the focusing steps for target, with the Document's viewport as the fallback target.</strike>
+>   1. <strike>Move the sequential focus navigation starting point to target.</strike>
+>
+>   With:
+>
+>   1. Assert: document's indicated part is an [=/element=] and [=range=].
 >   1. Let <em>target, range</em> be the [=/element=] and [=range=] that is
->       <a spec=HTML>the indicated part of the document</a>.
-
-Replace step 3.3 of the <a spec=HTML>scroll to the fragment</a> algorithm with
-the following:
-
->   <strong>Monkeypatching [[HTML]]:</strong>
->
->   3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+>       <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>.
+>   1. Set document's target element to target.
+>   1. Run the ancestor details revealing algorithm on target.
+>   1. Run the ancestor hidden-until-found revealing algorithm on target.
+>   1. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
 >       the policy value</a> for `force-load-at-top` in the
->       [=Document=]. If the result is true, abort these steps.
->   4. If <em>range</em> is non-null:
->       1. If the UA supports scrolling of text fragments on navigation, invoke
->           [=scroll a Range into view|Scroll range into view=], with range
->           <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
->           to "auto", <em>block</em> set to "center", and <em>inline</em> set to
->           "nearest".
->   5. Otherwise:
->       1. <a spec=cssom-view lt="scroll an element into view">Scroll target
->           into view</a>, with <em>behavior</em> set to "auto", <em>block</em>
->           set to "start", and <em>inline</em> set to "nearest".
->           <div class="note">
->               This otherwise case is the same as the current step 3.3.
->           </div>
+>       [=Document=]. If the result is false:
+>       1. If <em>range</em> is non-null:
+>           1. If the UA supports scrolling of text fragments on navigation, invoke
+>               [=scroll a Range into view|Scroll range into view=], with range
+>               <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
+>               to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+>               "nearest".
+>       1. Otherwise:
+>           1. <a spec=cssom-view lt="scroll an element into view">Scroll target
+>               into view</a>, with <em>behavior</em> set to "auto", <em>block</em>
+>               set to "start", and <em>inline</em> set to "nearest".
+>               <div class="note">
+>                   This otherwise case is the same as the current step 3.3.
+>               </div>
+>   1. Run the focusing steps for target, with the Document's viewport as the fallback target.
+>   1. Move the sequential focus navigation starting point to target.
 
-Add the following steps to the beginning of the processing model for
-<a spec=HTML>the indicated part of the document</a>:
+Add the following steps to the beginning of the processing model for the [=HTML Document=]'s
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
@@ -975,7 +980,7 @@ Add the following steps to the beginning of the processing model for
 >               [=range/start node=] and [=range/end node=].
 >           1. While |node| is non-null and is not an [=element=], set |node| to
 >               |node|'s [=tree/parent=].
->           1. The indicated part of the document is |node| and |range|; return.
+>           1. The indicated part is |node| and |range|; return.
 
 <div algorithm="first common ancestor">
 To find the <dfn>first common ancestor</dfn> of two nodes |nodeA| and |nodeB|,
@@ -1808,8 +1813,8 @@ with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy
   ```
 
   When the page loads, the element containing "foo" will be marked as the
-  indicated part of the document and set as the document's target element.
-  However, "foo" will not be scrolled into view.
+  indicated part and set as the document's target element. However, "foo"
+  will not be scrolled into view.
 </div>
 
 Fragment-based scroll blocking from this policy is specified in an amendment to the
@@ -1822,9 +1827,7 @@ persisted state</a> steps by inserting a new step after 2:
 3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
     the document policy value</a> of the "force-load-at-top" feature for the [=Document=]. If
     the result is true, then the user agent should not restore the scroll
-    position for the [=Document=] or any of its scrollable regions. Scroll
-    positions for [=child browsing contexts=] should be restored based on the
-    value of this policy in the child [=Document=].
+    position for the [=Document=] or any of its scrollable regions.
 
 
 ## Feature Detectability ## {#feature-detectability}
