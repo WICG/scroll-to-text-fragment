@@ -912,11 +912,14 @@ The text fragment specification proposes an amendment to
 [[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part. We amend the HTML Document's
-indicated part processing model to optionally include a [=range=] that
-may be scrolled into view instead of the containing element.
+indicated part processing model to return a [=range=], rather than an [=element=] that
+may be scrolled into view.
 </div>
 
-Replace step 3 of the <a spec=HTML>scroll to the fragment</a> algorithm as follows:
+To enable the <a spec=HTML>scroll to the fragment</a> algorithm to operate on a
+[=range=] indicated part, replace step 3 of this algorithm as follows:
+
+<!--TODO This and following sections would flow better if reordered.-->
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
@@ -933,33 +936,54 @@ Replace step 3 of the <a spec=HTML>scroll to the fragment</a> algorithm as follo
 >
 >   With:
 >
->   1. Assert: document's indicated part is an [=/element=] and [=range=].
->   1. Let <em>target, range</em> be the [=/element=] and [=range=] that is
+>   1. Assert: document's indicated part is a [=range=].
+>   1. Let |range| be the [=range=] that is |document|'s
 >       <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>.
->   1. Set document's target element to target.
+>   1. Let |target| be the [=first common ancestor=] of |range|'s
+>       [=range/start node=] and [=range/end node=].
+>   1. While |target| is non-null and is not an [=element=], set |target| to
+>       |target|'s [=tree/parent=].
+>       <div class="issue">
+>           What should be set as target if inside a shadow tree?
+>           <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a>
+>       </div>
+>   1. Set |document|'s [=target element=] to |target|.
 >   1. Run the ancestor details revealing algorithm on target.
 >   1. Run the ancestor hidden-until-found revealing algorithm on target.
+>       <div class="issue">
+>         These revealing algorithms currently wont work well since |target|
+>         could be an ancestor or even the root document node. Issue
+>         <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a>
+>         proposes restricting matches to `contain:style layout` blocks which
+>         would resolve this problem.
+>       </div>
 >   1. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
 >       the policy value</a> for `force-load-at-top` in the
 >       [=Document=]. If the result is false:
->       1. If <em>range</em> is non-null:
->           1. If the UA supports scrolling of text fragments on navigation, invoke
->               [=scroll a Range into view|Scroll range into view=], with range
->               <em>range</em>, containingElement <em>target</em>, <em>behavior</em> set
->               to "auto", <em>block</em> set to "center", and <em>inline</em> set to
->               "nearest".
->       1. Otherwise:
->           1. <a spec=cssom-view lt="scroll an element into view">Scroll target
->               into view</a>, with <em>behavior</em> set to "auto", <em>block</em>
->               set to "start", and <em>inline</em> set to "nearest".
->               <div class="note">
->                   This otherwise case is the same as the current step 3.3.
->               </div>
->   1. Run the focusing steps for target, with the Document's viewport as the fallback target.
->   1. Move the sequential focus navigation starting point to target.
+>       1. If |range| wasn't produced as a result of a text fragment, or if the
+>           UA supports scrolling of text fragments on navigation, invoke
+>           [=scroll a Range into view|Scroll range into view=], with range
+>           |range|, containingElement |target|, <em>behavior</em> set
+>           to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+>           "nearest".
+>
+>       <div class="issue">
+>           <code>force-load-at-top</code> should be checked only when a new
+>           document is being loaded.
+>           <a href="https://github.com/WICG/scroll-to-text-fragment/issues/186">#186</a>
+>       </div>
+>   1. Let |start node| be |range|'s [=range/start node=].
+>   1. Run the focusing steps for |start node|, with the Document's viewport as the fallback target.
+>       <div class="issue">
+>           Implementation note: Blink doesn't currently set focus for text
+>           fragments, it probably should? TODO: file crbug.
+>       </div>
+>   1. Move the sequential focus navigation starting point to |start node|.
 
-Add the following steps to the beginning of the processing model for the [=HTML Document=]'s
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>:
+To enable a fragment to indicate a range of text, add the following steps to the
+beginning of the processing model for the [=HTML Document=]'s
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>
+so that the indicated part is a [=range=]:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
@@ -976,11 +1000,39 @@ Add the following steps to the beginning of the processing model for the [=HTML 
 >                 remaining |ranges| should be visually indicated in a way that
 >                 is not revealed to script, which is left as UA-defined behavior.
 >               </div>
->           1. Let |node| be the [=first common ancestor=] of |range|'s
->               [=range/start node=] and [=range/end node=].
->           1. While |node| is non-null and is not an [=element=], set |node| to
->               |node|'s [=tree/parent=].
->           1. The indicated part is |node| and |range|; return.
+>           1. Set |range| as |document|'s indicated part, return.
+
+In order for the indicated part to return a [=range=] for regular element
+fragments, modify the
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element">
+find a potential indicated element</a> steps as follows:
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   Replace:
+>
+>   1. <strike>If there is an element in the document tree whose root is
+>       document and that has an ID equal to fragment, then return the first
+>       such element in tree order.</strike>
+>   1. <strike>If there is an a element in the document tree whose root is
+>       document that has a name attribute whose value is equal to fragment,
+>       then return the first such element in tree order.</strike>
+>   1. <strike>Return null.</strike>
+>
+>   With:
+>
+>   1. Let |element| be an [=Element=], initially null.
+>   1. If there is an element in the document tree whose root is document and
+>       that has an ID equal to fragment, set |element| to the first such
+>       element in tree order.
+>   1. Otherwise, if there is an element in the document tree whose root is
+>       document that has a name attribute whose value is equal to fragment,
+>       then set |element| to the first such element in tree order.
+>   1. If |element| is null, return null.
+>   1. Otherwise, return a [=range=] with [=range/start=] (|element|, 0) and
+>       [=range/end=] (|element|, |element|'s [=Node/length=]).
+>
+>  And rename this algorithm and the returned variables.
 
 <div algorithm="first common ancestor">
 To find the <dfn>first common ancestor</dfn> of two nodes |nodeA| and |nodeB|,
