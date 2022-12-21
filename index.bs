@@ -268,6 +268,28 @@ To the definition of [=Document=], add:
 >     resource. It is initially null.
 >   </em>
 
+<div algorithm="split the fragment from the fragment directive">
+  To <dfn export>split the fragment from the fragment directive</dfn>, given an ASCII string
+  |raw fragment| and returning a [=/tuple=] consisting of a <code>fragment</code> and a
+  <code>fragment directive</code> (both ASCII strings), run these steps:
+
+  <ol class="algorithm">
+    1. Let |position| be the [=string/position variable=] pointing to the first code
+        point of the first instance, if one exists, of the [=fragment directive delimiter=] in |raw
+        fragment|, or past the end of |raw fragment| otherwise.
+    1. Let |fragment| be the [=code point substring by positions=] of |raw fragment| from the
+        start of |raw fragment| to |position|.
+    1. Let |fragmentDirective| be an ASCII string, initially empty.
+    1. Advance |position| by the [=string/code point length=] of the [=fragment directive
+        delimiter=].
+    1. If |position| does not point past the end of |raw fragment|:
+        1. Set |fragmentDirective| to the [=code point substring to the end of the string=]
+            |raw fragment| starting from |position|
+    1. Return the [=/tuple=] (|fragment|, |fragmentDirective|).
+  </ol>
+</div>
+
+
 Whenever the fragment directive is stripped from the URL, it is set to the
 Document's [=fragment directive=].
 
@@ -280,18 +302,11 @@ Add a series of steps that will process a fragment directive on a [=Document/URL
 >   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
 >   1. If |raw fragment| is non-null and contains the [=fragment directive
 >       delimiter=] as a substring:
->       1. Let |fragmentDirectivePosition| be the index of the first instance
->           of the [=fragment directive delimiter=] in |raw fragment|.
->       1. Let |fragment| be the substring of |raw fragment| starting at 0 of
->           count |fragmentDirectivePosition|.
->       1. Advance |fragmentDirectivePosition| by the length of [=fragment
->           directive delimiter=].
->       1. Let |fragment directive| be the substring of |raw fragment| starting
->           at |fragmentDirectivePosition|.
->       1. Set |url|'s [=url/fragment=] to |fragment|.
->       1. Set |document|'s [=fragment directive=] to |fragment directive|.
->           <div class="note">This is stored on the document but currently not
->           web-exposed</div>
+>       1. Let |components| be the result of running [=split the fragment from the fragment
+>           directive=] on |raw fragment|.
+>       1. Set |url|'s [=url/fragment=] to |components|' <code>fragment</code>.
+>       1. Set |document|'s [=fragment directive=] to |components|' <code>fragment directive</code>.
+>           <div class="note">This is stored on the document but currently not web-exposed</div>
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive
