@@ -709,7 +709,7 @@ Amend the definition of a [=/request=] and of a [=Document=] to include a new
 >
 >   A [=Document=] has an <dfn for="document">textFragmentActivationFlag</dfn> that is
 >   consumed in order to allow a single activation of a text fragment. This flag is
->   set during document loading only if the navigation occured as a result of a user
+>   set during document loading only if the navigation occurred as a result of a user
 >   activation.
 >
 >   If the [=Document=]'s [=document/textFragmentActivationFlag=] isn't consumed to activate
@@ -1117,7 +1117,7 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 |document|, run these steps:
 
 <div class="note">
-  This algorithm takes as input a the |fragment directive input|, that is the
+  This algorithm takes as input a |fragment directive input|, that is the
   raw text of the fragment directive and the |document| over which it operates.
   It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
   indicated, the first of which may be scrolled into view (if the UA scrolls
