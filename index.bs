@@ -699,34 +699,34 @@ to find and set the [=Document=]'s indicated part.
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
 Amend the definition of a [=/request=] and of a [=Document=] to include a new
-field for the [=document/textFragmentToken=]:
+[=document/textFragmentActivationFlag=] field:
 
 >   <strong>Monkeypatching [[FETCH]]:</strong>
 >
->   A [=/request=] has an associated <dfn for="request">textFragmentToken</dfn> flag
+>   A [=/request=] has an associated <dfn for="request">textFragmentActivationFlag</dfn>.
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   A [=Document=] has a <dfn for="document">textFragmentToken</dfn> flag that is
+>   A [=Document=] has a <dfn for="document">textFragmentActivationFlag</dfn> that is
 >   consumed in order to allow a single activation of a text fragment. This flag is
->   generated only during loading if the navigation occurs as a result of a user
+>   set during document loading only if the navigation occurred as a result of a user
 >   activation.
 >
->   If the [=Document=]'s [=document/textFragmentToken=] isn't consumed to activate
->   a text fragment, it may be consumed to set the [=request/textFragmentToken=]
->   flag of a navigation [=/request=]. In this way, a [=document/textFragmentToken=]
+>   If the [=Document=]'s [=document/textFragmentActivationFlag=] isn't consumed to activate
+>   a text fragment, it may be consumed to set the [=request/textFragmentActivationFlag=]
+>   flag of a navigation [=/request=]. In this way, a [=document/textFragmentActivationFlag=]
 >   can be propagated from one [=Document=] to another across a navigation.
 >
->   Reading either the [=Document=]'s [=document/textFragmentToken=] or the
->   [=/request=]'s [=request/textFragmentToken=] must always consume the value,
->   such that the token cannot be cloned.
+>   Reading either the [=Document=]'s [=document/textFragmentActivationFlag=] or the
+>   [=/request=]'s [=request/textFragmentActivationFlag=] flag must always consume the value by
+>   setting it to false, such that the flag cannot be reused.
 
 <div class="note">
   <p>
-    A [=document/textFragmentToken=] is generated when a [=Document=] is loaded
-    as a result of a user gesture. It grants its holder permission (in terms of
-    user activation) to activate a single text fragment. Alternatively, it may be
-    propagated through a navigation to allow a future document to activate a text
+    [=document/textFragmentActivationFlag=] is set to true when a [=Document=] is loaded
+    as a result of a user gesture. It grants permission (in terms of
+    user activation) to scroll a single text fragment. Alternatively, it may be
+    propagated through a navigation to allow a future document to scroll a text
     fragment from this navigation's user gesture.
   </p>
 
@@ -740,19 +740,20 @@ field for the [=document/textFragmentToken=]:
   <p>
     Unlike real HTTP (<tt>status 3xx</tt>) redirects, these "client-side"
     redirects cannot propagate the fact that the navigation is the result of a
-    user gesture. The [=document/textFragmentToken=] mechanism allows passing
+    user gesture. The [=document/textFragmentActivationFlag=] mechanism allows passing
     through this specifically scoped user-activation through such navigations.
     This means a page can programmatically navigate to a text fragment, a
     single time, as if it has a user gesture. However, further navigations
     require a new user gesture.
   </p>
   <p>
-    The following diagram demonstrates how the token is used to activate a text
+    The following diagram demonstrates how the flag is used to activate a text
     fragment through a client-side redirect service:
   </p>
   <img style="margin-left:auto;margin-right:auto;display:block"
-       src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_token.png"
-       alt="Diagram showing how a text fragment token is created and used">
+       width="745" height="671"
+       src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png"
+       alt="Diagram showing how a text fragment flag is set and used">
 
   <p>
     See [redirects.md](redirects.md) for a more in-depth discussion.
@@ -768,10 +769,10 @@ field for the [=document/textFragmentToken=]:
 
 <div class="note">
   <p>
-    [=document/textFragmentToken=] is analogous to a user-activation state
+    [=document/textFragmentActivationFlag=] is analogous to a user-activation state
     while [=allowTextFragmentDirective=] is more comprehensive, taking into
     account various pieces of information, one of which is the existence of a
-    textFragmentToken.
+    textFragmentActivationFlag.
   </p>
   <p>
     The reason we compute allowTextFragmentDirective and keep it as a flag,
@@ -794,7 +795,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   15. Set the [=document/textFragmentToken=] flag on |document|:
+>   15. Set |document|'s [=document/textFragmentActivationFlag=] by following these sub-steps:
 >       1. Let |is user activated| be true if the current navigation was initiated from
 >           a window that had a <a spec="html">transient activation</a> at the time the
 >           navigation was initiated, or the UA has reason to believe it comes from a
@@ -805,22 +806,21 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in [[FETCH-METADATA]].
 >           </div>
 >       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
->           user activated| or the [=request/textFragmentToken=] flag of
+>           user activated| or the [=request/textFragmentActivationFlag=] of
 >           |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           object is true, set the |document|'s [=document/textFragmentToken=]
->           flag to true. Otherwise, set it to false.
+>           object is true, set the |document|'s [=document/textFragmentActivationFlag=]
+>           to true. Otherwise, set it to false.
 >           <div class="note">
->             It's important that the token not be copyable so that at most one token
->             is created per user-activated navigation.
+>             It's important that the flag not be copyable so that only one text fragment can be
+>             activated per user-activated navigation.
 >           </div>
->   16. Set the [=document/allowTextFragmentDirective=] flag on |document| by
->       following these sub-steps:
+>   16. Set |document|'s [=document/allowTextFragmentDirective=] by following these sub-steps:
 >       1. If |document|'s [=fragment directive=] field is null or empty, set
 >           [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
->       1. Let |textFragmentToken| be the value of |document|'s
->           [=document/textFragmentToken=] and set |document|'s
->           [=document/textFragmentToken=] to false.
+>       1. Let |textFragmentActivationFlag| be the value of |document|'s
+>           [=document/textFragmentActivationFlag=] and set |document|'s
+>           [=document/textFragmentActivationFlag=] to false.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
@@ -850,7 +850,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >               for a more detailed discussion of how this should apply.
 >             </p>
 >           </div>
->       1. If |textFragmentToken| is false, set
+>       1. If |textFragmentActivationFlag| is false, set
 >           [=document/allowTextFragmentDirective=] to false and abort these sub-steps.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
@@ -874,8 +874,8 @@ and initialize a Document object</a> steps by adding the following steps before 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
 process a navigate fetch</a> steps to additionally set |request|'s
-[=request/textFragmentToken=] to the value of the [=active document=]'s
-[=document/textFragmentToken=] and set the [=active document=]'s value to
+[=request/textFragmentActivationFlag=] to the value of the [=active document=]'s
+[=document/textFragmentActivationFlag=] and set the [=active document=]'s value to
 false.
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
@@ -884,10 +884,10 @@ false.
 >       settings object, destination to "document", mode to "navigate", credentials
 >       mode to "include", use-URL-credentials flag, redirect mode to "manual",
 >       replaces client id to browsingContext's active document's relevant settings
->       object's id, and [=request/textFragmentToken=] to
+>       object's id, and [=request/textFragmentActivationFlag=] to
 >       sourceBrowsingContext's active document's
->       [=document/textFragmentToken=]. Set sourceBrowsingContext's active
->       document's [=document/textFragmentToken=] to false.
+>       [=document/textFragmentActivationFlag=]. Set sourceBrowsingContext's active
+>       document's [=document/textFragmentActivationFlag=] to false.
 
 
 Amend the <a spec=HTML>try to scroll to the fragment</a> steps by replacing the
@@ -1117,7 +1117,7 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 |document|, run these steps:
 
 <div class="note">
-  This algorithm takes as input a the |fragment directive input|, that is the
+  This algorithm takes as input a |fragment directive input|, that is the
   raw text of the fragment directive and the |document| over which it operates.
   It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
   indicated, the first of which may be scrolled into view (if the UA scrolls
