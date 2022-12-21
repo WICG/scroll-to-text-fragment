@@ -1326,28 +1326,29 @@ multiple solutions with differing tradeoffs. For example, a UA <em>may</em> cont
 text directive</a>.  Alternatively, it <em>may</em> schedule an asynchronous task
 to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document④">Document</a>'s indicated part.</p>
    <h4 class="heading settled" data-level="3.4.4" id="restricting-the-text-fragment"><span class="secno">3.4.4. </span><span class="content">Restricting the Text Fragment</span><a class="self-link" href="#restricting-the-text-fragment"></a></h4>
-   <p>Amend the definition of a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> and of a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑤">Document</a> to include a new <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag">textFragmentActivationFlag</a> field:</p>
+   <p>Amend the definition of a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> and of a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑤">Document</a> to include a new
+boolean <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation">text fragment activation</a> field:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-fetch" title="Fetch Standard">[FETCH]</a>:</strong></p>
-    <p>A <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> has an associated <dfn class="dfn-paneled" data-dfn-for="request" data-dfn-type="dfn" data-noexport id="request-textfragmentactivationflag">textFragmentActivationFlag</dfn>.</p>
+    <p>A <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> has an associated boolean <dfn class="dfn-paneled" data-dfn-for="request" data-dfn-type="dfn" data-noexport id="request-text-fragment-activation">text fragment activation</dfn>,
+  initially false.</p>
    </blockquote>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>A <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-textfragmentactivationflag">textFragmentActivationFlag</dfn> that is
-  consumed in order to allow a single activation of a text fragment. This flag is
-  set during document loading only if the navigation occurred as a result of a user
-  activation.</p>
-    <p>If the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>'s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①">textFragmentActivationFlag</a> isn’t consumed to activate
-  a text fragment, it may be consumed to set the <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag">textFragmentActivationFlag</a> flag of a navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>. In this way, a <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag②">textFragmentActivationFlag</a> can be propagated from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> to another across a navigation.</p>
-    <p>Reading either the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a>'s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag③">textFragmentActivationFlag</a> or the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag①">textFragmentActivationFlag</a> flag must always consume the value by
-  setting it to false, such that the flag cannot be reused.</p>
+    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-text-fragment-activation">text fragment activation</dfn>, which is a boolean,
+  initially false.</p>
+    <div class="note" role="note">
+      <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation①">text fragment activation</a> is consumed in order to allow a single activation of a
+    text fragment. It is set during document loading only if the navigation occurred as a result
+    of a user activation and can be propagated across client-side redirects. 
+     <p>If a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>'s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation②">text fragment activation</a> isn’t consumed to activate
+    a text fragment, it may be consumed to set the <a data-link-type="dfn" href="#request-text-fragment-activation" id="ref-for-request-text-fragment-activation">text fragment activation</a> flag of a navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>. In this way, a <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation③">text fragment activation</a> can be propagated from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> to another across a navigation.</p>
+     <p>Reading either the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a>'s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation④">text fragment activation</a> or the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-text-fragment-activation" id="ref-for-request-text-fragment-activation①">text fragment activation</a> flag always consumes the value by
+    setting it to false, such that a single activation cannot be reused to activate more than one
+    text fragment.</p>
+    </div>
    </blockquote>
    <div class="note" role="note">
-    <p> <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag④">textFragmentActivationFlag</a> is set to true when a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⓪">Document</a> is loaded
-    as a result of a user gesture. It grants permission (in terms of
-    user activation) to scroll a single text fragment. Alternatively, it may be
-    propagated through a navigation to allow a future document to scroll a text
-    fragment from this navigation’s user gesture. </p>
     <p>
       This mechanism allows text fragments to activate through a common redirect
     technique used by many popular web sites. Such sites redirect users to
@@ -1361,7 +1362,7 @@ to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#c
      <tt>status 3xx</tt>
      ) redirects, these "client-side"
     redirects cannot propagate the fact that the navigation is the result of a
-    user gesture. The <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag⑤">textFragmentActivationFlag</a> mechanism allows passing
+    user gesture. The <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation⑤">text fragment activation</a> mechanism allows passing
     through this specifically scoped user-activation through such navigations.
     This means a page can programmatically navigate to a text fragment, a
     single time, as if it has a user gesture. However, further navigations
@@ -1374,16 +1375,18 @@ to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#c
    </div>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>A <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①①">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-allowtextfragmentdirective">allowTextFragmentDirective</dfn> flag that is used to determine whether a text fragment directive should be
-  allowed to activate. If this flag is false, the text fragment must not
-  cause any observable effects.</p>
+    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⓪">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-allow-text-fragment">allow text fragment</dfn>, which is a
+  boolean, initially false.</p>
+    <div class="note" role="note"> <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment">allow text fragment</a> is used to determine whether a text fragment
+    should be allowed to activate. If it is false, the text fragment must not cause any
+    observable effects. </div>
    </blockquote>
    <div class="note" role="note">
-    <p> <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag⑥">textFragmentActivationFlag</a> is analogous to a user-activation state
-    while <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective">allowTextFragmentDirective</a> is more comprehensive, taking into
-    account various pieces of information, one of which is the existence of a
-    textFragmentActivationFlag. </p>
-    <p> The reason we compute allowTextFragmentDirective and keep it as a flag,
+    <p> <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation⑥">text fragment activation</a> is analogous to a user-activation state
+    while <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment①">allow text fragment</a> is more comprehensive, taking into
+    account various pieces of information, one of which is the value of
+    text fragment activation. </p>
+    <p> The reason we compute and store allow text fragment,
     rather than performing the checks at the time of use, is that it relies on
     the properties of the navigation while the invocation will occur as part of
     the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier">scroll to the fragment</a> steps which can happen outside
@@ -1398,7 +1401,7 @@ and initialize a Document object</a> steps by adding the following steps before 
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
     <ol start="15">
      <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag⑦">textFragmentActivationFlag</a> by following these sub-steps:</p>
+      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation⑦">text fragment activation</a> by following these sub-steps:</p>
       <ol>
        <li data-md>
         <p>Let <var>is user activated</var> be true if the current navigation was initiated from
@@ -1408,19 +1411,19 @@ and initialize a Document object</a> steps by adding the following steps before 
         <div class="note" role="note"> TODO: it’d be better to refer to the userActivationFlag on the <var>request</var>. See <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a>. </div>
        <li data-md>
         <p>If <var>browsing context</var> is a top-level browsing context and if either of <var>is
-  user activated</var> or the <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag②">textFragmentActivationFlag</a> of <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> object is true, set the <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag⑧">textFragmentActivationFlag</a> to true. Otherwise, set it to false.</p>
+  user activated</var> or the <a data-link-type="dfn" href="#request-text-fragment-activation" id="ref-for-request-text-fragment-activation②">text fragment activation</a> of <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> object is true, set the <var>document</var>’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation⑧">text fragment activation</a> to true. Otherwise, set it to false.</p>
         <div class="note" role="note"> It’s important that the flag not be copyable so that only one text fragment can be
     activated per user-activated navigation. </div>
       </ol>
      <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective①">allowTextFragmentDirective</a> by following these sub-steps:</p>
+      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment②">allow text fragment</a> by following these sub-steps:</p>
       <ol>
        <li data-md>
-        <p>If <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①③">fragment directive</a> field is null or empty, set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective②">allowTextFragmentDirective</a> to false and abort these sub-steps.</p>
+        <p>If <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①③">fragment directive</a> field is null or empty, set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment③">allow text fragment</a> to false and abort these sub-steps.</p>
        <li data-md>
-        <p>Let <var>textFragmentActivationFlag</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag⑨">textFragmentActivationFlag</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①⓪">textFragmentActivationFlag</a> to false.</p>
+        <p>Let <var>text fragment activation</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation⑨">text fragment activation</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation①⓪">text fragment activation</a> to false.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective③">allowTextFragmentDirective</a> to true and abort these sub-steps.</p>
+        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment④">allow text fragment</a> to true and abort these sub-steps.</p>
         <div class="note" role="note">
          <p> If a navigation originates from browser UI, it’s always ok to allow it
       since it’ll be user triggered and the page/script isn’t providing the
@@ -1438,23 +1441,23 @@ and initialize a Document object</a> steps by adding the following steps before 
          <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> for a more detailed discussion of how this should apply. </p>
         </div>
        <li data-md>
-        <p>If <var>textFragmentActivationFlag</var> is false, set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective④">allowTextFragmentDirective</a> to false and abort these sub-steps.</p>
+        <p>If <var>text fragment activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment⑤">allow text fragment</a> to false and abort these sub-steps.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑤">allowTextFragmentDirective</a> to true and abort these
+        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment⑥">allow text fragment</a> to true and abort these
   sub-steps.</p>
        <li data-md>
         <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a> is a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing
-  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑥">allowTextFragmentDirective</a> to true and abort these sub-steps.</p>
+  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment⑦">allow text fragment</a> to true and abort these sub-steps.</p>
         <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
     document is loaded in a noopener context. That is, a new top level
     browsing context group to which the navigator does not have script access
     and which may be placed into a separate process. </div>
        <li data-md>
-        <p>Otherwise, set <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑦">allowTextFragmentDirective</a> to false.</p>
+        <p>Otherwise, set <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment⑧">allow text fragment</a> to false.</p>
       </ol>
     </ol>
    </blockquote>
-   <p>Amend step 2 of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch"> process a navigate fetch</a> steps to additionally set <var>request</var>’s <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag③">textFragmentActivationFlag</a> to the value of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document①">active document</a>'s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①①">textFragmentActivationFlag</a> and set the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document②">active document</a>'s value to
+   <p>Amend step 2 of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch"> process a navigate fetch</a> steps to additionally set <var>request</var>’s <a data-link-type="dfn" href="#request-text-fragment-activation" id="ref-for-request-text-fragment-activation③">text fragment activation</a> to the value of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document①">active document</a>'s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation①①">text fragment activation</a> and set the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document②">active document</a>'s value to
 false.</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
@@ -1464,9 +1467,9 @@ false.</p>
   settings object, destination to "document", mode to "navigate", credentials
   mode to "include", use-URL-credentials flag, redirect mode to "manual",
   replaces client id to browsingContext’s active document’s relevant settings
-  object’s id, and <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag④">textFragmentActivationFlag</a> to
-  sourceBrowsingContext’s active document’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①②">textFragmentActivationFlag</a>. Set sourceBrowsingContext’s active
-  document’s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①③">textFragmentActivationFlag</a> to false.</p>
+  object’s id, and <a data-link-type="dfn" href="#request-text-fragment-activation" id="ref-for-request-text-fragment-activation④">text fragment activation</a> to
+  sourceBrowsingContext’s active document’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation①②">text fragment activation</a>. Set sourceBrowsingContext’s active
+  document’s <a data-link-type="dfn" href="#document-text-fragment-activation" id="ref-for-document-text-fragment-activation①③">text fragment activation</a> to false.</p>
     </ol>
    </blockquote>
    <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</a> steps by replacing the
@@ -1477,13 +1480,13 @@ steps of the task queued in step 2:</p>
      <li data-md>
       <p>If document has no parser, or its parser has stopped parsing, or the user
   agent has reason to believe the user is no longer interested in scrolling to
-  the fragment, then clear <em>document</em>’s <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑧">allowTextFragmentDirective</a> flag and abort these steps.</p>
+  the fragment, then set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment⑨">allow text fragment</a> to false and abort these steps.</p>
      <li data-md>
       <p>Scroll to the fragment given in document’s URL. If this does not find an
   indicated part, then try to scroll to the fragment for
   document.</p>
      <li data-md>
-      <p>Clear <em>document</em>’s <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective⑨">allowTextFragmentDirective</a> flag</p>
+      <p>Set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment①⓪">allow text fragment</a> to false.</p>
     </ol>
    </blockquote>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
@@ -1535,7 +1538,7 @@ may be scrolled into view. </div>
     would resolve this problem. </div>
      <li data-md>
       <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①②">Document</a>. If the result is false:</p>
+  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①①">Document</a>. If the result is false:</p>
       <ol>
        <li data-md>
         <p>If <var>range</var> wasn’t produced as a result of a text fragment, or if the
@@ -1563,7 +1566,7 @@ beginning of the processing model for the <a data-link-type="dfn" href="https://
      <li data-md>
       <p>Let <var>fragment directive string</var> be the document’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①④">fragment directive</a>.</p>
      <li data-md>
-      <p>If the document’s <a data-link-type="dfn" href="#document-allowtextfragmentdirective" id="ref-for-document-allowtextfragmentdirective①⓪">allowTextFragmentDirective</a> flag is true then:</p>
+      <p>If the document’s <a data-link-type="dfn" href="#document-allow-text-fragment" id="ref-for-document-allow-text-fragment①①">allow text fragment</a> is true then:</p>
       <ol>
        <li data-md>
         <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> that is the result of running
@@ -1722,7 +1725,7 @@ text=bar,baz
   list.</p>
    </div>
    <div class="algorithm" data-algorithm="process a fragment directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run these steps: 
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①②">Document</a> <var>document</var>, run these steps: 
     <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">ranges</a> that are to be visually
@@ -1757,7 +1760,7 @@ directive</a> steps on <var>directive</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a range from a text directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective②">ParsedTextDirective</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①④">Document</a> <var>document</var>, run the
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective②">ParsedTextDirective</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
@@ -2350,9 +2353,9 @@ persisted state</a> steps by inserting a new step after 2:</p>
    <ol start="3">
     <li data-md>
      <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
-the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑤">Document</a>. If
+the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①④">Document</a>. If
 the result is true, then the user agent should not restore the scroll
-position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑥">Document</a> or any of its scrollable regions.</p>
+position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑤">Document</a> or any of its scrollable regions.</p>
    </ol>
    <h3 class="heading settled" data-level="3.8" id="feature-detectability"><span class="secno">3.8. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
@@ -2527,7 +2530,7 @@ match based on whether the element-id was scrolled.</p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#document-allowtextfragmentdirective">allowTextFragmentDirective</a><span>, in § 3.4.4</span>
+   <li><a href="#document-allow-text-fragment">allow text fragment</a><span>, in § 3.4.4</span>
    <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.3</span>
    <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.5.2</span>
@@ -2569,10 +2572,10 @@ match based on whether the element-id was scrolled.</p>
    <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in § 3.3.3</span>
    <li><a href="#parsedtextdirective-textend">textEnd</a><span>, in § 3.3.2</span>
    <li>
-    textFragmentActivationFlag
+    text fragment activation
     <ul>
-     <li><a href="#document-textfragmentactivationflag">dfn for document</a><span>, in § 3.4.4</span>
-     <li><a href="#request-textfragmentactivationflag">dfn for request</a><span>, in § 3.4.4</span>
+     <li><a href="#document-text-fragment-activation">dfn for document</a><span>, in § 3.4.4</span>
+     <li><a href="#request-text-fragment-activation">dfn for request</a><span>, in § 3.4.4</span>
     </ul>
    <li><a href="#text-fragment-directive">text fragment directive</a><span>, in § 3.3.3</span>
    <li><a href="#parsedtextdirective-textstart">textStart</a><span>, in § 3.3.2</span>
@@ -2721,10 +2724,10 @@ match based on whether the element-id was scrolled.</p>
     <li><a href="#ref-for-concept-document">3.3. The Fragment Directive</a>
     <li><a href="#ref-for-concept-document①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-document②">(2)</a> <a href="#ref-for-concept-document③">(3)</a>
     <li><a href="#ref-for-concept-document④">3.4.3. Search Timing</a>
-    <li><a href="#ref-for-concept-document⑤">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document⑥">(2)</a> <a href="#ref-for-concept-document⑦">(3)</a> <a href="#ref-for-concept-document⑧">(4)</a> <a href="#ref-for-concept-document⑨">(5)</a> <a href="#ref-for-concept-document①⓪">(6)</a> <a href="#ref-for-concept-document①①">(7)</a>
-    <li><a href="#ref-for-concept-document①②">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-document①③">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-document①④">(2)</a>
-    <li><a href="#ref-for-concept-document①⑤">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①⑥">(2)</a>
+    <li><a href="#ref-for-concept-document⑤">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document⑥">(2)</a> <a href="#ref-for-concept-document⑦">(3)</a> <a href="#ref-for-concept-document⑧">(4)</a> <a href="#ref-for-concept-document⑨">(5)</a> <a href="#ref-for-concept-document①⓪">(6)</a>
+    <li><a href="#ref-for-concept-document①①">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-concept-document①②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-document①③">(2)</a>
+    <li><a href="#ref-for-concept-document①④">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①⑤">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document-element">
@@ -3542,23 +3545,23 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-percentencodedchar">3.3.3. Fragment directive grammar</a> <a href="#ref-for-percentencodedchar①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="request-textfragmentactivationflag">
-   <b><a href="#request-textfragmentactivationflag">#request-textfragmentactivationflag</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="request-text-fragment-activation">
+   <b><a href="#request-text-fragment-activation">#request-text-fragment-activation</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-request-textfragmentactivationflag">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-request-textfragmentactivationflag①">(2)</a> <a href="#ref-for-request-textfragmentactivationflag②">(3)</a> <a href="#ref-for-request-textfragmentactivationflag③">(4)</a> <a href="#ref-for-request-textfragmentactivationflag④">(5)</a>
+    <li><a href="#ref-for-request-text-fragment-activation">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-request-text-fragment-activation①">(2)</a> <a href="#ref-for-request-text-fragment-activation②">(3)</a> <a href="#ref-for-request-text-fragment-activation③">(4)</a> <a href="#ref-for-request-text-fragment-activation④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="document-textfragmentactivationflag">
-   <b><a href="#document-textfragmentactivationflag">#document-textfragmentactivationflag</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="document-text-fragment-activation">
+   <b><a href="#document-text-fragment-activation">#document-text-fragment-activation</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document-textfragmentactivationflag">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-textfragmentactivationflag①">(2)</a> <a href="#ref-for-document-textfragmentactivationflag②">(3)</a> <a href="#ref-for-document-textfragmentactivationflag③">(4)</a> <a href="#ref-for-document-textfragmentactivationflag④">(5)</a> <a href="#ref-for-document-textfragmentactivationflag⑤">(6)</a> <a href="#ref-for-document-textfragmentactivationflag⑥">(7)</a> <a href="#ref-for-document-textfragmentactivationflag⑦">(8)</a> <a href="#ref-for-document-textfragmentactivationflag⑧">(9)</a> <a href="#ref-for-document-textfragmentactivationflag⑨">(10)</a> <a href="#ref-for-document-textfragmentactivationflag①⓪">(11)</a> <a href="#ref-for-document-textfragmentactivationflag①①">(12)</a> <a href="#ref-for-document-textfragmentactivationflag①②">(13)</a> <a href="#ref-for-document-textfragmentactivationflag①③">(14)</a>
+    <li><a href="#ref-for-document-text-fragment-activation">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-text-fragment-activation①">(2)</a> <a href="#ref-for-document-text-fragment-activation②">(3)</a> <a href="#ref-for-document-text-fragment-activation③">(4)</a> <a href="#ref-for-document-text-fragment-activation④">(5)</a> <a href="#ref-for-document-text-fragment-activation⑤">(6)</a> <a href="#ref-for-document-text-fragment-activation⑥">(7)</a> <a href="#ref-for-document-text-fragment-activation⑦">(8)</a> <a href="#ref-for-document-text-fragment-activation⑧">(9)</a> <a href="#ref-for-document-text-fragment-activation⑨">(10)</a> <a href="#ref-for-document-text-fragment-activation①⓪">(11)</a> <a href="#ref-for-document-text-fragment-activation①①">(12)</a> <a href="#ref-for-document-text-fragment-activation①②">(13)</a> <a href="#ref-for-document-text-fragment-activation①③">(14)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="document-allowtextfragmentdirective">
-   <b><a href="#document-allowtextfragmentdirective">#document-allowtextfragmentdirective</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="document-allow-text-fragment">
+   <b><a href="#document-allow-text-fragment">#document-allow-text-fragment</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document-allowtextfragmentdirective">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-allowtextfragmentdirective①">(2)</a> <a href="#ref-for-document-allowtextfragmentdirective②">(3)</a> <a href="#ref-for-document-allowtextfragmentdirective③">(4)</a> <a href="#ref-for-document-allowtextfragmentdirective④">(5)</a> <a href="#ref-for-document-allowtextfragmentdirective⑤">(6)</a> <a href="#ref-for-document-allowtextfragmentdirective⑥">(7)</a> <a href="#ref-for-document-allowtextfragmentdirective⑦">(8)</a> <a href="#ref-for-document-allowtextfragmentdirective⑧">(9)</a> <a href="#ref-for-document-allowtextfragmentdirective⑨">(10)</a>
-    <li><a href="#ref-for-document-allowtextfragmentdirective①⓪">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-document-allow-text-fragment">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-allow-text-fragment①">(2)</a> <a href="#ref-for-document-allow-text-fragment②">(3)</a> <a href="#ref-for-document-allow-text-fragment③">(4)</a> <a href="#ref-for-document-allow-text-fragment④">(5)</a> <a href="#ref-for-document-allow-text-fragment⑤">(6)</a> <a href="#ref-for-document-allow-text-fragment⑥">(7)</a> <a href="#ref-for-document-allow-text-fragment⑦">(8)</a> <a href="#ref-for-document-allow-text-fragment⑧">(9)</a> <a href="#ref-for-document-allow-text-fragment⑨">(10)</a> <a href="#ref-for-document-allow-text-fragment①⓪">(11)</a>
+    <li><a href="#ref-for-document-allow-text-fragment①①">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="first-common-ancestor">
