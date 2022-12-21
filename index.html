@@ -1333,9 +1333,9 @@ to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#c
    </blockquote>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>A <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-textfragmentactivationflag">textFragmentActivationFlag</dfn> that is
+    <p>A <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-textfragmentactivationflag">textFragmentActivationFlag</dfn> that is
   consumed in order to allow a single activation of a text fragment. This flag is
-  set during document loading only if the navigation occured as a result of a user
+  set during document loading only if the navigation occurred as a result of a user
   activation.</p>
     <p>If the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>'s <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag①">textFragmentActivationFlag</a> isn’t consumed to activate
   a text fragment, it may be consumed to set the <a data-link-type="dfn" href="#request-textfragmentactivationflag" id="ref-for-request-textfragmentactivationflag">textFragmentActivationFlag</a> flag of a navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>. In this way, a <a data-link-type="dfn" href="#document-textfragmentactivationflag" id="ref-for-document-textfragmentactivationflag②">textFragmentActivationFlag</a> can be propagated from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> to another across a navigation.</p>
@@ -1688,7 +1688,7 @@ text=bar,baz
    </div>
    <div class="algorithm" data-algorithm="process a fragment directive">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run these steps: 
-    <div class="note" role="note"> This algorithm takes as input a the <var>fragment directive input</var>, that is the
+    <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">ranges</a> that are to be visually
   indicated, the first of which may be scrolled into view (if the UA scrolls

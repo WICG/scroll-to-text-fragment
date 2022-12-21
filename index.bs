@@ -707,7 +707,7 @@ Amend the definition of a [=/request=] and of a [=Document=] to include a new
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   A [=Document=] has an <dfn for="document">textFragmentActivationFlag</dfn> that is
+>   A [=Document=] has a <dfn for="document">textFragmentActivationFlag</dfn> that is
 >   consumed in order to allow a single activation of a text fragment. This flag is
 >   set during document loading only if the navigation occurred as a result of a user
 >   activation.
