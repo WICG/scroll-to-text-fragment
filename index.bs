@@ -961,10 +961,13 @@ To enable the <a spec=HTML>scroll to the fragment</a> algorithm to operate on a
 >       [=Document=]. If the result is false:
 >       1. If |range| wasn't produced as a result of a text fragment, or if the
 >           UA supports scrolling of text fragments on navigation, invoke
->           [=scroll a Range into view|Scroll range into view=], with range
->           |range|, containingElement |target|, <em>behavior</em> set
->           to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+>           <a href="https://drafts.csswg.org/cssom-view-1/#scroll-a-target-into-view">
+>           scroll a target into view</a>, with <em>target</em> set to |range|,
+>           containingElement |target|, <em>behavior</em> set to "auto",
+>           <em>block</em> set to "center", and <em>inline</em> set to
 >           "nearest".
+>           <!-- TODO: Update scroll-a-target-into-view once autolink database
+>           includes it. -->
 >
 >       <div class="issue">
 >           <code>force-load-at-top</code> should be checked only when a new
@@ -1055,77 +1058,6 @@ To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
     1. Otherwise, return |node|'s [=tree/parent=].
   </ol>
 </div>
-
-### Scroll a DOMRect into view ### {#scroll-rect-into-view}
-<div class="note">
-  This section describes a refactoring of the CSSOMVIEW's
-  <a spec=cssom-view>scroll an element into view</a> algorithm
-  to separate the steps for scrolling a DOMRect into view, so it can be used to
-  scroll a Range into view.
-</div>
-
-Move the <a spec=cssom-view>scroll an element into view</a> algorithm's steps
-3-14 into a new algorithm <dfn>scroll a DOMRect into view</dfn>, with input
-{{DOMRect}} |bounding box|, {{ScrollIntoViewOptions}} dictionary |options|, and
-[=element=] |startingElement|.
-
-Also move the recursive behavior described at the top of the <a
-spec=cssom-view>scroll an element into view</a> algorithm to the [=scroll a
-DOMRect into view=] algorithm: "run these steps for each ancestor element or
-viewport <b>of |startingElement|</b> that establishes a scrolling box <var
-ignore=''>scrolling box</var>, in order of innermost to outermost scrolling box".
-
-<div class="note">
-  |bounding box| is renamed from |element bounding border box|.
-</div>
-
->   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
->
->   To scroll a DOMRect into view given a {{DOMRect}} |bounding box|,
->   a scroll behavior |behavior|,
->   a block flow direction position |block|,
->   and an inline base direction position |inline|,
->   and [=element=] |startingElement|, means to run these steps for each ancestor element or viewport of |startingElement| that establishes
->   a scrolling box <var ignore=''>scrolling box</var>, in order of innermost to outermost scrolling box:
->
->   <em>OMITTED</em>
->
->   <div class="note">
->     TODO: There's more to do here since the |bounding box| needs to be
->     transformed with each step to an ancestor element or viewport.
->   </div>
-
-
-Replace steps 3-14 of the <a spec=cssom-view>scroll an element into view</a>
-algorithm with a call to [=scroll a DOMRect into view=]:
-
->   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
->
->   To scroll an element into view |element|,
->   with a scroll behavior |behavior|,
->   a block flow direction position |block|,
->   and an inline base direction position |inline|,
->   means to run these steps:
->
->   1. If the {{Document}} associated with |element| is not same origin with the {{Document}} associated with the element or viewport associated with <var ignore=''>box</var>, terminate these steps.
->   1. Let |element bounding border box| be the box that the return value of invoking {{Element/getBoundingClientRect()}} on |element| represents.
->   1. Perform [=scroll a DOMRect into view=] given |element bounding border box|,
->       |options| and |element|.
-
-Define a new algorithm for scrolling [=Range=] into view:
-
->   <strong>Monkeypatching [[CSSOM-VIEW]]:</strong>
->
->   To <dfn>scroll a Range into view</dfn>, with input
->   [=range=] |range|,
->   scroll behavior |behavior|,
->   a block flow direction position |block|,
->   an inline base direction position |inline|,
->   and an [=element=] |containingElement|:
->   1. Let |bounding rect| be the {{DOMRect}} that is the return value of
->       invoking {{Range/getBoundingClientRect()}} on |range|.
->   2. Perform [=scroll a DOMRect into view=] given |bounding rect|, |behavior|, |block|, |inline|, and
->       |containingElement|.
 
 ### Finding Ranges in a Document ### {#finding-ranges-in-a-document}
 

@@ -814,9 +814,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li>
        <a href="#navigating-to-text-fragment"><span class="secno">3.5</span> <span class="content">Navigating to a Text Fragment</span></a>
        <ol class="toc">
-        <li><a href="#scroll-rect-into-view"><span class="secno">3.5.1</span> <span class="content">Scroll a DOMRect into view</span></a>
-        <li><a href="#finding-ranges-in-a-document"><span class="secno">3.5.2</span> <span class="content">Finding Ranges in a Document</span></a>
-        <li><a href="#word-boundaries"><span class="secno">3.5.3</span> <span class="content">Word Boundaries</span></a>
+        <li><a href="#finding-ranges-in-a-document"><span class="secno">3.5.1</span> <span class="content">Finding Ranges in a Document</span></a>
+        <li><a href="#word-boundaries"><span class="secno">3.5.2</span> <span class="content">Word Boundaries</span></a>
        </ol>
       <li>
        <a href="#indicating-the-text-match"><span class="secno">3.6</span> <span class="content">Indicating The Text Match</span></a>
@@ -1541,8 +1540,8 @@ indicated part processing model to return a <a data-link-type="dfn" href="https:
       <ol>
        <li data-md>
         <p>If <var>range</var> wasn’t produced as a result of a text fragment, or if the
-  UA supports scrolling of text fragments on navigation, invoke <a data-link-type="dfn" href="#scroll-a-range-into-view" id="ref-for-scroll-a-range-into-view">Scroll range into view</a>, with range <var>range</var>, containingElement <var>target</var>, <em>behavior</em> set
-  to "auto", <em>block</em> set to "center", and <em>inline</em> set to
+  UA supports scrolling of text fragments on navigation, invoke <a href="https://drafts.csswg.org/cssom-view-1/#scroll-a-target-into-view"> scroll a target into view</a>, with <em>target</em> set to <var>range</var>,
+  containingElement <var>target</var>, <em>behavior</em> set to "auto", <em>block</em> set to "center", and <em>inline</em> set to
   "nearest".</p>
       </ol>
       <div class="issue" id="issue-b49aac41"><a class="self-link" href="#issue-b49aac41"></a> <code>force-load-at-top</code> should be checked only when a new
@@ -1644,65 +1643,10 @@ ancestor</a> of <var>nodeB</var>, let <var>commonAncestor</var> be <var>commonAn
       <p>Otherwise, return <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-parent" id="ref-for-concept-tree-parent①">parent</a>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="3.5.1" id="scroll-rect-into-view"><span class="secno">3.5.1. </span><span class="content">Scroll a DOMRect into view</span><a class="self-link" href="#scroll-rect-into-view"></a></h4>
-   <div class="note" role="note"> This section describes a refactoring of the CSSOMVIEW’s <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view">scroll an element into view</a> algorithm
-  to separate the steps for scrolling a DOMRect into view, so it can be used to
-  scroll a Range into view. </div>
-   <p>Move the <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view①">scroll an element into view</a> algorithm’s steps
-3-14 into a new algorithm <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-domrect-into-view">scroll a DOMRect into view</dfn>, with input <code class="idl"><a data-link-type="idl" href="https://drafts.fxtf.org/geometry-1/#domrect" id="ref-for-domrect">DOMRect</a></code> <var>bounding box</var>, <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/cssom-view-1/#dictdef-scrollintoviewoptions" id="ref-for-dictdef-scrollintoviewoptions">ScrollIntoViewOptions</a></code> dictionary <var>options</var>, and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element③">element</a> <var>startingElement</var>.</p>
-   <p>Also move the recursive behavior described at the top of the <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view②">scroll an element into view</a> algorithm to the <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view">scroll a
-DOMRect into view</a> algorithm: "run these steps for each ancestor element or
-viewport <b>of <var>startingElement</var></b> that establishes a scrolling box <var>scrolling box</var>, in order of innermost to outermost scrolling box".</p>
-   <div class="note" role="note"> <var>bounding box</var> is renamed from <var>element bounding border box</var>. </div>
-   <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-cssom-view" title="CSSOM View Module">[CSSOM-VIEW]</a>:</strong></p>
-    <p>To scroll a DOMRect into view given a <code class="idl"><a data-link-type="idl" href="https://drafts.fxtf.org/geometry-1/#domrect" id="ref-for-domrect①">DOMRect</a></code> <var>bounding box</var>,
-  a scroll behavior <var>behavior</var>,
-  a block flow direction position <var>block</var>,
-  and an inline base direction position <var>inline</var>,
-  and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element④">element</a> <var>startingElement</var>, means to run these steps for each ancestor element or viewport of <var>startingElement</var> that establishes
-  a scrolling box <var>scrolling box</var>, in order of innermost to outermost scrolling box:</p>
-    <p><em>OMITTED</em></p>
-    <div class="note" role="note"> TODO: There’s more to do here since the <var>bounding box</var> needs to be
-    transformed with each step to an ancestor element or viewport. </div>
-   </blockquote>
-   <p>Replace steps 3-14 of the <a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view" id="ref-for-scroll-an-element-into-view③">scroll an element into view</a> algorithm with a call to <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view①">scroll a DOMRect into view</a>:</p>
-   <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-cssom-view" title="CSSOM View Module">[CSSOM-VIEW]</a>:</strong></p>
-    <p>To scroll an element into view <var>element</var>,
-  with a scroll behavior <var>behavior</var>,
-  a block flow direction position <var>block</var>,
-  and an inline base direction position <var>inline</var>,
-  means to run these steps:</p>
-    <ol>
-     <li data-md>
-      <p>If the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> associated with <var>element</var> is not same origin with the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①">Document</a></code> associated with the element or viewport associated with <var>box</var>, terminate these steps.</p>
-     <li data-md>
-      <p>Let <var>element bounding border box</var> be the box that the return value of invoking <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/cssom-view-1/#dom-element-getboundingclientrect" id="ref-for-dom-element-getboundingclientrect">getBoundingClientRect()</a></code> on <var>element</var> represents.</p>
-     <li data-md>
-      <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view②">scroll a DOMRect into view</a> given <var>element bounding border box</var>, <var>options</var> and <var>element</var>.</p>
-    </ol>
-   </blockquote>
-   <p>Define a new algorithm for scrolling <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑨">Range</a> into view:</p>
-   <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-cssom-view" title="CSSOM View Module">[CSSOM-VIEW]</a>:</strong></p>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="scroll-a-range-into-view">scroll a Range into view</dfn>, with input <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">range</a> <var>range</var>,
-  scroll behavior <var>behavior</var>,
-  a block flow direction position <var>block</var>,
-  an inline base direction position <var>inline</var>,
-  and an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑤">element</a> <var>containingElement</var>:</p>
-    <ol>
-     <li data-md>
-      <p>Let <var>bounding rect</var> be the <code class="idl"><a data-link-type="idl" href="https://drafts.fxtf.org/geometry-1/#domrect" id="ref-for-domrect②">DOMRect</a></code> that is the return value of
-  invoking <code class="idl"><a data-link-type="idl" href="https://drafts.csswg.org/cssom-view-1/#dom-range-getboundingclientrect" id="ref-for-dom-range-getboundingclientrect">getBoundingClientRect()</a></code> on <var>range</var>.</p>
-     <li data-md>
-      <p>Perform <a data-link-type="dfn" href="#scroll-a-domrect-into-view" id="ref-for-scroll-a-domrect-into-view③">scroll a DOMRect into view</a> given <var>bounding rect</var>, <var>behavior</var>, <var>block</var>, <var>inline</var>, and <var>containingElement</var>.</p>
-    </ol>
-   </blockquote>
-   <h4 class="heading settled" data-level="3.5.2" id="finding-ranges-in-a-document"><span class="secno">3.5.2. </span><span class="content">Finding Ranges in a Document</span><a class="self-link" href="#finding-ranges-in-a-document"></a></h4>
+   <h4 class="heading settled" data-level="3.5.1" id="finding-ranges-in-a-document"><span class="secno">3.5.1. </span><span class="content">Finding Ranges in a Document</span><a class="self-link" href="#finding-ranges-in-a-document"></a></h4>
    <div class="note" role="note">
      This section outlines several algorithms and definitions that specify how to
-  turn a full fragment directive string into a list of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">Ranges</a> in the
+  turn a full fragment directive string into a list of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑨">Ranges</a> in the
   document. 
     <p>At a high level, we take a fragment directive string that looks like this:</p>
 <pre>text=prefix-,foo&amp;unknown&amp;text=bar,baz
@@ -1715,9 +1659,9 @@ text=bar,baz
   instance of rendered text that matches the restrictions in the directive.
   Each search is independent of any others; that is, the result is the same
   regardless of how many other directives are provided or their match result.</p>
-    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#process-a-fragment-directive" id="ref-for-process-a-fragment-directive①">process a fragment
+    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#process-a-fragment-directive" id="ref-for-process-a-fragment-directive①">process a fragment
   directive</a> steps are the high level API provided by this section. These
-  return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">ranges</a> that were matched by the
+  return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">ranges</a> that were matched by the
   individual directive matching steps, in the order the directives were
   specified in the fragment directive string.</p>
     <p>If a directive was not matched, it does not add an item to the returned
@@ -1727,7 +1671,7 @@ text=bar,baz
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①②">Document</a> <var>document</var>, run these steps: 
     <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
-  It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">ranges</a> that are to be visually
+  It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">ranges</a> that are to be visually
   indicated, the first of which will be scrolled into view (if the UA scrolls
   automatically). </div>
     <ol class="algorithm">
@@ -1739,7 +1683,7 @@ return an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#lis
 that is the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting the
 string</a> <var>fragment directive input</var> on "&amp;".</p>
      <li data-md>
-      <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">ranges</a>, initially empty.</p>
+      <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">ranges</a>, initially empty.</p>
      <li data-md>
       <p>For each <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a> <var>directive</var> of <var>directives</var>:</p>
       <ol>
@@ -1763,12 +1707,12 @@ directive</a> steps on <var>directive</var>.</p>
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
-  document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> that points to the first
+  document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">range</a> that points to the first
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists. 
      <p><a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①">textEnd</a> can be null. If omitted, this is an "exact"
-  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart②">textStart</a>. If <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend②">textEnd</a> is
-  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> will start with <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend③">textEnd</a>. In the normative text below, we’ll call a
+  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart②">textStart</a>. If <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend②">textEnd</a> is
+  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will start with <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend③">textEnd</a>. In the normative text below, we’ll call a
   text passage that matches the provided <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart④">textStart</a> and <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend④">textEnd</a>, regardless of which mode we’re in, the
   "matching text".</p>
      <p>Either or both of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix①">prefix</a> and <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix①">suffix</a> can be null, in which case context on that
@@ -1798,7 +1742,7 @@ following steps:
     </div>
     <ol class="algorithm">
      <li data-md>
-      <p>Let <var>searchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①">start</a> (<var>document</var>, 0) and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①">end</a> (<var>document</var>, <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>)</p>
+      <p>Let <var>searchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①">start</a> (<var>document</var>, 0) and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①">end</a> (<var>document</var>, <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a>)</p>
      <li data-md>
       <p>While <var>searchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed">collapsed</a>:</p>
       <ol>
@@ -1815,7 +1759,7 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
          <li data-md>
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start②">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after">after</a> <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start③">start</a></p>
          <li data-md>
-          <p>Let <var>matchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start④">start</a> is <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end②">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end③">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end④">end</a>.</p>
+          <p>Let <var>matchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start④">start</a> is <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end②">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end③">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end④">end</a>.</p>
          <li data-md>
           <p>Advance <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑤">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position">next non-whitespace position</a>.</p>
          <li data-md>
@@ -1855,7 +1799,7 @@ range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-t
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑨">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp①">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after①">after</a> <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a></p>
         </ol>
        <li data-md>
-        <p>Let <var>rangeEndSearchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑧">end</a>.</p>
+        <p>Let <var>rangeEndSearchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑧">end</a>.</p>
        <li data-md>
         <p>While <var>rangeEndSearchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a>:</p>
         <ol>
@@ -1879,7 +1823,7 @@ represents a range exactly containing an instance of matching text.</p>
          <li data-md>
           <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
          <li data-md>
-          <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a>.</p>
+          <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a>.</p>
          <li data-md>
           <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①③">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
@@ -1931,7 +1875,7 @@ then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-brea
     </ul>
    </details>
    <div class="algorithm" data-algorithm="advance range start to next non-whitespace position">
-     To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑦">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
+     To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑦">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
 non-whitespace position</dfn> follow the steps: 
     <ol class="algorithm">
      <li data-md>
@@ -1978,16 +1922,16 @@ not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a string in a range">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②④">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
 run these steps: 
-    <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a> that represents the first instance of
+    <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> that represents the first instance of
   the <var>query</var> text that is fully contained within <var>searchRange</var>, optionally
-  restricting itself to matches that start and/or end at word boundaries (see <a href="#word-boundaries">§ 3.5.3 Word Boundaries</a>). Returns null if none is found. </div>
+  restricting itself to matches that start and/or end at word boundaries (see <a href="#word-boundaries">§ 3.5.2 Word Boundaries</a>). Returns null if none is found. </div>
     <div class="note" role="note">
      <p> The basic premise of this algorithm is to walk all searchable text nodes
     within a block, collecting them into a list. The list is then concatenated
     into a single string in which we can search, using the node list to
-    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑥">range</a>. </p>
+    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②④">range</a>. </p>
      <p> Collection breaks when we hit a block node, e.g. searching over this tree: </p>
 <pre>&lt;div>
   a&lt;em>b&lt;/em>c&lt;div>d&lt;/div>e
@@ -2050,7 +1994,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
           <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>.</p>
         </ol>
        <li data-md>
-        <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, <var>textNodeList</var>, <var>wordStartBounded</var> and <var>wordEndBounded</var> as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑦">range</a> is not null, then return it.</p>
+        <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, <var>textNodeList</var>, <var>wordStartBounded</var> and <var>wordEndBounded</var> as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a> is not null, then return it.</p>
        <li data-md>
         <p>If <var>curNode</var> is null, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break③">break</a>.</p>
        <li data-md>
@@ -2063,7 +2007,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
       <p>Return null.</p>
     </ol>
    </div>
-   <p>A node is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="search-invisible">search invisible</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑥">element</a> in the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#html-namespace" id="ref-for-html-namespace">HTML
+   <p>A node is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="search-invisible">search invisible</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element③">element</a> in the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#html-namespace" id="ref-for-html-namespace">HTML
 namespace</a> and meets any of the following conditions:</p>
    <ol>
     <li data-md>
@@ -2077,7 +2021,7 @@ namespace</a> and meets any of the following conditions:</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor" id="ref-for-concept-shadow-including-ancestor">shadow-including ancestor</a> that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
    <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element⑦">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element④">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <div class="algorithm" data-algorithm="nearest block ancestor">
      To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps: 
     <ol class="algorithm">
@@ -2098,7 +2042,7 @@ return <var>curNode</var>.</p>
    </div>
    <div class="algorithm" data-algorithm="range from node list">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-node-list">find a range from a node list</dfn> given a search string <var>queryString</var>,
-a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑧">range</a> <var>searchRange</var>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>, follow these steps: 
+a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑥">range</a> <var>searchRange</var>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>, follow these steps: 
     <div class="note" role="note">
       Optionally, this will only return a match if the matched text begins and/or
   ends on a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary">word boundary</a>. For example: 
@@ -2111,7 +2055,7 @@ a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="
         <p>When requiring a word boundary at the end, it will not match in “forest ranger”.</p>
       </ol>
      </div>
-     <p>See <a href="#word-boundaries">§ 3.5.3 Word Boundaries</a> for details and more examples.</p>
+     <p>See <a href="#word-boundaries">§ 3.5.2 Word Boundaries</a> for details and more examples.</p>
     </div>
     <ol class="algorithm">
      <li data-md>
@@ -2172,7 +2116,7 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
      <li data-md>
       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert⑤">Assert</a>: <var>start</var> and <var>end</var> are non-null, valid <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑦">boundary points</a> in <var>searchRange</var>.</p>
      <li data-md>
-      <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑨">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑨">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑥">end</a> <var>end</var>.</p>
+      <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑦">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑨">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑥">end</a> <var>end</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="boundary point at index">
@@ -2208,7 +2152,7 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
       <p>Return null.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="3.5.3" id="word-boundaries"><span class="secno">3.5.3. </span><span class="content">Word Boundaries</span><a class="self-link" href="#word-boundaries"></a></h4>
+   <h4 class="heading settled" data-level="3.5.2" id="word-boundaries"><span class="secno">3.5.2. </span><span class="content">Word Boundaries</span><a class="self-link" href="#word-boundaries"></a></h4>
    <div class="note" role="note"> Limiting matching to word boundaries is one of the mitigations to limit
   cross-origin information leakage. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>, a
@@ -2364,8 +2308,8 @@ the feature.</p>
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fragmentdirective"><code><c- g>FragmentDirective</c-></code></dfn> {
 };
 </pre>
-   <p>We amend the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document②">Document</a></code> interface to include a <code>fragmentDirective</code> property:</p>
-<pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://dom.spec.whatwg.org/#document" id="ref-for-document③"><c- g>Document</c-></a> {
+   <p>We amend the <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document">Document</a></code> interface to include a <code>fragmentDirective</code> property:</p>
+<pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://dom.spec.whatwg.org/#document" id="ref-for-document①"><c- g>Document</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SameObject" id="ref-for-SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#fragmentdirective" id="ref-for-fragmentdirective"><c- n>FragmentDirective</c-></a> <dfn class="idl-code" data-dfn-for="Document" data-dfn-type="attribute" data-export data-readonly data-type="FragmentDirective" id="dom-document-fragmentdirective"><code><c- g>fragmentDirective</c-></code><a class="self-link" href="#dom-document-fragmentdirective"></a></dfn>;
 };
 </pre>
@@ -2526,9 +2470,9 @@ manipulations
    <li><a href="#document-allow-text-fragment-scroll">allow text fragment scroll</a><span>, in § 3.4.4</span>
    <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.3</span>
    <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.3</span>
-   <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.5.2</span>
-   <li><a href="#find-a-range-from-a-text-directive">find a range from a text directive</a><span>, in § 3.5.2</span>
-   <li><a href="#find-a-string-in-range">find a string in range</a><span>, in § 3.5.2</span>
+   <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.5.1</span>
+   <li><a href="#find-a-range-from-a-text-directive">find a range from a text directive</a><span>, in § 3.5.1</span>
+   <li><a href="#find-a-string-in-range">find a string in range</a><span>, in § 3.5.1</span>
    <li><a href="#first-common-ancestor">first common ancestor</a><span>, in § 3.5</span>
    <li><a href="#fragment-directive">fragment directive</a><span>, in § 3.3.1</span>
    <li>
@@ -2539,22 +2483,20 @@ manipulations
     </ul>
    <li><a href="#dom-document-fragmentdirective">fragmentDirective</a><span>, in § 3.8</span>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in § 3.3</span>
-   <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in § 3.5.2</span>
-   <li><a href="#has-block-level-display">has block-level display</a><span>, in § 3.5.2</span>
-   <li><a href="#is-at-a-word-boundary">is at a word boundary</a><span>, in § 3.5.3</span>
-   <li><a href="#locale">locale</a><span>, in § 3.5.3</span>
-   <li><a href="#nearest-block-ancestor">nearest block ancestor</a><span>, in § 3.5.2</span>
-   <li><a href="#next-non-whitespace-position">next non-whitespace position</a><span>, in § 3.5.2</span>
-   <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in § 3.5.2</span>
+   <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in § 3.5.1</span>
+   <li><a href="#has-block-level-display">has block-level display</a><span>, in § 3.5.1</span>
+   <li><a href="#is-at-a-word-boundary">is at a word boundary</a><span>, in § 3.5.2</span>
+   <li><a href="#locale">locale</a><span>, in § 3.5.2</span>
+   <li><a href="#nearest-block-ancestor">nearest block ancestor</a><span>, in § 3.5.1</span>
+   <li><a href="#next-non-whitespace-position">next non-whitespace position</a><span>, in § 3.5.1</span>
+   <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in § 3.5.1</span>
    <li><a href="#parse-a-text-directive">parse a text directive</a><span>, in § 3.3.2</span>
    <li><a href="#parsedtextdirective">ParsedTextDirective</a><span>, in § 3.3.2</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.3</span>
    <li><a href="#parsedtextdirective-prefix">prefix</a><span>, in § 3.3.2</span>
-   <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.5.2</span>
+   <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.5.1</span>
    <li><a href="#process-and-consume-fragment-directive">process and consume fragment directive</a><span>, in § 3.3.1</span>
-   <li><a href="#scroll-a-domrect-into-view">scroll a DOMRect into view</a><span>, in § 3.5.1</span>
-   <li><a href="#scroll-a-range-into-view">scroll a Range into view</a><span>, in § 3.5.1</span>
-   <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.2</span>
+   <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.5</span>
    <li><a href="#parsedtextdirective-suffix">suffix</a><span>, in § 3.3.2</span>
    <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.3</span>
@@ -2574,141 +2516,116 @@ manipulations
    <li><a href="#parsedtextdirective-textstart">textStart</a><span>, in § 3.3.2</span>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.3</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.3</span>
-   <li><a href="#visible-text-node">visible text node</a><span>, in § 3.5.2</span>
-   <li><a href="#word-boundary">word boundary</a><span>, in § 3.5.3</span>
-   <li><a href="#word-bounded">word bounded</a><span>, in § 3.5.3</span>
+   <li><a href="#visible-text-node">visible text node</a><span>, in § 3.5.1</span>
+   <li><a href="#word-boundary">word boundary</a><span>, in § 3.5.2</span>
+   <li><a href="#word-bounded">word bounded</a><span>, in § 3.5.2</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-computed-value">
    <a href="https://drafts.csswg.org/css-cascade-5/#computed-value">https://drafts.csswg.org/css-cascade-5/#computed-value</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-computed-value">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-computed-value①">(2)</a> <a href="#ref-for-computed-value②">(3)</a>
+    <li><a href="#ref-for-computed-value">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-computed-value①">(2)</a> <a href="#ref-for-computed-value②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-block">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-block">https://drafts.csswg.org/css-display-3/#valdef-display-block</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-block">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-block">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-propdef-display">
    <a href="https://drafts.csswg.org/css-display-3/#propdef-display">https://drafts.csswg.org/css-display-3/#propdef-display</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-propdef-display">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-propdef-display①">(2)</a>
+    <li><a href="#ref-for-propdef-display">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-propdef-display①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-flex">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-flex">https://drafts.csswg.org/css-display-3/#valdef-display-flex</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-flex">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-flex">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-flow-root">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root">https://drafts.csswg.org/css-display-3/#valdef-display-flow-root</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-flow-root">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-flow-root">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-grid">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-grid">https://drafts.csswg.org/css-display-3/#valdef-display-grid</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-grid">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-grid">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-list-item">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item">https://drafts.csswg.org/css-display-3/#valdef-display-list-item</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-list-item">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-list-item">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-none">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-none">https://drafts.csswg.org/css-display-3/#valdef-display-none</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-none">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-none">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-display-table">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-display-table">https://drafts.csswg.org/css-display-3/#valdef-display-table</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-display-table">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valdef-display-table">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-propdef-visibility">
    <a href="https://drafts.csswg.org/css-display-3/#propdef-visibility">https://drafts.csswg.org/css-display-3/#propdef-visibility</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-propdef-visibility">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-propdef-visibility">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valdef-visibility-visible">
    <a href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible">https://drafts.csswg.org/css-display-3/#valdef-visibility-visible</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valdef-visibility-visible">3.5.2. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-dictdef-scrollintoviewoptions">
-   <a href="https://drafts.csswg.org/cssom-view-1/#dictdef-scrollintoviewoptions">https://drafts.csswg.org/cssom-view-1/#dictdef-scrollintoviewoptions</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dictdef-scrollintoviewoptions">3.5.1. Scroll a DOMRect into view</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-dom-element-getboundingclientrect">
-   <a href="https://drafts.csswg.org/cssom-view-1/#dom-element-getboundingclientrect">https://drafts.csswg.org/cssom-view-1/#dom-element-getboundingclientrect</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-element-getboundingclientrect">3.5.1. Scroll a DOMRect into view</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-dom-range-getboundingclientrect">
-   <a href="https://drafts.csswg.org/cssom-view-1/#dom-range-getboundingclientrect">https://drafts.csswg.org/cssom-view-1/#dom-range-getboundingclientrect</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-range-getboundingclientrect">3.5.1. Scroll a DOMRect into view</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-scroll-an-element-into-view">
-   <a href="https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view">https://drafts.csswg.org/cssom-view-1/#scroll-an-element-into-view</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-scroll-an-element-into-view">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-an-element-into-view①">(2)</a> <a href="#ref-for-scroll-an-element-into-view②">(3)</a> <a href="#ref-for-scroll-an-element-into-view③">(4)</a>
+    <li><a href="#ref-for-valdef-visibility-visible">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document">
    <a href="https://dom.spec.whatwg.org/#document">https://dom.spec.whatwg.org/#document</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-document①">(2)</a>
-    <li><a href="#ref-for-document②">3.8. Feature Detectability</a> <a href="#ref-for-document③">(2)</a>
+    <li><a href="#ref-for-document">3.8. Feature Detectability</a> <a href="#ref-for-document①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-text">
    <a href="https://dom.spec.whatwg.org/#text">https://dom.spec.whatwg.org/#text</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-text①">(2)</a> <a href="#ref-for-text②">(3)</a> <a href="#ref-for-text③">(4)</a> <a href="#ref-for-text④">(5)</a> <a href="#ref-for-text⑤">(6)</a>
+    <li><a href="#ref-for-text">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text①">(2)</a> <a href="#ref-for-text②">(3)</a> <a href="#ref-for-text③">(4)</a> <a href="#ref-for-text④">(5)</a> <a href="#ref-for-text⑤">(6)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-bp-after">
    <a href="https://dom.spec.whatwg.org/#concept-range-bp-after">https://dom.spec.whatwg.org/#concept-range-bp-after</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-bp-after">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp-after①">(2)</a> <a href="#ref-for-concept-range-bp-after②">(3)</a>
+    <li><a href="#ref-for-concept-range-bp-after">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp-after①">(2)</a> <a href="#ref-for-concept-range-bp-after②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-bp">
    <a href="https://dom.spec.whatwg.org/#concept-range-bp">https://dom.spec.whatwg.org/#concept-range-bp</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-bp">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp①">(2)</a> <a href="#ref-for-concept-range-bp②">(3)</a> <a href="#ref-for-concept-range-bp③">(4)</a> <a href="#ref-for-concept-range-bp④">(5)</a> <a href="#ref-for-concept-range-bp⑤">(6)</a> <a href="#ref-for-concept-range-bp⑥">(7)</a> <a href="#ref-for-concept-range-bp⑦">(8)</a> <a href="#ref-for-concept-range-bp⑧">(9)</a>
+    <li><a href="#ref-for-concept-range-bp">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp①">(2)</a> <a href="#ref-for-concept-range-bp②">(3)</a> <a href="#ref-for-concept-range-bp③">(4)</a> <a href="#ref-for-concept-range-bp④">(5)</a> <a href="#ref-for-concept-range-bp⑤">(6)</a> <a href="#ref-for-concept-range-bp⑥">(7)</a> <a href="#ref-for-concept-range-bp⑦">(8)</a> <a href="#ref-for-concept-range-bp⑧">(9)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-range-collapsed">
    <a href="https://dom.spec.whatwg.org/#range-collapsed">https://dom.spec.whatwg.org/#range-collapsed</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-range-collapsed">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-range-collapsed①">(2)</a> <a href="#ref-for-range-collapsed②">(3)</a> <a href="#ref-for-range-collapsed③">(4)</a> <a href="#ref-for-range-collapsed④">(5)</a> <a href="#ref-for-range-collapsed⑤">(6)</a>
+    <li><a href="#ref-for-range-collapsed">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-range-collapsed①">(2)</a> <a href="#ref-for-range-collapsed②">(3)</a> <a href="#ref-for-range-collapsed③">(4)</a> <a href="#ref-for-range-collapsed④">(5)</a> <a href="#ref-for-range-collapsed⑤">(6)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-cd-data">
    <a href="https://dom.spec.whatwg.org/#concept-cd-data">https://dom.spec.whatwg.org/#concept-cd-data</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-cd-data">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-data①">(2)</a> <a href="#ref-for-concept-cd-data②">(3)</a>
+    <li><a href="#ref-for-concept-cd-data">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-data①">(2)</a> <a href="#ref-for-concept-cd-data②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-doctype">
    <a href="https://dom.spec.whatwg.org/#concept-doctype">https://dom.spec.whatwg.org/#concept-doctype</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-doctype">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-doctype">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-document">
@@ -2719,48 +2636,47 @@ manipulations
     <li><a href="#ref-for-concept-document④">3.4.3. Search Timing</a>
     <li><a href="#ref-for-concept-document⑤">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document⑥">(2)</a> <a href="#ref-for-concept-document⑦">(3)</a> <a href="#ref-for-concept-document⑧">(4)</a> <a href="#ref-for-concept-document⑨">(5)</a> <a href="#ref-for-concept-document①⓪">(6)</a>
     <li><a href="#ref-for-concept-document①①">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-document①②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-document①③">(2)</a>
+    <li><a href="#ref-for-concept-document①②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-document①③">(2)</a>
     <li><a href="#ref-for-concept-document①④">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①⑤">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document-element">
    <a href="https://dom.spec.whatwg.org/#document-element">https://dom.spec.whatwg.org/#document-element</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document-element">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-document-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-element">
    <a href="https://dom.spec.whatwg.org/#concept-element">https://dom.spec.whatwg.org/#concept-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-element">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-element①">(2)</a> <a href="#ref-for-concept-element②">(3)</a>
-    <li><a href="#ref-for-concept-element③">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-concept-element④">(2)</a> <a href="#ref-for-concept-element⑤">(3)</a>
-    <li><a href="#ref-for-concept-element⑥">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-element⑦">(2)</a>
+    <li><a href="#ref-for-concept-element③">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-element④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end">
    <a href="https://dom.spec.whatwg.org/#concept-range-end">https://dom.spec.whatwg.org/#concept-range-end</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-end">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-range-end①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end②">(2)</a> <a href="#ref-for-concept-range-end③">(3)</a> <a href="#ref-for-concept-range-end④">(4)</a> <a href="#ref-for-concept-range-end⑤">(5)</a> <a href="#ref-for-concept-range-end⑥">(6)</a> <a href="#ref-for-concept-range-end⑦">(7)</a> <a href="#ref-for-concept-range-end⑧">(8)</a> <a href="#ref-for-concept-range-end⑨">(9)</a> <a href="#ref-for-concept-range-end①⓪">(10)</a> <a href="#ref-for-concept-range-end①①">(11)</a> <a href="#ref-for-concept-range-end①②">(12)</a> <a href="#ref-for-concept-range-end①③">(13)</a> <a href="#ref-for-concept-range-end①④">(14)</a> <a href="#ref-for-concept-range-end①⑤">(15)</a> <a href="#ref-for-concept-range-end①⑥">(16)</a>
+    <li><a href="#ref-for-concept-range-end①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end②">(2)</a> <a href="#ref-for-concept-range-end③">(3)</a> <a href="#ref-for-concept-range-end④">(4)</a> <a href="#ref-for-concept-range-end⑤">(5)</a> <a href="#ref-for-concept-range-end⑥">(6)</a> <a href="#ref-for-concept-range-end⑦">(7)</a> <a href="#ref-for-concept-range-end⑧">(8)</a> <a href="#ref-for-concept-range-end⑨">(9)</a> <a href="#ref-for-concept-range-end①⓪">(10)</a> <a href="#ref-for-concept-range-end①①">(11)</a> <a href="#ref-for-concept-range-end①②">(12)</a> <a href="#ref-for-concept-range-end①③">(13)</a> <a href="#ref-for-concept-range-end①④">(14)</a> <a href="#ref-for-concept-range-end①⑤">(15)</a> <a href="#ref-for-concept-range-end①⑥">(16)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end-node">
    <a href="https://dom.spec.whatwg.org/#concept-range-end-node">https://dom.spec.whatwg.org/#concept-range-end-node</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-end-node">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-range-end-node①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end-node②">(2)</a>
+    <li><a href="#ref-for-concept-range-end-node①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end-node②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-end-offset">
    <a href="https://dom.spec.whatwg.org/#concept-range-end-offset">https://dom.spec.whatwg.org/#concept-range-end-offset</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-end-offset">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-range-end-offset">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-tree-following">
    <a href="https://dom.spec.whatwg.org/#concept-tree-following">https://dom.spec.whatwg.org/#concept-tree-following</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-tree-following">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-tree-following">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-documentfragment-host">
@@ -2779,40 +2695,39 @@ manipulations
    <a href="https://dom.spec.whatwg.org/#concept-node-length">https://dom.spec.whatwg.org/#concept-node-length</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-node-length">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-node-length①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-node-length②">(2)</a> <a href="#ref-for-concept-node-length③">(3)</a> <a href="#ref-for-concept-node-length④">(4)</a> <a href="#ref-for-concept-node-length⑤">(5)</a>
+    <li><a href="#ref-for-concept-node-length①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-node-length②">(2)</a> <a href="#ref-for-concept-node-length③">(3)</a> <a href="#ref-for-concept-node-length④">(4)</a> <a href="#ref-for-concept-node-length⑤">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-boundary-point-node">
    <a href="https://dom.spec.whatwg.org/#boundary-point-node">https://dom.spec.whatwg.org/#boundary-point-node</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-boundary-point-node">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-boundary-point-node①">(2)</a>
+    <li><a href="#ref-for-boundary-point-node">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-boundary-point-node①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-node-document">
    <a href="https://dom.spec.whatwg.org/#concept-node-document">https://dom.spec.whatwg.org/#concept-node-document</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-node-document">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-node-document">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-tree-parent">
    <a href="https://dom.spec.whatwg.org/#concept-tree-parent">https://dom.spec.whatwg.org/#concept-tree-parent</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-tree-parent">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-tree-parent①">(2)</a>
-    <li><a href="#ref-for-concept-tree-parent②">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-tree-parent②">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-parent-element">
    <a href="https://dom.spec.whatwg.org/#parent-element">https://dom.spec.whatwg.org/#parent-element</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parent-element">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-parent-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range">
    <a href="https://dom.spec.whatwg.org/#concept-range">https://dom.spec.whatwg.org/#concept-range</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range①">(2)</a> <a href="#ref-for-concept-range②">(3)</a> <a href="#ref-for-concept-range③">(4)</a> <a href="#ref-for-concept-range④">(5)</a> <a href="#ref-for-concept-range⑤">(6)</a> <a href="#ref-for-concept-range⑥">(7)</a> <a href="#ref-for-concept-range⑦">(8)</a> <a href="#ref-for-concept-range⑧">(9)</a>
-    <li><a href="#ref-for-concept-range⑨">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-concept-range①⓪">(2)</a>
-    <li><a href="#ref-for-concept-range①①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range①②">(2)</a> <a href="#ref-for-concept-range①③">(3)</a> <a href="#ref-for-concept-range①④">(4)</a> <a href="#ref-for-concept-range①⑤">(5)</a> <a href="#ref-for-concept-range①⑥">(6)</a> <a href="#ref-for-concept-range①⑦">(7)</a> <a href="#ref-for-concept-range①⑧">(8)</a> <a href="#ref-for-concept-range①⑨">(9)</a> <a href="#ref-for-concept-range②⓪">(10)</a> <a href="#ref-for-concept-range②①">(11)</a> <a href="#ref-for-concept-range②②">(12)</a> <a href="#ref-for-concept-range②③">(13)</a> <a href="#ref-for-concept-range②④">(14)</a> <a href="#ref-for-concept-range②⑤">(15)</a> <a href="#ref-for-concept-range②⑥">(16)</a> <a href="#ref-for-concept-range②⑦">(17)</a> <a href="#ref-for-concept-range②⑧">(18)</a> <a href="#ref-for-concept-range②⑨">(19)</a>
+    <li><a href="#ref-for-concept-range⑨">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range①⓪">(2)</a> <a href="#ref-for-concept-range①①">(3)</a> <a href="#ref-for-concept-range①②">(4)</a> <a href="#ref-for-concept-range①③">(5)</a> <a href="#ref-for-concept-range①④">(6)</a> <a href="#ref-for-concept-range①⑤">(7)</a> <a href="#ref-for-concept-range①⑥">(8)</a> <a href="#ref-for-concept-range①⑦">(9)</a> <a href="#ref-for-concept-range①⑧">(10)</a> <a href="#ref-for-concept-range①⑨">(11)</a> <a href="#ref-for-concept-range②⓪">(12)</a> <a href="#ref-for-concept-range②①">(13)</a> <a href="#ref-for-concept-range②②">(14)</a> <a href="#ref-for-concept-range②③">(15)</a> <a href="#ref-for-concept-range②④">(16)</a> <a href="#ref-for-concept-range②⑤">(17)</a> <a href="#ref-for-concept-range②⑥">(18)</a> <a href="#ref-for-concept-range②⑦">(19)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-root">
@@ -2824,13 +2739,13 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-ancestor">
    <a href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-ancestor</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-shadow-including-ancestor">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-concept-shadow-including-ancestor">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-descendant">
    <a href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant">https://dom.spec.whatwg.org/#concept-shadow-including-descendant</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-shadow-including-descendant">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-descendant①">(2)</a> <a href="#ref-for-concept-shadow-including-descendant②">(3)</a>
+    <li><a href="#ref-for-concept-shadow-including-descendant">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-descendant①">(2)</a> <a href="#ref-for-concept-shadow-including-descendant②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-inclusive-ancestor">
@@ -2842,33 +2757,33 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-concept-shadow-including-tree-order">
    <a href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order">https://dom.spec.whatwg.org/#concept-shadow-including-tree-order</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-shadow-including-tree-order">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-tree-order①">(2)</a> <a href="#ref-for-concept-shadow-including-tree-order②">(3)</a> <a href="#ref-for-concept-shadow-including-tree-order③">(4)</a> <a href="#ref-for-concept-shadow-including-tree-order④">(5)</a>
+    <li><a href="#ref-for-concept-shadow-including-tree-order">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-tree-order①">(2)</a> <a href="#ref-for-concept-shadow-including-tree-order②">(3)</a> <a href="#ref-for-concept-shadow-including-tree-order③">(4)</a> <a href="#ref-for-concept-shadow-including-tree-order④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-start">
    <a href="https://dom.spec.whatwg.org/#concept-range-start">https://dom.spec.whatwg.org/#concept-range-start</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-start">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-range-start①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start②">(2)</a> <a href="#ref-for-concept-range-start③">(3)</a> <a href="#ref-for-concept-range-start④">(4)</a> <a href="#ref-for-concept-range-start⑤">(5)</a> <a href="#ref-for-concept-range-start⑥">(6)</a> <a href="#ref-for-concept-range-start⑦">(7)</a> <a href="#ref-for-concept-range-start⑧">(8)</a> <a href="#ref-for-concept-range-start⑨">(9)</a> <a href="#ref-for-concept-range-start①⓪">(10)</a> <a href="#ref-for-concept-range-start①①">(11)</a> <a href="#ref-for-concept-range-start①②">(12)</a> <a href="#ref-for-concept-range-start①③">(13)</a> <a href="#ref-for-concept-range-start①④">(14)</a> <a href="#ref-for-concept-range-start①⑤">(15)</a> <a href="#ref-for-concept-range-start①⑥">(16)</a> <a href="#ref-for-concept-range-start①⑦">(17)</a> <a href="#ref-for-concept-range-start①⑧">(18)</a> <a href="#ref-for-concept-range-start①⑨">(19)</a>
+    <li><a href="#ref-for-concept-range-start①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start②">(2)</a> <a href="#ref-for-concept-range-start③">(3)</a> <a href="#ref-for-concept-range-start④">(4)</a> <a href="#ref-for-concept-range-start⑤">(5)</a> <a href="#ref-for-concept-range-start⑥">(6)</a> <a href="#ref-for-concept-range-start⑦">(7)</a> <a href="#ref-for-concept-range-start⑧">(8)</a> <a href="#ref-for-concept-range-start⑨">(9)</a> <a href="#ref-for-concept-range-start①⓪">(10)</a> <a href="#ref-for-concept-range-start①①">(11)</a> <a href="#ref-for-concept-range-start①②">(12)</a> <a href="#ref-for-concept-range-start①③">(13)</a> <a href="#ref-for-concept-range-start①④">(14)</a> <a href="#ref-for-concept-range-start①⑤">(15)</a> <a href="#ref-for-concept-range-start①⑥">(16)</a> <a href="#ref-for-concept-range-start①⑦">(17)</a> <a href="#ref-for-concept-range-start①⑧">(18)</a> <a href="#ref-for-concept-range-start①⑨">(19)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-start-node">
    <a href="https://dom.spec.whatwg.org/#concept-range-start-node">https://dom.spec.whatwg.org/#concept-range-start-node</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-start-node">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range-start-node①">(2)</a>
-    <li><a href="#ref-for-concept-range-start-node②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-node③">(2)</a> <a href="#ref-for-concept-range-start-node④">(3)</a> <a href="#ref-for-concept-range-start-node⑤">(4)</a> <a href="#ref-for-concept-range-start-node⑥">(5)</a> <a href="#ref-for-concept-range-start-node⑦">(6)</a> <a href="#ref-for-concept-range-start-node⑧">(7)</a> <a href="#ref-for-concept-range-start-node⑨">(8)</a>
+    <li><a href="#ref-for-concept-range-start-node②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-node③">(2)</a> <a href="#ref-for-concept-range-start-node④">(3)</a> <a href="#ref-for-concept-range-start-node⑤">(4)</a> <a href="#ref-for-concept-range-start-node⑥">(5)</a> <a href="#ref-for-concept-range-start-node⑦">(6)</a> <a href="#ref-for-concept-range-start-node⑧">(7)</a> <a href="#ref-for-concept-range-start-node⑨">(8)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-range-start-offset">
    <a href="https://dom.spec.whatwg.org/#concept-range-start-offset">https://dom.spec.whatwg.org/#concept-range-start-offset</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-range-start-offset">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a>
+    <li><a href="#ref-for-concept-range-start-offset">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-cd-substring">
    <a href="https://dom.spec.whatwg.org/#concept-cd-substring">https://dom.spec.whatwg.org/#concept-cd-substring</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-cd-substring">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-substring①">(2)</a>
+    <li><a href="#ref-for-concept-cd-substring">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-substring①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-document-url">
@@ -2884,64 +2799,58 @@ manipulations
     <li><a href="#ref-for-concept-request">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-request①">(2)</a> <a href="#ref-for-concept-request②">(3)</a> <a href="#ref-for-concept-request③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-domrect">
-   <a href="https://drafts.fxtf.org/geometry-1/#domrect">https://drafts.fxtf.org/geometry-1/#domrect</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-domrect">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-domrect①">(2)</a> <a href="#ref-for-domrect②">(3)</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-htmlaudioelement">
    <a href="https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement">https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlaudioelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlaudioelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmliframeelement">
    <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmliframeelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmliframeelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlimageelement">
    <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement">https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlimageelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlimageelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlmeterelement">
    <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlmeterelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlmeterelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlobjectelement">
    <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlobjectelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlobjectelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlprogresselement">
    <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlprogresselement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlprogresselement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlscriptelement">
    <a href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement">https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlscriptelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlscriptelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlstyleelement">
    <a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement">https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlstyleelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlstyleelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-htmlvideoelement">
    <a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-htmlvideoelement">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-htmlvideoelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-location">
@@ -2960,7 +2869,7 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-being-rendered">
    <a href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered">https://html.spec.whatwg.org/multipage/rendering.html#being-rendered</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-being-rendered">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-being-rendered">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-document-bc">
@@ -2978,13 +2887,13 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-language">
    <a href="https://html.spec.whatwg.org/multipage/dom.html#language">https://html.spec.whatwg.org/multipage/dom.html#language</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-language">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-language①">(2)</a>
+    <li><a href="#ref-for-language">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-language①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-attr-select-multiple">
    <a href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple">https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-attr-select-multiple">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-attr-select-multiple">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-restore-persisted-state">
@@ -3004,13 +2913,13 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-the-select-element">
    <a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element">https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-the-select-element">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-the-select-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializes-as-void">
    <a href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void">https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-serializes-as-void">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-serializes-as-void">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-top-level-browsing-context">
@@ -3035,57 +2944,57 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-list-append">
    <a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-append">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-list-append">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ascii-string">
    <a href="https://infra.spec.whatwg.org/#ascii-string">https://infra.spec.whatwg.org/#ascii-string</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-ascii-string">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-ascii-string①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-ascii-string②">(2)</a> <a href="#ref-for-ascii-string③">(3)</a>
+    <li><a href="#ref-for-ascii-string①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-ascii-string②">(2)</a> <a href="#ref-for-ascii-string③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-assert">
    <a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-assert">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-assert①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-assert②">(2)</a> <a href="#ref-for-assert③">(3)</a> <a href="#ref-for-assert④">(4)</a> <a href="#ref-for-assert⑤">(5)</a>
+    <li><a href="#ref-for-assert①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-assert②">(2)</a> <a href="#ref-for-assert③">(3)</a> <a href="#ref-for-assert④">(4)</a> <a href="#ref-for-assert⑤">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-iteration-break">
    <a href="https://infra.spec.whatwg.org/#iteration-break">https://infra.spec.whatwg.org/#iteration-break</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-iteration-break">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-iteration-break①">(2)</a> <a href="#ref-for-iteration-break②">(3)</a> <a href="#ref-for-iteration-break③">(4)</a>
+    <li><a href="#ref-for-iteration-break">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-iteration-break①">(2)</a> <a href="#ref-for-iteration-break②">(3)</a> <a href="#ref-for-iteration-break③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-code-point">
    <a href="https://infra.spec.whatwg.org/#code-point">https://infra.spec.whatwg.org/#code-point</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-code-point">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-code-point">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string-concatenate">
    <a href="https://infra.spec.whatwg.org/#string-concatenate">https://infra.spec.whatwg.org/#string-concatenate</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-string-concatenate">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-string-concatenate">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-iteration-continue">
    <a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-iteration-continue">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-iteration-continue①">(2)</a> <a href="#ref-for-iteration-continue②">(3)</a> <a href="#ref-for-iteration-continue③">(4)</a> <a href="#ref-for-iteration-continue④">(5)</a> <a href="#ref-for-iteration-continue⑤">(6)</a> <a href="#ref-for-iteration-continue⑥">(7)</a>
+    <li><a href="#ref-for-iteration-continue">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-iteration-continue①">(2)</a> <a href="#ref-for-iteration-continue②">(3)</a> <a href="#ref-for-iteration-continue③">(4)</a> <a href="#ref-for-iteration-continue④">(5)</a> <a href="#ref-for-iteration-continue⑤">(6)</a> <a href="#ref-for-iteration-continue⑥">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-html-namespace">
    <a href="https://infra.spec.whatwg.org/#html-namespace">https://infra.spec.whatwg.org/#html-namespace</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-html-namespace">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-html-namespace">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string-length">
    <a href="https://infra.spec.whatwg.org/#string-length">https://infra.spec.whatwg.org/#string-length</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-string-length">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-string-length①">(2)</a> <a href="#ref-for-string-length②">(3)</a>
+    <li><a href="#ref-for-string-length">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-string-length①">(2)</a> <a href="#ref-for-string-length②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list">
@@ -3093,7 +3002,7 @@ manipulations
    <ul>
     <li><a href="#ref-for-list">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-list①">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-list②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-list③">(2)</a> <a href="#ref-for-list④">(3)</a> <a href="#ref-for-list⑤">(4)</a> <a href="#ref-for-list⑥">(5)</a> <a href="#ref-for-list⑦">(6)</a> <a href="#ref-for-list⑧">(7)</a> <a href="#ref-for-list⑨">(8)</a>
+    <li><a href="#ref-for-list②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-list③">(2)</a> <a href="#ref-for-list④">(3)</a> <a href="#ref-for-list⑤">(4)</a> <a href="#ref-for-list⑥">(5)</a> <a href="#ref-for-list⑦">(6)</a> <a href="#ref-for-list⑧">(7)</a> <a href="#ref-for-list⑨">(8)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-remove">
@@ -3117,14 +3026,14 @@ manipulations
   <aside class="dfn-panel" data-for="term-for-strictly-split">
    <a href="https://infra.spec.whatwg.org/#strictly-split">https://infra.spec.whatwg.org/#strictly-split</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-strictly-split">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-strictly-split">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string">
    <a href="https://infra.spec.whatwg.org/#string">https://infra.spec.whatwg.org/#string</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-string">3.5.2. Finding Ranges in a Document</a>
-    <li><a href="#ref-for-string①">3.5.3. Word Boundaries</a> <a href="#ref-for-string②">(2)</a> <a href="#ref-for-string③">(3)</a>
+    <li><a href="#ref-for-string">3.5.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-string①">3.5.2. Word Boundaries</a> <a href="#ref-for-string②">(2)</a> <a href="#ref-for-string③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-struct">
@@ -3198,14 +3107,6 @@ manipulations
      <li><span class="dfn-paneled" id="term-for-valdef-visibility-visible">visible</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[CSSOM-VIEW]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-dictdef-scrollintoviewoptions">ScrollIntoViewOptions</span>
-     <li><span class="dfn-paneled" id="term-for-dom-element-getboundingclientrect">getBoundingClientRect() <small>(for Element)</small></span>
-     <li><span class="dfn-paneled" id="term-for-dom-range-getboundingclientrect">getBoundingClientRect() <small>(for Range)</small></span>
-     <li><span class="dfn-paneled" id="term-for-scroll-an-element-into-view">scroll an element into view</span>
-    </ul>
-   <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-document">Document</span>
@@ -3245,11 +3146,6 @@ manipulations
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
-    </ul>
-   <li>
-    <a data-link-type="biblio">[GEOMETRY-1]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-domrect">DOMRect</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
@@ -3325,16 +3221,12 @@ manipulations
    <dd>Elika Etemad; Miriam Suzanne; Tab Atkins Jr.. <a href="https://drafts.csswg.org/css-cascade-5/"><cite>CSS Cascading and Inheritance Level 5</cite></a>. URL: <a href="https://drafts.csswg.org/css-cascade-5/">https://drafts.csswg.org/css-cascade-5/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
    <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://drafts.csswg.org/css-display/"><cite>CSS Display Module Level 3</cite></a>. URL: <a href="https://drafts.csswg.org/css-display/">https://drafts.csswg.org/css-display/</a>
-   <dt id="biblio-cssom-view">[CSSOM-VIEW]
-   <dd>Simon Pieters. <a href="https://drafts.csswg.org/cssom-view/"><cite>CSSOM View Module</cite></a>. URL: <a href="https://drafts.csswg.org/cssom-view/">https://drafts.csswg.org/cssom-view/</a>
    <dt id="biblio-document-policy">[DOCUMENT-POLICY]
    <dd>Ian Clelland. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html"><cite>Document Policy</cite></a>. ED. URL: <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">https://w3c.github.io/webappsec-permissions-policy/document-policy.html</a>
    <dt id="biblio-dom">[DOM]
    <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/"><cite>DOM Standard</cite></a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-fetch">[FETCH]
    <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/"><cite>Fetch Standard</cite></a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
-   <dt id="biblio-geometry-1">[GEOMETRY-1]
-   <dd>Simon Pieters; Chris Harrelson. <a href="https://drafts.fxtf.org/geometry/"><cite>Geometry Interfaces Module Level 1</cite></a>. URL: <a href="https://drafts.fxtf.org/geometry/">https://drafts.fxtf.org/geometry/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-infra">[INFRA]
@@ -3415,47 +3307,47 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
    <b><a href="#parsedtextdirective">#parsedtextdirective</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-parsedtextdirective①">(2)</a>
-    <li><a href="#ref-for-parsedtextdirective②">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-parsedtextdirective②">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-textstart">
    <b><a href="#parsedtextdirective-textstart">#parsedtextdirective-textstart</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-textstart">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-parsedtextdirective-textstart①">(2)</a>
-    <li><a href="#ref-for-parsedtextdirective-textstart②">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textstart③">(2)</a> <a href="#ref-for-parsedtextdirective-textstart④">(3)</a> <a href="#ref-for-parsedtextdirective-textstart⑤">(4)</a> <a href="#ref-for-parsedtextdirective-textstart⑥">(5)</a> <a href="#ref-for-parsedtextdirective-textstart⑦">(6)</a>
+    <li><a href="#ref-for-parsedtextdirective-textstart②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textstart③">(2)</a> <a href="#ref-for-parsedtextdirective-textstart④">(3)</a> <a href="#ref-for-parsedtextdirective-textstart⑤">(4)</a> <a href="#ref-for-parsedtextdirective-textstart⑥">(5)</a> <a href="#ref-for-parsedtextdirective-textstart⑦">(6)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-textend">
    <b><a href="#parsedtextdirective-textend">#parsedtextdirective-textend</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-textend">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a> <a href="#ref-for-parsedtextdirective-textend⑧">(8)</a> <a href="#ref-for-parsedtextdirective-textend⑨">(9)</a> <a href="#ref-for-parsedtextdirective-textend①⓪">(10)</a> <a href="#ref-for-parsedtextdirective-textend①①">(11)</a>
+    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a> <a href="#ref-for-parsedtextdirective-textend⑧">(8)</a> <a href="#ref-for-parsedtextdirective-textend⑨">(9)</a> <a href="#ref-for-parsedtextdirective-textend①⓪">(10)</a> <a href="#ref-for-parsedtextdirective-textend①①">(11)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-prefix">
    <b><a href="#parsedtextdirective-prefix">#parsedtextdirective-prefix</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-prefix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-prefix①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-prefix②">(2)</a> <a href="#ref-for-parsedtextdirective-prefix③">(3)</a> <a href="#ref-for-parsedtextdirective-prefix④">(4)</a> <a href="#ref-for-parsedtextdirective-prefix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-prefix⑥">(6)</a>
+    <li><a href="#ref-for-parsedtextdirective-prefix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-prefix②">(2)</a> <a href="#ref-for-parsedtextdirective-prefix③">(3)</a> <a href="#ref-for-parsedtextdirective-prefix④">(4)</a> <a href="#ref-for-parsedtextdirective-prefix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-prefix⑥">(6)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parsedtextdirective-suffix">
    <b><a href="#parsedtextdirective-suffix">#parsedtextdirective-suffix</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parsedtextdirective-suffix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-suffix①">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-suffix②">(2)</a> <a href="#ref-for-parsedtextdirective-suffix③">(3)</a> <a href="#ref-for-parsedtextdirective-suffix④">(4)</a> <a href="#ref-for-parsedtextdirective-suffix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-suffix⑥">(6)</a> <a href="#ref-for-parsedtextdirective-suffix⑦">(7)</a>
+    <li><a href="#ref-for-parsedtextdirective-suffix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-suffix②">(2)</a> <a href="#ref-for-parsedtextdirective-suffix③">(3)</a> <a href="#ref-for-parsedtextdirective-suffix④">(4)</a> <a href="#ref-for-parsedtextdirective-suffix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-suffix⑥">(6)</a> <a href="#ref-for-parsedtextdirective-suffix⑦">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="parse-a-text-directive">
    <b><a href="#parse-a-text-directive">#parse-a-text-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parse-a-text-directive">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-parse-a-text-directive">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="valid-fragment-directive">
    <b><a href="#valid-fragment-directive">#valid-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-valid-fragment-directive">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-valid-fragment-directive">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirectiveproduction">
@@ -3499,7 +3391,7 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
    <ul>
     <li><a href="#ref-for-textdirective">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-textdirective①">3.3.3. Fragment directive grammar</a> <a href="#ref-for-textdirective②">(2)</a>
-    <li><a href="#ref-for-textdirective③">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-textdirective③">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="textdirectiveparameters">
@@ -3569,110 +3461,98 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-shadow-including-parent">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="scroll-a-domrect-into-view">
-   <b><a href="#scroll-a-domrect-into-view">#scroll-a-domrect-into-view</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-scroll-a-domrect-into-view">3.5.1. Scroll a DOMRect into view</a> <a href="#ref-for-scroll-a-domrect-into-view①">(2)</a> <a href="#ref-for-scroll-a-domrect-into-view②">(3)</a> <a href="#ref-for-scroll-a-domrect-into-view③">(4)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="scroll-a-range-into-view">
-   <b><a href="#scroll-a-range-into-view">#scroll-a-range-into-view</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-scroll-a-range-into-view">3.5. Navigating to a Text Fragment</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="process-a-fragment-directive">
    <b><a href="#process-a-fragment-directive">#process-a-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-process-a-fragment-directive">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-process-a-fragment-directive①">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-process-a-fragment-directive①">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="find-a-range-from-a-text-directive">
    <b><a href="#find-a-range-from-a-text-directive">#find-a-range-from-a-text-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-find-a-range-from-a-text-directive">3.4.3. Search Timing</a>
-    <li><a href="#ref-for-find-a-range-from-a-text-directive①">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-find-a-range-from-a-text-directive①">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="next-non-whitespace-position">
    <b><a href="#next-non-whitespace-position">#next-non-whitespace-position</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-next-non-whitespace-position">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-next-non-whitespace-position①">(2)</a>
+    <li><a href="#ref-for-next-non-whitespace-position">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-next-non-whitespace-position①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="find-a-string-in-range">
    <b><a href="#find-a-string-in-range">#find-a-string-in-range</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-find-a-string-in-range">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-find-a-string-in-range①">(2)</a> <a href="#ref-for-find-a-string-in-range②">(3)</a> <a href="#ref-for-find-a-string-in-range③">(4)</a> <a href="#ref-for-find-a-string-in-range④">(5)</a>
+    <li><a href="#ref-for-find-a-string-in-range">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-find-a-string-in-range①">(2)</a> <a href="#ref-for-find-a-string-in-range②">(3)</a> <a href="#ref-for-find-a-string-in-range③">(4)</a> <a href="#ref-for-find-a-string-in-range④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="search-invisible">
    <b><a href="#search-invisible">#search-invisible</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-search-invisible">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-search-invisible①">(2)</a>
+    <li><a href="#ref-for-search-invisible">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-search-invisible①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="non-searchable-subtree">
    <b><a href="#non-searchable-subtree">#non-searchable-subtree</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-non-searchable-subtree">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-non-searchable-subtree①">(2)</a>
+    <li><a href="#ref-for-non-searchable-subtree">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-non-searchable-subtree①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="visible-text-node">
    <b><a href="#visible-text-node">#visible-text-node</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-visible-text-node">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-visible-text-node①">(2)</a> <a href="#ref-for-visible-text-node②">(3)</a>
+    <li><a href="#ref-for-visible-text-node">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-visible-text-node①">(2)</a> <a href="#ref-for-visible-text-node②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="has-block-level-display">
    <b><a href="#has-block-level-display">#has-block-level-display</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-has-block-level-display">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-has-block-level-display①">(2)</a>
+    <li><a href="#ref-for-has-block-level-display">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-has-block-level-display①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="nearest-block-ancestor">
    <b><a href="#nearest-block-ancestor">#nearest-block-ancestor</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-nearest-block-ancestor">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-nearest-block-ancestor">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="find-a-range-from-a-node-list">
    <b><a href="#find-a-range-from-a-node-list">#find-a-range-from-a-node-list</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-find-a-range-from-a-node-list">3.5.2. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-find-a-range-from-a-node-list">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="get-boundary-point-at-index">
    <b><a href="#get-boundary-point-at-index">#get-boundary-point-at-index</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-get-boundary-point-at-index">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-get-boundary-point-at-index①">(2)</a>
+    <li><a href="#ref-for-get-boundary-point-at-index">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-get-boundary-point-at-index①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="word-boundary">
    <b><a href="#word-boundary">#word-boundary</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-word-boundary">3.5.2. Finding Ranges in a Document</a>
-    <li><a href="#ref-for-word-boundary①">3.5.3. Word Boundaries</a>
+    <li><a href="#ref-for-word-boundary">3.5.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-word-boundary①">3.5.2. Word Boundaries</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="locale">
    <b><a href="#locale">#locale</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-locale">3.5.3. Word Boundaries</a> <a href="#ref-for-locale①">(2)</a>
+    <li><a href="#ref-for-locale">3.5.2. Word Boundaries</a> <a href="#ref-for-locale①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="word-bounded">
    <b><a href="#word-bounded">#word-bounded</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-word-bounded">3.5.3. Word Boundaries</a>
+    <li><a href="#ref-for-word-bounded">3.5.2. Word Boundaries</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="is-at-a-word-boundary">
    <b><a href="#is-at-a-word-boundary">#is-at-a-word-boundary</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-is-at-a-word-boundary">3.5.2. Finding Ranges in a Document</a> <a href="#ref-for-is-at-a-word-boundary①">(2)</a>
-    <li><a href="#ref-for-is-at-a-word-boundary②">3.5.3. Word Boundaries</a> <a href="#ref-for-is-at-a-word-boundary③">(2)</a>
+    <li><a href="#ref-for-is-at-a-word-boundary">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-is-at-a-word-boundary①">(2)</a>
+    <li><a href="#ref-for-is-at-a-word-boundary②">3.5.2. Word Boundaries</a> <a href="#ref-for-is-at-a-word-boundary③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fragmentdirective">
