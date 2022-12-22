@@ -712,19 +712,19 @@ boolean [=document/text fragment activation=] field:
 >   initially false.
 >
 >   <div class="note">
->     [=document/text fragment activation=] is consumed in order to allow a single activation of a
->     text fragment. It is set during document loading only if the navigation occurred as a result
->     of a user activation and can be propagated across client-side redirects.
+>     [=document/text fragment activation=] provides the necessary user gesture signal to allow a
+>     single activation of a text fragment. It is set to true during document loading only if the
+>     navigation occurred as a result of a user activation and can be propagated across client-side
+>     redirects.
 >
->     If a [=Document=]'s [=document/text fragment activation=] isn't consumed to activate
->     a text fragment, it may be consumed to set the [=request/text fragment activation=]
->     flag of a navigation [=/request=]. In this way, a [=document/text fragment activation=]
->     can be propagated from one [=Document=] to another across a navigation.
+>     If a [=Document=]'s [=document/text fragment activation=] isn't used to activate a text
+>     fragment, it may instead be used to set a navigation [=/request=]'s [=request/text fragment
+>     activation=] to true. In this way, a [=document/text fragment activation=] can be propagated
+>     from one [=Document=] to another across a navigation.
 >
->     Reading either the [=Document=]'s [=document/text fragment activation=] or the
->     [=/request=]'s [=request/text fragment activation=] flag always consumes the value by
->     setting it to false, such that a single activation cannot be reused to activate more than one
->     text fragment.
+>     Reading either the [=Document=]'s [=document/text fragment activation=] or the [=/request=]'s
+>     [=request/text fragment activation=] flag always resets the value to false, such that a single
+>     user activation cannot be reused to activate more than one text fragment.
 >   </div>
 
 <div class="note">
@@ -760,10 +760,10 @@ boolean [=document/text fragment activation=] field:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   Each [=Document=] has an <dfn for="document">allow text fragment</dfn>, which is a
+>   Each [=Document=] has an <dfn for="document">allow observable text fragment effects</dfn>, which is a
 >   boolean, initially false.
 >   <div class="note">
->     [=document/allow text fragment=] is used to determine whether a text fragment
+>     [=document/allow observable text fragment effects=] is used to determine whether a text fragment
 >     should be allowed to activate. If it is false, the text fragment must not cause any
 >     observable effects.
 >   </div>
@@ -771,12 +771,12 @@ boolean [=document/text fragment activation=] field:
 <div class="note">
   <p>
     [=document/text fragment activation=] is analogous to a user-activation state
-    while [=document/allow text fragment=] is more comprehensive, taking into
+    while [=document/allow observable text fragment effects=] is more comprehensive, taking into
     account various pieces of information, one of which is the value of
     text fragment activation.
   </p>
   <p>
-    The reason we compute and store allow text fragment,
+    The reason we compute and store allow observable text fragment effects,
     rather than performing the checks at the time of use, is that it relies on
     the properties of the navigation while the invocation will occur as part of
     the <a spec=HTML>scroll to the fragment</a> steps which can happen outside
@@ -816,16 +816,16 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             It's important that the flag not be copyable so that only one text fragment can be
 >             activated per user-activated navigation.
 >           </div>
->   16. Set |document|'s [=document/allow text fragment=] by following these sub-steps:
+>   16. Set |document|'s [=document/allow observable text fragment effects=] by following these sub-steps:
 >       1. If |document|'s [=fragment directive=] field is null or empty, set
->           [=document/allow text fragment=] to false and abort these sub-steps.
+>           [=document/allow observable text fragment effects=] to false and abort these sub-steps.
 >       1. Let |text fragment activation| be the value of |document|'s
 >           [=document/text fragment activation=] and set |document|'s
 >           [=document/text fragment activation=] to false.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"none"` set [=document/allow text fragment=] to true and abort these sub-steps.
+>           header and its value is `"none"` set [=document/allow observable text fragment effects=] to true and abort these sub-steps.
 >           <div class="note">
 >             <p>
 >               If a navigation originates from browser UI, it's always ok to allow it
@@ -852,25 +852,25 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             </p>
 >           </div>
 >       1. If |text fragment activation| is false, set
->           [=document/allow text fragment=] to false and abort these sub-steps.
+>           [=document/allow observable text fragment effects=] to false and abort these sub-steps.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
 >           header and its value is `"same-origin"` set
->           [=document/allow text fragment=] to true and abort these
+>           [=document/allow observable text fragment effects=] to true and abort these
 >           sub-steps.
 >       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
 >           context=] and its
 >           <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
 >           <a spec=HTML>browsing context set</a> has length 1, set
->           [=document/allow text fragment=] to true and abort these sub-steps.
+>           [=document/allow observable text fragment effects=] to true and abort these sub-steps.
 >           <div class="note">
 >             i.e. Only allow navigation from a cross-origin element/script if the
 >             document is loaded in a noopener context. That is, a new top level
 >             browsing context group to which the navigator does not have script access
 >             and which may be placed into a separate process.
 >           </div>
->       1. Otherwise, set [=document/allow text fragment=] to false.
+>       1. Otherwise, set [=document/allow observable text fragment effects=] to false.
 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
@@ -899,11 +899,11 @@ steps of the task queued in step 2:
 >   1. If document has no parser, or its parser has stopped parsing, or the user
 >       agent has reason to believe the user is no longer interested in scrolling to
 >       the fragment, then set <em>document</em>'s
->       [=document/allow text fragment=] to false and abort these steps.
+>       [=document/allow observable text fragment effects=] to false and abort these steps.
 >   2. Scroll to the fragment given in document's URL. If this does not find an
 >       indicated part, then try to scroll to the fragment for
 >       document.
->   3. Set <em>document</em>'s [=document/allow text fragment=] to false.
+>   3. Set <em>document</em>'s [=document/allow observable text fragment effects=] to false.
 
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
@@ -989,7 +989,7 @@ so that the indicated part is a [=range=]:
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
 >   1. Let |fragment directive string| be the document's [=fragment directive=].
->   1. If the document's [=document/allow text fragment=] is true then:
+>   1. If the document's [=document/allow observable text fragment effects=] is true then:
 >       1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
 >           the [=process a fragment directive=] steps with |fragment directive
 >           string| and the document.
