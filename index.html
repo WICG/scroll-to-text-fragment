@@ -999,6 +999,31 @@ following additions and changes.</p>
     either null or an ASCII string holding data used by the UA to process the
     resource. It is initially null. </em></p>
    </blockquote>
+   <div class="algorithm" data-algorithm="split the fragment from the fragment directive">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</dfn>, given an ASCII string <var>raw fragment</var> and returning a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">tuple</a> consisting of a <code>fragment</code> and a <code>fragment directive</code> (both ASCII strings), run these steps: 
+    <ol class="algorithm">
+     <li data-md>
+      <p>Let <var>position</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-position-variable" id="ref-for-string-position-variable">position variable</a> pointing to the first code
+point of the first instance, if one exists, of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive delimiter</a> in <var>raw
+fragment</var>, or past the end of <var>raw fragment</var> otherwise.</p>
+     <li data-md>
+      <p>Let <var>fragment</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-by-positions" id="ref-for-code-point-substring-by-positions">code point substring by positions</a> of <var>raw fragment</var> from the
+start of <var>raw fragment</var> to <var>position</var>.</p>
+     <li data-md>
+      <p>Let <var>fragmentDirective</var> be an ASCII string, initially empty.</p>
+     <li data-md>
+      <p>Advance <var>position</var> by the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-code-point-length" id="ref-for-string-code-point-length">code point length</a> of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive
+delimiter</a>.</p>
+     <li data-md>
+      <p>If <var>position</var> does not point past the end of <var>raw fragment</var>:</p>
+      <ol>
+       <li data-md>
+        <p>Set <var>fragmentDirective</var> to the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string" id="ref-for-code-point-substring-to-the-end-of-the-string">code point substring to the end of the string</a> <var>raw fragment</var> starting from <var>position</var></p>
+      </ol>
+     <li data-md>
+      <p>Return the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple①">tuple</a> (<var>fragment</var>, <var>fragmentDirective</var>).</p>
+    </ol>
+   </div>
    <p>Whenever the fragment directive is stripped from the URL, it is set to the
 Document’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a>.</p>
    <p>Add a series of steps that will process a fragment directive on a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url②">URL</a>:</p>
@@ -1009,27 +1034,17 @@ Document’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-frag
      <li data-md>
       <p>Let <var>raw fragment</var> be equal to <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment①">fragment</a>.</p>
      <li data-md>
-      <p>If <var>raw fragment</var> is non-null and contains the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive
+      <p>If <var>raw fragment</var> is non-null and contains the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter③">fragment directive
   delimiter</a> as a substring:</p>
       <ol>
        <li data-md>
-        <p>Let <var>fragmentDirectivePosition</var> be the index of the first instance
-  of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive delimiter</a> in <var>raw fragment</var>.</p>
+        <p>Let <var>components</var> be the result of running <a data-link-type="dfn" href="#split-the-fragment-from-the-fragment-directive" id="ref-for-split-the-fragment-from-the-fragment-directive">split the fragment from the fragment
+  directive</a> on <var>raw fragment</var>.</p>
        <li data-md>
-        <p>Let <var>fragment</var> be the substring of <var>raw fragment</var> starting at 0 of
-  count <var>fragmentDirectivePosition</var>.</p>
+        <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment②">fragment</a> to <var>components</var>’ <code>fragment</code>.</p>
        <li data-md>
-        <p>Advance <var>fragmentDirectivePosition</var> by the length of <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter③">fragment
-  directive delimiter</a>.</p>
-       <li data-md>
-        <p>Let <var>fragment directive</var> be the substring of <var>raw fragment</var> starting
-  at <var>fragmentDirectivePosition</var>.</p>
-       <li data-md>
-        <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment②">fragment</a> to <var>fragment</var>.</p>
-       <li data-md>
-        <p>Set <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> to <var>fragment directive</var>.</p>
-        <div class="note" role="note">This is stored on the document but currently not
-  web-exposed</div>
+        <p>Set <var>document</var>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> to <var>components</var>’ <code>fragment directive</code>.</p>
+        <div class="note" role="note">This is stored on the document but currently not web-exposed</div>
       </ol>
     </ol>
    </blockquote>
@@ -2498,6 +2513,7 @@ manipulations
    <li><a href="#process-and-consume-fragment-directive">process and consume fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.5</span>
+   <li><a href="#split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#parsedtextdirective-suffix">suffix</a><span>, in § 3.3.2</span>
    <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in § 3.3.3</span>
@@ -2973,6 +2989,24 @@ manipulations
     <li><a href="#ref-for-code-point">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-string-code-point-length">
+   <a href="https://infra.spec.whatwg.org/#string-code-point-length">https://infra.spec.whatwg.org/#string-code-point-length</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-string-code-point-length">3.3.1. Processing the fragment directive</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-code-point-substring-by-positions">
+   <a href="https://infra.spec.whatwg.org/#code-point-substring-by-positions">https://infra.spec.whatwg.org/#code-point-substring-by-positions</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-code-point-substring-by-positions">3.3.1. Processing the fragment directive</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-code-point-substring-to-the-end-of-the-string">
+   <a href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string">https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-code-point-substring-to-the-end-of-the-string">3.3.1. Processing the fragment directive</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-string-concatenate">
    <a href="https://infra.spec.whatwg.org/#string-concatenate">https://infra.spec.whatwg.org/#string-concatenate</a><b>Referenced in:</b>
    <ul>
@@ -3003,6 +3037,12 @@ manipulations
     <li><a href="#ref-for-list">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-list①">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-list②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-list③">(2)</a> <a href="#ref-for-list④">(3)</a> <a href="#ref-for-list⑤">(4)</a> <a href="#ref-for-list⑥">(5)</a> <a href="#ref-for-list⑦">(6)</a> <a href="#ref-for-list⑧">(7)</a> <a href="#ref-for-list⑨">(8)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-string-position-variable">
+   <a href="https://infra.spec.whatwg.org/#string-position-variable">https://infra.spec.whatwg.org/#string-position-variable</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-string-position-variable">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-remove">
@@ -3040,6 +3080,12 @@ manipulations
    <a href="https://infra.spec.whatwg.org/#struct">https://infra.spec.whatwg.org/#struct</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-struct">3.3.2. Parsing the fragment directive</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-tuple">
+   <a href="https://infra.spec.whatwg.org/#tuple">https://infra.spec.whatwg.org/#tuple</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-tuple">3.3.1. Processing the fragment directive</a> <a href="#ref-for-tuple①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-url-fragment">
@@ -3182,17 +3228,22 @@ manipulations
      <li><span class="dfn-paneled" id="term-for-assert">assert</span>
      <li><span class="dfn-paneled" id="term-for-iteration-break">break</span>
      <li><span class="dfn-paneled" id="term-for-code-point">code point</span>
+     <li><span class="dfn-paneled" id="term-for-string-code-point-length">code point length</span>
+     <li><span class="dfn-paneled" id="term-for-code-point-substring-by-positions">code point substring by positions</span>
+     <li><span class="dfn-paneled" id="term-for-code-point-substring-to-the-end-of-the-string">code point substring to the end of the string</span>
      <li><span class="dfn-paneled" id="term-for-string-concatenate">concatenate</span>
      <li><span class="dfn-paneled" id="term-for-iteration-continue">continue</span>
      <li><span class="dfn-paneled" id="term-for-html-namespace">html namespace</span>
      <li><span class="dfn-paneled" id="term-for-string-length">length</span>
      <li><span class="dfn-paneled" id="term-for-list">list</span>
+     <li><span class="dfn-paneled" id="term-for-string-position-variable">position variable</span>
      <li><span class="dfn-paneled" id="term-for-list-remove">remove</span>
      <li><span class="dfn-paneled" id="term-for-list-size">size</span>
      <li><span class="dfn-paneled" id="term-for-split-on-commas">split on commas</span>
      <li><span class="dfn-paneled" id="term-for-strictly-split">strictly split a string</span>
      <li><span class="dfn-paneled" id="term-for-string">string</span>
      <li><span class="dfn-paneled" id="term-for-struct">struct</span>
+     <li><span class="dfn-paneled" id="term-for-tuple">tuple</span>
     </ul>
    <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
@@ -3295,6 +3346,12 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-fragment-directive①⑧">3.6.1.1. Location Bar</a>
     <li><a href="#ref-for-fragment-directive①⑨">3.6.1.2. Bookmarks</a> <a href="#ref-for-fragment-directive②⓪">(2)</a>
     <li><a href="#ref-for-fragment-directive②①">3.6.1.3. Sharing</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="split-the-fragment-from-the-fragment-directive">
+   <b><a href="#split-the-fragment-from-the-fragment-directive">#split-the-fragment-from-the-fragment-directive</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-split-the-fragment-from-the-fragment-directive">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="process-and-consume-fragment-directive">
