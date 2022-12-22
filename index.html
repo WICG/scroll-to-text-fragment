@@ -884,10 +884,9 @@ loses the context of the page.
    <h2 class="heading settled" data-level="3" id="description"><span class="secno">3. </span><span class="content">Description</span><a class="self-link" href="#description"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="indication"><span class="secno">3.1. </span><span class="content">Indication</span><a class="self-link" href="#indication"></a></h3>
    <div class="note" role="note">This section is non-normative</div>
-   <p>This specification intentionally doesn’t define what actions a user agent
-should or could take to "indicate" a text match. There are different
-experiences and trade-offs a user agent could make. Some examples of possible
-actions:</p>
+   <p>This specification intentionally doesn’t define what actions a user agent takes
+to "indicate" a text match. There are different experiences and trade-offs a
+user agent could make. Some examples of possible actions:</p>
    <ul>
     <li data-md>
      <p>Providing visual emphasis or highlight of the text passage</p>
@@ -910,8 +909,8 @@ the <a href="#security-and-privacy">§ 3.4 Security and Privacy</a> section fo
 </pre>
    <p><em>(Square brackets indicate an optional parameter)</em></p>
    <p>The text parameters are percent-decoded before matching. Dash (-), ampersand
-(&amp;), and comma (,) characters in text parameters must be percent-encoded to
-avoid being interpreted as part of the text directive syntax.</p>
+(&amp;), and comma (,) characters in text parameters are percent-encoded to avoid
+being interpreted as part of the text directive syntax.</p>
    <p>The only required parameter is textStart. If only textStart is specified, the
 first instance of this exact text string is the target text.</p>
    <div class="example" id="example-4e85550d"><a class="self-link" href="#example-4e85550d"></a> <code>#:~:text=an%20example%20text%20fragment</code> indicates that the
@@ -930,16 +929,16 @@ is the target text. </div>
    <p>The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
 differentiate them from the textStart and textEnd parameters, as any
-combination of optional parameters may be specified.</p>
+combination of optional parameters can be specified.</p>
    <p>Context terms are used to disambiguate the target text fragment. The context
 terms can specify the text immediately before (prefix) and immediately after
 (suffix) the text fragment, allowing for whitespace.</p>
-   <div class="note" role="note"> While the context terms must be the immediate text surrounding the target text
-fragment, any amount of whitespace is allowed between context terms and the
-text fragment. This helps allow context terms to be across element boundaries,
-for example if the target text fragment is at the beginning of a paragraph and
-it must be disambiguated by the previous element’s text as a prefix. </div>
-   <p>The context terms are not part of the targeted text fragment and must not be
+   <div class="note" role="note"> While a match succeeds only if the context terms surround the target text
+fragment, any amount of whitespace is allowed between context terms and the text
+fragment. This allows context terms to cross element boundaries, for example if
+the target text fragment is at the beginning of a paragraph and needs
+disambiguation by the previous element’s text as a prefix. </div>
+   <p>The context terms are not part of the targeted text fragment and are not
 visually indicated.</p>
    <div class="example" id="example-5c87b699"><a class="self-link" href="#example-5c87b699"></a> <code>#:~:text=this%20is-,an%20example,-text%20fragment</code> would match
 to "an example" in "this is an example text fragment", but not match to "an
@@ -950,7 +949,7 @@ example" in "here is an example text". </div>
   Bidirectional Algorithm basics</a> for a good overview of how Bidirectional
   text works. </div>
    <p>Since URL strings are ASCII encoded, they provide no built-in support for
-bi-directional text. However, the content that we wish to target on a page may
+bi-directional text. However, the content that we wish to target on a page can
 be LTR (left-to-right), RTL (right-to-left) or both (Bidirectional/BiDi). This
 section provides an intuitive description the behavior implicitly described by
 the normative sections further in this spec.</p>
@@ -959,11 +958,11 @@ that is, the order in which a native reader would read them in (and also the
 order in which characters are stored in memory).</p>
    <p>Similarly, the <code>prefix</code> and <code>textStart</code> terms identify
 text coming before another term in logical order, while <code>suffix</code> and <code>textEnd</code> follow other terms in logical order.</p>
-   <p class="note" role="note"><span>Note:</span> user agents may visually render URLs in a manner friendlier to a native
+   <p class="note" role="note"><span>Note:</span> user agents can visually render URLs in a manner friendlier to a native
 reader, for example, by converting the displayed string to Unicode. However, the
 string representation of a URL remains plain ASCII characters.</p>
-   <div class="example" id="example-9f4a4e2f">
-    <a class="self-link" href="#example-9f4a4e2f"></a> Suppose we want to select the text <code>مِصر‎</code> (Egypt, in Arabic),
+   <div class="example" id="example-b17c0d6b">
+    <a class="self-link" href="#example-b17c0d6b"></a> Suppose we want to select the text <code>مِصر‎</code> (Egypt, in Arabic),
   that’s preceeded by <code>البحرين‎</code> (Bahrain, in Arabic). We would
   first percent encode each term: 
     <p><code>مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
@@ -971,7 +970,7 @@ string representation of a URL remains plain ASCII characters.</p>
     <p><code>البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"</p>
     <p>The text fragment would then become:</p>
     <p><code> :~:text=%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86-,%D9%85%D8%B5%D8%B1 </code></p>
-    <p>When displayed in a browser’s address bar, the browser may visually render the
+    <p>When displayed in a browser’s address bar, the browser can visually render the
   text in its natural RTL direction, appearing to the user:</p>
     <p><code> :~:text=البحرين-,مِصر </code></p>
    </div>
@@ -981,10 +980,10 @@ introduces the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fr
 of the URL <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment">fragment</a> that follows the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter">fragment directive delimiter</a>.</p>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragment-directive-delimiter">fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).</p>
-   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive③">fragment directive</a> is part of the URL fragment. This means it must
-  always appear after a U+0023 (#) code point in a URL. </div>
-   <div class="example" id="example-aa58e32d"><a class="self-link" href="#example-aa58e32d"></a> To add a <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> to a URL like https://example.com, a fragment
-  must first be appended to the URL: https://example.com#:~:text=foo. </div>
+   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive③">fragment directive</a> is part of the URL fragment. This means it
+  always appears after a U+0023 (#) code point in a URL. </div>
+   <div class="example" id="example-6998d91f"><a class="self-link" href="#example-6998d91f"></a> To add a <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> to a URL like https://example.com, a fragment
+  is first appended to the URL: https://example.com#:~:text=foo. </div>
    <p>The fragment directive is meant to carry instructions, such as <code>text=</code>, for the UA rather than for the document.</p>
    <p>To prevent impacting page operation, it is stripped from a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">Document</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url">URL</a> so that author scripts can’t directly interact with it. This
 also ensures future directives could be added without introducing breaking
@@ -1069,7 +1068,7 @@ setting <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.w
     directive when it is set on a Document. Notably, since a window’s <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location" id="ref-for-location">Location</a></code> object is a representation of the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document">active
     document</a>, all getters on it will show a fragment-directive-stripped
     version of the URL. </p>
-    <p> Some examples should help clarify various edge cases. </p>
+    <p> Some examples are provided to help clarify various edge cases. </p>
    </div>
    <div class="example" id="example-609a3312">
     <a class="self-link" href="#example-609a3312"></a> 
@@ -1216,7 +1215,7 @@ in the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-d
     ";" | "=" | "?" | "@" | "_" | "~" | "&amp;" | "," | "-"</code> 
      <div class="note" role="note"> An <a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar①">ExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points">URL code point</a>. </div>
    </dl>
-   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction①">FragmentDirective</a> may contain multiple directives split by the "&amp;"
+   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction①">FragmentDirective</a> can contain multiple directives split by the "&amp;"
   character. Currently this means we allow multiple text directives to enable
   multiple indicated strings in the page, but this also allows for future
   directive types to be added and combined. For extensibility, we do not fail to
@@ -1238,9 +1237,10 @@ enables specifying a piece of text on the page, that matches the production:</p>
     <dd>
       <code> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
     ";" | "=" | "?" | "@" | "_" | "~" </code> 
-     <div class="note" role="note"> A <a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar①">TextDirectiveExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points①">URL code point</a> that is not
-    explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and ",",
-    which must be percent-encoded. </div>
+     <div class="note" role="note"> A <a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar①">TextDirectiveExplicitChar</a> is any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points①">URL code point</a> that is not
+    explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> syntax, that is "&amp;", "-", and ",".
+    If a text fragment refers to a "&amp;", "-", or "," character in the document,
+    it will be percent-encoded in the fragment. </div>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar"><code>PercentEncodedChar</code></dfn> <code>::=</code>
     <dd><code>"%" [a-zA-Z0-9]+</code>
    </dl>
@@ -1262,7 +1262,7 @@ such that the destination page is known to be sufficiently isolated.</p>
    <h4 class="heading settled" data-level="3.4.2" id="scroll-on-navigation"><span class="secno">3.4.2. </span><span class="content">Scroll On Navigation</span><a class="self-link" href="#scroll-on-navigation"></a></h4>
    <p>A UA may choose to automatically scroll a matched text passage into view. This
 can be a convenient experience for the user but does present some risks that
-implementing UAs should be aware of.</p>
+implementing UAs need to be aware of.</p>
    <p>There are known (and potentially unknown) ways a scroll on navigation might be
 detectable and distinguished from natural user scrolls.</p>
    <div class="example" id="example-fe268bc5"><a class="self-link" href="#example-fe268bc5"></a> An origin embedded in an iframe in the target page registers an
@@ -1287,15 +1287,15 @@ detectable and distinguished from natural user scrolls.</p>
 so don’t apply generally. With additional restrictions about when the text
 fragment can invoke an attacker is further restricted. Nonetheless, different
 UAs can come to different conclusions about whether these risks are acceptable.
-UAs should consider these factors when determining whether to scroll as part of
+UAs need to consider these factors when determining whether to scroll as part of
 navigating to a text fragment.</p>
    <p>Conforming UAs may choose not to scroll automatically on navigation. Such UAs
 may, instead, provide UI to initiate the scroll ("click to scroll") or none
 at all. In these cases UA should provide some indication to the user that an
 indicated passage exists further down on the page.</p>
-   <p>The examples above illustrate that in specific circumstances, it may be
+   <p>The examples above illustrate that in specific circumstances, it can be
 possible for an attacker to extract 1 bit of information about content on the
-page.  However, care must be taken so that such opportunities cannot be
+page. However, care must be taken so that such opportunities cannot be
 exploited to extract arbitrary content from the page by repeating the attack.
 For this reason, restrictions based on user activation and browsing context
 isolation are very important and must be implemented.</p>
@@ -1303,20 +1303,24 @@ isolation are very important and must be implemented.</p>
      Browsing context isolation ensures that no other document can script the
   target document which helps reduce the attack surface. 
     <p>However, it also ensures any malicious use is difficult to hide. A browsing
-  context that’s the only one in a group must be a top level browsing context
+  context that’s the only one in a group will be a top level browsing context
   (i.e. a full tab/window).</p>
    </div>
    <p>If a UA does choose to scroll automatically, it must ensure no scrolling is
 performed while the document is in the background (for example, in an inactive
 tab). This ensures any malicious usage is visible to the user and prevents
 attackers from trying to secretly automate a search in background documents.</p>
+   <p>If a UA chooses not to scroll automatically, it must scroll a fallback
+element-id into view, if provided, regardless of whether a text fragment was
+matched. Not doing so would allow detecting the text fragment match based on
+whether the element-id was scrolled.</p>
    <h4 class="heading settled" data-level="3.4.3" id="search-timing"><span class="secno">3.4.3. </span><span class="content">Search Timing</span><a class="self-link" href="#search-timing"></a></h4>
    <p>A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
 matching query. If an attacker could find a way to synchronously navigate
 to a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive③">text fragment directive</a>-invoking URL, they would be able to determine
 the existence of a text snippet by measuring how long the navigation call takes.</p>
-   <div class="note" role="note"> The restrictions in <a href="#restricting-the-text-fragment">§ 3.4.4 Restricting the Text Fragment</a> should prevent this
+   <div class="note" role="note"> The restrictions in <a href="#restricting-the-text-fragment">§ 3.4.4 Restricting the Text Fragment</a> prevent this
   specific case; in particular, the no-same-document-navigation restriction.
   However, these restrictions are provided as multiple layers of defence. </div>
    <p>For this reason, the implementation <em>must ensure the runtime of <a href="#navigating-to-text-fragment">§ 3.5 Navigating to a Text Fragment</a> steps does not differ based on whether a match
@@ -1338,15 +1342,15 @@ boolean <a data-link-type="dfn" href="#document-text-fragment-user-activation" i
     <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-text-fragment-user-activation">text fragment user activation</dfn>, which is a boolean,
   initially false.</p>
     <div class="note" role="note">
-      <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation①">text fragment user activation</a> provides the necessary user gesture signal to allow a
-    single activation of a text fragment. It is set to true during document loading only if the
-    navigation occurred as a result of a user activation and can be propagated across client-side
+      <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation①">text fragment user activation</a> provides the necessary user gesture signal to allow
+    a single activation of a text fragment. It is set to true during document loading only if the
+    navigation occurred as a result of a user activation and is propagated across client-side
     redirects. 
      <p>If a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>'s <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation②">text fragment user activation</a> isn’t used to activate a text
-    fragment, it may instead be used to set a navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>'s <a data-link-type="dfn" href="#request-text-fragment-user-activation" id="ref-for-request-text-fragment-user-activation">text fragment user activation</a> to true. In this way, a <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation③">text fragment user activation</a> can be propagated
+    fragment, it is instead used to set a new navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>'s <a data-link-type="dfn" href="#request-text-fragment-user-activation" id="ref-for-request-text-fragment-user-activation">text fragment user activation</a> to true. In this way, a <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation③">text fragment user activation</a> can be propagated
     from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> to another across a navigation.</p>
-     <p>Reading either the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a>'s <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation④">text fragment user activation</a> or the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-text-fragment-user-activation" id="ref-for-request-text-fragment-user-activation①">text fragment user activation</a> flag always resets the value to false, such that a single
-    user activation cannot be reused to activate more than one text fragment.</p>
+     <p>Both <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a>'s <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation④">text fragment user activation</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-text-fragment-user-activation" id="ref-for-request-text-fragment-user-activation①">text fragment user activation</a> are always set to false when used, such that a
+    single user activation cannot be reused to activate more than one text fragment.</p>
     </div>
    </blockquote>
    <div class="note" role="note">
@@ -1365,9 +1369,9 @@ boolean <a data-link-type="dfn" href="#document-text-fragment-user-activation" i
     redirects cannot propagate the fact that the navigation is the result of a
     user gesture. The <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation⑤">text fragment user activation</a> mechanism allows passing
     through this specifically scoped user-activation through such navigations.
-    This means a page can programmatically navigate to a text fragment, a
-    single time, as if it has a user gesture. However, further navigations
-    require a new user gesture. 
+    This means a page is able to programmatically navigate to a text fragment, a
+    single time, as if it has a user gesture. However, since this resets <code>text fragment user
+    activation</code>, further text fragment navigations will not activation without a new user gesture. 
     </p>
     <p> The following diagram demonstrates how the flag is used to activate a text
     fragment through a client-side redirect service: </p>
@@ -1380,7 +1384,7 @@ boolean <a data-link-type="dfn" href="#document-text-fragment-user-activation" i
   boolean, initially false.</p>
     <div class="note" role="note">
      <p> <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll">allow text fragment scroll</a> is used to determine whether a text fragment will
-      perform scrolling when the document is loaded. If it is false, the text fragment may be
+      perform scrolling when the document is loaded. If it is false, the text fragment can be
       visually indicated but will not be scrolled to. This implements the mitigations discussed in <a href="#scroll-on-navigation">§ 3.4.2 Scroll On Navigation</a>. </p>
      <p> The reason we compute and store allow text fragment scroll, rather than performing these
       checks at the time of use, is that it relies on the properties of the navigation while the
@@ -1424,17 +1428,17 @@ and initialize a Document object</a> steps by adding the following steps before 
          <p> If a navigation originates from browser UI, it’s always ok to allow it
       since it’ll be user triggered and the page/script isn’t providing the
       text snippet. </p>
-         <p> Note: Depending on the UA, there may be cases where the <var>incumbentNavigationOrigin</var> parameter is null but
-      it’s not clear that the navigation should be considered as
+         <p> Note: Depending on the UA, there can be cases where the <var>incumbentNavigationOrigin</var> parameter is null but
+      it’s not clear that the navigation is to be considered as
       initiated from browser UI. E.g. an "open in new window" context
-      menu item when right clicking on a link.  The intent in this item
+      menu item when right clicking on a link. The intent in this item
       is to distinguish cases where the app/page is able to set the URL
-      from those that are fully under the user’s control.  In the former
+      from those that are fully under the user’s control. In the former
       we want to prevent activation of the text fragment unless the
       destination is loaded in a separate browsing context group (so that
       the source cannot both control the text snippet and observe
       side-effects in the navigation). </p>
-         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> for a more detailed discussion of how this should apply. </p>
+         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> for a more detailed discussion of how this applies. </p>
         </div>
        <li data-md>
         <p>If <var>text fragment user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to false and abort these sub-steps.</p>
@@ -1447,7 +1451,7 @@ and initialize a Document object</a> steps by adding the following steps before 
         <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
     document is loaded in a noopener context. That is, a new top level
     browsing context group to which the navigator does not have script access
-    and which may be placed into a separate process. </div>
+    and which can be placed into a separate process. </div>
        <li data-md>
         <p>Otherwise, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to false.</p>
       </ol>
@@ -1489,8 +1493,7 @@ steps of the task queued in step 2:</p>
    <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>. In summary, if a <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive④">text fragment directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part. We amend the HTML Document’s
-indicated part processing model to return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range">range</a>, rather than an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element">element</a> that
-may be scrolled into view. </div>
+indicated part processing model to return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range">range</a>, rather than an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element">element</a>, that will be scrolled into view. </div>
    <p>To enable the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier①">scroll to the fragment</a> algorithm to operate on a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①">range</a> indicated part, replace step 3 of this algorithm as follows:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
@@ -1725,7 +1728,7 @@ text=bar,baz
     <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">ranges</a> that are to be visually
-  indicated, the first of which may be scrolled into view (if the UA scrolls
+  indicated, the first of which will be scrolled into view (if the UA scrolls
   automatically). </div>
     <ol class="algorithm">
      <li data-md>
@@ -1763,12 +1766,12 @@ following steps:
   document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> that points to the first
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists. 
-     <p><a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①">textEnd</a> may be null. If omitted, this is an "exact"
-  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> must contain a string exactly matching <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart②">textStart</a>. If <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend②">textEnd</a> is
-  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> must start with <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend③">textEnd</a>. In the normative text below, we’ll call a
+     <p><a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①">textEnd</a> can be null. If omitted, this is an "exact"
+  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart②">textStart</a>. If <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend②">textEnd</a> is
+  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> will start with <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend③">textEnd</a>. In the normative text below, we’ll call a
   text passage that matches the provided <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart④">textStart</a> and <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend④">textEnd</a>, regardless of which mode we’re in, the
   "matching text".</p>
-     <p>Either or both of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix①">prefix</a> and <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix①">suffix</a> may be null, in which case context on that
+     <p>Either or both of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix①">prefix</a> and <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix①">suffix</a> can be null, in which case context on that
   side of a match is not checked. E.g. If <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix②">prefix</a> is
   null, text is matched without any requirement on what text precedes it.</p>
     </div>
@@ -1896,7 +1899,7 @@ then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-brea
   start searching for the next range start by breaking out
   of this loop without <var>rangeEndSearchRange</var> being collapsed.
   If we’re looking for a range match, we’ll continue iterating
-  this inner loop since the range start must already be correct. </div>
+  this inner loop since the range start will already be correct. </div>
          <li data-md>
           <p>Set <var>rangeEndSearchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑥">start</a> to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①④">end</a>.</p>
           <div class="note" role="note"> Otherwise, it is possible that we found the correct range
@@ -2210,7 +2213,7 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
   cross-origin information leakage. </div>
    <div class="note" role="note"> See <a href="https://github.com/tc39/proposal-intl-segmenter">Intl.Segmenter</a>, a
   proposal to specify unicode segmentation, including word segmentation. Once
-  specified, this algorithm may be improved by making use of the Intl.Segmenter
+  specified, this algorithm can be improved by making use of the Intl.Segmenter
   API for word boundary matching. </div>
    <p> A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="word-boundary">word boundary</dfn> is defined in <a data-link-type="biblio" href="#biblio-uax29" title="Unicode Text Segmentation">[UAX29]</a> in <a href="https://www.unicode.org/reports/tr29/tr29-41.html#Word_Boundaries">Unicode Text Segmentation § Word_Boundaries</a>. <a href="https://www.unicode.org/reports/tr29/tr29-41.html#Default_Word_Boundaries">Unicode Text Segmentation § Default_Word_Boundaries</a> defines a
   default set of what constitutes a word boundary, but as the specification
@@ -2240,12 +2243,13 @@ is more than 0 and <var>position</var> equals either 0 or <var>text</var>’s le
   Chinese/Japanese/Korean). Languages such as these requires dictionaries to
   determine what a valid word in the given locale is.</p>
    </div>
-   <div class="example" id="example-1c1d8c25">
-    <a class="self-link" href="#example-1c1d8c25"></a> 
+   <div class="example" id="example-a9f4cbc5">
+    <a class="self-link" href="#example-a9f4cbc5"></a> 
     <p> Text fragments are restricted such that match terms, when combined with
-    their adjacent context terms, must be word bounded. For example, in an
-    exact search like <code>prefix,textStart,suffix</code>, <code>"prefix+textStart+suffix"</code> must be word bounded. However, in a
-    range search like <code>prefix,textStart,textEnd,suffix</code>, both <code>"prefix+textStart"</code> and <code>"textEnd+suffix"</code> must be
+    their adjacent context terms, are word bounded. For example, in an
+    exact search like <code>prefix,textStart,suffix</code>, <code>"prefix+textStart+suffix"</code> will match only if the entire result is word bounded. However, in a
+    range search like <code>prefix,textStart,textEnd,suffix</code>, a match is
+    found only if both <code>"prefix+textStart"</code> and <code>"textEnd+suffix"</code> are
     word bounded. </p>
     <p> The goal is that a third-party must already know the full tokens they are
     matching against. A range match like <code>textStart,textEnd</code> must be
@@ -2275,41 +2279,40 @@ ways to differentiate it from the page’s content as perceived by the user.</p>
   indicator appears to help train the user that it comes from the linking page
   and is provided by the UA. </div>
    <h4 class="heading settled" data-level="3.6.1" id="urls-in-ua-features"><span class="secno">3.6.1. </span><span class="content">URLs in UA features</span><a class="self-link" href="#urls-in-ua-features"></a></h4>
-   <div class="note" role="note"> This section is non-normative. </div>
    <p>UAs provide a number of consumers for a document’s URL (outside of programmatic
 APIs like <code>window.location</code>). Examples include a location bar
 indicating the URL of the currently visible document, or the URL used when a
 user requests to create a bookmark for the current page.</p>
    <p>To avoid user confusion, UAs should be consistent in whether such URLs include
 the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑤">fragment directive</a>. This section provides a default set of
-recommendations for how UAs should handle these cases.</p>
+recommendations for how UAs can handle these cases.</p>
    <div class="note" role="note">
     <p> We provide these as a baseline for consistent behavior; however, as these
   features don’t affect cross-UA interoperability, they are not strict
   conformance requirements. </p>
-    <p> Exact behavior is left up to the implementing UA which may have differing
-  constraints or reasons for modifying the behavior. e.g. UAs may allow users
+    <p> Exact behavior is left up to the implementing UA which can have differing
+  constraints or reasons for modifying the behavior. e.g. UAs can allow users
   to configure defaults or expose UI options so users can choose whether they
   prefer to include fragment directives in these URLs. </p>
     <p>It’s also useful to allow UAs to experiment with providing a better
-  experience. E.g. perhaps a URL should elide the text fragment if the user
-  scrolls it out of view?</p>
+  experience. E.g. perhaps the UA’s displayed URL can elide the text fragment if
+  the user scrolls it out of view?</p>
     <p></p>
    </div>
    <p>The general principle is that a URL should include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑥">fragment directive</a> only while the visual indicator is visible (i.e. not dismissed). If the user
-dismisses the indicator, the URL should not include the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑦">fragment directive</a>.</p>
+dismisses the indicator, the URL should reflect that by also removing the the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive①⑦">fragment directive</a>.</p>
    <p>If the URL includes a text fragment but a match wasn’t found in the current
 page, the UA may choose to omit it from the exposed URL.</p>
    <div class="note" role="note">
-    <p> A text fragment that isn’t found on the page may be useful information to
-  surface to a user to indicate that the page may have changed since the link
+    <p> A text fragment that isn’t found on the page can be useful information to
+  surface to a user to indicate that the page has changed since the link
   was created. </p>
     <p> However, it’s unlikely to be useful to the user in a bookmark. </p>
    </div>
    <p>A few common examples are provided below.</p>
    <div class="note" role="note"> We use "text fragment" and "fragment directive" interchangeably here as text
-  fragments are assumed to be the only kind of directive. Should additional
-  directives be added in the future, the UX in these cases may have to be
+  fragments are assumed to be the only kind of directive. If additional
+  directives are added in the future, the UX in these cases will have to be
   re-evaluated separately for new directive types. </div>
    <h5 class="heading settled" data-level="3.6.1.1" id="urls-in-location-bar"><span class="secno">3.6.1.1. </span><span class="content">Location Bar</span><a class="self-link" href="#urls-in-location-bar"></a></h5>
    <p>The location bar’s URL should include a text fragment while it is visually
@@ -2377,9 +2380,9 @@ URLs.</p>
    <h3 class="heading settled" data-level="4.1" id="prefer-exact-matching-to-range-based"><span class="secno">4.1. </span><span class="content">Prefer Exact Matching To Range-based</span><a class="self-link" href="#prefer-exact-matching-to-range-based"></a></h3>
    <p>The match text can be provided either as an exact string "text=foo%20bar%20baz"
 or as a range "text=foo,bar".</p>
-   <p>UAs should prefer to specify the entire string where practical. This ensures
-that if the destination page is removed or changed, the intended destination can
-still be derived from the URL itself.</p>
+   <p>Prefer to specify the entire string where practical. This ensures that if the
+destination page is removed or changed, the intended destination can still be
+derived from the URL itself.</p>
    <div class="example" id="example-53e82e58">
     <a class="self-link" href="#example-53e82e58"></a> Suppose we wish to craft a URL to
   https://en.wikipedia.org/wiki/History_of_computing quoting the sentence: 
@@ -2401,9 +2404,9 @@ Physical Phenomena" by C. E. Wynn-Williams.
    </div>
    <p>Range-based matches can be helpful when the quoted text is excessively long
 and encoding the entire string would produce an unwieldy URL.</p>
-   <p>It is recommended that text snippets shorter than 300 characters always be
-encoded using an exact match. Above this limit, the UA should encode the string
-as a range-based match.</p>
+   <p>Text snippets shorter than 300 characters are encouraged to be encoded using an
+exact match. Above this limit, the UA can encode the string as a range-based
+match.</p>
    <div class="note" role="note"> TODO:  Can we determine the above limit in some less arbitrary way? </div>
    <h3 class="heading settled" data-level="4.2" id="use-context-only-when-necessary"><span class="secno">4.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
    <p>Context terms allow the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑥">text fragment directive</a> to disambiguate text
@@ -2411,7 +2414,7 @@ snippets on a page. However, their use can make the URL more brittle in some
 cases. Often, the desired string will start or end at an element boundary. The
 context will therefore exist in an adjacent element. Changes to the page
 structure could invalidate the <a data-link-type="dfn" href="#text-fragment-directive" id="ref-for-text-fragment-directive⑦">text fragment directive</a> since the context and
-match text may no longer appear to be adjacent.</p>
+match text will no longer appear to be adjacent.</p>
    <div class="example" id="example-735b40dc">
     <a class="self-link" href="#example-735b40dc"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
@@ -2423,10 +2426,9 @@ match text may no longer appear to be adjacent.</p>
     <p>However, suppose the page changes to add a "[edit]" link beside all section
   headers. This would now break the URL.</p>
    </div>
-   <p>Where a text snippet is long enough and unique, a UA should prefer to avoid
+   <p>Where a text snippet is long enough and unique, a UAs are encouraged to avoid
 adding superfluous context terms.</p>
-   <p>It is recommended that context should be used only if one of the following is
-true:</p>
+   <p>Use context only if one of the following is true:</p>
    <ul>
     <li>The UA determines the quoted text is ambiguous
     <li>The quoted text contains 3 or fewer words
@@ -2450,15 +2452,15 @@ changes, invalidating the <a data-link-type="dfn" href="#text-fragment-directive
    </div>
    <p>However, UAs should take care that the fallback element-id fragment is the
 correct one:</p>
-   <div class="example" id="example-0ae51dec">
-    <a class="self-link" href="#example-0ae51dec"></a> Suppose the user navigates to
+   <div class="example" id="example-3c4e565c">
+    <a class="self-link" href="#example-3c4e565c"></a> Suppose the user navigates to
   https://en.wikipedia.org/wiki/History_of_computing#Early_computation. They
   now scroll down to the Symbolic Computations section. There, they select a
   text snippet and choose to create a URL to it: 
 <pre>By the late 1960s, computer systems could perform symbolic algebraic
 manipulations
 </pre>
-    <p>The UA should note that, even though the current URL of the page is:
+    <p>Even though the current URL of the page is:
   https://en.wikipedia.org/wiki/History_of_computing#Early_computation, using
   #Early_computation as a fallback is inappropriate. If the above sentence is
   changed or removed, the page will load in the #Early_computation section
@@ -2467,11 +2469,6 @@ manipulations
   it should remove the fragment id from the URL:</p>
     <p><a href="https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations"> https://en.wikipedia.org/wiki/History_of_computing#:~:text=By%20the%20late%201960s,%20computer%20systems%20could%20perform%20symbolic%20algebraic%20manipulations</a></p>
    </div>
-   <p>If a UA chooses not to scroll text fragments into view on navigation (reasons
-why a UA may make this choice are discussed in <a href="#security-and-privacy">§ 3.4 Security and Privacy</a>), it
-must scroll the element-id into view, if provided, regardless of whether a text
-fragment was matched. Not doing so would allow detecting the text fragment
-match based on whether the element-id was scrolled.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
