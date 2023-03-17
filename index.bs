@@ -1,12 +1,12 @@
 <pre class='metadata'>
 Status: CG-DRAFT
-Title: Text Fragments
+Title: Text Directive
 ED: https://wicg.github.io/scroll-to-text-fragment/
-Shortname: text-fragments
+Shortname: text-directive
 Level: 1
 Editor: Nick Burris, Google https://www.google.com, nburris@chromium.org
 Editor: David Bokan, Google https://www.google.com, bokan@chromium.org
-Abstract: Text Fragments adds support for specifying a text snippet in the URL
+Abstract: Text directives adds support for specifying a text snippet in the URL
     fragment. When navigating to a URL with such a fragment, the user agent
     can quickly emphasise and/or bring it to the user's attention.
 Group: wicg
@@ -110,7 +110,7 @@ the [[#security-and-privacy]] section for details.
 
 <div class='note'>This section is non-normative</div>
 
-A [=text fragment directive=] is specified in the [=fragment directive=] (see
+A [=text directive=] is specified in the [=/fragment directive=] (see
 [[#the-fragment-directive]]) with the following format:
 <pre>
 #:~:text=[prefix-,]start[,end][,-suffix]
@@ -229,35 +229,45 @@ string representation of a URL remains plain ASCII characters.
 ## The Fragment Directive ## {#the-fragment-directive}
 
 To avoid compatibility issues with usage of existing URL fragments, this spec
-introduces the [=fragment directive=]. The [=fragment directive=] is a portion
-of the URL [=url/fragment=] that follows the [=fragment directive delimiter=].
+introduces the concept of a <dfn>fragment directive</dfn>. It is the portion of
+the URL [=url/fragment=] that follows the [=fragment directive delimiter=] and
+may be null if the delimiter does not appear in the fragment.
 
 The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
 <div class="note">
-  The [=fragment directive=] is part of the URL fragment. This means it
+  The [=/fragment directive=] is part of the URL fragment. This means it
   always appears after a U+0023 (#) code point in a URL.
 </div>
 
 <div class="example">
-  To add a [=fragment directive=] to a URL like https://example.com, a fragment
+  To add a [=/fragment directive=] to a URL like https://example.com, a fragment
   is first appended to the URL: https://example.com#:~:text=foo.
 </div>
 
-The fragment directive is meant to carry instructions, such as
-<code>text=</code>, for the UA rather than for the document.
+The fragment directive is parsed and processed into individual
+<dfn>directives</dfn>, which are instructions to the user agent to perform some
+action. Multiple directives may appear in the fragment directive.
+
+<div class="note">
+  The only directive introduced in this spec is the text directive but others
+  could be added in the future.
+</div>
+
+<div class="example">
+  <code>https://example.com#:~:text=foo&text=bar&unknownDirective</code>
+  <p>Contains 2 text directives and one unknown directive.</p>
+</div>
+
 
 To prevent impacting page operation, it is stripped from a [=Document=]'s
-[=Document/URL=] so that author scripts can't directly interact with it. This
-also ensures future directives could be added without introducing breaking
-changes to existing content.  Potential examples could be: image-fragments,
-translation-hints.
-
+[=Document/URL=] to prevent interaction with author script. This also ensures
+future directives can be added without web compatibility risk.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
-The fragment directive is processed and removed from the fragment whenever the
+The [=/fragment directive=] is processed and removed from the fragment whenever the
 UA sets the [=Document/URL=] on a [=Document=]. This is defined with the
 following additions and changes.
 
@@ -266,9 +276,9 @@ To the definition of [=Document=], add:
 >   <strong>Monkeypatching [[DOM]]:</strong>
 >
 >   <em>
->     Each document has an associated <dfn>fragment directive</dfn> which is
->     either null or an ASCII string holding data used by the UA to process the
->     resource. It is initially null.
+>     Each document has an associated <dfn for="Document">fragment
+>     directive</dfn> which is either null or an ASCII string holding data used
+>     by the UA to process the resource. It is initially null.
 >   </em>
 
 <div algorithm="split the fragment from the fragment directive">
@@ -294,7 +304,7 @@ To the definition of [=Document=], add:
 
 
 Whenever the fragment directive is stripped from the URL, it is set to the
-Document's [=fragment directive=].
+Document's [=Document/fragment directive=].
 
 Add a series of steps that will process a fragment directive on a [=Document/URL=]:
 
@@ -308,18 +318,18 @@ Add a series of steps that will process a fragment directive on a [=Document/URL
 >       1. Let |components| be the result of running [=split the fragment from the fragment
 >           directive=] on |raw fragment|.
 >       1. Set |url|'s [=url/fragment=] to |components|' <code>fragment</code>.
->       1. Set |document|'s [=fragment directive=] to |components|' <code>fragment directive</code>.
+>       1. Set |document|'s [=Document/fragment directive=] to |components|' <code>fragment directive</code>.
 >           <div class="note">This is stored on the document but currently not web-exposed</div>
 
 <div class="note">
   These changes make a URL's fragment end at the [=fragment directive
-  delimiter=]. The [=fragment directive=] includes all characters that follow,
+  delimiter=]. The [=/fragment directive=] includes all characters that follow,
   but not including, the delimiter.
 </div>
 
 <div class="example">
 <code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the [=fragment directive=] is the string
+the fragment is the string "test" and the [=/fragment directive=] is the string
 "text=foo".
 </div>
 
@@ -327,7 +337,7 @@ the fragment is the string "test" and the [=fragment directive=] is the string
 Amend the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
 create and initialize a Document object</a> steps to parse and remove the
-[=fragment directive=] by inserting the following steps right before the
+[=/fragment directive=] by inserting the following steps right before the
 setting |document|'s [=Document/URL=]
 (<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#initialise-the-document-object">currently</a>
 step 9):
@@ -340,7 +350,7 @@ step 9):
 
 Amend the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history">
-traverse the history</a> steps to process the [=fragment directive=]
+traverse the history</a> steps to process the [=/fragment directive=]
 during a history navigation by inserting steps before setting the |newDocument|'s URL (<a
 href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#traverse-the-history">currently</a>
 step 6).
@@ -450,11 +460,11 @@ step 6).
 
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
 
-A <dfn>text directive</dfn> is a <a spec=infra>struct</a> that consists of
-four strings: <dfn for="text directive">start</dfn>,
-<dfn for="text directive">end</dfn>,
-<dfn for="text directive">prefix</dfn>, and
-<dfn for="text directive">suffix</dfn>. [=text directive/start=]
+A <dfn>text directive struct</dfn> is a <a spec=infra>struct</a> that consists of
+four strings: <dfn for="text directive struct">start</dfn>,
+<dfn for="text directive struct">end</dfn>,
+<dfn for="text directive struct">prefix</dfn>, and
+<dfn for="text directive struct">suffix</dfn>. [=text directive struct/start=]
 is required to be non-null. The other three items may be set to null,
 indicating they weren't provided. The empty string is not a valid value for any
 of these items.
@@ -477,7 +487,7 @@ directive input|, run these steps:
   </p>
   <p>
     Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a [=text directive=].
+    Otherwise, returns a [=text directive struct=].
   </p>
 </div>
 
@@ -493,11 +503,11 @@ directive input|, run these steps:
         <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
     1. If |tokens| has size less than 1 or greater than 4, return null.
     1. If any of |tokens|'s items are the empty string, return null.
-    1. Let |retVal| be a [=text directive=] with each of its items initialized
+    1. Let |retVal| be a [=text directive struct=] with each of its items initialized
         to null.
     1. Let |potential prefix| be the first item of |tokens|.
     1. If the last character of |potential prefix| is U+002D (-), then:
-        1. Set |retVal|'s [=text directive/prefix=] to the
+        1. Set |retVal|'s [=text directive struct/prefix=] to the
             [=string/percent-decode|percent-decoding=] of the result of removing the
             last character from |potential prefix|.
         1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
@@ -505,16 +515,16 @@ directive input|, run these steps:
         otherwise.
     1. If |potential suffix| is non-null and its first character is U+002D (-),
         then:
-        1. Set |retVal|'s [=text directive/suffix=] to the
+        1. Set |retVal|'s [=text directive struct/suffix=] to the
             [=string/percent-decode|percent-decoding=] of the result of removing the
             first character from |potential suffix|.
         1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
         return null.
-    1. Set |retVal|'s [=text directive/start=] be the
+    1. Set |retVal|'s [=text directive struct/start=] be the
         [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-        [=text directive/end=] be the
+        [=text directive struct/end=] be the
         [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
     1. Return |retVal|.
   </ol>
@@ -522,8 +532,8 @@ directive input|, run these steps:
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 
-A <dfn>valid fragment directive</dfn> is a sequence of characters that appears
-in the [=fragment directive=] that matches the production:
+An <a spec=infra>ASCII string</a> is a <dfn>valid fragment directive</dfn> if
+it matches the production:
 <dl>
   <dt>
     <dfn id="fragmentdirectiveproduction">`FragmentDirective`</dfn> `::=`
@@ -563,8 +573,8 @@ in the [=fragment directive=] that matches the production:
   parse if an unknown directive is in the &-separated list of directives.
 </div>
 
-The <dfn>text fragment directive</dfn> is one such [=fragment directive=] that
-enables specifying a piece of text on the page, that matches the production:
+A <dfn>text directive</dfn> is a [=directive=] that specifies a text range on
+the page as being targeted by the URL. It must match the production:
 
 <dl>
   <dt><dfn>`TextDirective`</dfn> `::=`</dt>
@@ -605,19 +615,19 @@ enables specifying a piece of text on the page, that matches the production:
 
 <div class="note">This section is non-normative</div>
 
-Care must be taken when implementing [=text fragment directive=] so that it
+Care must be taken when implementing [=text directive=] so that it
 cannot be used to exfiltrate information across origins. Scripts can navigate a
-page to a cross-origin URL with a [=text fragment directive=]. If a malicious
+page to a cross-origin URL with a [=text directive=]. If a malicious
 actor can determine that the text fragment was successfully found in victim
 page as a result of such a navigation, they can infer the existence of any text
 on the page.
 
 The following subsections restrict the feature to mitigate the expected attack
-vectors. In summary, the text fragment directives are invoked only on full
-(non-same-page) navigations that are the result of a user activation.
-Additionally, navigations originating from a different origin than the
-destination will require the navigation to take place in a "noopener" context,
-such that the destination page is known to be sufficiently isolated.
+vectors. In summary, text directives are invoked only on full (non-same-page)
+navigations that are the result of a user activation.  Additionally,
+navigations originating from a different origin than the destination will
+require the navigation to take place in a "noopener" context, such that the
+destination page is known to be sufficiently isolated.
 
 ### Scroll On Navigation ### {#scroll-on-navigation}
 
@@ -701,7 +711,7 @@ whether the element-id was scrolled.
 A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
 matching query. If an attacker could find a way to synchronously navigate
-to a [=text fragment directive=]-invoking URL, they would be able to determine
+to a [=text directive=]-invoking URL, they would be able to determine
 the existence of a text snippet by measuring how long the navigation call takes.
 
 <div class="note">
@@ -723,31 +733,31 @@ to find and set the [=Document=]'s indicated part.
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
 Amend the definition of a [=/request=] and of a [=Document=] to include a new
-boolean [=document/text fragment user activation=] field:
+boolean [=document/text directive user activation=] field:
 
 >   <strong>Monkeypatching [[FETCH]]:</strong>
 >
->   A [=/request=] has an associated boolean <dfn for="request">text fragment user activation</dfn>,
+>   A [=/request=] has an associated boolean <dfn for="request">text directive user activation</dfn>,
 >   initially false.
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   Each [=Document=] has a <dfn for="document">text fragment user activation</dfn>, which is a boolean,
+>   Each [=Document=] has a <dfn for="document">text directive user activation</dfn>, which is a boolean,
 >   initially false.
 >
 >   <div class="note">
->     [=document/text fragment user activation=] provides the necessary user gesture signal to allow
+>     [=document/text directive user activation=] provides the necessary user gesture signal to allow
 >     a single activation of a text fragment. It is set to true during document loading only if the
 >     navigation occurred as a result of a user activation and is propagated across client-side
 >     redirects.
 >
->     If a [=Document=]'s [=document/text fragment user activation=] isn't used to activate a text
->     fragment, it is instead used to set a new navigation [=/request=]'s [=request/text fragment user activation=]
->     to true. In this way, a [=document/text fragment user activation=] can be propagated
+>     If a [=Document=]'s [=document/text directive user activation=] isn't used to activate a text
+>     fragment, it is instead used to set a new navigation [=/request=]'s [=request/text directive user activation=]
+>     to true. In this way, a [=document/text directive user activation=] can be propagated
 >     from one [=Document=] to another across a navigation.
 >
->     Both [=Document=]'s [=document/text fragment user activation=] and [=/request=]'s
->     [=request/text fragment user activation=] are always set to false when used, such that a
+>     Both [=Document=]'s [=document/text directive user activation=] and [=/request=]'s
+>     [=request/text directive user activation=] are always set to false when used, such that a
 >     single user activation cannot be reused to activate more than one text fragment.
 >   </div>
 
@@ -762,7 +772,7 @@ boolean [=document/text fragment user activation=] field:
   <p>
     Unlike real HTTP (<tt>status 3xx</tt>) redirects, these "client-side"
     redirects cannot propagate the fact that the navigation is the result of a
-    user gesture. The [=document/text fragment user activation=] mechanism allows passing
+    user gesture. The [=document/text directive user activation=] mechanism allows passing
     through this specifically scoped user-activation through such navigations.
     This means a page is able to programmatically navigate to a text fragment, a
     single time, as if it has a user gesture. However, since this resets <code>text fragment user
@@ -811,7 +821,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   15. Set |document|'s [=document/text fragment user activation=] by following these sub-steps:
+>   15. Set |document|'s [=document/text directive user activation=] by following these sub-steps:
 >       1. Let |is user activated| be true if the current navigation was initiated from
 >           a window that had a <a spec="html">transient activation</a> at the time the
 >           navigation was initiated, or the UA has reason to believe it comes from a
@@ -820,21 +830,21 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             TODO: it'd be better to refer to the [=request/user-activation=] flag.
 >           </div>
 >       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
->           user activated| or the [=request/text fragment user activation=] of
+>           user activated| or the [=request/text directive user activation=] of
 >           |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           object is true, set the |document|'s [=document/text fragment user activation=]
+>           object is true, set the |document|'s [=document/text directive user activation=]
 >           to true. Otherwise, set it to false.
 >           <div class="note">
 >             It's important that the flag not be copyable so that only one text fragment can be
 >             activated per user-activated navigation.
 >           </div>
 >   16. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
->       1. If |document|'s [=fragment directive=] field is null or empty, set
+>       1. If |document|'s [=Document/fragment directive=] field is null or empty, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
->       1. Let |text fragment user activation| be the value of |document|'s
->           [=document/text fragment user activation=] and set |document|'s
->           [=document/text fragment user activation=] to false.
+>       1. Let |text directive user activation| be the value of |document|'s
+>           [=document/text directive user activation=] and set |document|'s
+>           [=document/text directive user activation=] to false.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
 >           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
@@ -864,7 +874,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
 >             </p>
 >           </div>
->       1. If |text fragment user activation| is false, set
+>       1. If |text directive user activation| is false, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
@@ -888,8 +898,8 @@ and initialize a Document object</a> steps by adding the following steps before 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
 process a navigate fetch</a> steps to additionally set <var ignore=''>request</var>'s
-[=request/text fragment user activation=] to the value of the [=active document=]'s
-[=document/text fragment user activation=] and set the [=active document=]'s value to
+[=request/text directive user activation=] to the value of the [=active document=]'s
+[=document/text directive user activation=] and set the [=active document=]'s value to
 false.
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
@@ -898,10 +908,10 @@ false.
 >       settings object, destination to "document", mode to "navigate", credentials
 >       mode to "include", use-URL-credentials flag, redirect mode to "manual",
 >       replaces client id to browsingContext's active document's relevant settings
->       object's id, and [=request/text fragment user activation=] to
+>       object's id, and [=request/text directive user activation=] to
 >       sourceBrowsingContext's active document's
->       [=document/text fragment user activation=]. Set sourceBrowsingContext's active
->       document's [=document/text fragment user activation=] to false.
+>       [=document/text directive user activation=]. Set sourceBrowsingContext's active
+>       document's [=document/text directive user activation=] to false.
 
 
 Amend the <a spec=HTML>try to scroll to the fragment</a> steps by replacing the
@@ -923,7 +933,7 @@ steps of the task queued in step 2:
 
 <div class="note">
 The text fragment specification proposes an amendment to
-[[html#scroll-to-fragid]]. In summary, if a [=text fragment directive=] is
+[[html#scroll-to-fragid]]. In summary, if a [=text directive=] is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part. We amend the HTML Document's
 indicated part processing model to return a [=range=], rather than an
@@ -1004,7 +1014,7 @@ so that the indicated part is a [=range=]:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   1. Let |fragment directive string| be the document's [=fragment directive=].
+>   1. Let |fragment directive string| be the document's [=Document/fragment directive=].
 >   1. If the document's [=document/allow text fragment scroll=] is true then:
 >       1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
 >           the [=process a fragment directive=] steps with |fragment directive
@@ -1144,7 +1154,7 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 
 <div algorithm="find a range from a text directive">
 To <dfn>find a range from a text directive</dfn>, given a
-[=text directive=] |parsedValues| and [=Document=] |document|, run the
+[=text directive struct=] |parsedValues| and [=Document=] |document|, run the
 following steps:
 
 <div class="note">
@@ -1153,26 +1163,26 @@ following steps:
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists.
 
-  [=text directive/end=] can be null. If omitted, this is an "exact"
+  [=text directive struct/end=] can be null. If omitted, this is an "exact"
   search and the returned [=range=] will contain a string exactly matching
-  [=text directive/start=]. If [=text directive/end=] is
+  [=text directive struct/start=]. If [=text directive struct/end=] is
   provided, this is a "range" search; the returned [=range=] will start with
-  [=text directive/start=] and end with
-  [=text directive/end=]. In the normative text below, we'll call a
-  text passage that matches the provided [=text directive/start=] and
-  [=text directive/end=], regardless of which mode we're in, the
+  [=text directive struct/start=] and end with
+  [=text directive struct/end=]. In the normative text below, we'll call a
+  text passage that matches the provided [=text directive struct/start=] and
+  [=text directive struct/end=], regardless of which mode we're in, the
   "matching text".
 
-  Either or both of [=text directive/prefix=] and
-  [=text directive/suffix=] can be null, in which case context on that
-  side of a match is not checked. E.g. If [=text directive/prefix=] is
+  Either or both of [=text directive struct/prefix=] and
+  [=text directive struct/suffix=] can be null, in which case context on that
+  side of a match is not checked. E.g. If [=text directive struct/prefix=] is
   null, text is matched without any requirement on what text precedes it.
 </div>
 <div class="note">
   While the matching text and its prefix/suffix can span across
   block-boundaries, the individual parameters to these steps cannot. That is,
-  each of [=text directive/prefix=], [=text directive/start=],
-  [=text directive/end=], and [=text directive/suffix=] will only
+  each of [=text directive struct/prefix=], [=text directive struct/start=],
+  [=text directive struct/end=], and [=text directive struct/suffix=] will only
   match text within a single block.
 
   <div class="example">
@@ -1201,10 +1211,10 @@ following steps:
         [=range/end=] (|document|, |document|'s [=Node/length=])
     1. While |searchRange| is not [=range/collapsed=]:
         1. Let |potentialMatch| be null.
-        1. If |parsedValues|'s [=text directive/prefix=] is not null:
+        1. If |parsedValues|'s [=text directive struct/prefix=] is not null:
             1. Let |prefixMatch| be the the result of running the [=find a string
                 in range=] steps with |query| |parsedValues|'s
-                [=text directive/prefix=], |searchRange| |searchRange|,
+                [=text directive struct/prefix=], |searchRange| |searchRange|,
                 |wordStartBounded| true and |wordEndBounded| false.
             1. If |prefixMatch| is null, return null.
             1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
@@ -1225,12 +1235,12 @@ following steps:
                   non-whitespace text data following a matched prefix.
                 </div>
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive/end=] is non-null or
-                |parsedValues|'s [=text directive/suffix=] is null, false
+                [=text directive struct/end=] is non-null or
+                |parsedValues|'s [=text directive struct/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive/start=], |searchRange| |matchRange|,
+                [=text directive struct/start=], |searchRange| |matchRange|,
                 |wordStartBounded| false, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1239,16 +1249,16 @@ following steps:
                 <div class="note">
                   In this case, we found a prefix but it was followed by something
                   other than a matching text so we'll continue searching for the
-                  next instance of [=text directive/prefix=].
+                  next instance of [=text directive struct/prefix=].
                 </div>
         1. Otherwise:
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive/end=] is non-null or
-                |parsedValues|'s [=text directive/suffix=] is null, false
+                [=text directive struct/end=] is non-null or
+                |parsedValues|'s [=text directive struct/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive/start=], |searchRange| |searchRange|,
+                [=text directive struct/start=], |searchRange| |searchRange|,
                 |wordStartBounded| true, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1258,13 +1268,13 @@ following steps:
             |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
         1. While |rangeEndSearchRange| is not [=range/collapsed=]:
-            1. If |parsedValues|'s [=text directive/end=] item is
+            1. If |parsedValues|'s [=text directive struct/end=] item is
                 non-null, then:
                 1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                    [=text directive/suffix=] is null, false otherwise.
+                    [=text directive struct/suffix=] is null, false otherwise.
                 1. Let |endMatch| be the result of running the [=find a string
                     in range=] steps with |query| |parsedValues|'s
-                    [=text directive/end=], |searchRange| |rangeEndSearchRange|,
+                    [=text directive struct/end=], |searchRange| |rangeEndSearchRange|,
                     |wordStartBounded| true, and |wordEndBounded|
                     |mustEndAtWordBoundary|.
                 1. If |endMatch| is null then return null.
@@ -1272,7 +1282,7 @@ following steps:
                     [=range/end=].
             1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
                 represents a range exactly containing an instance of matching text.
-            1. If |parsedValues|'s [=text directive/suffix=] is null, return
+            1. If |parsedValues|'s [=text directive struct/suffix=] is null, return
                 |potentialMatch|.
             1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
                 |potentialMatch|'s [=range/end=] and [=range/end=] equal to
@@ -1280,7 +1290,7 @@ following steps:
             1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
                 position=].
             1. Let |suffixMatch| be result of running the [=find a string in range=]
-                steps with |query| |parsedValues|'s [=text directive/suffix=],
+                steps with |query| |parsedValues|'s [=text directive struct/suffix=],
                 |searchRange| |suffixRange|, |wordStartBounded| false, and
                 |wordEndBounded| true.
             1. If |suffixMatch| is null then return null.
@@ -1290,7 +1300,7 @@ following steps:
                 </div>
             1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
                 return |potentialMatch|.
-            1. If |parsedValues|'s [=text directive/end=] item is null
+            1. If |parsedValues|'s [=text directive struct/end=] item is null
                 then [=iteration/break=];
                 <div class="note">
                   If this is an exact match and the suffix doesn't match,
@@ -1308,7 +1318,7 @@ following steps:
                   rangeEnd.
                 </div>
         1. If |rangeEndSearchRange| is [=range/collapsed=] then:
-            1. [=/Assert=]: |parsedValues|'s [=text directive/end=] item is non-null
+            1. [=/Assert=]: |parsedValues|'s [=text directive struct/end=] item is non-null
             1. Return null
                 <div class="note">
                     This can only happen for range matches due to the
@@ -1703,7 +1713,7 @@ indicating the URL of the currently visible document, or the URL used when a
 user requests to create a bookmark for the current page.
 
 To avoid user confusion, UAs should be consistent in whether such URLs include
-the [=fragment directive=]. This section provides a default set of
+the [=/fragment directive=]. This section provides a default set of
 recommendations for how UAs can handle these cases.
 
 <div class='note'>
@@ -1725,10 +1735,10 @@ recommendations for how UAs can handle these cases.
   </p>
 </div>
 
-The general principle is that a URL should include the [=fragment directive=]
+The general principle is that a URL should include the [=/fragment directive=]
 only while the visual indicator is visible (i.e. not dismissed). If the user
 dismisses the indicator, the URL should reflect that by also removing the the
-[=fragment directive=].
+[=/fragment directive=].
 
 If the URL includes a text fragment but a match wasn't found in the current
 page, the UA may choose to omit it from the exposed URL.
@@ -1757,7 +1767,7 @@ A few common examples are provided below.
 #### Location Bar #### {#urls-in-location-bar}
 
 The location bar's URL should include a text fragment while it is visually
-indicated. The [=fragment directive=] should be stripped from the location bar
+indicated. The [=/fragment directive=] should be stripped from the location bar
 URL when the user dismisses the indication.
 
 It is recommended that the text fragment be displayed in the location bar's URL
@@ -1768,11 +1778,11 @@ even if a match wasn't located in the document.
 Many UAs provide a "bookmark" feature allowing users to store a convenient link
 to the current page in the UA's interface.
 
-A newly created bookmark should, by default, include the [=fragment directive=]
+A newly created bookmark should, by default, include the [=/fragment directive=]
 in the URL if, and only if, a match was found and the visual indicator hasn't
 been dismissed.
 
-Navigating to a URL from a bookmark should process a [=fragment directive=] as
+Navigating to a URL from a bookmark should process a [=/fragment directive=] as
 if it were navigated to in a typical navigation.
 
 #### Sharing #### {#urls-in-sharing}
@@ -1780,7 +1790,7 @@ if it were navigated to in a typical navigation.
 Some UAs provide a method for users to share the current page with others,
 typically by providing the URL to another app or messaging service.
 
-When providing a URL in these situations, it should include the [=fragment
+When providing a URL in these situations, it should include the [=/fragment
 directive=] if, and only if, a match was found and the visual indicator hasn't
 been dismissed.
 
@@ -1857,7 +1867,7 @@ fragment or other fragment directives in the future.
 </div>
 
 This section contains recommendations for UAs automatically generating URLs
-with a [=text fragment directive=]. These recommendations aren't normative but
+with a [=text directive=]. These recommendations aren't normative but
 are provided to ensure generated URLs result in maximally stable and usable
 URLs.
 
@@ -1913,11 +1923,11 @@ match.
 
 ## Use Context Only When Necessary ## {#use-context-only-when-necessary}
 
-Context terms allow the [=text fragment directive=] to disambiguate text
+Context terms allow the [=text directive=] to disambiguate text
 snippets on a page. However, their use can make the URL more brittle in some
 cases. Often, the desired string will start or end at an element boundary. The
 context will therefore exist in an adjacent element. Changes to the page
-structure could invalidate the [=text fragment directive=] since the context and
+structure could invalidate the [=text directive=] since the context and
 match text will no longer appear to be adjacent.
 
 <div class='example'>
@@ -1928,7 +1938,7 @@ match text will no longer appear to be adjacent.
     &lt;div class="content"&gt;Text to quote&lt;/div&gt;
   </pre>
 
-  We could craft the [=text fragment directive=] as follows:
+  We could craft the [=text directive=] as follows:
 
   <pre>
     text=HEADER-,Text%20to%20quote
@@ -1953,12 +1963,12 @@ Use context only if one of the following is true:
 
 ## Determine If Fragment Id Is Needed ## {#determine-if-fragment-id-is-needed}
 
-When the UA navigates to a URL containing a [=text fragment directive=], it will
+When the UA navigates to a URL containing a [=text directive=], it will
 fallback to scrolling into view a regular element-id based fragment if it
 exists and the text fragment isn't found.
 
 This can be useful to provide a fallback, in case the text in the document
-changes, invalidating the [=text fragment directive=].
+changes, invalidating the [=text directive=].
 
 <div class='example'>
   Suppose we wish to craft a URL to
