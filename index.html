@@ -4,10 +4,9 @@
   <title>Text Fragments</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 26e85e599, updated Thu Dec 8 15:29:31 2022 -0800" name="generator">
+  <meta content="Bikeshed version d9f9c3533, updated Fri Mar 10 11:31:29 2023 -0800" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
 <style>/* style-autolinks */
-
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
     font-size: inherit;
@@ -67,7 +66,8 @@ pre .property::before, pre .property::after {
 
 [data-link-type=biblio] {
     white-space: pre;
-}</style>
+}
+</style>
 <style>/* style-colors */
 
 /* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
@@ -176,9 +176,9 @@ pre .property::before, pre .property::after {
     --outdated-shadow: red;
 
     --editedrec-bg: darkorange;
-}</style>
+}
+</style>
 <style>/* style-counters */
-
 body {
     counter-reset: example figure issue;
 }
@@ -205,9 +205,9 @@ figcaption {
 }
 figcaption:not(.no-marker)::before {
     content: "Figure " counter(figure) " ";
-}</style>
+}
+</style>
 <style>/* style-dfn-panel */
-
 :root {
     --dfnpanel-bg: #ddd;
     --dfnpanel-text: var(--text);
@@ -215,10 +215,10 @@ figcaption:not(.no-marker)::before {
 .dfn-panel {
     position: absolute;
     z-index: 35;
-    height: auto;
-    width: -webkit-fit-content;
-    width: fit-content;
+    width: 20em;
+    min-width: min-content;
     max-width: 300px;
+    height: auto;
     max-height: 500px;
     overflow: auto;
     padding: 0.5em 0.75em;
@@ -226,6 +226,7 @@ figcaption:not(.no-marker)::before {
     background: var(--dfnpanel-bg);
     color: var(--dfnpanel-text);
     border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
@@ -248,7 +249,6 @@ figcaption:not(.no-marker)::before {
 .dfn-paneled { cursor: pointer; }
 </style>
 <style>/* style-issues */
-
 a[href].issue-return {
     float: right;
     float: inline-end;
@@ -258,7 +258,6 @@ a[href].issue-return {
 }
 </style>
 <style>/* style-md-lists */
-
 /* This is a weird hack for me not yet following the commonmark spec
    regarding paragraph and lists. */
 [data-md] > :first-child {
@@ -266,7 +265,8 @@ a[href].issue-return {
 }
 [data-md] > :last-child {
     margin-bottom: 0;
-}</style>
+}
+</style>
 <style>/* style-selflinks */
 
 :root {
@@ -652,6 +652,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
        which is quite common in practice... */
     img { background: white; }
 }
+
 @media (prefers-color-scheme: dark) {
     :root {
         --selflink-text: black;
@@ -666,6 +667,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
         --dfnpanel-text: var(--text);
     }
 }
+
 @media (prefers-color-scheme: dark) {
     .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
 
@@ -733,7 +735,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-12-22">22 December 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-03-17">17 March 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -749,7 +751,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the Text Fragments Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2023 the Contributors to the Text Fragments Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -957,7 +959,7 @@ that is, the order in which a native reader would read them in (and also the
 order in which characters are stored in memory).</p>
    <p>Similarly, the <code>prefix</code> and <code>textStart</code> terms identify
 text coming before another term in logical order, while <code>suffix</code> and <code>textEnd</code> follow other terms in logical order.</p>
-   <p class="note" role="note"><span>Note:</span> user agents can visually render URLs in a manner friendlier to a native
+   <p class="note" role="note"><span class="marker">Note:</span> user agents can visually render URLs in a manner friendlier to a native
 reader, for example, by converting the displayed string to Unicode. However, the
 string representation of a URL remains plain ASCII characters.</p>
    <div class="example" id="example-b17c0d6b">
@@ -1144,8 +1146,8 @@ history.back();
     <p>Results in the current document having "bar" as the fragment directive.</p>
    </div>
    <h4 class="heading settled" data-level="3.3.2" id="parsing-the-fragment-directive"><span class="secno">3.3.2. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parsedtextdirective">ParsedTextDirective</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct" id="ref-for-struct">struct</a> that consists of
-four strings: <dfn class="dfn-paneled" data-dfn-for="ParsedTextDirective" data-dfn-type="dfn" data-noexport id="parsedtextdirective-textstart">textStart</dfn>, <dfn class="dfn-paneled" data-dfn-for="ParsedTextDirective" data-dfn-type="dfn" data-noexport id="parsedtextdirective-textend">textEnd</dfn>, <dfn class="dfn-paneled" data-dfn-for="ParsedTextDirective" data-dfn-type="dfn" data-noexport id="parsedtextdirective-prefix">prefix</dfn>, and <dfn class="dfn-paneled" data-dfn-for="ParsedTextDirective" data-dfn-type="dfn" data-noexport id="parsedtextdirective-suffix">suffix</dfn>. <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart">textStart</a> is required to be non-null. The other three items may be set to null,
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive">text directive</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct" id="ref-for-struct">struct</a> that consists of
+four strings: <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-textstart">textStart</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-textend">textEnd</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-prefix">prefix</dfn>, and <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-suffix">suffix</dfn>. <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart">textStart</a> is required to be non-null. The other three items may be set to null,
 indicating they weren’t provided. The empty string is not a valid value for any
 of these items.</p>
    <p>See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
@@ -1159,7 +1161,7 @@ directive input</var>, run these steps:</p>
     components of the directive (e.g. ("prefix", "foo", "bar", null)). See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
     used. </p>
      <p> Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective">ParsedTextDirective</a>. </p>
+    Otherwise, returns a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive">text directive</a>. </p>
     </div>
     <ol class="algorithm">
      <li data-md>
@@ -1176,7 +1178,7 @@ input</var> starting at index 5.</p>
      <li data-md>
       <p>If any of <var>tokens</var>’s items are the empty string, return null.</p>
      <li data-md>
-      <p>Let <var>retVal</var> be a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective①">ParsedTextDirective</a> with each of its items initialized
+      <p>Let <var>retVal</var> be a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①">text directive</a> with each of its items initialized
 to null.</p>
      <li data-md>
       <p>Let <var>potential prefix</var> be the first item of <var>tokens</var>.</p>
@@ -1184,7 +1186,7 @@ to null.</p>
       <p>If the last character of <var>potential prefix</var> is U+002D (-), then:</p>
       <ol>
        <li data-md>
-        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix">prefix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> of the result of removing the
+        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix">prefix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> of the result of removing the
 last character from <var>potential prefix</var>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">Remove</a> the first item of the list <var>tokens</var>.</p>
@@ -1197,7 +1199,7 @@ otherwise.</p>
 then:</p>
       <ol>
        <li data-md>
-        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix">suffix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode①">percent-decoding</a> of the result of removing the
+        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix">suffix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode①">percent-decoding</a> of the result of removing the
 first character from <var>potential suffix</var>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove①">Remove</a> the last item of the list <var>tokens</var>.</p>
@@ -1206,9 +1208,9 @@ first character from <var>potential suffix</var>.</p>
       <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> not equal to 1 nor 2 then
 return null.</p>
      <li data-md>
-      <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart①">textStart</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode②">percent-decoding</a> of the first item of <var>tokens</var>.</p>
+      <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart①">textStart</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode②">percent-decoding</a> of the first item of <var>tokens</var>.</p>
      <li data-md>
-      <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend">textEnd</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode③">percent-decoding</a> of the last item of <var>tokens</var>.</p>
+      <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend">textEnd</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode③">percent-decoding</a> of the last item of <var>tokens</var>.</p>
      <li data-md>
       <p>Return <var>retVal</var>.</p>
     </ol>
@@ -1389,7 +1391,7 @@ boolean <a data-link-type="dfn" href="#document-text-fragment-user-activation" i
     </p>
     <p> The following diagram demonstrates how the flag is used to activate a text
     fragment through a client-side redirect service: </p>
-     <img alt="Diagram showing how a text fragment flag is set and used" height="671" src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png" style="margin-left:auto;margin-right:auto;display:block" width="745"> 
+    <p><img alt="Diagram showing how a text fragment flag is set and used" height="671" src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png" style="margin-left:auto;margin-right:auto;display:block" width="745"></p>
     <p> See <a href="redirects.md">redirects.md</a> for a more in-depth discussion. </p>
    </div>
    <blockquote>
@@ -1718,26 +1720,26 @@ directive</a> steps on <var>directive</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a range from a text directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#parsedtextdirective" id="ref-for-parsedtextdirective②">ParsedTextDirective</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive②">text directive</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
   document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">range</a> that points to the first
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists. 
-     <p><a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①">textEnd</a> can be null. If omitted, this is an "exact"
-  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart②">textStart</a>. If <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend②">textEnd</a> is
-  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will start with <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend③">textEnd</a>. In the normative text below, we’ll call a
-  text passage that matches the provided <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart④">textStart</a> and <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend④">textEnd</a>, regardless of which mode we’re in, the
+     <p><a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend①">textEnd</a> can be null. If omitted, this is an "exact"
+  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart②">textStart</a>. If <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend②">textEnd</a> is
+  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will start with <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart③">textStart</a> and end with <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend③">textEnd</a>. In the normative text below, we’ll call a
+  text passage that matches the provided <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart④">textStart</a> and <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend④">textEnd</a>, regardless of which mode we’re in, the
   "matching text".</p>
-     <p>Either or both of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix①">prefix</a> and <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix①">suffix</a> can be null, in which case context on that
-  side of a match is not checked. E.g. If <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix②">prefix</a> is
+     <p>Either or both of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix①">prefix</a> and <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix①">suffix</a> can be null, in which case context on that
+  side of a match is not checked. E.g. If <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix②">prefix</a> is
   null, text is matched without any requirement on what text precedes it.</p>
     </div>
     <div class="note" role="note">
       While the matching text and its prefix/suffix can span across
   block-boundaries, the individual parameters to these steps cannot. That is,
-  each of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix③">prefix</a>, <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑤">textStart</a>, <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑤">textEnd</a>, and <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix②">suffix</a> will only
+  each of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix③">prefix</a>, <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart⑤">textStart</a>, <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend⑤">textEnd</a>, and <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix②">suffix</a> will only
   match text within a single block. 
      <div class="example" id="example-73638554">
       <a class="self-link" href="#example-73638554"></a> 
@@ -1764,11 +1766,11 @@ following steps:
        <li data-md>
         <p>Let <var>potentialMatch</var> be null.</p>
        <li data-md>
-        <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix④">prefix</a> is not null:</p>
+        <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix④">prefix</a> is not null:</p>
         <ol>
          <li data-md>
           <p>Let <var>prefixMatch</var> be the the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range">find a string
-in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix⑤">prefix</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true and <var>wordEndBounded</var> false.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix⑤">prefix</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true and <var>wordEndBounded</var> false.</p>
          <li data-md>
           <p>If <var>prefixMatch</var> is null, return null.</p>
          <li data-md>
@@ -1786,28 +1788,28 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
           <div class="note" role="note"> <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑥">start</a> now points to the next
   non-whitespace text data following a matched prefix. </div>
          <li data-md>
-          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑥">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix③">suffix</a> is null, false
+          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend⑥">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix③">suffix</a> is null, false
 otherwise.</p>
          <li data-md>
           <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range①">find a string in
-range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑥">textStart</a>, <var>searchRange</var> <var>matchRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart⑥">textStart</a>, <var>searchRange</var> <var>matchRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
          <li data-md>
           <p>If <var>potentialMatch</var> is null, return null.</p>
          <li data-md>
           <p>If <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑦">start</a> is not <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue②">continue</a>.</p>
           <div class="note" role="note"> In this case, we found a prefix but it was followed by something
   other than a matching text so we’ll continue searching for the
-  next instance of <a data-link-type="dfn" href="#parsedtextdirective-prefix" id="ref-for-parsedtextdirective-prefix⑥">prefix</a>. </div>
+  next instance of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix⑥">prefix</a>. </div>
         </ol>
        <li data-md>
         <p>Otherwise:</p>
         <ol>
          <li data-md>
-          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑦">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix④">suffix</a> is null, false
+          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend⑦">textEnd</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix④">suffix</a> is null, false
 otherwise.</p>
          <li data-md>
           <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range②">find a string in
-range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textstart" id="ref-for-parsedtextdirective-textstart⑦">textStart</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textstart" id="ref-for-text-directive-textstart⑦">textStart</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
          <li data-md>
           <p>If <var>potentialMatch</var> is null, return null.</p>
          <li data-md>
@@ -1819,14 +1821,14 @@ range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-t
         <p>While <var>rangeEndSearchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a>:</p>
         <ol>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑧">textEnd</a> item is
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend⑧">textEnd</a> item is
 non-null, then:</p>
           <ol>
            <li data-md>
-            <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑤">suffix</a> is null, false otherwise.</p>
+            <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑤">suffix</a> is null, false otherwise.</p>
            <li data-md>
             <p>Let <var>textEndMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range③">find a string
-in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend⑨">textEnd</a>, <var>searchRange</var> <var>rangeEndSearchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend⑨">textEnd</a>, <var>searchRange</var> <var>rangeEndSearchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
            <li data-md>
             <p>If <var>textEndMatch</var> is null then return null.</p>
            <li data-md>
@@ -1836,14 +1838,14 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
           <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert②">Assert</a>: <var>potentialMatch</var> is non-null, not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed③">collapsed</a> and
 represents a range exactly containing an instance of matching text.</p>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
          <li data-md>
           <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a>.</p>
          <li data-md>
           <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①③">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
          <li data-md>
-          <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-suffix" id="ref-for-parsedtextdirective-suffix⑦">suffix</a>, <var>searchRange</var> <var>suffixRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> true.</p>
+          <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑦">suffix</a>, <var>searchRange</var> <var>suffixRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> true.</p>
          <li data-md>
           <p>If <var>suffixMatch</var> is null then return null.</p>
           <div class="note" role="note"> If the suffix doesn’t appear in the remaining text of the document,
@@ -1852,7 +1854,7 @@ position</a>.</p>
           <p>If <var>suffixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①④">start</a> is <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑤">start</a>,
 return <var>potentialMatch</var>.</p>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①⓪">textEnd</a> item is null
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend①⓪">textEnd</a> item is null
 then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break">break</a>;</p>
           <div class="note" role="note"> If this is an exact match and the suffix doesn’t match,
   start searching for the next range start by breaking out
@@ -1870,7 +1872,7 @@ then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-brea
         <p>If <var>rangeEndSearchRange</var> is <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed④">collapsed</a> then:</p>
         <ol>
          <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>parsedValues</var>’s <a data-link-type="dfn" href="#parsedtextdirective-textend" id="ref-for-parsedtextdirective-textend①①">textEnd</a> item is non-null</p>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-textend" id="ref-for-text-directive-textend①①">textEnd</a> item is non-null</p>
          <li data-md>
           <p>Return null</p>
           <div class="note" role="note"> This can only happen for range matches due to the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break①">break</a> for exact matches in step 9 of the
@@ -2026,7 +2028,7 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
 namespace</a> and meets any of the following conditions:</p>
    <ol>
     <li data-md>
-     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
+     <p>The <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-4/#propdef-display" id="ref-for-propdef-display">display</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-display-none" id="ref-for-valdef-display-none">none</a>.</p>
     <li data-md>
      <p>If the node <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void" id="ref-for-serializes-as-void">serializes as void</a>.</p>
     <li data-md>
@@ -2035,8 +2037,8 @@ namespace</a> and meets any of the following conditions:</p>
      <p>Is a <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element" id="ref-for-the-select-element">select</a></code> element whose <code><a data-link-type="element-sub" href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple" id="ref-for-attr-select-multiple">multiple</a></code> content attribute is absent.</p>
    </ol>
    <p>A node is part of a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="non-searchable-subtree">non-searchable subtree</dfn> if it is or has a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor" id="ref-for-concept-shadow-including-ancestor">shadow-including ancestor</a> that is <a data-link-type="dfn" href="#search-invisible" id="ref-for-search-invisible①">search invisible</a>.</p>
-   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
-   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element④">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-3/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
+   <p>A node is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="visible-text-node">visible text node</dfn> if it is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text②">Text</a></code> node, the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value①">computed value</a> of its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#parent-element" id="ref-for-parent-element">parent element</a>'s <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-4/#propdef-visibility" id="ref-for-propdef-visibility">visibility</a> property is <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-visibility-visible" id="ref-for-valdef-visibility-visible">visible</a>, and it is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered" id="ref-for-being-rendered">being rendered</a>.</p>
+   <p>A node <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="has-block-level-display">has block-level display</dfn> if it is an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element④">element</a> and the <a data-link-type="dfn" href="https://drafts.csswg.org/css-cascade-5/#computed-value" id="ref-for-computed-value②">computed value</a> of its <a class="property css" data-link-type="property" href="https://drafts.csswg.org/css-display-4/#propdef-display" id="ref-for-propdef-display①">display</a> property is any of <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-display-block" id="ref-for-valdef-display-block">block</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-display-table" id="ref-for-valdef-display-table">table</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-display-flow-root" id="ref-for-valdef-display-flow-root">flow-root</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-grid" id="ref-for-valdef-display-grid">grid</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-3/#valdef-display-flex" id="ref-for-valdef-display-flex">flex</a>, <a class="css" data-link-type="maybe" href="https://drafts.csswg.org/css-display-4/#valdef-display-list-item" id="ref-for-valdef-display-list-item">list-item</a>.</p>
    <div class="algorithm" data-algorithm="nearest block ancestor">
      To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="nearest-block-ancestor">nearest block ancestor</dfn> of a <var>node</var> follow the steps: 
     <ol class="algorithm">
@@ -2506,22 +2508,22 @@ manipulations
    <li><a href="#next-non-whitespace-position">next non-whitespace position</a><span>, in § 3.5.1</span>
    <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in § 3.5.1</span>
    <li><a href="#parse-a-text-directive">parse a text directive</a><span>, in § 3.3.2</span>
-   <li><a href="#parsedtextdirective">ParsedTextDirective</a><span>, in § 3.3.2</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.3</span>
-   <li><a href="#parsedtextdirective-prefix">prefix</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.3.2</span>
    <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.5.1</span>
    <li><a href="#process-and-consume-fragment-directive">process and consume fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.5</span>
    <li><a href="#split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</a><span>, in § 3.3.1</span>
-   <li><a href="#parsedtextdirective-suffix">suffix</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-suffix">suffix</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive">text directive</a><span>, in § 3.3.2</span>
    <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectivestring">TextDirectiveString</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in § 3.3.3</span>
-   <li><a href="#parsedtextdirective-textend">textEnd</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-textend">textEnd</a><span>, in § 3.3.2</span>
    <li><a href="#text-fragment-directive">text fragment directive</a><span>, in § 3.3.3</span>
    <li>
     text fragment user activation
@@ -2529,123 +2531,123 @@ manipulations
      <li><a href="#document-text-fragment-user-activation">dfn for document</a><span>, in § 3.4.4</span>
      <li><a href="#request-text-fragment-user-activation">dfn for request</a><span>, in § 3.4.4</span>
     </ul>
-   <li><a href="#parsedtextdirective-textstart">textStart</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-textstart">textStart</a><span>, in § 3.3.2</span>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.3</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.3</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.5.1</span>
    <li><a href="#word-boundary">word boundary</a><span>, in § 3.5.2</span>
    <li><a href="#word-bounded">word bounded</a><span>, in § 3.5.2</span>
   </ul>
-  <aside class="dfn-panel" data-for="term-for-computed-value">
-   <a href="https://drafts.csswg.org/css-cascade-5/#computed-value">https://drafts.csswg.org/css-cascade-5/#computed-value</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-04a3e56775153b770147c82efb4a7fcc" class="dfn-panel" data-for="04a3e56775153b770147c82efb4a7fcc" id="infopanel-for-04a3e56775153b770147c82efb4a7fcc">
+   <span id="infopaneltitle-for-04a3e56775153b770147c82efb4a7fcc" style="display:none">Info about the 'computed value' external reference.</span><a href="https://drafts.csswg.org/css-cascade-5/#computed-value">https://drafts.csswg.org/css-cascade-5/#computed-value</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-computed-value">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-computed-value①">(2)</a> <a href="#ref-for-computed-value②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-block">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-block">https://drafts.csswg.org/css-display-3/#valdef-display-block</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-valdef-display-block">3.5.1. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-propdef-display">
-   <a href="https://drafts.csswg.org/css-display-3/#propdef-display">https://drafts.csswg.org/css-display-3/#propdef-display</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-propdef-display">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-propdef-display①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-flex">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-flex">https://drafts.csswg.org/css-display-3/#valdef-display-flex</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-237214a4fd6d7213e767ffff72449766" class="dfn-panel" data-for="237214a4fd6d7213e767ffff72449766" id="infopanel-for-237214a4fd6d7213e767ffff72449766">
+   <span id="infopaneltitle-for-237214a4fd6d7213e767ffff72449766" style="display:none">Info about the 'flex' external reference.</span><a href="https://drafts.csswg.org/css-display-3/#valdef-display-flex">https://drafts.csswg.org/css-display-3/#valdef-display-flex</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-flex">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-flow-root">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-flow-root">https://drafts.csswg.org/css-display-3/#valdef-display-flow-root</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-valdef-display-flow-root">3.5.1. Finding Ranges in a Document</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-grid">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-grid">https://drafts.csswg.org/css-display-3/#valdef-display-grid</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-ec8797201183b965b0d6d6fb070cd536" class="dfn-panel" data-for="ec8797201183b965b0d6d6fb070cd536" id="infopanel-for-ec8797201183b965b0d6d6fb070cd536">
+   <span id="infopaneltitle-for-ec8797201183b965b0d6d6fb070cd536" style="display:none">Info about the 'grid' external reference.</span><a href="https://drafts.csswg.org/css-display-3/#valdef-display-grid">https://drafts.csswg.org/css-display-3/#valdef-display-grid</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-grid">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-list-item">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-list-item">https://drafts.csswg.org/css-display-3/#valdef-display-list-item</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-b8338bd8fab72fca326f5384a61ae74f" class="dfn-panel" data-for="b8338bd8fab72fca326f5384a61ae74f" id="infopanel-for-b8338bd8fab72fca326f5384a61ae74f">
+   <span id="infopaneltitle-for-b8338bd8fab72fca326f5384a61ae74f" style="display:none">Info about the 'block' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-display-block">https://drafts.csswg.org/css-display-4/#valdef-display-block</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-block">3.5.1. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside aria-labelledby="infopaneltitle-for-522431f7808b21d88503d04e52e61f86" class="dfn-panel" data-for="522431f7808b21d88503d04e52e61f86" id="infopanel-for-522431f7808b21d88503d04e52e61f86">
+   <span id="infopaneltitle-for-522431f7808b21d88503d04e52e61f86" style="display:none">Info about the 'display' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#propdef-display">https://drafts.csswg.org/css-display-4/#propdef-display</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-propdef-display">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-propdef-display①">(2)</a>
+   </ul>
+  </aside>
+  <aside aria-labelledby="infopaneltitle-for-254ee5b37c3db69231dd9123f1a7e46d" class="dfn-panel" data-for="254ee5b37c3db69231dd9123f1a7e46d" id="infopanel-for-254ee5b37c3db69231dd9123f1a7e46d">
+   <span id="infopaneltitle-for-254ee5b37c3db69231dd9123f1a7e46d" style="display:none">Info about the 'flow-root' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-display-flow-root">https://drafts.csswg.org/css-display-4/#valdef-display-flow-root</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-valdef-display-flow-root">3.5.1. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside aria-labelledby="infopaneltitle-for-52abd6169b5c1ec7799450a6e984bbcd" class="dfn-panel" data-for="52abd6169b5c1ec7799450a6e984bbcd" id="infopanel-for-52abd6169b5c1ec7799450a6e984bbcd">
+   <span id="infopaneltitle-for-52abd6169b5c1ec7799450a6e984bbcd" style="display:none">Info about the 'list-item' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-display-list-item">https://drafts.csswg.org/css-display-4/#valdef-display-list-item</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-list-item">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-none">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-none">https://drafts.csswg.org/css-display-3/#valdef-display-none</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-ed84484b5357103410a6b9a8c395c581" class="dfn-panel" data-for="ed84484b5357103410a6b9a8c395c581" id="infopanel-for-ed84484b5357103410a6b9a8c395c581">
+   <span id="infopaneltitle-for-ed84484b5357103410a6b9a8c395c581" style="display:none">Info about the 'none' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-display-none">https://drafts.csswg.org/css-display-4/#valdef-display-none</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-none">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-display-table">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-display-table">https://drafts.csswg.org/css-display-3/#valdef-display-table</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-24a24da5995b85864d9ba2a5723717c2" class="dfn-panel" data-for="24a24da5995b85864d9ba2a5723717c2" id="infopanel-for-24a24da5995b85864d9ba2a5723717c2">
+   <span id="infopaneltitle-for-24a24da5995b85864d9ba2a5723717c2" style="display:none">Info about the 'table' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-display-table">https://drafts.csswg.org/css-display-4/#valdef-display-table</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-display-table">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-propdef-visibility">
-   <a href="https://drafts.csswg.org/css-display-3/#propdef-visibility">https://drafts.csswg.org/css-display-3/#propdef-visibility</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-66c7cac658bb54d45bb26c155a86ba15" class="dfn-panel" data-for="66c7cac658bb54d45bb26c155a86ba15" id="infopanel-for-66c7cac658bb54d45bb26c155a86ba15">
+   <span id="infopaneltitle-for-66c7cac658bb54d45bb26c155a86ba15" style="display:none">Info about the 'visibility' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#propdef-visibility">https://drafts.csswg.org/css-display-4/#propdef-visibility</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-propdef-visibility">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-valdef-visibility-visible">
-   <a href="https://drafts.csswg.org/css-display-3/#valdef-visibility-visible">https://drafts.csswg.org/css-display-3/#valdef-visibility-visible</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-64b773084479966b88900296ed9bbc3d" class="dfn-panel" data-for="64b773084479966b88900296ed9bbc3d" id="infopanel-for-64b773084479966b88900296ed9bbc3d">
+   <span id="infopaneltitle-for-64b773084479966b88900296ed9bbc3d" style="display:none">Info about the 'visible' external reference.</span><a href="https://drafts.csswg.org/css-display-4/#valdef-visibility-visible">https://drafts.csswg.org/css-display-4/#valdef-visibility-visible</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valdef-visibility-visible">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-document">
-   <a href="https://dom.spec.whatwg.org/#document">https://dom.spec.whatwg.org/#document</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-07886e33695d0e7b473ef18f656ad7ac" class="dfn-panel" data-for="07886e33695d0e7b473ef18f656ad7ac" id="infopanel-for-07886e33695d0e7b473ef18f656ad7ac">
+   <span id="infopaneltitle-for-07886e33695d0e7b473ef18f656ad7ac" style="display:none">Info about the 'Document' external reference.</span><a href="https://dom.spec.whatwg.org/#document">https://dom.spec.whatwg.org/#document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-document">3.8. Feature Detectability</a> <a href="#ref-for-document①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-text">
-   <a href="https://dom.spec.whatwg.org/#text">https://dom.spec.whatwg.org/#text</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-106b91ce1ac7f01d4824f5509c502039" class="dfn-panel" data-for="106b91ce1ac7f01d4824f5509c502039" id="infopanel-for-106b91ce1ac7f01d4824f5509c502039">
+   <span id="infopaneltitle-for-106b91ce1ac7f01d4824f5509c502039" style="display:none">Info about the 'Text' external reference.</span><a href="https://dom.spec.whatwg.org/#text">https://dom.spec.whatwg.org/#text</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-text">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text①">(2)</a> <a href="#ref-for-text②">(3)</a> <a href="#ref-for-text③">(4)</a> <a href="#ref-for-text④">(5)</a> <a href="#ref-for-text⑤">(6)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-bp-after">
-   <a href="https://dom.spec.whatwg.org/#concept-range-bp-after">https://dom.spec.whatwg.org/#concept-range-bp-after</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-edf5142dd2b5d2a009c400649821eddd" class="dfn-panel" data-for="edf5142dd2b5d2a009c400649821eddd" id="infopanel-for-edf5142dd2b5d2a009c400649821eddd">
+   <span id="infopaneltitle-for-edf5142dd2b5d2a009c400649821eddd" style="display:none">Info about the 'after' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-bp-after">https://dom.spec.whatwg.org/#concept-range-bp-after</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-bp-after">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp-after①">(2)</a> <a href="#ref-for-concept-range-bp-after②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-bp">
-   <a href="https://dom.spec.whatwg.org/#concept-range-bp">https://dom.spec.whatwg.org/#concept-range-bp</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-9d2e985ff01578d3c485962a6bbd0845" class="dfn-panel" data-for="9d2e985ff01578d3c485962a6bbd0845" id="infopanel-for-9d2e985ff01578d3c485962a6bbd0845">
+   <span id="infopaneltitle-for-9d2e985ff01578d3c485962a6bbd0845" style="display:none">Info about the 'boundary point' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-bp">https://dom.spec.whatwg.org/#concept-range-bp</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-bp">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-bp①">(2)</a> <a href="#ref-for-concept-range-bp②">(3)</a> <a href="#ref-for-concept-range-bp③">(4)</a> <a href="#ref-for-concept-range-bp④">(5)</a> <a href="#ref-for-concept-range-bp⑤">(6)</a> <a href="#ref-for-concept-range-bp⑥">(7)</a> <a href="#ref-for-concept-range-bp⑦">(8)</a> <a href="#ref-for-concept-range-bp⑧">(9)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-range-collapsed">
-   <a href="https://dom.spec.whatwg.org/#range-collapsed">https://dom.spec.whatwg.org/#range-collapsed</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-ed282e7847345f30e78230f14fdb52ff" class="dfn-panel" data-for="ed282e7847345f30e78230f14fdb52ff" id="infopanel-for-ed282e7847345f30e78230f14fdb52ff">
+   <span id="infopaneltitle-for-ed282e7847345f30e78230f14fdb52ff" style="display:none">Info about the 'collapsed' external reference.</span><a href="https://dom.spec.whatwg.org/#range-collapsed">https://dom.spec.whatwg.org/#range-collapsed</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-range-collapsed">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-range-collapsed①">(2)</a> <a href="#ref-for-range-collapsed②">(3)</a> <a href="#ref-for-range-collapsed③">(4)</a> <a href="#ref-for-range-collapsed④">(5)</a> <a href="#ref-for-range-collapsed⑤">(6)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-cd-data">
-   <a href="https://dom.spec.whatwg.org/#concept-cd-data">https://dom.spec.whatwg.org/#concept-cd-data</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-f2efda2d3d7a172500570045686d8285" class="dfn-panel" data-for="f2efda2d3d7a172500570045686d8285" id="infopanel-for-f2efda2d3d7a172500570045686d8285">
+   <span id="infopaneltitle-for-f2efda2d3d7a172500570045686d8285" style="display:none">Info about the 'data' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-cd-data">https://dom.spec.whatwg.org/#concept-cd-data</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-cd-data">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-data①">(2)</a> <a href="#ref-for-concept-cd-data②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-doctype">
-   <a href="https://dom.spec.whatwg.org/#concept-doctype">https://dom.spec.whatwg.org/#concept-doctype</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-76c65f143cb419c0fa5636eb9ad3f070" class="dfn-panel" data-for="76c65f143cb419c0fa5636eb9ad3f070" id="infopanel-for-76c65f143cb419c0fa5636eb9ad3f070">
+   <span id="infopaneltitle-for-76c65f143cb419c0fa5636eb9ad3f070" style="display:none">Info about the 'doctype' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-doctype">https://dom.spec.whatwg.org/#concept-doctype</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-doctype">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-document">
-   <a href="https://dom.spec.whatwg.org/#concept-document">https://dom.spec.whatwg.org/#concept-document</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" class="dfn-panel" data-for="985c42e2af63b3e74bd3b70d55668fd4" id="infopanel-for-985c42e2af63b3e74bd3b70d55668fd4">
+   <span id="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" style="display:none">Info about the 'document' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-document">https://dom.spec.whatwg.org/#concept-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-document">3.3. The Fragment Directive</a>
     <li><a href="#ref-for-concept-document①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-document②">(2)</a> <a href="#ref-for-concept-document③">(3)</a>
@@ -2656,477 +2658,477 @@ manipulations
     <li><a href="#ref-for-concept-document①④">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①⑤">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-document-element">
-   <a href="https://dom.spec.whatwg.org/#document-element">https://dom.spec.whatwg.org/#document-element</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-6780f5129791c577e5710641ce0e787a" class="dfn-panel" data-for="6780f5129791c577e5710641ce0e787a" id="infopanel-for-6780f5129791c577e5710641ce0e787a">
+   <span id="infopaneltitle-for-6780f5129791c577e5710641ce0e787a" style="display:none">Info about the 'document element' external reference.</span><a href="https://dom.spec.whatwg.org/#document-element">https://dom.spec.whatwg.org/#document-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-document-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-element">
-   <a href="https://dom.spec.whatwg.org/#concept-element">https://dom.spec.whatwg.org/#concept-element</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-0e9d2b68d8d34152d128b48f1a821cc6" class="dfn-panel" data-for="0e9d2b68d8d34152d128b48f1a821cc6" id="infopanel-for-0e9d2b68d8d34152d128b48f1a821cc6">
+   <span id="infopaneltitle-for-0e9d2b68d8d34152d128b48f1a821cc6" style="display:none">Info about the 'element' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-element">https://dom.spec.whatwg.org/#concept-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-element">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-element①">(2)</a> <a href="#ref-for-concept-element②">(3)</a>
     <li><a href="#ref-for-concept-element③">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-element④">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-end">
-   <a href="https://dom.spec.whatwg.org/#concept-range-end">https://dom.spec.whatwg.org/#concept-range-end</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3eaf36df88595e1b1fb545bb425dbfff" class="dfn-panel" data-for="3eaf36df88595e1b1fb545bb425dbfff" id="infopanel-for-3eaf36df88595e1b1fb545bb425dbfff">
+   <span id="infopaneltitle-for-3eaf36df88595e1b1fb545bb425dbfff" style="display:none">Info about the 'end' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-end">https://dom.spec.whatwg.org/#concept-range-end</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-end">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-concept-range-end①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end②">(2)</a> <a href="#ref-for-concept-range-end③">(3)</a> <a href="#ref-for-concept-range-end④">(4)</a> <a href="#ref-for-concept-range-end⑤">(5)</a> <a href="#ref-for-concept-range-end⑥">(6)</a> <a href="#ref-for-concept-range-end⑦">(7)</a> <a href="#ref-for-concept-range-end⑧">(8)</a> <a href="#ref-for-concept-range-end⑨">(9)</a> <a href="#ref-for-concept-range-end①⓪">(10)</a> <a href="#ref-for-concept-range-end①①">(11)</a> <a href="#ref-for-concept-range-end①②">(12)</a> <a href="#ref-for-concept-range-end①③">(13)</a> <a href="#ref-for-concept-range-end①④">(14)</a> <a href="#ref-for-concept-range-end①⑤">(15)</a> <a href="#ref-for-concept-range-end①⑥">(16)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-end-node">
-   <a href="https://dom.spec.whatwg.org/#concept-range-end-node">https://dom.spec.whatwg.org/#concept-range-end-node</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3595088e5123f2838b7b6a27b98fd0a5" class="dfn-panel" data-for="3595088e5123f2838b7b6a27b98fd0a5" id="infopanel-for-3595088e5123f2838b7b6a27b98fd0a5">
+   <span id="infopaneltitle-for-3595088e5123f2838b7b6a27b98fd0a5" style="display:none">Info about the 'end node' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-end-node">https://dom.spec.whatwg.org/#concept-range-end-node</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-end-node">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-concept-range-end-node①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-end-node②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-end-offset">
-   <a href="https://dom.spec.whatwg.org/#concept-range-end-offset">https://dom.spec.whatwg.org/#concept-range-end-offset</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-d196280e8309de02330b386f7b7f41d5" class="dfn-panel" data-for="d196280e8309de02330b386f7b7f41d5" id="infopanel-for-d196280e8309de02330b386f7b7f41d5">
+   <span id="infopaneltitle-for-d196280e8309de02330b386f7b7f41d5" style="display:none">Info about the 'end offset' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-end-offset">https://dom.spec.whatwg.org/#concept-range-end-offset</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-end-offset">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-tree-following">
-   <a href="https://dom.spec.whatwg.org/#concept-tree-following">https://dom.spec.whatwg.org/#concept-tree-following</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-42520ea878e2f46d9f9a0b2c695dd7ed" class="dfn-panel" data-for="42520ea878e2f46d9f9a0b2c695dd7ed" id="infopanel-for-42520ea878e2f46d9f9a0b2c695dd7ed">
+   <span id="infopaneltitle-for-42520ea878e2f46d9f9a0b2c695dd7ed" style="display:none">Info about the 'following' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-tree-following">https://dom.spec.whatwg.org/#concept-tree-following</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-tree-following">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-documentfragment-host">
-   <a href="https://dom.spec.whatwg.org/#concept-documentfragment-host">https://dom.spec.whatwg.org/#concept-documentfragment-host</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-336f9dec7e7e3f85d4ed32b3ca6ad4d4" class="dfn-panel" data-for="336f9dec7e7e3f85d4ed32b3ca6ad4d4" id="infopanel-for-336f9dec7e7e3f85d4ed32b3ca6ad4d4">
+   <span id="infopaneltitle-for-336f9dec7e7e3f85d4ed32b3ca6ad4d4" style="display:none">Info about the 'host' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-documentfragment-host">https://dom.spec.whatwg.org/#concept-documentfragment-host</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-documentfragment-host">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-html-document">
-   <a href="https://dom.spec.whatwg.org/#html-document">https://dom.spec.whatwg.org/#html-document</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7f09c44566c0c49d2cb28c4878acf2ab" class="dfn-panel" data-for="7f09c44566c0c49d2cb28c4878acf2ab" id="infopanel-for-7f09c44566c0c49d2cb28c4878acf2ab">
+   <span id="infopaneltitle-for-7f09c44566c0c49d2cb28c4878acf2ab" style="display:none">Info about the 'html document' external reference.</span><a href="https://dom.spec.whatwg.org/#html-document">https://dom.spec.whatwg.org/#html-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-html-document">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-node-length">
-   <a href="https://dom.spec.whatwg.org/#concept-node-length">https://dom.spec.whatwg.org/#concept-node-length</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-db19c0d2ac621c4f4f2ff03911d64150" class="dfn-panel" data-for="db19c0d2ac621c4f4f2ff03911d64150" id="infopanel-for-db19c0d2ac621c4f4f2ff03911d64150">
+   <span id="infopaneltitle-for-db19c0d2ac621c4f4f2ff03911d64150" style="display:none">Info about the 'length' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-node-length">https://dom.spec.whatwg.org/#concept-node-length</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-node-length">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-concept-node-length①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-node-length②">(2)</a> <a href="#ref-for-concept-node-length③">(3)</a> <a href="#ref-for-concept-node-length④">(4)</a> <a href="#ref-for-concept-node-length⑤">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-boundary-point-node">
-   <a href="https://dom.spec.whatwg.org/#boundary-point-node">https://dom.spec.whatwg.org/#boundary-point-node</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-f89bf81e89d1487d0236c9740d7f7b85" class="dfn-panel" data-for="f89bf81e89d1487d0236c9740d7f7b85" id="infopanel-for-f89bf81e89d1487d0236c9740d7f7b85">
+   <span id="infopaneltitle-for-f89bf81e89d1487d0236c9740d7f7b85" style="display:none">Info about the 'node' external reference.</span><a href="https://dom.spec.whatwg.org/#boundary-point-node">https://dom.spec.whatwg.org/#boundary-point-node</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-boundary-point-node">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-boundary-point-node①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-node-document">
-   <a href="https://dom.spec.whatwg.org/#concept-node-document">https://dom.spec.whatwg.org/#concept-node-document</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-e374c2a979dc7a73f7d03be0623d67e6" class="dfn-panel" data-for="e374c2a979dc7a73f7d03be0623d67e6" id="infopanel-for-e374c2a979dc7a73f7d03be0623d67e6">
+   <span id="infopaneltitle-for-e374c2a979dc7a73f7d03be0623d67e6" style="display:none">Info about the 'node document' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-node-document">https://dom.spec.whatwg.org/#concept-node-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-node-document">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-tree-parent">
-   <a href="https://dom.spec.whatwg.org/#concept-tree-parent">https://dom.spec.whatwg.org/#concept-tree-parent</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-bcfb3881f3a3ab6a912b4e9343723961" class="dfn-panel" data-for="bcfb3881f3a3ab6a912b4e9343723961" id="infopanel-for-bcfb3881f3a3ab6a912b4e9343723961">
+   <span id="infopaneltitle-for-bcfb3881f3a3ab6a912b4e9343723961" style="display:none">Info about the 'parent' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-tree-parent">https://dom.spec.whatwg.org/#concept-tree-parent</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-tree-parent">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-tree-parent①">(2)</a>
     <li><a href="#ref-for-concept-tree-parent②">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-parent-element">
-   <a href="https://dom.spec.whatwg.org/#parent-element">https://dom.spec.whatwg.org/#parent-element</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-e2bf2f94dbcb51e9619badf334cedd2f" class="dfn-panel" data-for="e2bf2f94dbcb51e9619badf334cedd2f" id="infopanel-for-e2bf2f94dbcb51e9619badf334cedd2f">
+   <span id="infopaneltitle-for-e2bf2f94dbcb51e9619badf334cedd2f" style="display:none">Info about the 'parent element' external reference.</span><a href="https://dom.spec.whatwg.org/#parent-element">https://dom.spec.whatwg.org/#parent-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parent-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range">
-   <a href="https://dom.spec.whatwg.org/#concept-range">https://dom.spec.whatwg.org/#concept-range</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-d32c450d88a0eb615ada385939371cf2" class="dfn-panel" data-for="d32c450d88a0eb615ada385939371cf2" id="infopanel-for-d32c450d88a0eb615ada385939371cf2">
+   <span id="infopaneltitle-for-d32c450d88a0eb615ada385939371cf2" style="display:none">Info about the 'range' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range">https://dom.spec.whatwg.org/#concept-range</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range①">(2)</a> <a href="#ref-for-concept-range②">(3)</a> <a href="#ref-for-concept-range③">(4)</a> <a href="#ref-for-concept-range④">(5)</a> <a href="#ref-for-concept-range⑤">(6)</a> <a href="#ref-for-concept-range⑥">(7)</a> <a href="#ref-for-concept-range⑦">(8)</a> <a href="#ref-for-concept-range⑧">(9)</a>
     <li><a href="#ref-for-concept-range⑨">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range①⓪">(2)</a> <a href="#ref-for-concept-range①①">(3)</a> <a href="#ref-for-concept-range①②">(4)</a> <a href="#ref-for-concept-range①③">(5)</a> <a href="#ref-for-concept-range①④">(6)</a> <a href="#ref-for-concept-range①⑤">(7)</a> <a href="#ref-for-concept-range①⑥">(8)</a> <a href="#ref-for-concept-range①⑦">(9)</a> <a href="#ref-for-concept-range①⑧">(10)</a> <a href="#ref-for-concept-range①⑨">(11)</a> <a href="#ref-for-concept-range②⓪">(12)</a> <a href="#ref-for-concept-range②①">(13)</a> <a href="#ref-for-concept-range②②">(14)</a> <a href="#ref-for-concept-range②③">(15)</a> <a href="#ref-for-concept-range②④">(16)</a> <a href="#ref-for-concept-range②⑤">(17)</a> <a href="#ref-for-concept-range②⑥">(18)</a> <a href="#ref-for-concept-range②⑦">(19)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-shadow-root">
-   <a href="https://dom.spec.whatwg.org/#concept-shadow-root">https://dom.spec.whatwg.org/#concept-shadow-root</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-a0776d2c12f01e4264ed344ff747bce1" class="dfn-panel" data-for="a0776d2c12f01e4264ed344ff747bce1" id="infopanel-for-a0776d2c12f01e4264ed344ff747bce1">
+   <span id="infopaneltitle-for-a0776d2c12f01e4264ed344ff747bce1" style="display:none">Info about the 'shadow root' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-shadow-root">https://dom.spec.whatwg.org/#concept-shadow-root</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-shadow-root">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-shadow-including-ancestor">
-   <a href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-ancestor</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-6cf8d76260ca17ac744213dd88df7467" class="dfn-panel" data-for="6cf8d76260ca17ac744213dd88df7467" id="infopanel-for-6cf8d76260ca17ac744213dd88df7467">
+   <span id="infopaneltitle-for-6cf8d76260ca17ac744213dd88df7467" style="display:none">Info about the 'shadow-including ancestor' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-shadow-including-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-ancestor</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-shadow-including-ancestor">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-shadow-including-descendant">
-   <a href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant">https://dom.spec.whatwg.org/#concept-shadow-including-descendant</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-6cbf20ec6ae658e3dfeb68963b6b3d19" class="dfn-panel" data-for="6cbf20ec6ae658e3dfeb68963b6b3d19" id="infopanel-for-6cbf20ec6ae658e3dfeb68963b6b3d19">
+   <span id="infopaneltitle-for-6cbf20ec6ae658e3dfeb68963b6b3d19" style="display:none">Info about the 'shadow-including descendant' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant">https://dom.spec.whatwg.org/#concept-shadow-including-descendant</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-shadow-including-descendant">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-descendant①">(2)</a> <a href="#ref-for-concept-shadow-including-descendant②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-shadow-including-inclusive-ancestor">
-   <a href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7049f0f7045691b6d0511a167ad33988" class="dfn-panel" data-for="7049f0f7045691b6d0511a167ad33988" id="infopanel-for-7049f0f7045691b6d0511a167ad33988">
+   <span id="infopaneltitle-for-7049f0f7045691b6d0511a167ad33988" style="display:none">Info about the 'shadow-including inclusive ancestor' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor">https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-shadow-including-inclusive-ancestor">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-shadow-including-tree-order">
-   <a href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order">https://dom.spec.whatwg.org/#concept-shadow-including-tree-order</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-529584996f402e6737c1f987fc0e4f74" class="dfn-panel" data-for="529584996f402e6737c1f987fc0e4f74" id="infopanel-for-529584996f402e6737c1f987fc0e4f74">
+   <span id="infopaneltitle-for-529584996f402e6737c1f987fc0e4f74" style="display:none">Info about the 'shadow-including tree order' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order">https://dom.spec.whatwg.org/#concept-shadow-including-tree-order</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-shadow-including-tree-order">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-shadow-including-tree-order①">(2)</a> <a href="#ref-for-concept-shadow-including-tree-order②">(3)</a> <a href="#ref-for-concept-shadow-including-tree-order③">(4)</a> <a href="#ref-for-concept-shadow-including-tree-order④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-start">
-   <a href="https://dom.spec.whatwg.org/#concept-range-start">https://dom.spec.whatwg.org/#concept-range-start</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-f993e7a5a63693dc8df0d0ec9979bee1" class="dfn-panel" data-for="f993e7a5a63693dc8df0d0ec9979bee1" id="infopanel-for-f993e7a5a63693dc8df0d0ec9979bee1">
+   <span id="infopaneltitle-for-f993e7a5a63693dc8df0d0ec9979bee1" style="display:none">Info about the 'start' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-start">https://dom.spec.whatwg.org/#concept-range-start</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-start">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-concept-range-start①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start②">(2)</a> <a href="#ref-for-concept-range-start③">(3)</a> <a href="#ref-for-concept-range-start④">(4)</a> <a href="#ref-for-concept-range-start⑤">(5)</a> <a href="#ref-for-concept-range-start⑥">(6)</a> <a href="#ref-for-concept-range-start⑦">(7)</a> <a href="#ref-for-concept-range-start⑧">(8)</a> <a href="#ref-for-concept-range-start⑨">(9)</a> <a href="#ref-for-concept-range-start①⓪">(10)</a> <a href="#ref-for-concept-range-start①①">(11)</a> <a href="#ref-for-concept-range-start①②">(12)</a> <a href="#ref-for-concept-range-start①③">(13)</a> <a href="#ref-for-concept-range-start①④">(14)</a> <a href="#ref-for-concept-range-start①⑤">(15)</a> <a href="#ref-for-concept-range-start①⑥">(16)</a> <a href="#ref-for-concept-range-start①⑦">(17)</a> <a href="#ref-for-concept-range-start①⑧">(18)</a> <a href="#ref-for-concept-range-start①⑨">(19)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-start-node">
-   <a href="https://dom.spec.whatwg.org/#concept-range-start-node">https://dom.spec.whatwg.org/#concept-range-start-node</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-8c242aed29c9bcebb4c9c109c420c838" class="dfn-panel" data-for="8c242aed29c9bcebb4c9c109c420c838" id="infopanel-for-8c242aed29c9bcebb4c9c109c420c838">
+   <span id="infopaneltitle-for-8c242aed29c9bcebb4c9c109c420c838" style="display:none">Info about the 'start node' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-start-node">https://dom.spec.whatwg.org/#concept-range-start-node</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-start-node">3.5. Navigating to a Text Fragment</a> <a href="#ref-for-concept-range-start-node①">(2)</a>
     <li><a href="#ref-for-concept-range-start-node②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-node③">(2)</a> <a href="#ref-for-concept-range-start-node④">(3)</a> <a href="#ref-for-concept-range-start-node⑤">(4)</a> <a href="#ref-for-concept-range-start-node⑥">(5)</a> <a href="#ref-for-concept-range-start-node⑦">(6)</a> <a href="#ref-for-concept-range-start-node⑧">(7)</a> <a href="#ref-for-concept-range-start-node⑨">(8)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-range-start-offset">
-   <a href="https://dom.spec.whatwg.org/#concept-range-start-offset">https://dom.spec.whatwg.org/#concept-range-start-offset</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-19e2b479bf922057a37590c166b0e4d8" class="dfn-panel" data-for="19e2b479bf922057a37590c166b0e4d8" id="infopanel-for-19e2b479bf922057a37590c166b0e4d8">
+   <span id="infopaneltitle-for-19e2b479bf922057a37590c166b0e4d8" style="display:none">Info about the 'start offset' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-range-start-offset">https://dom.spec.whatwg.org/#concept-range-start-offset</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-range-start-offset">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-range-start-offset①">(2)</a> <a href="#ref-for-concept-range-start-offset②">(3)</a> <a href="#ref-for-concept-range-start-offset③">(4)</a> <a href="#ref-for-concept-range-start-offset④">(5)</a> <a href="#ref-for-concept-range-start-offset⑤">(6)</a> <a href="#ref-for-concept-range-start-offset⑥">(7)</a> <a href="#ref-for-concept-range-start-offset⑦">(8)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-cd-substring">
-   <a href="https://dom.spec.whatwg.org/#concept-cd-substring">https://dom.spec.whatwg.org/#concept-cd-substring</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-550461d883f8ee59a2caa514ddd21a53" class="dfn-panel" data-for="550461d883f8ee59a2caa514ddd21a53" id="infopanel-for-550461d883f8ee59a2caa514ddd21a53">
+   <span id="infopaneltitle-for-550461d883f8ee59a2caa514ddd21a53" style="display:none">Info about the 'substring data' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-cd-substring">https://dom.spec.whatwg.org/#concept-cd-substring</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-cd-substring">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-cd-substring①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-document-url">
-   <a href="https://dom.spec.whatwg.org/#concept-document-url">https://dom.spec.whatwg.org/#concept-document-url</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-2fc74f43c6d7f15a4a2fbfbece346388" class="dfn-panel" data-for="2fc74f43c6d7f15a4a2fbfbece346388" id="infopanel-for-2fc74f43c6d7f15a4a2fbfbece346388">
+   <span id="infopaneltitle-for-2fc74f43c6d7f15a4a2fbfbece346388" style="display:none">Info about the 'url' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-document-url">https://dom.spec.whatwg.org/#concept-document-url</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-document-url">3.3. The Fragment Directive</a>
     <li><a href="#ref-for-concept-document-url①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-document-url②">(2)</a> <a href="#ref-for-concept-document-url③">(3)</a> <a href="#ref-for-concept-document-url④">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-request">
-   <a href="https://fetch.spec.whatwg.org/#concept-request">https://fetch.spec.whatwg.org/#concept-request</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-491791562dd138987138e7051a96c07c" class="dfn-panel" data-for="491791562dd138987138e7051a96c07c" id="infopanel-for-491791562dd138987138e7051a96c07c">
+   <span id="infopaneltitle-for-491791562dd138987138e7051a96c07c" style="display:none">Info about the 'request' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request">https://fetch.spec.whatwg.org/#concept-request</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-request">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-request①">(2)</a> <a href="#ref-for-concept-request②">(3)</a> <a href="#ref-for-concept-request③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlaudioelement">
-   <a href="https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement">https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-d86264b91becec76f76c64bd87d6ee8d" class="dfn-panel" data-for="d86264b91becec76f76c64bd87d6ee8d" id="infopanel-for-d86264b91becec76f76c64bd87d6ee8d">
+   <span id="infopaneltitle-for-d86264b91becec76f76c64bd87d6ee8d" style="display:none">Info about the 'HTMLAudioElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement">https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlaudioelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmliframeelement">
-   <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-75ff12c16ae1a8f6cbf2920128280261" class="dfn-panel" data-for="75ff12c16ae1a8f6cbf2920128280261" id="infopanel-for-75ff12c16ae1a8f6cbf2920128280261">
+   <span id="infopaneltitle-for-75ff12c16ae1a8f6cbf2920128280261" style="display:none">Info about the 'HTMLIFrameElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmliframeelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlimageelement">
-   <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement">https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-8bd1567bfeee6a7f042b4739599829fd" class="dfn-panel" data-for="8bd1567bfeee6a7f042b4739599829fd" id="infopanel-for-8bd1567bfeee6a7f042b4739599829fd">
+   <span id="infopaneltitle-for-8bd1567bfeee6a7f042b4739599829fd" style="display:none">Info about the 'HTMLImageElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement">https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlimageelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlmeterelement">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-239ce47ea8ddbfe7c0404c23d1c5876c" class="dfn-panel" data-for="239ce47ea8ddbfe7c0404c23d1c5876c" id="infopanel-for-239ce47ea8ddbfe7c0404c23d1c5876c">
+   <span id="infopaneltitle-for-239ce47ea8ddbfe7c0404c23d1c5876c" style="display:none">Info about the 'HTMLMeterElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlmeterelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlmeterelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlobjectelement">
-   <a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-07819f370163076e23d268f7ec2b9056" class="dfn-panel" data-for="07819f370163076e23d268f7ec2b9056" id="infopanel-for-07819f370163076e23d268f7ec2b9056">
+   <span id="infopaneltitle-for-07819f370163076e23d268f7ec2b9056" style="display:none">Info about the 'HTMLObjectElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement">https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmlobjectelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlobjectelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlprogresselement">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-a08e22107da0c99822a74cf7ff2a29cc" class="dfn-panel" data-for="a08e22107da0c99822a74cf7ff2a29cc" id="infopanel-for-a08e22107da0c99822a74cf7ff2a29cc">
+   <span id="infopaneltitle-for-a08e22107da0c99822a74cf7ff2a29cc" style="display:none">Info about the 'HTMLProgressElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement">https://html.spec.whatwg.org/multipage/form-elements.html#htmlprogresselement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlprogresselement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlscriptelement">
-   <a href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement">https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-257c32b9f7676f6cdb079793771ec03b" class="dfn-panel" data-for="257c32b9f7676f6cdb079793771ec03b" id="infopanel-for-257c32b9f7676f6cdb079793771ec03b">
+   <span id="infopaneltitle-for-257c32b9f7676f6cdb079793771ec03b" style="display:none">Info about the 'HTMLScriptElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement">https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlscriptelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlstyleelement">
-   <a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement">https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-004ac07b9e7dd26f7341693e2162496d" class="dfn-panel" data-for="004ac07b9e7dd26f7341693e2162496d" id="infopanel-for-004ac07b9e7dd26f7341693e2162496d">
+   <span id="infopaneltitle-for-004ac07b9e7dd26f7341693e2162496d" style="display:none">Info about the 'HTMLStyleElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement">https://html.spec.whatwg.org/multipage/semantics.html#htmlstyleelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlstyleelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-htmlvideoelement">
-   <a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-a958269402aae8e8d7d28d3cb6aacc8d" class="dfn-panel" data-for="a958269402aae8e8d7d28d3cb6aacc8d" id="infopanel-for-a958269402aae8e8d7d28d3cb6aacc8d">
+   <span id="infopaneltitle-for-a958269402aae8e8d7d28d3cb6aacc8d" style="display:none">Info about the 'HTMLVideoElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement">https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-htmlvideoelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-location">
-   <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location">https://html.spec.whatwg.org/multipage/nav-history-apis.html#location</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-4b63022be77634e01931166ef990401a" class="dfn-panel" data-for="4b63022be77634e01931166ef990401a" id="infopanel-for-4b63022be77634e01931166ef990401a">
+   <span id="infopaneltitle-for-4b63022be77634e01931166ef990401a" style="display:none">Info about the 'Location' external reference.</span><a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location">https://html.spec.whatwg.org/multipage/nav-history-apis.html#location</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-location">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-nav-document">
-   <a href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document">https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-de11cdc07a64c79878f1c3074e81554a" class="dfn-panel" data-for="de11cdc07a64c79878f1c3074e81554a" id="infopanel-for-de11cdc07a64c79878f1c3074e81554a">
+   <span id="infopaneltitle-for-de11cdc07a64c79878f1c3074e81554a" style="display:none">Info about the 'active document' external reference.</span><a href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document">https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-nav-document">3.3.1. Processing the fragment directive</a>
     <li><a href="#ref-for-nav-document①">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-nav-document②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-being-rendered">
-   <a href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered">https://html.spec.whatwg.org/multipage/rendering.html#being-rendered</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-004498b212013045422acbba8c92f503" class="dfn-panel" data-for="004498b212013045422acbba8c92f503" id="infopanel-for-004498b212013045422acbba8c92f503">
+   <span id="infopaneltitle-for-004498b212013045422acbba8c92f503" style="display:none">Info about the 'being rendered' external reference.</span><a href="https://html.spec.whatwg.org/multipage/rendering.html#being-rendered">https://html.spec.whatwg.org/multipage/rendering.html#being-rendered</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-being-rendered">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-document-bc">
-   <a href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc">https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3eaa51ed66e1d8aa0c39a4f1fead29c0" class="dfn-panel" data-for="3eaa51ed66e1d8aa0c39a4f1fead29c0" id="infopanel-for-3eaa51ed66e1d8aa0c39a4f1fead29c0">
+   <span id="infopaneltitle-for-3eaa51ed66e1d8aa0c39a4f1fead29c0" style="display:none">Info about the 'browsing context' external reference.</span><a href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc">https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-document-bc">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-browsing-context-set">
-   <a href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set">https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7033f3e77cd84c91db6d5e82613c4d33" class="dfn-panel" data-for="7033f3e77cd84c91db6d5e82613c4d33" id="infopanel-for-7033f3e77cd84c91db6d5e82613c4d33">
+   <span id="infopaneltitle-for-7033f3e77cd84c91db6d5e82613c4d33" style="display:none">Info about the 'browsing context set' external reference.</span><a href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set">https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-browsing-context-set">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-language">
-   <a href="https://html.spec.whatwg.org/multipage/dom.html#language">https://html.spec.whatwg.org/multipage/dom.html#language</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-726a16249061363ef85fbdad67a6e959" class="dfn-panel" data-for="726a16249061363ef85fbdad67a6e959" id="infopanel-for-726a16249061363ef85fbdad67a6e959">
+   <span id="infopaneltitle-for-726a16249061363ef85fbdad67a6e959" style="display:none">Info about the 'language' external reference.</span><a href="https://html.spec.whatwg.org/multipage/dom.html#language">https://html.spec.whatwg.org/multipage/dom.html#language</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-language">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-language①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-attr-select-multiple">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple">https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-b51df82e894ee794ca3f536db97ad537" class="dfn-panel" data-for="b51df82e894ee794ca3f536db97ad537" id="infopanel-for-b51df82e894ee794ca3f536db97ad537">
+   <span id="infopaneltitle-for-b51df82e894ee794ca3f536db97ad537" style="display:none">Info about the 'multiple' external reference.</span><a href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple">https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-attr-select-multiple">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-restore-persisted-state">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7369d61835fa8a54aba2f14b16179bb7" class="dfn-panel" data-for="7369d61835fa8a54aba2f14b16179bb7" id="infopanel-for-7369d61835fa8a54aba2f14b16179bb7">
+   <span id="infopaneltitle-for-7369d61835fa8a54aba2f14b16179bb7" style="display:none">Info about the 'restore persisted state' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state">https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-restore-persisted-state">3.7. Document Policy Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-scroll-to-the-fragment-identifier">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier">https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-0bbe052a00d2d9a1853b94d848e97f83" class="dfn-panel" data-for="0bbe052a00d2d9a1853b94d848e97f83" id="infopanel-for-0bbe052a00d2d9a1853b94d848e97f83">
+   <span id="infopaneltitle-for-0bbe052a00d2d9a1853b94d848e97f83" style="display:none">Info about the 'scroll to the fragment' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier">https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-scroll-to-the-fragment-identifier">3.4.4. Restricting the Text Fragment</a>
     <li><a href="#ref-for-scroll-to-the-fragment-identifier①">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-scroll-to-the-fragment-identifier②">3.7. Document Policy Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-the-select-element">
-   <a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element">https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3fff2218abea20e2aebc96a3c4ed942d" class="dfn-panel" data-for="3fff2218abea20e2aebc96a3c4ed942d" id="infopanel-for-3fff2218abea20e2aebc96a3c4ed942d">
+   <span id="infopaneltitle-for-3fff2218abea20e2aebc96a3c4ed942d" style="display:none">Info about the 'select' external reference.</span><a href="https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element">https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-the-select-element">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-serializes-as-void">
-   <a href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void">https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-1e2b4e9c3af3712ccb3048eb5e83ae9d" class="dfn-panel" data-for="1e2b4e9c3af3712ccb3048eb5e83ae9d" id="infopanel-for-1e2b4e9c3af3712ccb3048eb5e83ae9d">
+   <span id="infopaneltitle-for-1e2b4e9c3af3712ccb3048eb5e83ae9d" style="display:none">Info about the 'serializes as void' external reference.</span><a href="https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void">https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-serializes-as-void">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-top-level-browsing-context">
-   <a href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context">https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-c104b697744f6f246969dcc26b898f11" class="dfn-panel" data-for="c104b697744f6f246969dcc26b898f11" id="infopanel-for-c104b697744f6f246969dcc26b898f11">
+   <span id="infopaneltitle-for-c104b697744f6f246969dcc26b898f11" style="display:none">Info about the 'top-level browsing context' external reference.</span><a href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context">https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-top-level-browsing-context">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-transient-activation">
-   <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-5b762d09d78e8674458b84982b3cb3c9" class="dfn-panel" data-for="5b762d09d78e8674458b84982b3cb3c9" id="infopanel-for-5b762d09d78e8674458b84982b3cb3c9">
+   <span id="infopaneltitle-for-5b762d09d78e8674458b84982b3cb3c9" style="display:none">Info about the 'transient activation' external reference.</span><a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-transient-activation">3.4.4. Restricting the Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-try-to-scroll-to-the-fragment">
-   <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-4e67373797cfec56e2dadb5a69ad2ed0" class="dfn-panel" data-for="4e67373797cfec56e2dadb5a69ad2ed0" id="infopanel-for-4e67373797cfec56e2dadb5a69ad2ed0">
+   <span id="infopaneltitle-for-4e67373797cfec56e2dadb5a69ad2ed0" style="display:none">Info about the 'try to scroll to the fragment' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-try-to-scroll-to-the-fragment">3.4.4. Restricting the Text Fragment</a>
     <li><a href="#ref-for-try-to-scroll-to-the-fragment①">3.6. Indicating The Text Match</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-append">
-   <a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fcfc8b0ed220faa237969aed00e2586d" class="dfn-panel" data-for="fcfc8b0ed220faa237969aed00e2586d" id="infopanel-for-fcfc8b0ed220faa237969aed00e2586d">
+   <span id="infopaneltitle-for-fcfc8b0ed220faa237969aed00e2586d" style="display:none">Info about the 'append' external reference.</span><a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-append">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-ascii-string">
-   <a href="https://infra.spec.whatwg.org/#ascii-string">https://infra.spec.whatwg.org/#ascii-string</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-61c7c9c76ff1cedf412e7a18bbe24e2c" class="dfn-panel" data-for="61c7c9c76ff1cedf412e7a18bbe24e2c" id="infopanel-for-61c7c9c76ff1cedf412e7a18bbe24e2c">
+   <span id="infopaneltitle-for-61c7c9c76ff1cedf412e7a18bbe24e2c" style="display:none">Info about the 'ascii string' external reference.</span><a href="https://infra.spec.whatwg.org/#ascii-string">https://infra.spec.whatwg.org/#ascii-string</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-ascii-string">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-ascii-string①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-ascii-string②">(2)</a> <a href="#ref-for-ascii-string③">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-assert">
-   <a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7618b9a6d44febb7e784c8f39faac140" class="dfn-panel" data-for="7618b9a6d44febb7e784c8f39faac140" id="infopanel-for-7618b9a6d44febb7e784c8f39faac140">
+   <span id="infopaneltitle-for-7618b9a6d44febb7e784c8f39faac140" style="display:none">Info about the 'assert' external reference.</span><a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-assert">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-assert①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-assert②">(2)</a> <a href="#ref-for-assert③">(3)</a> <a href="#ref-for-assert④">(4)</a> <a href="#ref-for-assert⑤">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-iteration-break">
-   <a href="https://infra.spec.whatwg.org/#iteration-break">https://infra.spec.whatwg.org/#iteration-break</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-2889fa868b02a31759864aaf77f851d6" class="dfn-panel" data-for="2889fa868b02a31759864aaf77f851d6" id="infopanel-for-2889fa868b02a31759864aaf77f851d6">
+   <span id="infopaneltitle-for-2889fa868b02a31759864aaf77f851d6" style="display:none">Info about the 'break' external reference.</span><a href="https://infra.spec.whatwg.org/#iteration-break">https://infra.spec.whatwg.org/#iteration-break</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-iteration-break">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-iteration-break①">(2)</a> <a href="#ref-for-iteration-break②">(3)</a> <a href="#ref-for-iteration-break③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-code-point">
-   <a href="https://infra.spec.whatwg.org/#code-point">https://infra.spec.whatwg.org/#code-point</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-4103741029595e9e13c67dab91d1e3bd" class="dfn-panel" data-for="4103741029595e9e13c67dab91d1e3bd" id="infopanel-for-4103741029595e9e13c67dab91d1e3bd">
+   <span id="infopaneltitle-for-4103741029595e9e13c67dab91d1e3bd" style="display:none">Info about the 'code point' external reference.</span><a href="https://infra.spec.whatwg.org/#code-point">https://infra.spec.whatwg.org/#code-point</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-code-point">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string-code-point-length">
-   <a href="https://infra.spec.whatwg.org/#string-code-point-length">https://infra.spec.whatwg.org/#string-code-point-length</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-0c5b8810162108ca42f42ac154072480" class="dfn-panel" data-for="0c5b8810162108ca42f42ac154072480" id="infopanel-for-0c5b8810162108ca42f42ac154072480">
+   <span id="infopaneltitle-for-0c5b8810162108ca42f42ac154072480" style="display:none">Info about the 'code point length' external reference.</span><a href="https://infra.spec.whatwg.org/#string-code-point-length">https://infra.spec.whatwg.org/#string-code-point-length</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string-code-point-length">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-code-point-substring-by-positions">
-   <a href="https://infra.spec.whatwg.org/#code-point-substring-by-positions">https://infra.spec.whatwg.org/#code-point-substring-by-positions</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-f0460547da5b011defe7b8f6f359524f" class="dfn-panel" data-for="f0460547da5b011defe7b8f6f359524f" id="infopanel-for-f0460547da5b011defe7b8f6f359524f">
+   <span id="infopaneltitle-for-f0460547da5b011defe7b8f6f359524f" style="display:none">Info about the 'code point substring by positions' external reference.</span><a href="https://infra.spec.whatwg.org/#code-point-substring-by-positions">https://infra.spec.whatwg.org/#code-point-substring-by-positions</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-code-point-substring-by-positions">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-code-point-substring-to-the-end-of-the-string">
-   <a href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string">https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-500c3d9147f1a7d23aec5cebaadf9dc5" class="dfn-panel" data-for="500c3d9147f1a7d23aec5cebaadf9dc5" id="infopanel-for-500c3d9147f1a7d23aec5cebaadf9dc5">
+   <span id="infopaneltitle-for-500c3d9147f1a7d23aec5cebaadf9dc5" style="display:none">Info about the 'code point substring to the end of the string' external reference.</span><a href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string">https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-code-point-substring-to-the-end-of-the-string">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string-concatenate">
-   <a href="https://infra.spec.whatwg.org/#string-concatenate">https://infra.spec.whatwg.org/#string-concatenate</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-7605aa4703a0a6921736ddd5321cfc07" class="dfn-panel" data-for="7605aa4703a0a6921736ddd5321cfc07" id="infopanel-for-7605aa4703a0a6921736ddd5321cfc07">
+   <span id="infopaneltitle-for-7605aa4703a0a6921736ddd5321cfc07" style="display:none">Info about the 'concatenate' external reference.</span><a href="https://infra.spec.whatwg.org/#string-concatenate">https://infra.spec.whatwg.org/#string-concatenate</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string-concatenate">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-iteration-continue">
-   <a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-ce9efec0e74a2cbfe986593eb861ade6" class="dfn-panel" data-for="ce9efec0e74a2cbfe986593eb861ade6" id="infopanel-for-ce9efec0e74a2cbfe986593eb861ade6">
+   <span id="infopaneltitle-for-ce9efec0e74a2cbfe986593eb861ade6" style="display:none">Info about the 'continue' external reference.</span><a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-iteration-continue">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-iteration-continue①">(2)</a> <a href="#ref-for-iteration-continue②">(3)</a> <a href="#ref-for-iteration-continue③">(4)</a> <a href="#ref-for-iteration-continue④">(5)</a> <a href="#ref-for-iteration-continue⑤">(6)</a> <a href="#ref-for-iteration-continue⑥">(7)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-html-namespace">
-   <a href="https://infra.spec.whatwg.org/#html-namespace">https://infra.spec.whatwg.org/#html-namespace</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-39deea7d529a23ee9b82b61369f78690" class="dfn-panel" data-for="39deea7d529a23ee9b82b61369f78690" id="infopanel-for-39deea7d529a23ee9b82b61369f78690">
+   <span id="infopaneltitle-for-39deea7d529a23ee9b82b61369f78690" style="display:none">Info about the 'html namespace' external reference.</span><a href="https://infra.spec.whatwg.org/#html-namespace">https://infra.spec.whatwg.org/#html-namespace</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-html-namespace">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string-length">
-   <a href="https://infra.spec.whatwg.org/#string-length">https://infra.spec.whatwg.org/#string-length</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-81b03c84949641fc3081227509aab38f" class="dfn-panel" data-for="81b03c84949641fc3081227509aab38f" id="infopanel-for-81b03c84949641fc3081227509aab38f">
+   <span id="infopaneltitle-for-81b03c84949641fc3081227509aab38f" style="display:none">Info about the 'length' external reference.</span><a href="https://infra.spec.whatwg.org/#string-length">https://infra.spec.whatwg.org/#string-length</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string-length">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-string-length①">(2)</a> <a href="#ref-for-string-length②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list">
-   <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fafd38d2108e357bcc9a6fd7f3cd04a7" class="dfn-panel" data-for="fafd38d2108e357bcc9a6fd7f3cd04a7" id="infopanel-for-fafd38d2108e357bcc9a6fd7f3cd04a7">
+   <span id="infopaneltitle-for-fafd38d2108e357bcc9a6fd7f3cd04a7" style="display:none">Info about the 'list' external reference.</span><a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-list①">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-list②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-list③">(2)</a> <a href="#ref-for-list④">(3)</a> <a href="#ref-for-list⑤">(4)</a> <a href="#ref-for-list⑥">(5)</a> <a href="#ref-for-list⑦">(6)</a> <a href="#ref-for-list⑧">(7)</a> <a href="#ref-for-list⑨">(8)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string-position-variable">
-   <a href="https://infra.spec.whatwg.org/#string-position-variable">https://infra.spec.whatwg.org/#string-position-variable</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-a261ff0f11f981dec5af7b60f3229916" class="dfn-panel" data-for="a261ff0f11f981dec5af7b60f3229916" id="infopanel-for-a261ff0f11f981dec5af7b60f3229916">
+   <span id="infopaneltitle-for-a261ff0f11f981dec5af7b60f3229916" style="display:none">Info about the 'position variable' external reference.</span><a href="https://infra.spec.whatwg.org/#string-position-variable">https://infra.spec.whatwg.org/#string-position-variable</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string-position-variable">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-remove">
-   <a href="https://infra.spec.whatwg.org/#list-remove">https://infra.spec.whatwg.org/#list-remove</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fadc27e826887faf120674544589ae68" class="dfn-panel" data-for="fadc27e826887faf120674544589ae68" id="infopanel-for-fadc27e826887faf120674544589ae68">
+   <span id="infopaneltitle-for-fadc27e826887faf120674544589ae68" style="display:none">Info about the 'remove' external reference.</span><a href="https://infra.spec.whatwg.org/#list-remove">https://infra.spec.whatwg.org/#list-remove</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-remove">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-list-remove①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-size">
-   <a href="https://infra.spec.whatwg.org/#list-size">https://infra.spec.whatwg.org/#list-size</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-bed8381510f5967f5d37a33de776e857" class="dfn-panel" data-for="bed8381510f5967f5d37a33de776e857" id="infopanel-for-bed8381510f5967f5d37a33de776e857">
+   <span id="infopaneltitle-for-bed8381510f5967f5d37a33de776e857" style="display:none">Info about the 'size' external reference.</span><a href="https://infra.spec.whatwg.org/#list-size">https://infra.spec.whatwg.org/#list-size</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-size">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-list-size①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-split-on-commas">
-   <a href="https://infra.spec.whatwg.org/#split-on-commas">https://infra.spec.whatwg.org/#split-on-commas</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-896aa3c7ff2be812b3ea9c5f7f9bc5e4" class="dfn-panel" data-for="896aa3c7ff2be812b3ea9c5f7f9bc5e4" id="infopanel-for-896aa3c7ff2be812b3ea9c5f7f9bc5e4">
+   <span id="infopaneltitle-for-896aa3c7ff2be812b3ea9c5f7f9bc5e4" style="display:none">Info about the 'split on commas' external reference.</span><a href="https://infra.spec.whatwg.org/#split-on-commas">https://infra.spec.whatwg.org/#split-on-commas</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-split-on-commas">3.3.2. Parsing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-strictly-split">
-   <a href="https://infra.spec.whatwg.org/#strictly-split">https://infra.spec.whatwg.org/#strictly-split</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-adb176cd03e93496f5eaada8f9e4dc0f" class="dfn-panel" data-for="adb176cd03e93496f5eaada8f9e4dc0f" id="infopanel-for-adb176cd03e93496f5eaada8f9e4dc0f">
+   <span id="infopaneltitle-for-adb176cd03e93496f5eaada8f9e4dc0f" style="display:none">Info about the 'strictly split a string' external reference.</span><a href="https://infra.spec.whatwg.org/#strictly-split">https://infra.spec.whatwg.org/#strictly-split</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-strictly-split">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string">
-   <a href="https://infra.spec.whatwg.org/#string">https://infra.spec.whatwg.org/#string</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-40b59bc325bd4d66701dfd8b7f1847c0" class="dfn-panel" data-for="40b59bc325bd4d66701dfd8b7f1847c0" id="infopanel-for-40b59bc325bd4d66701dfd8b7f1847c0">
+   <span id="infopaneltitle-for-40b59bc325bd4d66701dfd8b7f1847c0" style="display:none">Info about the 'string' external reference.</span><a href="https://infra.spec.whatwg.org/#string">https://infra.spec.whatwg.org/#string</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string">3.5.1. Finding Ranges in a Document</a>
     <li><a href="#ref-for-string①">3.5.2. Word Boundaries</a> <a href="#ref-for-string②">(2)</a> <a href="#ref-for-string③">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-struct">
-   <a href="https://infra.spec.whatwg.org/#struct">https://infra.spec.whatwg.org/#struct</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3ee316b93eb2dbe81d01a666cce50f9b" class="dfn-panel" data-for="3ee316b93eb2dbe81d01a666cce50f9b" id="infopanel-for-3ee316b93eb2dbe81d01a666cce50f9b">
+   <span id="infopaneltitle-for-3ee316b93eb2dbe81d01a666cce50f9b" style="display:none">Info about the 'struct' external reference.</span><a href="https://infra.spec.whatwg.org/#struct">https://infra.spec.whatwg.org/#struct</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-struct">3.3.2. Parsing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-tuple">
-   <a href="https://infra.spec.whatwg.org/#tuple">https://infra.spec.whatwg.org/#tuple</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-decbbd3ee5a73b54e8e8996ce1fddbbc" class="dfn-panel" data-for="decbbd3ee5a73b54e8e8996ce1fddbbc" id="infopanel-for-decbbd3ee5a73b54e8e8996ce1fddbbc">
+   <span id="infopaneltitle-for-decbbd3ee5a73b54e8e8996ce1fddbbc" style="display:none">Info about the 'tuple' external reference.</span><a href="https://infra.spec.whatwg.org/#tuple">https://infra.spec.whatwg.org/#tuple</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-tuple">3.3.1. Processing the fragment directive</a> <a href="#ref-for-tuple①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-url-fragment">
-   <a href="https://url.spec.whatwg.org/#concept-url-fragment">https://url.spec.whatwg.org/#concept-url-fragment</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-60cc34e102fbb39581626f2f37e3179a" class="dfn-panel" data-for="60cc34e102fbb39581626f2f37e3179a" id="infopanel-for-60cc34e102fbb39581626f2f37e3179a">
+   <span id="infopaneltitle-for-60cc34e102fbb39581626f2f37e3179a" style="display:none">Info about the 'fragment' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-fragment">https://url.spec.whatwg.org/#concept-url-fragment</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-url-fragment">3.3. The Fragment Directive</a>
     <li><a href="#ref-for-concept-url-fragment①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-url-fragment②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-string-percent-decode">
-   <a href="https://url.spec.whatwg.org/#string-percent-decode">https://url.spec.whatwg.org/#string-percent-decode</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-3999a3b3593c7cb689ffd79b86bd5b34" class="dfn-panel" data-for="3999a3b3593c7cb689ffd79b86bd5b34" id="infopanel-for-3999a3b3593c7cb689ffd79b86bd5b34">
+   <span id="infopaneltitle-for-3999a3b3593c7cb689ffd79b86bd5b34" style="display:none">Info about the 'percent-decode' external reference.</span><a href="https://url.spec.whatwg.org/#string-percent-decode">https://url.spec.whatwg.org/#string-percent-decode</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string-percent-decode">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-string-percent-decode①">(2)</a> <a href="#ref-for-string-percent-decode②">(3)</a> <a href="#ref-for-string-percent-decode③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-url">
-   <a href="https://url.spec.whatwg.org/#concept-url">https://url.spec.whatwg.org/#concept-url</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" class="dfn-panel" data-for="fc05c76e016d3aec6a25a91c066500c8" id="infopanel-for-fc05c76e016d3aec6a25a91c066500c8">
+   <span id="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" style="display:none">Info about the 'url' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url">https://url.spec.whatwg.org/#concept-url</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-url">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-url①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-url-code-points">
-   <a href="https://url.spec.whatwg.org/#url-code-points">https://url.spec.whatwg.org/#url-code-points</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-46bd2da80269c4e9d4491ad1e341a8f5" class="dfn-panel" data-for="46bd2da80269c4e9d4491ad1e341a8f5" id="infopanel-for-46bd2da80269c4e9d4491ad1e341a8f5">
+   <span id="infopaneltitle-for-46bd2da80269c4e9d4491ad1e341a8f5" style="display:none">Info about the 'url code point' external reference.</span><a href="https://url.spec.whatwg.org/#url-code-points">https://url.spec.whatwg.org/#url-code-points</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-url-code-points">3.3.3. Fragment directive grammar</a> <a href="#ref-for-url-code-points①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-effect-target-target-element">
-   <a href="https://drafts.csswg.org/web-animations-1/#effect-target-target-element">https://drafts.csswg.org/web-animations-1/#effect-target-target-element</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-c8f6aafa6499946be59e4d1486023981" class="dfn-panel" data-for="c8f6aafa6499946be59e4d1486023981" id="infopanel-for-c8f6aafa6499946be59e4d1486023981">
+   <span id="infopaneltitle-for-c8f6aafa6499946be59e4d1486023981" style="display:none">Info about the 'target element' external reference.</span><a href="https://drafts.csswg.org/web-animations-1/#effect-target-target-element">https://drafts.csswg.org/web-animations-1/#effect-target-target-element</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-effect-target-target-element">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-Exposed">
-   <a href="https://webidl.spec.whatwg.org/#Exposed">https://webidl.spec.whatwg.org/#Exposed</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-dde049eb112f043fc45407ec0d4cb457" class="dfn-panel" data-for="dde049eb112f043fc45407ec0d4cb457" id="infopanel-for-dde049eb112f043fc45407ec0d4cb457">
+   <span id="infopaneltitle-for-dde049eb112f043fc45407ec0d4cb457" style="display:none">Info about the 'Exposed' external reference.</span><a href="https://webidl.spec.whatwg.org/#Exposed">https://webidl.spec.whatwg.org/#Exposed</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-Exposed">3.8. Feature Detectability</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-SameObject">
-   <a href="https://webidl.spec.whatwg.org/#SameObject">https://webidl.spec.whatwg.org/#SameObject</a><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-f572762cd4679aeacd36722d99d2b741" class="dfn-panel" data-for="f572762cd4679aeacd36722d99d2b741" id="infopanel-for-f572762cd4679aeacd36722d99d2b741">
+   <span id="infopaneltitle-for-f572762cd4679aeacd36722d99d2b741" style="display:none">Info about the 'SameObject' external reference.</span><a href="https://webidl.spec.whatwg.org/#SameObject">https://webidl.spec.whatwg.org/#SameObject</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-SameObject">3.8. Feature Detectability</a>
    </ul>
@@ -3136,133 +3138,137 @@ manipulations
    <li>
     <a data-link-type="biblio">[CSS-CASCADE-5]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-computed-value">computed value</span>
+     <li><span class="dfn-paneled" id="04a3e56775153b770147c82efb4a7fcc">computed value</span>
     </ul>
    <li>
     <a data-link-type="biblio">[CSS-DISPLAY-3]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-block">block</span>
-     <li><span class="dfn-paneled" id="term-for-propdef-display">display</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-flex">flex</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-flow-root">flow-root</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-grid">grid</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-list-item">list-item</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-none">none</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-display-table">table</span>
-     <li><span class="dfn-paneled" id="term-for-propdef-visibility">visibility</span>
-     <li><span class="dfn-paneled" id="term-for-valdef-visibility-visible">visible</span>
+     <li><span class="dfn-paneled" id="237214a4fd6d7213e767ffff72449766">flex</span>
+     <li><span class="dfn-paneled" id="ec8797201183b965b0d6d6fb070cd536">grid</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[CSS-DISPLAY-4]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="b8338bd8fab72fca326f5384a61ae74f">block</span>
+     <li><span class="dfn-paneled" id="522431f7808b21d88503d04e52e61f86">display</span>
+     <li><span class="dfn-paneled" id="254ee5b37c3db69231dd9123f1a7e46d">flow-root</span>
+     <li><span class="dfn-paneled" id="52abd6169b5c1ec7799450a6e984bbcd">list-item</span>
+     <li><span class="dfn-paneled" id="ed84484b5357103410a6b9a8c395c581">none</span>
+     <li><span class="dfn-paneled" id="24a24da5995b85864d9ba2a5723717c2">table</span>
+     <li><span class="dfn-paneled" id="66c7cac658bb54d45bb26c155a86ba15">visibility</span>
+     <li><span class="dfn-paneled" id="64b773084479966b88900296ed9bbc3d">visible</span>
     </ul>
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-document">Document</span>
-     <li><span class="dfn-paneled" id="term-for-text">Text</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-bp-after">after</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-bp">boundary point</span>
-     <li><span class="dfn-paneled" id="term-for-range-collapsed">collapsed</span>
-     <li><span class="dfn-paneled" id="term-for-concept-cd-data">data</span>
-     <li><span class="dfn-paneled" id="term-for-concept-doctype">doctype</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document">document</span>
-     <li><span class="dfn-paneled" id="term-for-document-element">document element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-element">element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end">end</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end-node">end node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-end-offset">end offset</span>
-     <li><span class="dfn-paneled" id="term-for-concept-tree-following">following</span>
-     <li><span class="dfn-paneled" id="term-for-concept-documentfragment-host">host</span>
-     <li><span class="dfn-paneled" id="term-for-html-document">html document</span>
-     <li><span class="dfn-paneled" id="term-for-concept-node-length">length</span>
-     <li><span class="dfn-paneled" id="term-for-boundary-point-node">node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-node-document">node document</span>
-     <li><span class="dfn-paneled" id="term-for-concept-tree-parent">parent</span>
-     <li><span class="dfn-paneled" id="term-for-parent-element">parent element</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range">range</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-root">shadow root</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-ancestor">shadow-including ancestor</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-descendant">shadow-including descendant</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</span>
-     <li><span class="dfn-paneled" id="term-for-concept-shadow-including-tree-order">shadow-including tree order</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start">start</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start-node">start node</span>
-     <li><span class="dfn-paneled" id="term-for-concept-range-start-offset">start offset</span>
-     <li><span class="dfn-paneled" id="term-for-concept-cd-substring">substring data</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document-url">url</span>
+     <li><span class="dfn-paneled" id="07886e33695d0e7b473ef18f656ad7ac">Document</span>
+     <li><span class="dfn-paneled" id="106b91ce1ac7f01d4824f5509c502039">Text</span>
+     <li><span class="dfn-paneled" id="edf5142dd2b5d2a009c400649821eddd">after</span>
+     <li><span class="dfn-paneled" id="9d2e985ff01578d3c485962a6bbd0845">boundary point</span>
+     <li><span class="dfn-paneled" id="ed282e7847345f30e78230f14fdb52ff">collapsed</span>
+     <li><span class="dfn-paneled" id="f2efda2d3d7a172500570045686d8285">data</span>
+     <li><span class="dfn-paneled" id="76c65f143cb419c0fa5636eb9ad3f070">doctype</span>
+     <li><span class="dfn-paneled" id="985c42e2af63b3e74bd3b70d55668fd4">document</span>
+     <li><span class="dfn-paneled" id="6780f5129791c577e5710641ce0e787a">document element</span>
+     <li><span class="dfn-paneled" id="0e9d2b68d8d34152d128b48f1a821cc6">element</span>
+     <li><span class="dfn-paneled" id="3eaf36df88595e1b1fb545bb425dbfff">end</span>
+     <li><span class="dfn-paneled" id="3595088e5123f2838b7b6a27b98fd0a5">end node</span>
+     <li><span class="dfn-paneled" id="d196280e8309de02330b386f7b7f41d5">end offset</span>
+     <li><span class="dfn-paneled" id="42520ea878e2f46d9f9a0b2c695dd7ed">following</span>
+     <li><span class="dfn-paneled" id="336f9dec7e7e3f85d4ed32b3ca6ad4d4">host</span>
+     <li><span class="dfn-paneled" id="7f09c44566c0c49d2cb28c4878acf2ab">html document</span>
+     <li><span class="dfn-paneled" id="db19c0d2ac621c4f4f2ff03911d64150">length</span>
+     <li><span class="dfn-paneled" id="f89bf81e89d1487d0236c9740d7f7b85">node</span>
+     <li><span class="dfn-paneled" id="e374c2a979dc7a73f7d03be0623d67e6">node document</span>
+     <li><span class="dfn-paneled" id="bcfb3881f3a3ab6a912b4e9343723961">parent</span>
+     <li><span class="dfn-paneled" id="e2bf2f94dbcb51e9619badf334cedd2f">parent element</span>
+     <li><span class="dfn-paneled" id="d32c450d88a0eb615ada385939371cf2">range</span>
+     <li><span class="dfn-paneled" id="a0776d2c12f01e4264ed344ff747bce1">shadow root</span>
+     <li><span class="dfn-paneled" id="6cf8d76260ca17ac744213dd88df7467">shadow-including ancestor</span>
+     <li><span class="dfn-paneled" id="6cbf20ec6ae658e3dfeb68963b6b3d19">shadow-including descendant</span>
+     <li><span class="dfn-paneled" id="7049f0f7045691b6d0511a167ad33988">shadow-including inclusive ancestor</span>
+     <li><span class="dfn-paneled" id="529584996f402e6737c1f987fc0e4f74">shadow-including tree order</span>
+     <li><span class="dfn-paneled" id="f993e7a5a63693dc8df0d0ec9979bee1">start</span>
+     <li><span class="dfn-paneled" id="8c242aed29c9bcebb4c9c109c420c838">start node</span>
+     <li><span class="dfn-paneled" id="19e2b479bf922057a37590c166b0e4d8">start offset</span>
+     <li><span class="dfn-paneled" id="550461d883f8ee59a2caa514ddd21a53">substring data</span>
+     <li><span class="dfn-paneled" id="2fc74f43c6d7f15a4a2fbfbece346388">url</span>
     </ul>
    <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
+     <li><span class="dfn-paneled" id="491791562dd138987138e7051a96c07c">request</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-htmlaudioelement">HTMLAudioElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmliframeelement">HTMLIFrameElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlimageelement">HTMLImageElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlmeterelement">HTMLMeterElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlobjectelement">HTMLObjectElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlprogresselement">HTMLProgressElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlscriptelement">HTMLScriptElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlstyleelement">HTMLStyleElement</span>
-     <li><span class="dfn-paneled" id="term-for-htmlvideoelement">HTMLVideoElement</span>
-     <li><span class="dfn-paneled" id="term-for-location">Location</span>
-     <li><span class="dfn-paneled" id="term-for-nav-document">active document</span>
-     <li><span class="dfn-paneled" id="term-for-being-rendered">being rendered</span>
-     <li><span class="dfn-paneled" id="term-for-concept-document-bc">browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-browsing-context-set">browsing context set</span>
-     <li><span class="dfn-paneled" id="term-for-language">language</span>
-     <li><span class="dfn-paneled" id="term-for-attr-select-multiple">multiple</span>
-     <li><span class="dfn-paneled" id="term-for-restore-persisted-state">restore persisted state</span>
-     <li><span class="dfn-paneled" id="term-for-scroll-to-the-fragment-identifier">scroll to the fragment</span>
-     <li><span class="dfn-paneled" id="term-for-the-select-element">select</span>
-     <li><span class="dfn-paneled" id="term-for-serializes-as-void">serializes as void</span>
-     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context">top-level browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-transient-activation">transient activation</span>
-     <li><span class="dfn-paneled" id="term-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</span>
+     <li><span class="dfn-paneled" id="d86264b91becec76f76c64bd87d6ee8d">HTMLAudioElement</span>
+     <li><span class="dfn-paneled" id="75ff12c16ae1a8f6cbf2920128280261">HTMLIFrameElement</span>
+     <li><span class="dfn-paneled" id="8bd1567bfeee6a7f042b4739599829fd">HTMLImageElement</span>
+     <li><span class="dfn-paneled" id="239ce47ea8ddbfe7c0404c23d1c5876c">HTMLMeterElement</span>
+     <li><span class="dfn-paneled" id="07819f370163076e23d268f7ec2b9056">HTMLObjectElement</span>
+     <li><span class="dfn-paneled" id="a08e22107da0c99822a74cf7ff2a29cc">HTMLProgressElement</span>
+     <li><span class="dfn-paneled" id="257c32b9f7676f6cdb079793771ec03b">HTMLScriptElement</span>
+     <li><span class="dfn-paneled" id="004ac07b9e7dd26f7341693e2162496d">HTMLStyleElement</span>
+     <li><span class="dfn-paneled" id="a958269402aae8e8d7d28d3cb6aacc8d">HTMLVideoElement</span>
+     <li><span class="dfn-paneled" id="4b63022be77634e01931166ef990401a">Location</span>
+     <li><span class="dfn-paneled" id="de11cdc07a64c79878f1c3074e81554a">active document</span>
+     <li><span class="dfn-paneled" id="004498b212013045422acbba8c92f503">being rendered</span>
+     <li><span class="dfn-paneled" id="3eaa51ed66e1d8aa0c39a4f1fead29c0">browsing context</span>
+     <li><span class="dfn-paneled" id="7033f3e77cd84c91db6d5e82613c4d33">browsing context set</span>
+     <li><span class="dfn-paneled" id="726a16249061363ef85fbdad67a6e959">language</span>
+     <li><span class="dfn-paneled" id="b51df82e894ee794ca3f536db97ad537">multiple</span>
+     <li><span class="dfn-paneled" id="7369d61835fa8a54aba2f14b16179bb7">restore persisted state</span>
+     <li><span class="dfn-paneled" id="0bbe052a00d2d9a1853b94d848e97f83">scroll to the fragment</span>
+     <li><span class="dfn-paneled" id="3fff2218abea20e2aebc96a3c4ed942d">select</span>
+     <li><span class="dfn-paneled" id="1e2b4e9c3af3712ccb3048eb5e83ae9d">serializes as void</span>
+     <li><span class="dfn-paneled" id="c104b697744f6f246969dcc26b898f11">top-level browsing context</span>
+     <li><span class="dfn-paneled" id="5b762d09d78e8674458b84982b3cb3c9">transient activation</span>
+     <li><span class="dfn-paneled" id="4e67373797cfec56e2dadb5a69ad2ed0">try to scroll to the fragment</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-list-append">append</span>
-     <li><span class="dfn-paneled" id="term-for-ascii-string">ascii string</span>
-     <li><span class="dfn-paneled" id="term-for-assert">assert</span>
-     <li><span class="dfn-paneled" id="term-for-iteration-break">break</span>
-     <li><span class="dfn-paneled" id="term-for-code-point">code point</span>
-     <li><span class="dfn-paneled" id="term-for-string-code-point-length">code point length</span>
-     <li><span class="dfn-paneled" id="term-for-code-point-substring-by-positions">code point substring by positions</span>
-     <li><span class="dfn-paneled" id="term-for-code-point-substring-to-the-end-of-the-string">code point substring to the end of the string</span>
-     <li><span class="dfn-paneled" id="term-for-string-concatenate">concatenate</span>
-     <li><span class="dfn-paneled" id="term-for-iteration-continue">continue</span>
-     <li><span class="dfn-paneled" id="term-for-html-namespace">html namespace</span>
-     <li><span class="dfn-paneled" id="term-for-string-length">length</span>
-     <li><span class="dfn-paneled" id="term-for-list">list</span>
-     <li><span class="dfn-paneled" id="term-for-string-position-variable">position variable</span>
-     <li><span class="dfn-paneled" id="term-for-list-remove">remove</span>
-     <li><span class="dfn-paneled" id="term-for-list-size">size</span>
-     <li><span class="dfn-paneled" id="term-for-split-on-commas">split on commas</span>
-     <li><span class="dfn-paneled" id="term-for-strictly-split">strictly split a string</span>
-     <li><span class="dfn-paneled" id="term-for-string">string</span>
-     <li><span class="dfn-paneled" id="term-for-struct">struct</span>
-     <li><span class="dfn-paneled" id="term-for-tuple">tuple</span>
+     <li><span class="dfn-paneled" id="fcfc8b0ed220faa237969aed00e2586d">append</span>
+     <li><span class="dfn-paneled" id="61c7c9c76ff1cedf412e7a18bbe24e2c">ascii string</span>
+     <li><span class="dfn-paneled" id="7618b9a6d44febb7e784c8f39faac140">assert</span>
+     <li><span class="dfn-paneled" id="2889fa868b02a31759864aaf77f851d6">break</span>
+     <li><span class="dfn-paneled" id="4103741029595e9e13c67dab91d1e3bd">code point</span>
+     <li><span class="dfn-paneled" id="0c5b8810162108ca42f42ac154072480">code point length</span>
+     <li><span class="dfn-paneled" id="f0460547da5b011defe7b8f6f359524f">code point substring by positions</span>
+     <li><span class="dfn-paneled" id="500c3d9147f1a7d23aec5cebaadf9dc5">code point substring to the end of the string</span>
+     <li><span class="dfn-paneled" id="7605aa4703a0a6921736ddd5321cfc07">concatenate</span>
+     <li><span class="dfn-paneled" id="ce9efec0e74a2cbfe986593eb861ade6">continue</span>
+     <li><span class="dfn-paneled" id="39deea7d529a23ee9b82b61369f78690">html namespace</span>
+     <li><span class="dfn-paneled" id="81b03c84949641fc3081227509aab38f">length</span>
+     <li><span class="dfn-paneled" id="fafd38d2108e357bcc9a6fd7f3cd04a7">list</span>
+     <li><span class="dfn-paneled" id="a261ff0f11f981dec5af7b60f3229916">position variable</span>
+     <li><span class="dfn-paneled" id="fadc27e826887faf120674544589ae68">remove</span>
+     <li><span class="dfn-paneled" id="bed8381510f5967f5d37a33de776e857">size</span>
+     <li><span class="dfn-paneled" id="896aa3c7ff2be812b3ea9c5f7f9bc5e4">split on commas</span>
+     <li><span class="dfn-paneled" id="adb176cd03e93496f5eaada8f9e4dc0f">strictly split a string</span>
+     <li><span class="dfn-paneled" id="40b59bc325bd4d66701dfd8b7f1847c0">string</span>
+     <li><span class="dfn-paneled" id="3ee316b93eb2dbe81d01a666cce50f9b">struct</span>
+     <li><span class="dfn-paneled" id="decbbd3ee5a73b54e8e8996ce1fddbbc">tuple</span>
     </ul>
    <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-url-fragment">fragment</span>
-     <li><span class="dfn-paneled" id="term-for-string-percent-decode">percent-decode</span>
-     <li><span class="dfn-paneled" id="term-for-concept-url">url</span>
-     <li><span class="dfn-paneled" id="term-for-url-code-points">url code point</span>
+     <li><span class="dfn-paneled" id="60cc34e102fbb39581626f2f37e3179a">fragment</span>
+     <li><span class="dfn-paneled" id="3999a3b3593c7cb689ffd79b86bd5b34">percent-decode</span>
+     <li><span class="dfn-paneled" id="fc05c76e016d3aec6a25a91c066500c8">url</span>
+     <li><span class="dfn-paneled" id="46bd2da80269c4e9d4491ad1e341a8f5">url code point</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WEB-ANIMATIONS-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-effect-target-target-element">target element</span>
+     <li><span class="dfn-paneled" id="c8f6aafa6499946be59e4d1486023981">target element</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-Exposed">Exposed</span>
-     <li><span class="dfn-paneled" id="term-for-SameObject">SameObject</span>
+     <li><span class="dfn-paneled" id="dde049eb112f043fc45407ec0d4cb457">Exposed</span>
+     <li><span class="dfn-paneled" id="f572762cd4679aeacd36722d99d2b741">SameObject</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -3272,6 +3278,8 @@ manipulations
    <dd>Elika Etemad; Miriam Suzanne; Tab Atkins Jr.. <a href="https://drafts.csswg.org/css-cascade-5/"><cite>CSS Cascading and Inheritance Level 5</cite></a>. URL: <a href="https://drafts.csswg.org/css-cascade-5/">https://drafts.csswg.org/css-cascade-5/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
    <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://drafts.csswg.org/css-display/"><cite>CSS Display Module Level 3</cite></a>. URL: <a href="https://drafts.csswg.org/css-display/">https://drafts.csswg.org/css-display/</a>
+   <dt id="biblio-css-display-4">[CSS-DISPLAY-4]
+   <dd>CSS Display Module Level 4 URL: <a href="https://drafts.csswg.org/css-display-4/">https://drafts.csswg.org/css-display-4/</a>
    <dt id="biblio-document-policy">[DOCUMENT-POLICY]
    <dd>Ian Clelland. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html"><cite>Document Policy</cite></a>. ED. URL: <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">https://w3c.github.io/webappsec-permissions-policy/document-policy.html</a>
    <dt id="biblio-dom">[DOM]
@@ -3326,15 +3334,15 @@ correct here since that’s the text data as it exists in the DOM. This
 algorithm means to run over the text as rendered (and then convert back
 to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/issues/98">[Issue #WICG/scroll-to-text-fragment#98]</a> <a class="issue-return" href="#issue-96fe4755" title="Jump to section">↵</a></div>
   </div>
-  <aside class="dfn-panel" data-for="fragment-directive-delimiter">
-   <b><a href="#fragment-directive-delimiter">#fragment-directive-delimiter</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fragment-directive-delimiter" class="dfn-panel" data-for="fragment-directive-delimiter" id="infopanel-for-fragment-directive-delimiter">
+   <span id="infopaneltitle-for-fragment-directive-delimiter" style="display:none">Info about the 'fragment directive delimiter' definition.</span><b><a href="#fragment-directive-delimiter">#fragment-directive-delimiter</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fragment-directive-delimiter">3.3. The Fragment Directive</a>
     <li><a href="#ref-for-fragment-directive-delimiter①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-fragment-directive-delimiter②">(2)</a> <a href="#ref-for-fragment-directive-delimiter③">(3)</a> <a href="#ref-for-fragment-directive-delimiter④">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="fragment-directive">
-   <b><a href="#fragment-directive">#fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fragment-directive" class="dfn-panel" data-for="fragment-directive" id="infopanel-for-fragment-directive">
+   <span id="infopaneltitle-for-fragment-directive" style="display:none">Info about the 'fragment directive' definition.</span><b><a href="#fragment-directive">#fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fragment-directive">3.2. Syntax</a>
     <li><a href="#ref-for-fragment-directive①">3.3. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a> <a href="#ref-for-fragment-directive③">(3)</a> <a href="#ref-for-fragment-directive④">(4)</a>
@@ -3348,91 +3356,91 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-fragment-directive②①">3.6.1.3. Sharing</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="split-the-fragment-from-the-fragment-directive">
-   <b><a href="#split-the-fragment-from-the-fragment-directive">#split-the-fragment-from-the-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-split-the-fragment-from-the-fragment-directive" class="dfn-panel" data-for="split-the-fragment-from-the-fragment-directive" id="infopanel-for-split-the-fragment-from-the-fragment-directive">
+   <span id="infopaneltitle-for-split-the-fragment-from-the-fragment-directive" style="display:none">Info about the 'split the fragment from the fragment directive' definition.</span><b><a href="#split-the-fragment-from-the-fragment-directive">#split-the-fragment-from-the-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-split-the-fragment-from-the-fragment-directive">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="process-and-consume-fragment-directive">
-   <b><a href="#process-and-consume-fragment-directive">#process-and-consume-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-process-and-consume-fragment-directive" class="dfn-panel" data-for="process-and-consume-fragment-directive" id="infopanel-for-process-and-consume-fragment-directive">
+   <span id="infopaneltitle-for-process-and-consume-fragment-directive" style="display:none">Info about the 'process and consume fragment directive' definition.</span><b><a href="#process-and-consume-fragment-directive">#process-and-consume-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-process-and-consume-fragment-directive">3.3.1. Processing the fragment directive</a> <a href="#ref-for-process-and-consume-fragment-directive①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parsedtextdirective">
-   <b><a href="#parsedtextdirective">#parsedtextdirective</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive" class="dfn-panel" data-for="text-directive" id="infopanel-for-text-directive">
+   <span id="infopaneltitle-for-text-directive" style="display:none">Info about the 'text directive' definition.</span><b><a href="#text-directive">#text-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parsedtextdirective">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-parsedtextdirective①">(2)</a>
-    <li><a href="#ref-for-parsedtextdirective②">3.5.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-text-directive">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive①">(2)</a>
+    <li><a href="#ref-for-text-directive②">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parsedtextdirective-textstart">
-   <b><a href="#parsedtextdirective-textstart">#parsedtextdirective-textstart</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-textstart" class="dfn-panel" data-for="text-directive-textstart" id="infopanel-for-text-directive-textstart">
+   <span id="infopaneltitle-for-text-directive-textstart" style="display:none">Info about the 'textStart' definition.</span><b><a href="#text-directive-textstart">#text-directive-textstart</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parsedtextdirective-textstart">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-parsedtextdirective-textstart①">(2)</a>
-    <li><a href="#ref-for-parsedtextdirective-textstart②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textstart③">(2)</a> <a href="#ref-for-parsedtextdirective-textstart④">(3)</a> <a href="#ref-for-parsedtextdirective-textstart⑤">(4)</a> <a href="#ref-for-parsedtextdirective-textstart⑥">(5)</a> <a href="#ref-for-parsedtextdirective-textstart⑦">(6)</a>
+    <li><a href="#ref-for-text-directive-textstart">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive-textstart①">(2)</a>
+    <li><a href="#ref-for-text-directive-textstart②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-textstart③">(2)</a> <a href="#ref-for-text-directive-textstart④">(3)</a> <a href="#ref-for-text-directive-textstart⑤">(4)</a> <a href="#ref-for-text-directive-textstart⑥">(5)</a> <a href="#ref-for-text-directive-textstart⑦">(6)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parsedtextdirective-textend">
-   <b><a href="#parsedtextdirective-textend">#parsedtextdirective-textend</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-textend" class="dfn-panel" data-for="text-directive-textend" id="infopanel-for-text-directive-textend">
+   <span id="infopaneltitle-for-text-directive-textend" style="display:none">Info about the 'textEnd' definition.</span><b><a href="#text-directive-textend">#text-directive-textend</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parsedtextdirective-textend">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-textend①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-textend②">(2)</a> <a href="#ref-for-parsedtextdirective-textend③">(3)</a> <a href="#ref-for-parsedtextdirective-textend④">(4)</a> <a href="#ref-for-parsedtextdirective-textend⑤">(5)</a> <a href="#ref-for-parsedtextdirective-textend⑥">(6)</a> <a href="#ref-for-parsedtextdirective-textend⑦">(7)</a> <a href="#ref-for-parsedtextdirective-textend⑧">(8)</a> <a href="#ref-for-parsedtextdirective-textend⑨">(9)</a> <a href="#ref-for-parsedtextdirective-textend①⓪">(10)</a> <a href="#ref-for-parsedtextdirective-textend①①">(11)</a>
+    <li><a href="#ref-for-text-directive-textend">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-textend①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-textend②">(2)</a> <a href="#ref-for-text-directive-textend③">(3)</a> <a href="#ref-for-text-directive-textend④">(4)</a> <a href="#ref-for-text-directive-textend⑤">(5)</a> <a href="#ref-for-text-directive-textend⑥">(6)</a> <a href="#ref-for-text-directive-textend⑦">(7)</a> <a href="#ref-for-text-directive-textend⑧">(8)</a> <a href="#ref-for-text-directive-textend⑨">(9)</a> <a href="#ref-for-text-directive-textend①⓪">(10)</a> <a href="#ref-for-text-directive-textend①①">(11)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parsedtextdirective-prefix">
-   <b><a href="#parsedtextdirective-prefix">#parsedtextdirective-prefix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-prefix" class="dfn-panel" data-for="text-directive-prefix" id="infopanel-for-text-directive-prefix">
+   <span id="infopaneltitle-for-text-directive-prefix" style="display:none">Info about the 'prefix' definition.</span><b><a href="#text-directive-prefix">#text-directive-prefix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parsedtextdirective-prefix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-prefix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-prefix②">(2)</a> <a href="#ref-for-parsedtextdirective-prefix③">(3)</a> <a href="#ref-for-parsedtextdirective-prefix④">(4)</a> <a href="#ref-for-parsedtextdirective-prefix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-prefix⑥">(6)</a>
+    <li><a href="#ref-for-text-directive-prefix">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-prefix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-prefix②">(2)</a> <a href="#ref-for-text-directive-prefix③">(3)</a> <a href="#ref-for-text-directive-prefix④">(4)</a> <a href="#ref-for-text-directive-prefix⑤">(5)</a> <a href="#ref-for-text-directive-prefix⑥">(6)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parsedtextdirective-suffix">
-   <b><a href="#parsedtextdirective-suffix">#parsedtextdirective-suffix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-suffix" class="dfn-panel" data-for="text-directive-suffix" id="infopanel-for-text-directive-suffix">
+   <span id="infopaneltitle-for-text-directive-suffix" style="display:none">Info about the 'suffix' definition.</span><b><a href="#text-directive-suffix">#text-directive-suffix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parsedtextdirective-suffix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-parsedtextdirective-suffix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-parsedtextdirective-suffix②">(2)</a> <a href="#ref-for-parsedtextdirective-suffix③">(3)</a> <a href="#ref-for-parsedtextdirective-suffix④">(4)</a> <a href="#ref-for-parsedtextdirective-suffix⑤">(5)</a> <a href="#ref-for-parsedtextdirective-suffix⑥">(6)</a> <a href="#ref-for-parsedtextdirective-suffix⑦">(7)</a>
+    <li><a href="#ref-for-text-directive-suffix">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-suffix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-suffix②">(2)</a> <a href="#ref-for-text-directive-suffix③">(3)</a> <a href="#ref-for-text-directive-suffix④">(4)</a> <a href="#ref-for-text-directive-suffix⑤">(5)</a> <a href="#ref-for-text-directive-suffix⑥">(6)</a> <a href="#ref-for-text-directive-suffix⑦">(7)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="parse-a-text-directive">
-   <b><a href="#parse-a-text-directive">#parse-a-text-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-parse-a-text-directive" class="dfn-panel" data-for="parse-a-text-directive" id="infopanel-for-parse-a-text-directive">
+   <span id="infopaneltitle-for-parse-a-text-directive" style="display:none">Info about the 'parse a text directive' definition.</span><b><a href="#parse-a-text-directive">#parse-a-text-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-parse-a-text-directive">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="valid-fragment-directive">
-   <b><a href="#valid-fragment-directive">#valid-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-valid-fragment-directive" class="dfn-panel" data-for="valid-fragment-directive" id="infopanel-for-valid-fragment-directive">
+   <span id="infopaneltitle-for-valid-fragment-directive" style="display:none">Info about the 'valid fragment directive' definition.</span><b><a href="#valid-fragment-directive">#valid-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valid-fragment-directive">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="fragmentdirectiveproduction">
-   <b><a href="#fragmentdirectiveproduction">#fragmentdirectiveproduction</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fragmentdirectiveproduction" class="dfn-panel" data-for="fragmentdirectiveproduction" id="infopanel-for-fragmentdirectiveproduction">
+   <span id="infopaneltitle-for-fragmentdirectiveproduction" style="display:none">Info about the 'FragmentDirective' definition.</span><b><a href="#fragmentdirectiveproduction">#fragmentdirectiveproduction</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fragmentdirectiveproduction">3.3.3. Fragment directive grammar</a> <a href="#ref-for-fragmentdirectiveproduction①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="unknowndirective">
-   <b><a href="#unknowndirective">#unknowndirective</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-unknowndirective" class="dfn-panel" data-for="unknowndirective" id="infopanel-for-unknowndirective">
+   <span id="infopaneltitle-for-unknowndirective" style="display:none">Info about the 'UnknownDirective' definition.</span><b><a href="#unknowndirective">#unknowndirective</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-unknowndirective">3.3.3. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="characterstring">
-   <b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-characterstring" class="dfn-panel" data-for="characterstring" id="infopanel-for-characterstring">
+   <span id="infopaneltitle-for-characterstring" style="display:none">Info about the 'CharacterString' definition.</span><b><a href="#characterstring">#characterstring</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-characterstring">3.3.3. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="explicitchar">
-   <b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-explicitchar" class="dfn-panel" data-for="explicitchar" id="infopanel-for-explicitchar">
+   <span id="infopaneltitle-for-explicitchar" style="display:none">Info about the 'ExplicitChar' definition.</span><b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-explicitchar">3.3.3. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="text-fragment-directive">
-   <b><a href="#text-fragment-directive">#text-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-fragment-directive" class="dfn-panel" data-for="text-fragment-directive" id="infopanel-for-text-fragment-directive">
+   <span id="infopaneltitle-for-text-fragment-directive" style="display:none">Info about the 'text fragment directive' definition.</span><b><a href="#text-fragment-directive">#text-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-text-fragment-directive">3.2. Syntax</a>
     <li><a href="#ref-for-text-fragment-directive①">3.4.1. Motivation</a> <a href="#ref-for-text-fragment-directive②">(2)</a>
@@ -3443,236 +3451,291 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-text-fragment-directive⑨">4.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-fragment-directive①⓪">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirective">
-   <b><a href="#textdirective">#textdirective</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirective" class="dfn-panel" data-for="textdirective" id="infopanel-for-textdirective">
+   <span id="infopaneltitle-for-textdirective" style="display:none">Info about the 'TextDirective' definition.</span><b><a href="#textdirective">#textdirective</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirective">3.3.2. Parsing the fragment directive</a>
     <li><a href="#ref-for-textdirective①">3.3.3. Fragment directive grammar</a> <a href="#ref-for-textdirective②">(2)</a>
     <li><a href="#ref-for-textdirective③">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirectiveparameters">
-   <b><a href="#textdirectiveparameters">#textdirectiveparameters</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirectiveparameters" class="dfn-panel" data-for="textdirectiveparameters" id="infopanel-for-textdirectiveparameters">
+   <span id="infopaneltitle-for-textdirectiveparameters" style="display:none">Info about the 'TextDirectiveParameters' definition.</span><b><a href="#textdirectiveparameters">#textdirectiveparameters</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirectiveparameters">3.3.3. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirectiveprefix">
-   <b><a href="#textdirectiveprefix">#textdirectiveprefix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirectiveprefix" class="dfn-panel" data-for="textdirectiveprefix" id="infopanel-for-textdirectiveprefix">
+   <span id="infopaneltitle-for-textdirectiveprefix" style="display:none">Info about the 'TextDirectivePrefix' definition.</span><b><a href="#textdirectiveprefix">#textdirectiveprefix</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirectiveprefix">3.3.3. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirectivesuffix">
-   <b><a href="#textdirectivesuffix">#textdirectivesuffix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirectivesuffix" class="dfn-panel" data-for="textdirectivesuffix" id="infopanel-for-textdirectivesuffix">
+   <span id="infopaneltitle-for-textdirectivesuffix" style="display:none">Info about the 'TextDirectiveSuffix' definition.</span><b><a href="#textdirectivesuffix">#textdirectivesuffix</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirectivesuffix">3.3.3. Fragment directive grammar</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirectivestring">
-   <b><a href="#textdirectivestring">#textdirectivestring</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirectivestring" class="dfn-panel" data-for="textdirectivestring" id="infopanel-for-textdirectivestring">
+   <span id="infopaneltitle-for-textdirectivestring" style="display:none">Info about the 'TextDirectiveString' definition.</span><b><a href="#textdirectivestring">#textdirectivestring</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirectivestring">3.3.3. Fragment directive grammar</a> <a href="#ref-for-textdirectivestring①">(2)</a> <a href="#ref-for-textdirectivestring②">(3)</a> <a href="#ref-for-textdirectivestring③">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="textdirectiveexplicitchar">
-   <b><a href="#textdirectiveexplicitchar">#textdirectiveexplicitchar</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-textdirectiveexplicitchar" class="dfn-panel" data-for="textdirectiveexplicitchar" id="infopanel-for-textdirectiveexplicitchar">
+   <span id="infopaneltitle-for-textdirectiveexplicitchar" style="display:none">Info about the 'TextDirectiveExplicitChar' definition.</span><b><a href="#textdirectiveexplicitchar">#textdirectiveexplicitchar</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-textdirectiveexplicitchar">3.3.3. Fragment directive grammar</a> <a href="#ref-for-textdirectiveexplicitchar①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="percentencodedchar">
-   <b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-percentencodedchar" class="dfn-panel" data-for="percentencodedchar" id="infopanel-for-percentencodedchar">
+   <span id="infopaneltitle-for-percentencodedchar" style="display:none">Info about the 'PercentEncodedChar' definition.</span><b><a href="#percentencodedchar">#percentencodedchar</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-percentencodedchar">3.3.3. Fragment directive grammar</a> <a href="#ref-for-percentencodedchar①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="request-text-fragment-user-activation">
-   <b><a href="#request-text-fragment-user-activation">#request-text-fragment-user-activation</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-request-text-fragment-user-activation" class="dfn-panel" data-for="request-text-fragment-user-activation" id="infopanel-for-request-text-fragment-user-activation">
+   <span id="infopaneltitle-for-request-text-fragment-user-activation" style="display:none">Info about the 'text fragment user activation' definition.</span><b><a href="#request-text-fragment-user-activation">#request-text-fragment-user-activation</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-request-text-fragment-user-activation">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-request-text-fragment-user-activation①">(2)</a> <a href="#ref-for-request-text-fragment-user-activation②">(3)</a> <a href="#ref-for-request-text-fragment-user-activation③">(4)</a> <a href="#ref-for-request-text-fragment-user-activation④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="document-text-fragment-user-activation">
-   <b><a href="#document-text-fragment-user-activation">#document-text-fragment-user-activation</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-document-text-fragment-user-activation" class="dfn-panel" data-for="document-text-fragment-user-activation" id="infopanel-for-document-text-fragment-user-activation">
+   <span id="infopaneltitle-for-document-text-fragment-user-activation" style="display:none">Info about the 'text fragment user activation' definition.</span><b><a href="#document-text-fragment-user-activation">#document-text-fragment-user-activation</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-document-text-fragment-user-activation">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-text-fragment-user-activation①">(2)</a> <a href="#ref-for-document-text-fragment-user-activation②">(3)</a> <a href="#ref-for-document-text-fragment-user-activation③">(4)</a> <a href="#ref-for-document-text-fragment-user-activation④">(5)</a> <a href="#ref-for-document-text-fragment-user-activation⑤">(6)</a> <a href="#ref-for-document-text-fragment-user-activation⑥">(7)</a> <a href="#ref-for-document-text-fragment-user-activation⑦">(8)</a> <a href="#ref-for-document-text-fragment-user-activation⑧">(9)</a> <a href="#ref-for-document-text-fragment-user-activation⑨">(10)</a> <a href="#ref-for-document-text-fragment-user-activation①⓪">(11)</a> <a href="#ref-for-document-text-fragment-user-activation①①">(12)</a> <a href="#ref-for-document-text-fragment-user-activation①②">(13)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="document-allow-text-fragment-scroll">
-   <b><a href="#document-allow-text-fragment-scroll">#document-allow-text-fragment-scroll</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-document-allow-text-fragment-scroll" class="dfn-panel" data-for="document-allow-text-fragment-scroll" id="infopanel-for-document-allow-text-fragment-scroll">
+   <span id="infopaneltitle-for-document-allow-text-fragment-scroll" style="display:none">Info about the 'allow text fragment scroll' definition.</span><b><a href="#document-allow-text-fragment-scroll">#document-allow-text-fragment-scroll</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-document-allow-text-fragment-scroll">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-allow-text-fragment-scroll①">(2)</a> <a href="#ref-for-document-allow-text-fragment-scroll②">(3)</a> <a href="#ref-for-document-allow-text-fragment-scroll③">(4)</a> <a href="#ref-for-document-allow-text-fragment-scroll④">(5)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑤">(6)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑥">(7)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑦">(8)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑧">(9)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑨">(10)</a>
     <li><a href="#ref-for-document-allow-text-fragment-scroll①⓪">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="first-common-ancestor">
-   <b><a href="#first-common-ancestor">#first-common-ancestor</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-first-common-ancestor" class="dfn-panel" data-for="first-common-ancestor" id="infopanel-for-first-common-ancestor">
+   <span id="infopaneltitle-for-first-common-ancestor" style="display:none">Info about the 'first common ancestor' definition.</span><b><a href="#first-common-ancestor">#first-common-ancestor</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-first-common-ancestor">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="shadow-including-parent">
-   <b><a href="#shadow-including-parent">#shadow-including-parent</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-shadow-including-parent" class="dfn-panel" data-for="shadow-including-parent" id="infopanel-for-shadow-including-parent">
+   <span id="infopaneltitle-for-shadow-including-parent" style="display:none">Info about the 'shadow-including parent' definition.</span><b><a href="#shadow-including-parent">#shadow-including-parent</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-shadow-including-parent">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="process-a-fragment-directive">
-   <b><a href="#process-a-fragment-directive">#process-a-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-process-a-fragment-directive" class="dfn-panel" data-for="process-a-fragment-directive" id="infopanel-for-process-a-fragment-directive">
+   <span id="infopaneltitle-for-process-a-fragment-directive" style="display:none">Info about the 'process a fragment directive' definition.</span><b><a href="#process-a-fragment-directive">#process-a-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-process-a-fragment-directive">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-process-a-fragment-directive①">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="find-a-range-from-a-text-directive">
-   <b><a href="#find-a-range-from-a-text-directive">#find-a-range-from-a-text-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-find-a-range-from-a-text-directive" class="dfn-panel" data-for="find-a-range-from-a-text-directive" id="infopanel-for-find-a-range-from-a-text-directive">
+   <span id="infopaneltitle-for-find-a-range-from-a-text-directive" style="display:none">Info about the 'find a range from a text directive' definition.</span><b><a href="#find-a-range-from-a-text-directive">#find-a-range-from-a-text-directive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-find-a-range-from-a-text-directive">3.4.3. Search Timing</a>
     <li><a href="#ref-for-find-a-range-from-a-text-directive①">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="next-non-whitespace-position">
-   <b><a href="#next-non-whitespace-position">#next-non-whitespace-position</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-next-non-whitespace-position" class="dfn-panel" data-for="next-non-whitespace-position" id="infopanel-for-next-non-whitespace-position">
+   <span id="infopaneltitle-for-next-non-whitespace-position" style="display:none">Info about the 'next
+non-whitespace position' definition.</span><b><a href="#next-non-whitespace-position">#next-non-whitespace-position</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-next-non-whitespace-position">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-next-non-whitespace-position①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="find-a-string-in-range">
-   <b><a href="#find-a-string-in-range">#find-a-string-in-range</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-find-a-string-in-range" class="dfn-panel" data-for="find-a-string-in-range" id="infopanel-for-find-a-string-in-range">
+   <span id="infopaneltitle-for-find-a-string-in-range" style="display:none">Info about the 'find a string in range' definition.</span><b><a href="#find-a-string-in-range">#find-a-string-in-range</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-find-a-string-in-range">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-find-a-string-in-range①">(2)</a> <a href="#ref-for-find-a-string-in-range②">(3)</a> <a href="#ref-for-find-a-string-in-range③">(4)</a> <a href="#ref-for-find-a-string-in-range④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="search-invisible">
-   <b><a href="#search-invisible">#search-invisible</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-search-invisible" class="dfn-panel" data-for="search-invisible" id="infopanel-for-search-invisible">
+   <span id="infopaneltitle-for-search-invisible" style="display:none">Info about the 'search invisible' definition.</span><b><a href="#search-invisible">#search-invisible</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-search-invisible">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-search-invisible①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="non-searchable-subtree">
-   <b><a href="#non-searchable-subtree">#non-searchable-subtree</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-non-searchable-subtree" class="dfn-panel" data-for="non-searchable-subtree" id="infopanel-for-non-searchable-subtree">
+   <span id="infopaneltitle-for-non-searchable-subtree" style="display:none">Info about the 'non-searchable subtree' definition.</span><b><a href="#non-searchable-subtree">#non-searchable-subtree</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-non-searchable-subtree">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-non-searchable-subtree①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="visible-text-node">
-   <b><a href="#visible-text-node">#visible-text-node</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-visible-text-node" class="dfn-panel" data-for="visible-text-node" id="infopanel-for-visible-text-node">
+   <span id="infopaneltitle-for-visible-text-node" style="display:none">Info about the 'visible text node' definition.</span><b><a href="#visible-text-node">#visible-text-node</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-visible-text-node">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-visible-text-node①">(2)</a> <a href="#ref-for-visible-text-node②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="has-block-level-display">
-   <b><a href="#has-block-level-display">#has-block-level-display</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-has-block-level-display" class="dfn-panel" data-for="has-block-level-display" id="infopanel-for-has-block-level-display">
+   <span id="infopaneltitle-for-has-block-level-display" style="display:none">Info about the 'has block-level display' definition.</span><b><a href="#has-block-level-display">#has-block-level-display</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-has-block-level-display">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-has-block-level-display①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="nearest-block-ancestor">
-   <b><a href="#nearest-block-ancestor">#nearest-block-ancestor</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-nearest-block-ancestor" class="dfn-panel" data-for="nearest-block-ancestor" id="infopanel-for-nearest-block-ancestor">
+   <span id="infopaneltitle-for-nearest-block-ancestor" style="display:none">Info about the 'nearest block ancestor' definition.</span><b><a href="#nearest-block-ancestor">#nearest-block-ancestor</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-nearest-block-ancestor">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="find-a-range-from-a-node-list">
-   <b><a href="#find-a-range-from-a-node-list">#find-a-range-from-a-node-list</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-find-a-range-from-a-node-list" class="dfn-panel" data-for="find-a-range-from-a-node-list" id="infopanel-for-find-a-range-from-a-node-list">
+   <span id="infopaneltitle-for-find-a-range-from-a-node-list" style="display:none">Info about the 'find a range from a node list' definition.</span><b><a href="#find-a-range-from-a-node-list">#find-a-range-from-a-node-list</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-find-a-range-from-a-node-list">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="get-boundary-point-at-index">
-   <b><a href="#get-boundary-point-at-index">#get-boundary-point-at-index</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-get-boundary-point-at-index" class="dfn-panel" data-for="get-boundary-point-at-index" id="infopanel-for-get-boundary-point-at-index">
+   <span id="infopaneltitle-for-get-boundary-point-at-index" style="display:none">Info about the 'get boundary point at index' definition.</span><b><a href="#get-boundary-point-at-index">#get-boundary-point-at-index</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-get-boundary-point-at-index">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-get-boundary-point-at-index①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="word-boundary">
-   <b><a href="#word-boundary">#word-boundary</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-word-boundary" class="dfn-panel" data-for="word-boundary" id="infopanel-for-word-boundary">
+   <span id="infopaneltitle-for-word-boundary" style="display:none">Info about the 'word boundary' definition.</span><b><a href="#word-boundary">#word-boundary</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-word-boundary">3.5.1. Finding Ranges in a Document</a>
     <li><a href="#ref-for-word-boundary①">3.5.2. Word Boundaries</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="locale">
-   <b><a href="#locale">#locale</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-locale" class="dfn-panel" data-for="locale" id="infopanel-for-locale">
+   <span id="infopaneltitle-for-locale" style="display:none">Info about the 'locale' definition.</span><b><a href="#locale">#locale</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-locale">3.5.2. Word Boundaries</a> <a href="#ref-for-locale①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="word-bounded">
-   <b><a href="#word-bounded">#word-bounded</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-word-bounded" class="dfn-panel" data-for="word-bounded" id="infopanel-for-word-bounded">
+   <span id="infopaneltitle-for-word-bounded" style="display:none">Info about the 'word bounded' definition.</span><b><a href="#word-bounded">#word-bounded</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-word-bounded">3.5.2. Word Boundaries</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="is-at-a-word-boundary">
-   <b><a href="#is-at-a-word-boundary">#is-at-a-word-boundary</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-is-at-a-word-boundary" class="dfn-panel" data-for="is-at-a-word-boundary" id="infopanel-for-is-at-a-word-boundary">
+   <span id="infopaneltitle-for-is-at-a-word-boundary" style="display:none">Info about the 'is at a word boundary' definition.</span><b><a href="#is-at-a-word-boundary">#is-at-a-word-boundary</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-is-at-a-word-boundary">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-is-at-a-word-boundary①">(2)</a>
     <li><a href="#ref-for-is-at-a-word-boundary②">3.5.2. Word Boundaries</a> <a href="#ref-for-is-at-a-word-boundary③">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="fragmentdirective">
-   <b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-fragmentdirective" class="dfn-panel" data-for="fragmentdirective" id="infopanel-for-fragmentdirective">
+   <span id="infopaneltitle-for-fragmentdirective" style="display:none">Info about the 'FragmentDirective' definition.</span><b><a href="#fragmentdirective">#fragmentdirective</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fragmentdirective">3.8. Feature Detectability</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
-
-document.body.addEventListener("click", function(e) {
-    var queryAll = function(sel) { return [].slice.call(document.querySelectorAll(sel)); }
-    // Find the dfn element or panel, if any, that was clicked on.
-    var el = e.target;
-    var target;
-    var hitALink = false;
-    while(el.parentElement) {
-        if(el.tagName == "A") {
-            // Clicking on a link in a <dfn> shouldn't summon the panel
-            hitALink = true;
-        }
-        if(el.classList.contains("dfn-paneled")) {
-            target = "dfn";
-            break;
-        }
-        if(el.classList.contains("dfn-panel")) {
-            target = "dfn-panel";
-            break;
-        }
-        el = el.parentElement;
+"use strict";
+{
+    function queryAll(sel) {
+        return [].slice.call(document.querySelectorAll(sel));
     }
-    if(target != "dfn-panel") {
+
+    // Add popup behavior to all dfns to show the corresponding dfn-panel.
+    var dfns = document.querySelectorAll('.dfn-paneled');
+    for (let dfn of dfns) { insertDfnPopupAction(dfn); }
+
+    document.body.addEventListener("click", (e) => {
+        // If not handled already, just hide all dfn panels.
+        hideAllDfnPanels();
+    });
+
+    function hideAllDfnPanels() {
         // Turn off any currently "on" or "activated" panels.
-        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(function(el){
-            el.classList.remove("on");
-            el.classList.remove("activated");
-        });
-    }
-    if(target == "dfn" && !hitALink) {
-        // open the panel
-        var dfnPanel = document.querySelector(".dfn-panel[data-for='" + el.id + "']");
-        if(dfnPanel) {
-            dfnPanel.classList.add("on");
-            var rect = el.getBoundingClientRect();
-            dfnPanel.style.left = window.scrollX + rect.right + 5 + "px";
-            dfnPanel.style.top = window.scrollY + rect.top + "px";
-            var panelRect = dfnPanel.getBoundingClientRect();
-            var panelWidth = panelRect.right - panelRect.left;
-            if(panelRect.right > document.body.scrollWidth && (rect.left - (panelWidth + 5)) > 0) {
-                // Reposition, because the panel is overflowing
-                dfnPanel.style.left = window.scrollX + rect.left - (panelWidth + 5) + "px";
-            }
-        } else {
-            console.log("Couldn't find .dfn-panel[data-for='" + el.id + "']");
-        }
-    } else if(target == "dfn-panel") {
-        // Switch it to "activated" state, which pins it.
-        el.classList.add("activated");
-        el.style.left = null;
-        el.style.top = null;
+        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>hideDfnPanel(el));
     }
 
-});
+    function showDfnPanel(dfnPanel, dfn) {
+        hideAllDfnPanels(); // Only display one at this time.
+        dfn.setAttribute("aria-expanded", "true");
+        dfnPanel.classList.add("on");
+        dfnPanel.style.left = "5px";
+        dfnPanel.style.top = "0px";
+        const panelRect = dfnPanel.getBoundingClientRect();
+        const panelWidth = panelRect.right - panelRect.left;
+        if (panelRect.right > document.body.scrollWidth) {
+            // Panel's overflowing the screen.
+            // Just drop it below the dfn and flip it rightward instead.
+            // This still wont' fix things if the screen is *really* wide,
+            // but fixing that's a lot harder without 'anchor()'.
+            dfnPanel.style.top = "1.5em";
+            dfnPanel.style.left = "auto";
+            dfnPanel.style.right = "0px";
+        }
+    }
+
+    function pinDfnPanel(dfnPanel) {
+        // Switch it to "activated" state, which pins it.
+        dfnPanel.classList.add("activated");
+        dfnPanel.style.left = null;
+        dfnPanel.style.top = null;
+    }
+
+    function hideDfnPanel(dfnPanel, dfn) {
+        if(!dfn) {
+            dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
+        }
+        dfn.setAttribute("aria-expanded", "false")
+        dfnPanel.classList.remove("on");
+        dfnPanel.classList.remove("activated");
+    }
+
+    function toggleDfnPanel(dfnPanel, dfn) {
+        if(dfnPanel.classList.contains("on")) {
+            hideDfnPanel(dfnPanel, dfn);
+        } else {
+            showDfnPanel(dfnPanel, dfn);
+        }
+    }
+
+    function insertDfnPopupAction(dfn) {
+        // Find dfn panel
+        const dfnPanel = document.querySelector(`.dfn-panel[data-for='${dfn.id}']`);
+        if (dfnPanel) {
+            const panelWrapper = document.createElement('span');
+            panelWrapper.appendChild(dfnPanel);
+            panelWrapper.style.position = "relative";
+            panelWrapper.style.height = "0px";
+            dfn.insertAdjacentElement("afterend", panelWrapper);
+            dfn.setAttribute('role', 'button');
+            dfn.setAttribute('aria-expanded', 'false')
+            dfn.tabIndex = 0;
+            dfn.classList.add('has-dfn-panel');
+            dfn.addEventListener('click', (event) => {
+                showDfnPanel(dfnPanel, dfn);
+                event.stopPropagation();
+            });
+            dfn.addEventListener('keypress', (event) => {
+                const kc = event.keyCode;
+                // 32->Space, 13->Enter
+                if(kc == 32 || kc == 13) {
+                    toggleDfnPanel(dfnPanel, dfn);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            });
+
+            dfnPanel.addEventListener('click', (event) => {
+                pinDfnPanel(dfnPanel);
+                event.stopPropagation();
+            });
+
+            dfnPanel.addEventListener('keydown', (event) => {
+                if(event.keyCode == 27) { // Escape key
+                    hideDfnPanel(dfnPanel, dfn);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            })
+
+        } else {
+            console.log("Couldn't find .dfn-panel[data-for='" + dfn.id + "']");
+        }
+    }
+}
 </script>
 <script>/* script-var-click-highlighting */
 
