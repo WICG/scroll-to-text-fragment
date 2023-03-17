@@ -16,9 +16,13 @@ WPT Display: inline
 </pre>
 
 <pre class='link-defaults'>
+spec:css-cascade-5; type:dfn; text:computed value
 spec:css-display-3; type:value; for:display; text:flex
 spec:css-display-3; type:value; for:display; text:grid
+spec:css-display-4; type:property; text:display
+spec:css-display-4; type:property; text:visibility
 spec:dom; type:dfn; for:/; text:element
+spec:dom; type:dfn; text:range
 spec:html; type:element; text:link
 spec:html; type:dfn; for:/; text:origin
 spec:html; type:element; text:script
@@ -768,10 +772,8 @@ boolean [=document/text fragment user activation=] field:
     The following diagram demonstrates how the flag is used to activate a text
     fragment through a client-side redirect service:
   </p>
-  <img style="margin-left:auto;margin-right:auto;display:block"
-       width="745" height="671"
-       src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png"
-       alt="Diagram showing how a text fragment flag is set and used">
+
+  <img style="margin-left:auto;margin-right:auto;display:block" width="745" height="671" src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png" alt="Diagram showing how a text fragment flag is set and used">
 
   <p>
     See [redirects.md](redirects.md) for a more in-depth discussion.
