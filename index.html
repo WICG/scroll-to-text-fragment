@@ -735,7 +735,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Text Fragments</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-03-17">17 March 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-03-20">20 March 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1552,7 +1552,7 @@ indicated part processing model to return a <a data-link-type="dfn" href="https:
       <div class="issue" id="issue-10739530"><a class="self-link" href="#issue-10739530"></a> These revealing algorithms currently wont work well since <var>target</var> could be an ancestor or even the root document node. Issue <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a> proposes restricting matches to <code>contain:style layout</code> blocks which
     would resolve this problem. </div>
      <li data-md>
-      <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+      <p><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
   the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①①">Document</a>. If the result is false:</p>
       <ol>
        <li data-md>
@@ -2295,7 +2295,7 @@ typically by providing the URL to another app or messaging service.</p>
 directive</a> if, and only if, a match was found and the visual indicator hasn’t
 been dismissed.</p>
    <h3 class="heading settled" data-level="3.7" id="document-policy-integration"><span class="secno">3.7. </span><span class="content">Document Policy Integration</span><a class="self-link" href="#document-policy-integration"></a></h3>
-   <p>This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy" title="Document Policy">Document Policy</a> with name "force-load-at-top". Its <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> is <code>boolean</code> with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a> <code>false</code>.</p>
+   <p>This specification defines a <a href="https://wicg.github.io/document-policy#configuration-point">configuration point</a> in <a data-link-type="biblio" href="#biblio-document-policy" title="Document Policy">Document Policy</a> with name "force-load-at-top". Its <a href="https://wicg.github.io/document-policy#configuration-point-type">type</a> is <code>boolean</code> with <a href="https://wicg.github.io/document-policy#configuration-point-default-value">default value</a> <code>false</code>.</p>
    <div class="note" role="note"> When enabled, this policy disables all automatic scroll-on-load features:
   text-fragments, element fragments, history scroll restoration. </div>
    <div class="example" id="example-a128f34b">
@@ -2312,7 +2312,7 @@ been dismissed.</p>
 persisted state</a> steps by inserting a new step after 2:</p>
    <ol start="3">
     <li data-md>
-     <p><a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+     <p><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
 the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①④">Document</a>. If
 the result is true, then the user agent should not restore the scroll
 position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑤">Document</a> or any of its scrollable regions.</p>
@@ -3281,7 +3281,7 @@ manipulations
    <dt id="biblio-css-display-4">[CSS-DISPLAY-4]
    <dd>CSS Display Module Level 4 URL: <a href="https://drafts.csswg.org/css-display-4/">https://drafts.csswg.org/css-display-4/</a>
    <dt id="biblio-document-policy">[DOCUMENT-POLICY]
-   <dd>Ian Clelland. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html"><cite>Document Policy</cite></a>. ED. URL: <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html">https://w3c.github.io/webappsec-permissions-policy/document-policy.html</a>
+   <dd>Ian Clelland. <a href="https://wicg.github.io/document-policy"><cite>Document Policy</cite></a>. ED. URL: <a href="https://wicg.github.io/document-policy">https://wicg.github.io/document-policy</a>
    <dt id="biblio-dom">[DOM]
    <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/"><cite>DOM Standard</cite></a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-fetch">[FETCH]
