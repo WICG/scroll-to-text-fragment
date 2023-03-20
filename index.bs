@@ -36,7 +36,7 @@ spec:url; type:dfn; text:fragment
       "authors": [
         "Ian Clelland"
       ],
-      "href": "https://w3c.github.io/webappsec-permissions-policy/document-policy.html",
+      "href": "https://wicg.github.io/document-policy",
       "title": "Document Policy",
       "status": "ED",
       "publisher": "W3C",
@@ -817,9 +817,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >           navigation was initiated, or the UA has reason to believe it comes from a
 >           direct user gesture (e.g. user typed into the address bar).
 >           <div class="note">
->             TODO: it'd be better to refer to the userActivationFlag on the
->             |request|. See
->             <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in [[FETCH-METADATA]].
+>             TODO: it'd be better to refer to the [=request/user-activation=] flag.
 >           </div>
 >       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
 >           user activated| or the [=request/text fragment user activation=] of
@@ -863,7 +861,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             <p>
 >               See <a
 >               href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
->               for a more detailed discussion of how this applies.
+>               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
 >             </p>
 >           </div>
 >       1. If |text fragment user activation| is false, set
@@ -889,7 +887,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
-process a navigate fetch</a> steps to additionally set |request|'s
+process a navigate fetch</a> steps to additionally set <var ignore=''>request</var>'s
 [=request/text fragment user activation=] to the value of the [=active document=]'s
 [=document/text fragment user activation=] and set the [=active document=]'s value to
 false.
@@ -973,7 +971,7 @@ To enable the <a spec=HTML>scroll to the fragment</a> algorithm to operate on a
 >         proposes restricting matches to `contain:style layout` blocks which
 >         would resolve this problem.
 >       </div>
->   1. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+>   1. <a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
 >       the policy value</a> for `force-load-at-top` in the
 >       [=Document=]. If the result is false:
 >       1. If |range| wasn't produced as a result of a text fragment, or if the
@@ -1792,10 +1790,10 @@ been dismissed.
           once it's referrable.  Also remember to autolink the ref in the
           navigating-to-text-fragment section -->
 
-This specification defines a <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point">configuration point</a>
+This specification defines a <a href="https://wicg.github.io/document-policy#configuration-point">configuration point</a>
 in [[!document-policy|Document Policy]] with name "force-load-at-top". Its
-<a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-type">type</a> is `boolean`
-with <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#configuration-point-default-value">default value</a>
+<a href="https://wicg.github.io/document-policy#configuration-point-type">type</a> is `boolean`
+with <a href="https://wicg.github.io/document-policy#configuration-point-default-value">default value</a>
 `false`.
 
 <div class="note">
@@ -1822,7 +1820,7 @@ Fragment-based scroll blocking from this policy is specified in an amendment to 
 History scroll restoration is blocked by amending the <a spec="HTML">restore
 persisted state</a> steps by inserting a new step after 2:
 
-3. <a href="https://w3c.github.io/webappsec-permissions-policy/document-policy.html#algo-get-policy-value">Get
+3. <a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
     the document policy value</a> of the "force-load-at-top" feature for the [=Document=]. If
     the result is true, then the user agent should not restore the scroll
     position for the [=Document=] or any of its scrollable regions.
