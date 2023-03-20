@@ -1424,7 +1424,7 @@ and initialize a Document object</a> steps by adding the following steps before 
   a window that had a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a> at the time the
   navigation was initiated, or the UA has reason to believe it comes from a
   direct user gesture (e.g. user typed into the address bar).</p>
-        <div class="note" role="note"> TODO: it’d be better to refer to the userActivationFlag on the <var>request</var>. See <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a>. </div>
+        <div class="note" role="note"> TODO: it’d be better to refer to the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#request-user-activation" id="ref-for-request-user-activation">user-activation</a> flag. </div>
        <li data-md>
         <p>If <var>browsing context</var> is a top-level browsing context and if either of <var>is
   user activated</var> or the <a data-link-type="dfn" href="#request-text-fragment-user-activation" id="ref-for-request-text-fragment-user-activation②">text fragment user activation</a> of <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> object is true, set the <var>document</var>’s <a data-link-type="dfn" href="#document-text-fragment-user-activation" id="ref-for-document-text-fragment-user-activation⑦">text fragment user activation</a> to true. Otherwise, set it to false.</p>
@@ -1454,7 +1454,7 @@ and initialize a Document object</a> steps by adding the following steps before 
       destination is loaded in a separate browsing context group (so that
       the source cannot both control the text snippet and observe
       side-effects in the navigation). </p>
-         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> for a more detailed discussion of how this applies. </p>
+         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a more detailed discussion of how this applies. </p>
         </div>
        <li data-md>
         <p>If <var>text fragment user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to false and abort these sub-steps.</p>
@@ -2817,6 +2817,12 @@ manipulations
     <li><a href="#ref-for-concept-request">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-request①">(2)</a> <a href="#ref-for-concept-request②">(3)</a> <a href="#ref-for-concept-request③">(4)</a>
    </ul>
   </aside>
+  <aside aria-labelledby="infopaneltitle-for-676cde839e3bd2930dd87545de24bb1a" class="dfn-panel" data-for="676cde839e3bd2930dd87545de24bb1a" id="infopanel-for-676cde839e3bd2930dd87545de24bb1a">
+   <span id="infopaneltitle-for-676cde839e3bd2930dd87545de24bb1a" style="display:none">Info about the 'user-activation' external reference.</span><a href="https://fetch.spec.whatwg.org/#request-user-activation">https://fetch.spec.whatwg.org/#request-user-activation</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-request-user-activation">3.4.4. Restricting the Text Fragment</a>
+   </ul>
+  </aside>
   <aside aria-labelledby="infopaneltitle-for-d86264b91becec76f76c64bd87d6ee8d" class="dfn-panel" data-for="d86264b91becec76f76c64bd87d6ee8d" id="infopanel-for-d86264b91becec76f76c64bd87d6ee8d">
    <span id="infopaneltitle-for-d86264b91becec76f76c64bd87d6ee8d" style="display:none">Info about the 'HTMLAudioElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement">https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement</a><b>Referenced in:</b>
    <ul>
@@ -3198,6 +3204,7 @@ manipulations
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="491791562dd138987138e7051a96c07c">request</span>
+     <li><span class="dfn-paneled" id="676cde839e3bd2930dd87545de24bb1a">user-activation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:

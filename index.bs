@@ -817,9 +817,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >           navigation was initiated, or the UA has reason to believe it comes from a
 >           direct user gesture (e.g. user typed into the address bar).
 >           <div class="note">
->             TODO: it'd be better to refer to the userActivationFlag on the
->             |request|. See
->             <a href="https://w3c.github.io/webappsec-fetch-metadata/#request-user-activation-flag">Sec-Fetch-User</a> in [[FETCH-METADATA]].
+>             TODO: it'd be better to refer to the [=request/user-activation=] flag.
 >           </div>
 >       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
 >           user activated| or the [=request/text fragment user activation=] of
@@ -863,7 +861,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             <p>
 >               See <a
 >               href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
->               for a more detailed discussion of how this applies.
+>               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
 >             </p>
 >           </div>
 >       1. If |text fragment user activation| is false, set
@@ -889,7 +887,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 
 Amend step 2 of the
 <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
-process a navigate fetch</a> steps to additionally set |request|'s
+process a navigate fetch</a> steps to additionally set <var ignore=''>request</var>'s
 [=request/text fragment user activation=] to the value of the [=active document=]'s
 [=document/text fragment user activation=] and set the [=active document=]'s value to
 false.
