@@ -113,8 +113,8 @@ the [[#security-and-privacy]] section for details.
 A [=text fragment directive=] is specified in the [=fragment directive=] (see
 [[#the-fragment-directive]]) with the following format:
 <pre>
-#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
-          context  |-------match-----|  context
+#:~:text=[prefix-,]start[,end][,-suffix]
+          context  |--match--|  context
 </pre>
 <em>(Square brackets indicate an optional parameter)</em>
 
@@ -122,7 +122,7 @@ The text parameters are percent-decoded before matching. Dash (-), ampersand
 (&), and comma (,) characters in text parameters are percent-encoded to avoid
 being interpreted as part of the text directive syntax.
 
-The only required parameter is textStart. If only textStart is specified, the
+The only required parameter is <code>start</code>. If only <code>start</code> is specified, the
 first instance of this exact text string is the target text.
 
 <div class="example">
@@ -130,11 +130,11 @@ first instance of this exact text string is the target text.
 exact text "an example text fragment" is the target text.
 </div>
 
-If the textEnd parameter is also specified, then the text directive refers to a
+If the <code>end</code> parameter is also specified, then the text directive refers to a
 range of text in the page. The target text range is the text range starting at
-the first instance of textStart, until the first instance of textEnd that
-appears after textStart. This is equivalent to specifying the entire text range
-in the textStart parameter, but allows the URL to avoid being bloated with a
+the first instance of <code>start</code>, until the first instance of <code>end</code> that
+appears after <code>start</code>. This is equivalent to specifying the entire text range
+in the <code>start</code> parameter, but allows the URL to avoid being bloated with a
 long text directive.
 
 <div class="example">
@@ -149,7 +149,7 @@ is the target text.
 
 The other two optional parameters are context terms. They are specified by the
 dash (-) character succeeding the prefix and preceding the suffix, to
-differentiate them from the textStart and textEnd parameters, as any
+differentiate them from the <code>start</code> and <code>end</code> parameters, as any
 combination of optional parameters can be specified.
 
 Context terms are used to disambiguate the target text fragment. The context
@@ -194,9 +194,9 @@ The characters of each term in the text fragment are in <em>logical order</em>,
 that is, the order in which a native reader would read them in (and also the
 order in which characters are stored in memory).
 
-Similarly, the <code>prefix</code> and <code>textStart</code> terms identify
+Similarly, the <code>prefix</code> and <code>start</code> terms identify
 text coming before another term in logical order, while <code>suffix</code> and
-<code>textEnd</code> follow other terms in logical order.
+<code>end</code> follow other terms in logical order.
 
 Note: user agents can visually render URLs in a manner friendlier to a native
 reader, for example, by converting the displayed string to Unicode. However, the
@@ -451,10 +451,10 @@ step 6).
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
 
 A <dfn>text directive</dfn> is a <a spec=infra>struct</a> that consists of
-four strings: <dfn for="text directive">textStart</dfn>,
-<dfn for="text directive">textEnd</dfn>,
+four strings: <dfn for="text directive">start</dfn>,
+<dfn for="text directive">end</dfn>,
 <dfn for="text directive">prefix</dfn>, and
-<dfn for="text directive">suffix</dfn>. [=text directive/textStart=]
+<dfn for="text directive">suffix</dfn>. [=text directive/start=]
 is required to be non-null. The other three items may be set to null,
 indicating they weren't provided. The empty string is not a valid value for any
 of these items.
@@ -511,10 +511,10 @@ directive input|, run these steps:
         1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
         return null.
-    1. Set |retVal|'s [=text directive/textStart=] be the
+    1. Set |retVal|'s [=text directive/start=] be the
         [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-        [=text directive/textEnd=] be the
+        [=text directive/end=] be the
         [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
     1. Return |retVal|.
   </ol>
@@ -1153,14 +1153,14 @@ following steps:
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists.
 
-  [=text directive/textEnd=] can be null. If omitted, this is an "exact"
+  [=text directive/end=] can be null. If omitted, this is an "exact"
   search and the returned [=range=] will contain a string exactly matching
-  [=text directive/textStart=]. If [=text directive/textEnd=] is
+  [=text directive/start=]. If [=text directive/end=] is
   provided, this is a "range" search; the returned [=range=] will start with
-  [=text directive/textStart=] and end with
-  [=text directive/textEnd=]. In the normative text below, we'll call a
-  text passage that matches the provided [=text directive/textStart=] and
-  [=text directive/textEnd=], regardless of which mode we're in, the
+  [=text directive/start=] and end with
+  [=text directive/end=]. In the normative text below, we'll call a
+  text passage that matches the provided [=text directive/start=] and
+  [=text directive/end=], regardless of which mode we're in, the
   "matching text".
 
   Either or both of [=text directive/prefix=] and
@@ -1171,8 +1171,8 @@ following steps:
 <div class="note">
   While the matching text and its prefix/suffix can span across
   block-boundaries, the individual parameters to these steps cannot. That is,
-  each of [=text directive/prefix=], [=text directive/textStart=],
-  [=text directive/textEnd=], and [=text directive/suffix=] will only
+  each of [=text directive/prefix=], [=text directive/start=],
+  [=text directive/end=], and [=text directive/suffix=] will only
   match text within a single block.
 
   <div class="example">
@@ -1225,12 +1225,12 @@ following steps:
                   non-whitespace text data following a matched prefix.
                 </div>
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive/textEnd=] is non-null or
+                [=text directive/end=] is non-null or
                 |parsedValues|'s [=text directive/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive/textStart=], |searchRange| |matchRange|,
+                [=text directive/start=], |searchRange| |matchRange|,
                 |wordStartBounded| false, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1243,12 +1243,12 @@ following steps:
                 </div>
         1. Otherwise:
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive/textEnd=] is non-null or
+                [=text directive/end=] is non-null or
                 |parsedValues|'s [=text directive/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive/textStart=], |searchRange| |searchRange|,
+                [=text directive/start=], |searchRange| |searchRange|,
                 |wordStartBounded| true, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1258,17 +1258,17 @@ following steps:
             |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
         1. While |rangeEndSearchRange| is not [=range/collapsed=]:
-            1. If |parsedValues|'s [=text directive/textEnd=] item is
+            1. If |parsedValues|'s [=text directive/end=] item is
                 non-null, then:
                 1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
                     [=text directive/suffix=] is null, false otherwise.
-                1. Let |textEndMatch| be the result of running the [=find a string
+                1. Let |endMatch| be the result of running the [=find a string
                     in range=] steps with |query| |parsedValues|'s
-                    [=text directive/textEnd=], |searchRange| |rangeEndSearchRange|,
+                    [=text directive/end=], |searchRange| |rangeEndSearchRange|,
                     |wordStartBounded| true, and |wordEndBounded|
                     |mustEndAtWordBoundary|.
-                1. If |textEndMatch| is null then return null.
-                1. Set |potentialMatch|'s [=range/end=] to |textEndMatch|'s
+                1. If |endMatch| is null then return null.
+                1. Set |potentialMatch|'s [=range/end=] to |endMatch|'s
                     [=range/end=].
             1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
                 represents a range exactly containing an instance of matching text.
@@ -1290,7 +1290,7 @@ following steps:
                 </div>
             1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
                 return |potentialMatch|.
-            1. If |parsedValues|'s [=text directive/textEnd=] item is null
+            1. If |parsedValues|'s [=text directive/end=] item is null
                 then [=iteration/break=];
                 <div class="note">
                   If this is an exact match and the suffix doesn't match,
@@ -1308,7 +1308,7 @@ following steps:
                   rangeEnd.
                 </div>
         1. If |rangeEndSearchRange| is [=range/collapsed=] then:
-            1. [=/Assert=]: |parsedValues|'s [=text directive/textEnd=] item is non-null
+            1. [=/Assert=]: |parsedValues|'s [=text directive/end=] item is non-null
             1. Return null
                 <div class="note">
                     This can only happen for range matches due to the
@@ -1633,21 +1633,21 @@ is more than 0 and |position| equals either 0 or |text|'s length.
   <p>
     Text fragments are restricted such that match terms, when combined with
     their adjacent context terms, are word bounded. For example, in an
-    exact search like <code>prefix,textStart,suffix</code>,
-    <code>"prefix+textStart+suffix"</code> will match only if the entire result is word bounded. However, in a
-    range search like <code>prefix,textStart,textEnd,suffix</code>, a match is
+    exact search like <code>prefix,start,suffix</code>,
+    <code>"prefix+start+suffix"</code> will match only if the entire result is word bounded. However, in a
+    range search like <code>prefix,start,end,suffix</code>, a match is
     found only if both
-    <code>"prefix+textStart"</code> and <code>"textEnd+suffix"</code> are
+    <code>"prefix+start"</code> and <code>"end+suffix"</code> are
     word bounded.
   </p>
 
   <p>
     The goal is that a third-party must already know the full tokens they are
-    matching against. A range match like <code>textStart,textEnd</code> must be
+    matching against. A range match like <code>start,end</code> must be
     word bounded on the inside of the two terms; otherwise a third party could
     use this repeatedly to try and reveal a token (e.g. on a page with
     <code>"Balance: 123,456 $"</code>, a third-party could set
-    <code>prefix="Balance: ", textEnd="$"</code> and vary <code>textStart</code>
+    <code>prefix="Balance: ", end="$"</code> and vary <code>start</code>
     to try and guess the numeric token one digit at a time).
   </p>
 
