@@ -1,12 +1,12 @@
 <pre class='metadata'>
 Status: CG-DRAFT
-Title: Text Directive
+Title: URL Fragment Text Directives
 ED: https://wicg.github.io/scroll-to-text-fragment/
 Shortname: text-directive
 Level: 1
 Editor: Nick Burris, Google https://www.google.com, nburris@chromium.org
 Editor: David Bokan, Google https://www.google.com, bokan@chromium.org
-Abstract: Text directives adds support for specifying a text snippet in the URL
+Abstract: Text directives add support for specifying a text snippet in the URL
     fragment. When navigating to a URL with such a fragment, the user agent
     can quickly emphasise and/or bring it to the user's attention.
 Group: wicg
@@ -303,8 +303,8 @@ To the definition of [=Document=], add:
 </div>
 
 
-Whenever the fragment directive is stripped from the URL, it is set to the
-Document's [=Document/fragment directive=].
+Whenever the fragment directive is stripped from the URL, the
+Document's [=Document/fragment directive=] is set to the content of the fragment directive.
 
 Add a series of steps that will process a fragment directive on a [=Document/URL=]:
 
@@ -460,11 +460,11 @@ step 6).
 
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
 
-A <dfn>text directive struct</dfn> is a <a spec=infra>struct</a> that consists of
-four strings: <dfn for="text directive struct">start</dfn>,
-<dfn for="text directive struct">end</dfn>,
-<dfn for="text directive struct">prefix</dfn>, and
-<dfn for="text directive struct">suffix</dfn>. [=text directive struct/start=]
+A <dfn>text directive values</dfn> is a <a spec=infra>struct</a> that consists of
+four strings: <dfn for="text directive values">start</dfn>,
+<dfn for="text directive values">end</dfn>,
+<dfn for="text directive values">prefix</dfn>, and
+<dfn for="text directive values">suffix</dfn>. [=text directive values/start=]
 is required to be non-null. The other three items may be set to null,
 indicating they weren't provided. The empty string is not a valid value for any
 of these items.
@@ -487,7 +487,7 @@ directive input|, run these steps:
   </p>
   <p>
     Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a [=text directive struct=].
+    Otherwise, returns a [=text directive values=].
   </p>
 </div>
 
@@ -503,11 +503,11 @@ directive input|, run these steps:
         <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
     1. If |tokens| has size less than 1 or greater than 4, return null.
     1. If any of |tokens|'s items are the empty string, return null.
-    1. Let |retVal| be a [=text directive struct=] with each of its items initialized
+    1. Let |retVal| be a [=text directive values=] with each of its items initialized
         to null.
     1. Let |potential prefix| be the first item of |tokens|.
     1. If the last character of |potential prefix| is U+002D (-), then:
-        1. Set |retVal|'s [=text directive struct/prefix=] to the
+        1. Set |retVal|'s [=text directive values/prefix=] to the
             [=string/percent-decode|percent-decoding=] of the result of removing the
             last character from |potential prefix|.
         1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
@@ -515,16 +515,16 @@ directive input|, run these steps:
         otherwise.
     1. If |potential suffix| is non-null and its first character is U+002D (-),
         then:
-        1. Set |retVal|'s [=text directive struct/suffix=] to the
+        1. Set |retVal|'s [=text directive values/suffix=] to the
             [=string/percent-decode|percent-decoding=] of the result of removing the
             first character from |potential suffix|.
         1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
         return null.
-    1. Set |retVal|'s [=text directive struct/start=] be the
+    1. Set |retVal|'s [=text directive values/start=] be the
         [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
     1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-        [=text directive struct/end=] be the
+        [=text directive values/end=] be the
         [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
     1. Return |retVal|.
   </ol>
@@ -1154,7 +1154,7 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 
 <div algorithm="find a range from a text directive">
 To <dfn>find a range from a text directive</dfn>, given a
-[=text directive struct=] |parsedValues| and [=Document=] |document|, run the
+[=text directive values=] |parsedValues| and [=Document=] |document|, run the
 following steps:
 
 <div class="note">
@@ -1163,26 +1163,26 @@ following steps:
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists.
 
-  [=text directive struct/end=] can be null. If omitted, this is an "exact"
+  [=text directive values/end=] can be null. If omitted, this is an "exact"
   search and the returned [=range=] will contain a string exactly matching
-  [=text directive struct/start=]. If [=text directive struct/end=] is
+  [=text directive values/start=]. If [=text directive values/end=] is
   provided, this is a "range" search; the returned [=range=] will start with
-  [=text directive struct/start=] and end with
-  [=text directive struct/end=]. In the normative text below, we'll call a
-  text passage that matches the provided [=text directive struct/start=] and
-  [=text directive struct/end=], regardless of which mode we're in, the
+  [=text directive values/start=] and end with
+  [=text directive values/end=]. In the normative text below, we'll call a
+  text passage that matches the provided [=text directive values/start=] and
+  [=text directive values/end=], regardless of which mode we're in, the
   "matching text".
 
-  Either or both of [=text directive struct/prefix=] and
-  [=text directive struct/suffix=] can be null, in which case context on that
-  side of a match is not checked. E.g. If [=text directive struct/prefix=] is
+  Either or both of [=text directive values/prefix=] and
+  [=text directive values/suffix=] can be null, in which case context on that
+  side of a match is not checked. E.g. If [=text directive values/prefix=] is
   null, text is matched without any requirement on what text precedes it.
 </div>
 <div class="note">
   While the matching text and its prefix/suffix can span across
   block-boundaries, the individual parameters to these steps cannot. That is,
-  each of [=text directive struct/prefix=], [=text directive struct/start=],
-  [=text directive struct/end=], and [=text directive struct/suffix=] will only
+  each of [=text directive values/prefix=], [=text directive values/start=],
+  [=text directive values/end=], and [=text directive values/suffix=] will only
   match text within a single block.
 
   <div class="example">
@@ -1211,10 +1211,10 @@ following steps:
         [=range/end=] (|document|, |document|'s [=Node/length=])
     1. While |searchRange| is not [=range/collapsed=]:
         1. Let |potentialMatch| be null.
-        1. If |parsedValues|'s [=text directive struct/prefix=] is not null:
+        1. If |parsedValues|'s [=text directive values/prefix=] is not null:
             1. Let |prefixMatch| be the the result of running the [=find a string
                 in range=] steps with |query| |parsedValues|'s
-                [=text directive struct/prefix=], |searchRange| |searchRange|,
+                [=text directive values/prefix=], |searchRange| |searchRange|,
                 |wordStartBounded| true and |wordEndBounded| false.
             1. If |prefixMatch| is null, return null.
             1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
@@ -1235,12 +1235,12 @@ following steps:
                   non-whitespace text data following a matched prefix.
                 </div>
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive struct/end=] is non-null or
-                |parsedValues|'s [=text directive struct/suffix=] is null, false
+                [=text directive values/end=] is non-null or
+                |parsedValues|'s [=text directive values/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive struct/start=], |searchRange| |matchRange|,
+                [=text directive values/start=], |searchRange| |matchRange|,
                 |wordStartBounded| false, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1249,16 +1249,16 @@ following steps:
                 <div class="note">
                   In this case, we found a prefix but it was followed by something
                   other than a matching text so we'll continue searching for the
-                  next instance of [=text directive struct/prefix=].
+                  next instance of [=text directive values/prefix=].
                 </div>
         1. Otherwise:
             1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                [=text directive struct/end=] is non-null or
-                |parsedValues|'s [=text directive struct/suffix=] is null, false
+                [=text directive values/end=] is non-null or
+                |parsedValues|'s [=text directive values/suffix=] is null, false
                 otherwise.
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
-                [=text directive struct/start=], |searchRange| |searchRange|,
+                [=text directive values/start=], |searchRange| |searchRange|,
                 |wordStartBounded| true, and |wordEndBounded|
                 |mustEndAtWordBoundary|.
             1. If |potentialMatch| is null, return null.
@@ -1268,13 +1268,13 @@ following steps:
             |potentialMatch|'s [=range/end=] and whose [=range/end=] is
             |searchRange|'s [=range/end=].
         1. While |rangeEndSearchRange| is not [=range/collapsed=]:
-            1. If |parsedValues|'s [=text directive struct/end=] item is
+            1. If |parsedValues|'s [=text directive values/end=] item is
                 non-null, then:
                 1. Let |mustEndAtWordBoundary| be true if |parsedValues|'s
-                    [=text directive struct/suffix=] is null, false otherwise.
+                    [=text directive values/suffix=] is null, false otherwise.
                 1. Let |endMatch| be the result of running the [=find a string
                     in range=] steps with |query| |parsedValues|'s
-                    [=text directive struct/end=], |searchRange| |rangeEndSearchRange|,
+                    [=text directive values/end=], |searchRange| |rangeEndSearchRange|,
                     |wordStartBounded| true, and |wordEndBounded|
                     |mustEndAtWordBoundary|.
                 1. If |endMatch| is null then return null.
@@ -1282,7 +1282,7 @@ following steps:
                     [=range/end=].
             1. [=/Assert=]: |potentialMatch| is non-null, not [=range/collapsed=] and
                 represents a range exactly containing an instance of matching text.
-            1. If |parsedValues|'s [=text directive struct/suffix=] is null, return
+            1. If |parsedValues|'s [=text directive values/suffix=] is null, return
                 |potentialMatch|.
             1. Let |suffixRange| be a [=range=] with [=range/start=] equal to
                 |potentialMatch|'s [=range/end=] and [=range/end=] equal to
@@ -1290,7 +1290,7 @@ following steps:
             1. Advance |suffixRange|'s [=range/start=] to the [=next non-whitespace
                 position=].
             1. Let |suffixMatch| be result of running the [=find a string in range=]
-                steps with |query| |parsedValues|'s [=text directive struct/suffix=],
+                steps with |query| |parsedValues|'s [=text directive values/suffix=],
                 |searchRange| |suffixRange|, |wordStartBounded| false, and
                 |wordEndBounded| true.
             1. If |suffixMatch| is null then return null.
@@ -1300,7 +1300,7 @@ following steps:
                 </div>
             1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
                 return |potentialMatch|.
-            1. If |parsedValues|'s [=text directive struct/end=] item is null
+            1. If |parsedValues|'s [=text directive values/end=] item is null
                 then [=iteration/break=];
                 <div class="note">
                   If this is an exact match and the suffix doesn't match,
@@ -1318,7 +1318,7 @@ following steps:
                   rangeEnd.
                 </div>
         1. If |rangeEndSearchRange| is [=range/collapsed=] then:
-            1. [=/Assert=]: |parsedValues|'s [=text directive struct/end=] item is non-null
+            1. [=/Assert=]: |parsedValues|'s [=text directive values/end=] item is non-null
             1. Return null
                 <div class="note">
                     This can only happen for range matches due to the
