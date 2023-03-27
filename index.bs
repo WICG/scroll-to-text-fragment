@@ -548,9 +548,9 @@ in the [=fragment directive=] that matches the production:
   </dt>
   <dd>
     <code>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
-    ";" | "=" | "?" | "@" | "_" | "~" | "&" | "," | "-"</code>
+    ";" | "=" | "?" | "@" | "_" | "~" | "," | "-"</code>
   <div class = "note">
-    An [=ExplicitChar=] may be any [=URL code point=].
+    An [=ExplicitChar=] may be any [=URL code point=] other than "&".
   </div>
   </dd>
 </dl>
