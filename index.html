@@ -1152,8 +1152,9 @@ history.back();
     <p>Results in the current document having "bar" as the fragment directive.</p>
    </div>
    <h4 class="heading settled" data-level="3.3.2" id="parsing-the-fragment-directive"><span class="secno">3.3.2. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive-values">text directive values</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct" id="ref-for-struct">struct</a> that consists of
-four strings: <dfn class="dfn-paneled" data-dfn-for="text directive values" data-dfn-type="dfn" data-noexport id="text-directive-values-start">start</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive values" data-dfn-type="dfn" data-noexport id="text-directive-values-end">end</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive values" data-dfn-type="dfn" data-noexport id="text-directive-values-prefix">prefix</dfn>, and <dfn class="dfn-paneled" data-dfn-for="text directive values" data-dfn-type="dfn" data-noexport id="text-directive-values-suffix">suffix</dfn>. <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start">start</a> is required to be non-null. The other three items may be set to null,
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive">text directive</dfn> is a kind of <a data-link-type="dfn" href="#directives" id="ref-for-directives">directive</a> representing a range of
+text to be indicated to the user. It is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#struct" id="ref-for-struct">struct</a> that consists of
+four strings: <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-start">start</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-end">end</dfn>, <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-prefix">prefix</dfn>, and <dfn class="dfn-paneled" data-dfn-for="text directive" data-dfn-type="dfn" data-noexport id="text-directive-suffix">suffix</dfn>. <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start">start</a> is required to be non-null. The other three items may be set to null,
 indicating they weren’t provided. The empty string is not a valid value for any
 of these items.</p>
    <p>See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
@@ -1167,7 +1168,7 @@ directive input</var>, run these steps:</p>
     components of the directive (e.g. ("prefix", "foo", "bar", null)). See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
     used. </p>
      <p> Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a <a data-link-type="dfn" href="#text-directive-values" id="ref-for-text-directive-values">text directive values</a>. </p>
+    Otherwise, returns a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①">text directive</a>. </p>
     </div>
     <ol class="algorithm">
      <li data-md>
@@ -1184,7 +1185,7 @@ input</var> starting at index 5.</p>
      <li data-md>
       <p>If any of <var>tokens</var>’s items are the empty string, return null.</p>
      <li data-md>
-      <p>Let <var>retVal</var> be a <a data-link-type="dfn" href="#text-directive-values" id="ref-for-text-directive-values①">text directive values</a> with each of its items initialized
+      <p>Let <var>retVal</var> be a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive②">text directive</a> with each of its items initialized
 to null.</p>
      <li data-md>
       <p>Let <var>potential prefix</var> be the first item of <var>tokens</var>.</p>
@@ -1192,7 +1193,7 @@ to null.</p>
       <p>If the last character of <var>potential prefix</var> is U+002D (-), then:</p>
       <ol>
        <li data-md>
-        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix">prefix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> of the result of removing the
+        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix">prefix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> of the result of removing the
 last character from <var>potential prefix</var>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">Remove</a> the first item of the list <var>tokens</var>.</p>
@@ -1205,7 +1206,7 @@ otherwise.</p>
 then:</p>
       <ol>
        <li data-md>
-        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix">suffix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode①">percent-decoding</a> of the result of removing the
+        <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix">suffix</a> to the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode①">percent-decoding</a> of the result of removing the
 first character from <var>potential suffix</var>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove①">Remove</a> the last item of the list <var>tokens</var>.</p>
@@ -1214,9 +1215,9 @@ first character from <var>potential suffix</var>.</p>
       <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> not equal to 1 nor 2 then
 return null.</p>
      <li data-md>
-      <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start①">start</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode②">percent-decoding</a> of the first item of <var>tokens</var>.</p>
+      <p>Set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start①">start</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode②">percent-decoding</a> of the first item of <var>tokens</var>.</p>
      <li data-md>
-      <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end">end</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode③">percent-decoding</a> of the last item of <var>tokens</var>.</p>
+      <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> 2, then set <var>retVal</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end">end</a> be the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode③">percent-decoding</a> of the last item of <var>tokens</var>.</p>
      <li data-md>
       <p>Return <var>retVal</var>.</p>
     </ol>
@@ -1242,8 +1243,6 @@ it matches the production:</p>
   multiple indicated strings in the page, but this also allows for future
   directive types to be added and combined. For extensibility, we do not fail to
   parse if an unknown directive is in the &amp;-separated list of directives. </div>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive">text directive</dfn> is a <a data-link-type="dfn" href="#directives" id="ref-for-directives">directive</a> that specifies a text range on
-the page as being targeted by the URL. It must match the production:</p>
    <dl>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective"><code>TextDirective</code></dfn> <code>::=</code>
     <dd><code>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></code>
@@ -1269,9 +1268,9 @@ the page as being targeted by the URL. It must match the production:</p>
    <h3 class="heading settled" data-level="3.4" id="security-and-privacy"><span class="secno">3.4. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
    <h4 class="heading settled" data-level="3.4.1" id="motivation"><span class="secno">3.4.1. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h4>
    <div class="note" role="note">This section is non-normative</div>
-   <p>Care must be taken when implementing <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①">text directive</a> so that it
+   <p>Care must be taken when implementing <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive③">text directive</a> so that it
 cannot be used to exfiltrate information across origins. Scripts can navigate a
-page to a cross-origin URL with a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive②">text directive</a>. If a malicious
+page to a cross-origin URL with a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive④">text directive</a>. If a malicious
 actor can determine that the text fragment was successfully found in victim
 page as a result of such a navigation, they can infer the existence of any text
 on the page.</p>
@@ -1340,7 +1339,7 @@ whether the element-id was scrolled.</p>
    <p>A naive implementation of the text search algorithm could allow information
 exfiltration based on runtime duration differences between a matching and non-
 matching query. If an attacker could find a way to synchronously navigate
-to a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive③">text directive</a>-invoking URL, they would be able to determine
+to a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑤">text directive</a>-invoking URL, they would be able to determine
 the existence of a text snippet by measuring how long the navigation call takes.</p>
    <div class="note" role="note"> The restrictions in <a href="#restricting-the-text-fragment">§ 3.4.4 Restricting the Text Fragment</a> prevent this
   specific case; in particular, the no-same-document-navigation restriction.
@@ -1512,7 +1511,7 @@ steps of the task queued in step 2:</p>
     </ol>
    </blockquote>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
-   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>. In summary, if a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive④">text directive</a> is
+   <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>. In summary, if a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑥">text directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part. We amend the HTML Document’s
 indicated part processing model to return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range">range</a>, rather than an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element">element</a>, that will be scrolled into view. </div>
@@ -1726,26 +1725,26 @@ directive</a> steps on <var>directive</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a range from a text directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#text-directive-values" id="ref-for-text-directive-values②">text directive values</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑦">text directive</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
   document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">range</a> that points to the first
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists. 
-     <p><a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end①">end</a> can be null. If omitted, this is an "exact"
-  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start②">start</a>. If <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end②">end</a> is
-  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will start with <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start③">start</a> and end with <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end③">end</a>. In the normative text below, we’ll call a
-  text passage that matches the provided <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start④">start</a> and <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end④">end</a>, regardless of which mode we’re in, the
+     <p><a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end①">end</a> can be null. If omitted, this is an "exact"
+  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start②">start</a>. If <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end②">end</a> is
+  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will start with <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start③">start</a> and end with <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end③">end</a>. In the normative text below, we’ll call a
+  text passage that matches the provided <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start④">start</a> and <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end④">end</a>, regardless of which mode we’re in, the
   "matching text".</p>
-     <p>Either or both of <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix①">prefix</a> and <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix①">suffix</a> can be null, in which case context on that
-  side of a match is not checked. E.g. If <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix②">prefix</a> is
+     <p>Either or both of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix①">prefix</a> and <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix①">suffix</a> can be null, in which case context on that
+  side of a match is not checked. E.g. If <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix②">prefix</a> is
   null, text is matched without any requirement on what text precedes it.</p>
     </div>
     <div class="note" role="note">
       While the matching text and its prefix/suffix can span across
   block-boundaries, the individual parameters to these steps cannot. That is,
-  each of <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix③">prefix</a>, <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start⑤">start</a>, <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end⑤">end</a>, and <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix②">suffix</a> will only
+  each of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix③">prefix</a>, <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start⑤">start</a>, <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end⑤">end</a>, and <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix②">suffix</a> will only
   match text within a single block. 
      <div class="example" id="example-73638554">
       <a class="self-link" href="#example-73638554"></a> 
@@ -1772,11 +1771,11 @@ following steps:
        <li data-md>
         <p>Let <var>potentialMatch</var> be null.</p>
        <li data-md>
-        <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix④">prefix</a> is not null:</p>
+        <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix④">prefix</a> is not null:</p>
         <ol>
          <li data-md>
           <p>Let <var>prefixMatch</var> be the the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range">find a string
-in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix⑤">prefix</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true and <var>wordEndBounded</var> false.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix⑤">prefix</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true and <var>wordEndBounded</var> false.</p>
          <li data-md>
           <p>If <var>prefixMatch</var> is null, return null.</p>
          <li data-md>
@@ -1794,28 +1793,28 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
           <div class="note" role="note"> <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑥">start</a> now points to the next
   non-whitespace text data following a matched prefix. </div>
          <li data-md>
-          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end⑥">end</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix③">suffix</a> is null, false
+          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end⑥">end</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix③">suffix</a> is null, false
 otherwise.</p>
          <li data-md>
           <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range①">find a string in
-range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start⑥">start</a>, <var>searchRange</var> <var>matchRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start⑥">start</a>, <var>searchRange</var> <var>matchRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
          <li data-md>
           <p>If <var>potentialMatch</var> is null, return null.</p>
          <li data-md>
           <p>If <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑦">start</a> is not <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a>, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue②">continue</a>.</p>
           <div class="note" role="note"> In this case, we found a prefix but it was followed by something
   other than a matching text so we’ll continue searching for the
-  next instance of <a data-link-type="dfn" href="#text-directive-values-prefix" id="ref-for-text-directive-values-prefix⑥">prefix</a>. </div>
+  next instance of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix⑥">prefix</a>. </div>
         </ol>
        <li data-md>
         <p>Otherwise:</p>
         <ol>
          <li data-md>
-          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end⑦">end</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix④">suffix</a> is null, false
+          <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end⑦">end</a> is non-null or <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix④">suffix</a> is null, false
 otherwise.</p>
          <li data-md>
           <p>Set <var>potentialMatch</var> to the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range②">find a string in
-range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-start" id="ref-for-text-directive-values-start⑦">start</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start⑦">start</a>, <var>searchRange</var> <var>searchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
          <li data-md>
           <p>If <var>potentialMatch</var> is null, return null.</p>
          <li data-md>
@@ -1827,14 +1826,14 @@ range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-t
         <p>While <var>rangeEndSearchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a>:</p>
         <ol>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end⑧">end</a> item is
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end⑧">end</a> item is
 non-null, then:</p>
           <ol>
            <li data-md>
-            <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix⑤">suffix</a> is null, false otherwise.</p>
+            <p>Let <var>mustEndAtWordBoundary</var> be true if <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑤">suffix</a> is null, false otherwise.</p>
            <li data-md>
             <p>Let <var>endMatch</var> be the result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range③">find a string
-in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end⑨">end</a>, <var>searchRange</var> <var>rangeEndSearchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
+in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end⑨">end</a>, <var>searchRange</var> <var>rangeEndSearchRange</var>, <var>wordStartBounded</var> true, and <var>wordEndBounded</var> <var>mustEndAtWordBoundary</var>.</p>
            <li data-md>
             <p>If <var>endMatch</var> is null then return null.</p>
            <li data-md>
@@ -1844,14 +1843,14 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
           <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert②">Assert</a>: <var>potentialMatch</var> is non-null, not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed③">collapsed</a> and
 represents a range exactly containing an instance of matching text.</p>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
          <li data-md>
           <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①③">end</a>.</p>
          <li data-md>
           <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①③">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
          <li data-md>
-          <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-suffix" id="ref-for-text-directive-values-suffix⑦">suffix</a>, <var>searchRange</var> <var>suffixRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> true.</p>
+          <p>Let <var>suffixMatch</var> be result of running the <a data-link-type="dfn" href="#find-a-string-in-range" id="ref-for-find-a-string-in-range④">find a string in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑦">suffix</a>, <var>searchRange</var> <var>suffixRange</var>, <var>wordStartBounded</var> false, and <var>wordEndBounded</var> true.</p>
          <li data-md>
           <p>If <var>suffixMatch</var> is null then return null.</p>
           <div class="note" role="note"> If the suffix doesn’t appear in the remaining text of the document,
@@ -1860,7 +1859,7 @@ position</a>.</p>
           <p>If <var>suffixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①④">start</a> is <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑤">start</a>,
 return <var>potentialMatch</var>.</p>
          <li data-md>
-          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end①⓪">end</a> item is null
+          <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end①⓪">end</a> item is null
 then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break">break</a>;</p>
           <div class="note" role="note"> If this is an exact match and the suffix doesn’t match,
   start searching for the next range start by breaking out
@@ -1878,7 +1877,7 @@ then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-brea
         <p>If <var>rangeEndSearchRange</var> is <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed④">collapsed</a> then:</p>
         <ol>
          <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-values-end" id="ref-for-text-directive-values-end①①">end</a> item is non-null</p>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end①①">end</a> item is non-null</p>
          <li data-md>
           <p>Return null</p>
           <div class="note" role="note"> This can only happen for range matches due to the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break①">break</a> for exact matches in step 9 of the
@@ -2341,7 +2340,7 @@ fragment or other fragment directives in the future.</p>
    <h2 class="heading settled" data-level="4" id="generating-text-fragment-directives"><span class="secno">4. </span><span class="content">Generating Text Fragment Directives</span><a class="self-link" href="#generating-text-fragment-directives"></a></h2>
    <div class="note" role="note"> This section is non-normative. </div>
    <p>This section contains recommendations for UAs automatically generating URLs
-with a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑤">text directive</a>. These recommendations aren’t normative but
+with a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑧">text directive</a>. These recommendations aren’t normative but
 are provided to ensure generated URLs result in maximally stable and usable
 URLs.</p>
    <h3 class="heading settled" data-level="4.1" id="prefer-exact-matching-to-range-based"><span class="secno">4.1. </span><span class="content">Prefer Exact Matching To Range-based</span><a class="self-link" href="#prefer-exact-matching-to-range-based"></a></h3>
@@ -2376,18 +2375,18 @@ exact match. Above this limit, the UA can encode the string as a range-based
 match.</p>
    <div class="note" role="note"> TODO:  Can we determine the above limit in some less arbitrary way? </div>
    <h3 class="heading settled" data-level="4.2" id="use-context-only-when-necessary"><span class="secno">4.2. </span><span class="content">Use Context Only When Necessary</span><a class="self-link" href="#use-context-only-when-necessary"></a></h3>
-   <p>Context terms allow the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑥">text directive</a> to disambiguate text
+   <p>Context terms allow the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑨">text directive</a> to disambiguate text
 snippets on a page. However, their use can make the URL more brittle in some
 cases. Often, the desired string will start or end at an element boundary. The
 context will therefore exist in an adjacent element. Changes to the page
-structure could invalidate the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑦">text directive</a> since the context and
+structure could invalidate the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①⓪">text directive</a> since the context and
 match text will no longer appear to be adjacent.</p>
    <div class="example" id="example-7a86f6f5">
     <a class="self-link" href="#example-7a86f6f5"></a> Suppose we wish to craft a URL for the following text: 
 <pre>&lt;div class="section">HEADER&lt;/div>
 &lt;div class="content">Text to quote&lt;/div>
 </pre>
-    <p>We could craft the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑧">text directive</a> as follows:</p>
+    <p>We could craft the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①①">text directive</a> as follows:</p>
 <pre>text=HEADER-,Text%20to%20quote
 </pre>
     <p>However, suppose the page changes to add a "[edit]" link beside all section
@@ -2402,11 +2401,11 @@ adding superfluous context terms.</p>
    </ul>
    <div class="note" role="note"> TODO: Determine the numeric limit above in less arbitrary way. </div>
    <h3 class="heading settled" data-level="4.3" id="determine-if-fragment-id-is-needed"><span class="secno">4.3. </span><span class="content">Determine If Fragment Id Is Needed</span><a class="self-link" href="#determine-if-fragment-id-is-needed"></a></h3>
-   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑨">text directive</a>, it will
+   <p>When the UA navigates to a URL containing a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①②">text directive</a>, it will
 fallback to scrolling into view a regular element-id based fragment if it
 exists and the text fragment isn’t found.</p>
    <p>This can be useful to provide a fallback, in case the text in the document
-changes, invalidating the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①⓪">text directive</a>.</p>
+changes, invalidating the <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive①③">text directive</a>.</p>
    <div class="example" id="example-5990805b">
     <a class="self-link" href="#example-5990805b"></a> Suppose we wish to craft a URL to
   https://en.wikipedia.org/wiki/History_of_computing quoting the sentence: 
@@ -2493,7 +2492,7 @@ manipulations
    <li><a href="#document-allow-text-fragment-scroll">allow text fragment scroll</a><span>, in § 3.4.4</span>
    <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.3</span>
    <li><a href="#directives">directives</a><span>, in § 3.3</span>
-   <li><a href="#text-directive-values-end">end</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-end">end</a><span>, in § 3.3.2</span>
    <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.5.1</span>
    <li><a href="#find-a-range-from-a-text-directive">find a range from a text directive</a><span>, in § 3.5.1</span>
@@ -2522,15 +2521,15 @@ manipulations
    <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in § 3.5.1</span>
    <li><a href="#parse-a-text-directive">parse a text directive</a><span>, in § 3.3.2</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.3</span>
-   <li><a href="#text-directive-values-prefix">prefix</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.3.2</span>
    <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.5.1</span>
    <li><a href="#process-and-consume-fragment-directive">process and consume fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.5</span>
    <li><a href="#split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</a><span>, in § 3.3.1</span>
-   <li><a href="#text-directive-values-start">start</a><span>, in § 3.3.2</span>
-   <li><a href="#text-directive-values-suffix">suffix</a><span>, in § 3.3.2</span>
-   <li><a href="#text-directive">text directive</a><span>, in § 3.3.3</span>
+   <li><a href="#text-directive-start">start</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive-suffix">suffix</a><span>, in § 3.3.2</span>
+   <li><a href="#text-directive">text directive</a><span>, in § 3.3.2</span>
    <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in § 3.3.3</span>
@@ -2543,7 +2542,6 @@ manipulations
      <li><a href="#document-text-directive-user-activation">dfn for document</a><span>, in § 3.4.4</span>
      <li><a href="#request-text-directive-user-activation">dfn for request</a><span>, in § 3.4.4</span>
     </ul>
-   <li><a href="#text-directive-values">text directive values</a><span>, in § 3.3.2</span>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.3</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.3</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.5.1</span>
@@ -3376,7 +3374,7 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
   <aside aria-labelledby="infopaneltitle-for-directives" class="dfn-panel" data-for="directives" id="infopanel-for-directives">
    <span id="infopaneltitle-for-directives" style="display:none">Info about the 'directives' definition.</span><b><a href="#directives">#directives</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-directives">3.3.3. Fragment directive grammar</a>
+    <li><a href="#ref-for-directives">3.3.2. Parsing the fragment directive</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-document-fragment-directive" class="dfn-panel" data-for="document-fragment-directive" id="infopanel-for-document-fragment-directive">
@@ -3400,39 +3398,46 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-process-and-consume-fragment-directive">3.3.1. Processing the fragment directive</a> <a href="#ref-for-process-and-consume-fragment-directive①">(2)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive-values" class="dfn-panel" data-for="text-directive-values" id="infopanel-for-text-directive-values">
-   <span id="infopaneltitle-for-text-directive-values" style="display:none">Info about the 'text directive values' definition.</span><b><a href="#text-directive-values">#text-directive-values</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive" class="dfn-panel" data-for="text-directive" id="infopanel-for-text-directive">
+   <span id="infopaneltitle-for-text-directive" style="display:none">Info about the 'text directive' definition.</span><b><a href="#text-directive">#text-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-directive-values">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive-values①">(2)</a>
-    <li><a href="#ref-for-text-directive-values②">3.5.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-text-directive">3.2. Syntax</a>
+    <li><a href="#ref-for-text-directive①">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive②">(2)</a>
+    <li><a href="#ref-for-text-directive③">3.4.1. Motivation</a> <a href="#ref-for-text-directive④">(2)</a>
+    <li><a href="#ref-for-text-directive⑤">3.4.3. Search Timing</a>
+    <li><a href="#ref-for-text-directive⑥">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-text-directive⑦">3.5.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-text-directive⑧">4. Generating Text Fragment Directives</a>
+    <li><a href="#ref-for-text-directive⑨">4.2. Use Context Only When Necessary</a> <a href="#ref-for-text-directive①⓪">(2)</a> <a href="#ref-for-text-directive①①">(3)</a>
+    <li><a href="#ref-for-text-directive①②">4.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-directive①③">(2)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive-values-start" class="dfn-panel" data-for="text-directive-values-start" id="infopanel-for-text-directive-values-start">
-   <span id="infopaneltitle-for-text-directive-values-start" style="display:none">Info about the 'start' definition.</span><b><a href="#text-directive-values-start">#text-directive-values-start</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-start" class="dfn-panel" data-for="text-directive-start" id="infopanel-for-text-directive-start">
+   <span id="infopaneltitle-for-text-directive-start" style="display:none">Info about the 'start' definition.</span><b><a href="#text-directive-start">#text-directive-start</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-directive-values-start">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive-values-start①">(2)</a>
-    <li><a href="#ref-for-text-directive-values-start②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-values-start③">(2)</a> <a href="#ref-for-text-directive-values-start④">(3)</a> <a href="#ref-for-text-directive-values-start⑤">(4)</a> <a href="#ref-for-text-directive-values-start⑥">(5)</a> <a href="#ref-for-text-directive-values-start⑦">(6)</a>
+    <li><a href="#ref-for-text-directive-start">3.3.2. Parsing the fragment directive</a> <a href="#ref-for-text-directive-start①">(2)</a>
+    <li><a href="#ref-for-text-directive-start②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-start③">(2)</a> <a href="#ref-for-text-directive-start④">(3)</a> <a href="#ref-for-text-directive-start⑤">(4)</a> <a href="#ref-for-text-directive-start⑥">(5)</a> <a href="#ref-for-text-directive-start⑦">(6)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive-values-end" class="dfn-panel" data-for="text-directive-values-end" id="infopanel-for-text-directive-values-end">
-   <span id="infopaneltitle-for-text-directive-values-end" style="display:none">Info about the 'end' definition.</span><b><a href="#text-directive-values-end">#text-directive-values-end</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-end" class="dfn-panel" data-for="text-directive-end" id="infopanel-for-text-directive-end">
+   <span id="infopaneltitle-for-text-directive-end" style="display:none">Info about the 'end' definition.</span><b><a href="#text-directive-end">#text-directive-end</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-directive-values-end">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-text-directive-values-end①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-values-end②">(2)</a> <a href="#ref-for-text-directive-values-end③">(3)</a> <a href="#ref-for-text-directive-values-end④">(4)</a> <a href="#ref-for-text-directive-values-end⑤">(5)</a> <a href="#ref-for-text-directive-values-end⑥">(6)</a> <a href="#ref-for-text-directive-values-end⑦">(7)</a> <a href="#ref-for-text-directive-values-end⑧">(8)</a> <a href="#ref-for-text-directive-values-end⑨">(9)</a> <a href="#ref-for-text-directive-values-end①⓪">(10)</a> <a href="#ref-for-text-directive-values-end①①">(11)</a>
+    <li><a href="#ref-for-text-directive-end">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-end①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-end②">(2)</a> <a href="#ref-for-text-directive-end③">(3)</a> <a href="#ref-for-text-directive-end④">(4)</a> <a href="#ref-for-text-directive-end⑤">(5)</a> <a href="#ref-for-text-directive-end⑥">(6)</a> <a href="#ref-for-text-directive-end⑦">(7)</a> <a href="#ref-for-text-directive-end⑧">(8)</a> <a href="#ref-for-text-directive-end⑨">(9)</a> <a href="#ref-for-text-directive-end①⓪">(10)</a> <a href="#ref-for-text-directive-end①①">(11)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive-values-prefix" class="dfn-panel" data-for="text-directive-values-prefix" id="infopanel-for-text-directive-values-prefix">
-   <span id="infopaneltitle-for-text-directive-values-prefix" style="display:none">Info about the 'prefix' definition.</span><b><a href="#text-directive-values-prefix">#text-directive-values-prefix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-prefix" class="dfn-panel" data-for="text-directive-prefix" id="infopanel-for-text-directive-prefix">
+   <span id="infopaneltitle-for-text-directive-prefix" style="display:none">Info about the 'prefix' definition.</span><b><a href="#text-directive-prefix">#text-directive-prefix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-directive-values-prefix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-text-directive-values-prefix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-values-prefix②">(2)</a> <a href="#ref-for-text-directive-values-prefix③">(3)</a> <a href="#ref-for-text-directive-values-prefix④">(4)</a> <a href="#ref-for-text-directive-values-prefix⑤">(5)</a> <a href="#ref-for-text-directive-values-prefix⑥">(6)</a>
+    <li><a href="#ref-for-text-directive-prefix">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-prefix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-prefix②">(2)</a> <a href="#ref-for-text-directive-prefix③">(3)</a> <a href="#ref-for-text-directive-prefix④">(4)</a> <a href="#ref-for-text-directive-prefix⑤">(5)</a> <a href="#ref-for-text-directive-prefix⑥">(6)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive-values-suffix" class="dfn-panel" data-for="text-directive-values-suffix" id="infopanel-for-text-directive-values-suffix">
-   <span id="infopaneltitle-for-text-directive-values-suffix" style="display:none">Info about the 'suffix' definition.</span><b><a href="#text-directive-values-suffix">#text-directive-values-suffix</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-text-directive-suffix" class="dfn-panel" data-for="text-directive-suffix" id="infopanel-for-text-directive-suffix">
+   <span id="infopaneltitle-for-text-directive-suffix" style="display:none">Info about the 'suffix' definition.</span><b><a href="#text-directive-suffix">#text-directive-suffix</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-text-directive-values-suffix">3.3.2. Parsing the fragment directive</a>
-    <li><a href="#ref-for-text-directive-values-suffix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-values-suffix②">(2)</a> <a href="#ref-for-text-directive-values-suffix③">(3)</a> <a href="#ref-for-text-directive-values-suffix④">(4)</a> <a href="#ref-for-text-directive-values-suffix⑤">(5)</a> <a href="#ref-for-text-directive-values-suffix⑥">(6)</a> <a href="#ref-for-text-directive-values-suffix⑦">(7)</a>
+    <li><a href="#ref-for-text-directive-suffix">3.3.2. Parsing the fragment directive</a>
+    <li><a href="#ref-for-text-directive-suffix①">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-text-directive-suffix②">(2)</a> <a href="#ref-for-text-directive-suffix③">(3)</a> <a href="#ref-for-text-directive-suffix④">(4)</a> <a href="#ref-for-text-directive-suffix⑤">(5)</a> <a href="#ref-for-text-directive-suffix⑥">(6)</a> <a href="#ref-for-text-directive-suffix⑦">(7)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-parse-a-text-directive" class="dfn-panel" data-for="parse-a-text-directive" id="infopanel-for-parse-a-text-directive">
@@ -3469,18 +3474,6 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
    <span id="infopaneltitle-for-explicitchar" style="display:none">Info about the 'ExplicitChar' definition.</span><b><a href="#explicitchar">#explicitchar</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-explicitchar">3.3.3. Fragment directive grammar</a> <a href="#ref-for-explicitchar①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-text-directive" class="dfn-panel" data-for="text-directive" id="infopanel-for-text-directive">
-   <span id="infopaneltitle-for-text-directive" style="display:none">Info about the 'text directive' definition.</span><b><a href="#text-directive">#text-directive</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-text-directive">3.2. Syntax</a>
-    <li><a href="#ref-for-text-directive①">3.4.1. Motivation</a> <a href="#ref-for-text-directive②">(2)</a>
-    <li><a href="#ref-for-text-directive③">3.4.3. Search Timing</a>
-    <li><a href="#ref-for-text-directive④">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-text-directive⑤">4. Generating Text Fragment Directives</a>
-    <li><a href="#ref-for-text-directive⑥">4.2. Use Context Only When Necessary</a> <a href="#ref-for-text-directive⑦">(2)</a> <a href="#ref-for-text-directive⑧">(3)</a>
-    <li><a href="#ref-for-text-directive⑨">4.3. Determine If Fragment Id Is Needed</a> <a href="#ref-for-text-directive①⓪">(2)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-textdirective" class="dfn-panel" data-for="textdirective" id="infopanel-for-textdirective">
