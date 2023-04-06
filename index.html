@@ -6,6 +6,15 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version d9bd89757, updated Thu Mar 23 10:06:53 2023 -0700" name="generator">
   <link href="https://wicg.github.io/scroll-to-text-fragment/" rel="canonical">
+<style>
+  .monkeypatch {
+    color: grey;
+  }
+
+  .monkeypatch .diff {
+    color: black;
+  }
+</style>
 <style>/* style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -735,7 +744,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">URL Fragment Text Directives</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-03-28">28 March 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-04-06">6 April 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -994,131 +1003,307 @@ action. Multiple directives may appear in the fragment directive.</p>
     <a class="self-link" href="#example-9acce0ff"></a> <code>https://example.com#:~:text=foo&amp;text=bar&amp;unknownDirective</code> 
     <p>Contains 2 text directives and one unknown directive.</p>
    </div>
-   <p>To prevent impacting page operation, it is stripped from a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">Document</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url">URL</a> to prevent interaction with author script. This also ensures
-future directives can be added without web compatibility risk.</p>
+   <p>To prevent impacting page operation, it is stripped from script-accessible APIs to prevent
+interaction with author script. This also ensures future directives can be added without web
+compatibility risk.</p>
    <h4 class="heading settled" data-level="3.3.1" id="processing-the-fragment-directive"><span class="secno">3.3.1. </span><span class="content">Processing the fragment directive</span><a class="self-link" href="#processing-the-fragment-directive"></a></h4>
-   <p>The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive③">fragment directive</a> is processed and removed from the fragment whenever the
-UA sets the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url①">URL</a> on a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">Document</a>. This is defined with the
-following additions and changes.</p>
-   <p>To the definition of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a>, add:</p>
-   <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-dom" title="DOM Standard">[DOM]</a>:</strong></p>
-    <p><em> Each document has an associated <dfn class="dfn-paneled" data-dfn-for="Document" data-dfn-type="dfn" data-lt="fragment directive" data-noexport id="document-fragment-directive">fragment
-    directive</dfn> which is either null or an ASCII string holding data used
-    by the UA to process the resource. It is initially null. </em></p>
-   </blockquote>
-   <div class="algorithm" data-algorithm="split the fragment from the fragment directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</dfn>, given an ASCII string <var>raw fragment</var> and returning a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">tuple</a> consisting of a <code>fragment</code> and a <code>fragment directive</code> (both ASCII strings), run these steps: 
-    <ol class="algorithm">
+   <p>This section describes the mechanism by which the fragment directive is hidden
+from script and how it fits into <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-and-session-history"><cite>HTML</cite> § 7.4 Navigation and session history</a>.</p>
+   <div class="note" role="note">
+     The summarized changes in this section: 
+    <ul>
      <li data-md>
-      <p>Let <var>position</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-position-variable" id="ref-for-string-position-variable">position variable</a> pointing to the first code
-point of the first instance, if one exists, of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive delimiter</a> in <var>raw
-fragment</var>, or past the end of <var>raw fragment</var> otherwise.</p>
+      <p>Session history entries now include a new "directive state" item</p>
      <li data-md>
-      <p>Let <var>fragment</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-by-positions" id="ref-for-code-point-substring-by-positions">code point substring by positions</a> of <var>raw fragment</var> from the
-start of <var>raw fragment</var> to <var>position</var>.</p>
+      <p>All new entries are created with a directive state with an empty value. If the new URL includes
+  a fragment directive it will be written to the state’s value (otherwise it remains null).</p>
      <li data-md>
-      <p>Let <var>fragmentDirective</var> be an ASCII string, initially empty.</p>
-     <li data-md>
-      <p>Advance <var>position</var> by the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-code-point-length" id="ref-for-string-code-point-length">code point length</a> of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive
-delimiter</a>.</p>
-     <li data-md>
-      <p>If <var>position</var> does not point past the end of <var>raw fragment</var>:</p>
-      <ol>
+      <p>Any time a URL potentially including a fragment directive is written to a session history entry,
+  extract the fragment directive from the URL and store it in a directive state item of the
+  entry. There are three such points where a URL can potentially include a directive:</p>
+      <ul>
        <li data-md>
-        <p>Set <var>fragmentDirective</var> to the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string" id="ref-for-code-point-substring-to-the-end-of-the-string">code point substring to the end of the string</a> <var>raw fragment</var> starting from <var>position</var></p>
-      </ol>
+        <p>In the "navigate" steps for typical cross-document navigations</p>
+       <li data-md>
+        <p>In the "navigate to a fragment" steps for fragment based same-document navigations</p>
+       <li data-md>
+        <p>In the "URL and history update steps" for synchronous updates such as
+  pushState/replaceState.</p>
+      </ul>
      <li data-md>
-      <p>Return the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple①">tuple</a> (<var>fragment</var>, <var>fragmentDirective</var>).</p>
-    </ol>
+      <p>Same-document navigations that change only the fragment, and the new URL doesn’t specify a
+  directive, will create an entry whose directive state refers to the previous entry’s directive
+  state.</p>
+    </ul>
    </div>
-   <p>Whenever the fragment directive is stripped from the URL, the
-Document’s <a data-link-type="dfn" href="#document-fragment-directive" id="ref-for-document-fragment-directive">fragment directive</a> is set to the content of the fragment directive.</p>
-   <p>Add a series of steps that will process a fragment directive on a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url②">URL</a>:</p>
+   <div class="issue" id="issue-b598ad03"><a class="self-link" href="#issue-b598ad03"></a> The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL"> create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment."> uses the fragment from an existing entry</a> so the directive would already be removed. However,
+    I think that’s wrong. If the redirect URL includes a fragment it should be used, see <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
+    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
+    where the directive would have to be removed. </div>
+   <p>In <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-infrastructure"><cite>HTML</cite> § 7.4.1 Session history</a>, define <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state">directive state</a>:</p>
    <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-dom" title="DOM Standard">[DOM]</a>:</strong></p>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-and-consume-fragment-directive">process and consume fragment directive</dfn> from a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url">URL</a> <var>url</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a> <var>document</var>, run these steps:</p>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-infrastructure"><cite>HTML</cite> § 7.4.1 Session history</a>:</strong></p>
+    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="directive-state">directive state</dfn> holds the value of the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive③">fragment directive</a> at the time the session
+  history entry was created and is used to invoke directives, such as text highlighting, whenever
+  the entry is traversed. It has:</p>
+    <ul>
+     <li data-md>
+      <p><dfn class="dfn-paneled" data-dfn-for="directive state" data-dfn-type="dfn" data-noexport id="directive-state-value">value</dfn>, the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> ASCII string or null,
+  initially null.</p>
+    </ul>
+    <p>A <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state①">directive state</a> may be shared across contiguous session history entries.</p>
+    <div class="note" role="note">
+     <p>The fragment directive is removed from the URL before the URL is set to the session
+      history entry. It is instead stored in the directive state. This prevents it from being
+      visible to script APIs so that a directive can be specified without interfering with a
+      page’s operation.</p>
+     <p>The fragment directive is stored in the directive state object, rather than a raw string,
+      since the same directive state can be shared across multiple contiguous session history
+      entries. On a traversal, the directive is only processed (i.e. search text and highlight) if
+      the directive state has changed between two entries.</p>
+    </div>
+   </blockquote>
+   <p>To the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-entry">session history entry</a>, add:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-entries"><cite>HTML</cite> § 7.4.1.1 Session history entries</a>:</strong></p>
+    <div class="monkeypatch">
+     A session history entry is a struct with the following items: 
+     <ul>
+      <li data-md>
+       <p>...</p>
+      <li data-md>
+       <p>persisted user state, which is implementation-defined, initially null</p>
+      <li data-md>
+       <p><span class="diff"><dfn class="dfn-paneled" data-dfn-for="she" data-dfn-type="dfn" data-noexport id="she-directive-state">directive state</dfn>, a <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state②">directive state</a>,
+initially a new <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state③">directive state</a></span></p>
+     </ul>
+    </div>
+   </blockquote>
+   <p>Add a helper algorithm for removing and returning a fragment directive string from a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url">URL</a>:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="note" role="note"> This algorithm makes a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive
+    delimiter</a>. The returned <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a> includes all characters that follow the
+    delimiter but does not include the delimiter. </div>
+    <div class="issue" id="issue-827449be"><a class="self-link" href="#issue-827449be"></a> If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which is
+    treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+    one. But maybe in this case we should return the empty string? That way a page can explicitly
+    clear directives/highlights by navigating/pushState to '#:~:'. </div>
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="remove-the-fragment-directive">remove the fragment directive</dfn> from a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> <var>url</var>, run these steps:</p>
     <ol>
      <li data-md>
       <p>Let <var>raw fragment</var> be equal to <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment①">fragment</a>.</p>
      <li data-md>
-      <p>If <var>raw fragment</var> is non-null and contains the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter③">fragment directive
-  delimiter</a> as a substring:</p>
+      <p>Let <var>fragment directive</var> be null.</p>
+     <li data-md>
+      <p>If <var>raw fragment</var> is non-null and contains the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter②">fragment directive delimiter</a> as a
+  substring:</p>
       <ol>
        <li data-md>
-        <p>Let <var>components</var> be the result of running <a data-link-type="dfn" href="#split-the-fragment-from-the-fragment-directive" id="ref-for-split-the-fragment-from-the-fragment-directive">split the fragment from the fragment
-  directive</a> on <var>raw fragment</var>.</p>
+        <p>Let <var>position</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-position-variable" id="ref-for-string-position-variable">position variable</a> pointing to the first code
+  point of the first instance, if one exists, of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter③">fragment directive delimiter</a> in <var>raw fragment</var>, or past the end of <var>raw fragment</var> otherwise.</p>
        <li data-md>
-        <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment②">fragment</a> to <var>components</var>’ <code>fragment</code>.</p>
+        <p>Let <var>new fragment</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-by-positions" id="ref-for-code-point-substring-by-positions">code point substring by positions</a> of <var>raw fragment</var> from
+  the start of <var>raw fragment</var> to <var>position</var>.</p>
        <li data-md>
-        <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-fragment-directive" id="ref-for-document-fragment-directive①">fragment directive</a> to <var>components</var>’ <code>fragment directive</code>.</p>
-        <div class="note" role="note">This is stored on the document but currently not web-exposed</div>
+        <p>Advance <var>position</var> by the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-code-point-length" id="ref-for-string-code-point-length">code point length</a> of the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter④">fragment directive
+  delimiter</a>.</p>
+       <li data-md>
+        <p>If <var>position</var> does not point past the end of <var>raw fragment</var>:</p>
+        <ol>
+         <li data-md>
+          <p>Set <var>fragment directive</var> to the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point-substring-to-the-end-of-the-string" id="ref-for-code-point-substring-to-the-end-of-the-string">code point substring to the end of the string</a> <var>raw fragment</var> starting from <var>position</var></p>
+        </ol>
+       <li data-md>
+        <p>Set <var>url</var>’s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-fragment" id="ref-for-concept-url-fragment②">fragment</a> to <var>new fragment</var>.</p>
       </ol>
+     <li data-md>
+      <p>Return <var>fragment directive</var>.</p>
     </ol>
+    <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
+     the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> is the string
+     "text=foo". </div>
    </blockquote>
-   <div class="note" role="note"> These changes make a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter④">fragment directive
-  delimiter</a>. The <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> includes all characters that follow,
-  but not including, the delimiter. </div>
-   <div class="example" id="example-775c8cc2"><a class="self-link" href="#example-775c8cc2"></a> <code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a> is the string
-"text=foo". </div>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object"> create and initialize a Document object</a> steps to parse and remove the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> by inserting the following steps right before the
-setting <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url③">URL</a> (<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#initialise-the-document-object">currently</a> step 9):</p>
+   <p>The next three monkeypatches modify the creation of a session history entry, where the URL might
+contain a fragment directive, to remove the fragment directive and store it in the <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state④">directive
+state</a>.</p>
+   <p>In the definition of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate" id="ref-for-navigate">navigate</a>:</p>
    <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol start="9">
-     <li data-md>
-      <p>Run the <a data-link-type="dfn" href="#process-and-consume-fragment-directive" id="ref-for-process-and-consume-fragment-directive">process and consume fragment directive</a> steps on <var>creationURL</var> and <var>document</var>.</p>
-     <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url④">URL</a> to be <var>creationURL</var>.</p>
-    </ol>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#beginning-navigation"><cite>HTML</cite> § 7.4.2.2 Beginning navigation</a>:</strong></p>
+    <div class="monkeypatch">
+     To navigate a navigable navigable to a URL <var>url</var>...: 
+     <ol>
+      <li data-md>
+       <p>...</p>
+      <li value="14">Set navigable’s ongoing navigation to navigationId.
+      <li data-md>
+       <p>If url’s scheme is "javascript", then...</p>
+      <li data-md>
+       <p>In parallel, run these steps:</p>
+       <ol>
+        <li data-md>
+         <p>...</p>
+        <li value="5">If url is about:blank, then set documentState’s origin to documentState’s initiator origin.
+        <li data-md>
+         <p>Otherwise, if url is about:srcdoc, then set documentState’s origin to navigable’s parent’s active document’s origin.</p>
+        <li data-md>
+         <strike>Let historyEntry be a new session history entry, with its URL set to url and
+its document state set to documentState.</strike>
+        <li value="7"><span class="diff">Let <var>fragment directive</var> be the result of running <a data-link-type="dfn" href="#remove-the-fragment-directive" id="ref-for-remove-the-fragment-directive">remove the
+fragment directive</a> on <var>url</var>.</span>
+        <li data-md>
+         <p><span class="diff">Let <var>directive state</var> be a new <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state⑤">directive
+state</a> with <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value">value</a> set to <var>fragment directive</var>.</span></p>
+        <li data-md>
+         <p><span class="diff">Let historyEntry be a new session history entry, with its URL
+set to <var>url</var>, its document state set to documentState, and its <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state">directive state</a> set to <var>directive state</var>.</span></p>
+        <li data-md>
+         <p>Let navigationParams be null.</p>
+        <li data-md>
+         <p>...</p>
+       </ol>
+     </ol>
+    </div>
    </blockquote>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history"> traverse the history</a> steps to process the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> during a history navigation by inserting steps before setting the <var>newDocument</var>’s URL (<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#traverse-the-history">currently</a> step 6).</p>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to a fragment</a>:</p>
    <blockquote>
-    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol start="6">
-     <li data-md>
-      <p>Let <var>processedURL</var> be a copy of <var>entry</var>’s URL.</p>
-     <li data-md>
-      <p>Run the <a data-link-type="dfn" href="#process-and-consume-fragment-directive" id="ref-for-process-and-consume-fragment-directive①">process and consume fragment directive</a> steps on <var>processedURL</var> and <var>document</var>.</p>
-     <li data-md>
-      <p>Set <var>newDocument</var>’s URL to <var>processedURL</var>.</p>
-    </ol>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>:</strong></p>
+    <div class="monkeypatch">
+     To navigate to a fragment given navigable <var>navigable</var>, ...: 
+     <ol>
+      <li data-md>
+       <p><span class="diff">Let <var>directive state</var> be navigable’s active session history
+entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state①">directive state</a>.</span></p>
+      <li data-md>
+       <p><span class="diff">Let <var>fragment directive</var> be the result of running <a data-link-type="dfn" href="#remove-the-fragment-directive" id="ref-for-remove-the-fragment-directive①">remove the fragment directive</a> on <var>url</var>.</span></p>
+      <li data-md>
+       <p><span class="diff">If <var>url</var> does not equal <var>navigable</var>’s active session history
+entry’s URL with exclude fragments set to true OR <var>fragment directive</var> is not null:</span></p>
+       <div class="note" role="note">Otherwise, when only the fragment has changed and it did not specify
+a directive, the active entry’s directive state is reused. This prevents a fragment
+change from clobbering highlights.</div>
+       <ol>
+        <li data-md>
+         <p><span class="diff">Let <var>directive state</var> be a new <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state⑥">directive state</a> with <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value①">value</a> set to <var>fragment directive</var>.</span></p>
+       </ol>
+      <li data-md>
+       <p>Let historyEntry be a new session history entry, with</p>
+       <ul>
+        <li data-md>
+         <p>URL url</p>
+        <li data-md>
+         <p>document state navigable’s active session history entry’s document state</p>
+        <li data-md>
+         <p>scroll restoration mode navigable’s active session history entry’s scroll restoration
+mode</p>
+        <li data-md>
+         <p><span class="diff"><a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state②">directive state</a> <var>directive state</var></span></p>
+       </ul>
+      <li data-md>
+       <p>Let entryToReplace be navigable’s active session history entry if historyHandling is
+"replace", otherwise null.</p>
+      <li data-md>
+       <p>...</p>
+     </ol>
+    </div>
+   </blockquote>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#url-and-history-update-steps">URL and history update steps</a>:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-non-frag-sync"><cite>HTML</cite> § 7.4.4 Non-fragment synchronous "navigations"</a>:</strong></p>
+    <div class="monkeypatch">
+     The URL and history update steps, given a Document <var>document</var>, ...: 
+     <ol>
+      <li data-md>
+       <p>Let <var>navigable</var> be <var>document</var>’s node navigable.</p>
+      <li data-md>
+       <p>Let <var>activeEntry</var> be <var>navigable</var>’s active session history entry.</p>
+      <li data-md>
+       <p><span class="diff">Let <var>fragment directive</var> be the result of running <a data-link-type="dfn" href="#remove-the-fragment-directive" id="ref-for-remove-the-fragment-directive②">remove the
+fragment directive</a> on <var>newUrl</var>.</span></p>
+      <li data-md>
+       <p>Let <var>historyEntry</var> be a new session history entry, with</p>
+       <ul>
+        <li data-md>
+         <p>URL <var>newUrl</var></p>
+        <li data-md>
+         <p>...</p>
+        <li data-md>
+         <p><span class="diff"><a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state③">directive state</a> <var>activeEntry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state④">directive
+state</a></span></p>
+       </ul>
+      <li data-md>
+       <p>If <var>document</var>’s is initial about:blank is true, then set historyHandling to "replace".</p>
+      <li data-md>
+       <p>If historyHandling is "push", then:</p>
+       <ol>
+        <li data-md>
+         <p>Increment document’s history object’s index.</p>
+        <li data-md>
+         <p>Set document’s history object’s length to its index + 1.</p>
+        <li data-md>
+         <p><span class="diff">If <var>newUrl</var> does not equal <var>activeEntry</var>’s URL with exclude
+fragments set to true OR <var>fragment directive</var> is not null, then:</span></p>
+         <div class="note" role="note">Otherwise, when only the fragment has changed and it did not specify
+a directive, the active entry’s directive state is reused. This prevents a fragment
+change from clobbering highlights.</div>
+         <ol>
+          <li data-md>
+           <p><span class="diff">Let <var>historyEntry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑤">directive state</a> be a new <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state⑦">directive state</a> with <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value②">value</a> set to <var>fragment
+directive</var>.</span></p>
+         </ol>
+       </ol>
+      <li data-md>
+       <p><span class="diff">Otherwise, if <var>fragment directive</var> is not null, set <var>historyEntry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑥">directive state</a>'s <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value③">value</a> to <var>fragment
+directive</var>.</span></p>
+      <li data-md>
+       <p>If serializedData is not null, then restore the history object state given document and
+newEntry.</p>
+     </ol>
+    </div>
    </blockquote>
    <div class="note" role="note">
-    <p> The changes in this section imply that a URL is only stripped of its fragment
-    directive when it is set on a Document. Notably, since a window’s <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location" id="ref-for-location">Location</a></code> object is a representation of the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document">active
-    document</a>, all getters on it will show a fragment-directive-stripped
+    <p> Since a Document is populated from a history entry, its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url">URL</a> will not include the
+    fragment directive. Similarly, since a window’s <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location" id="ref-for-location">Location</a></code> object is a representation of the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url②">URL</a> of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document">active document</a>, all getters on it will show a fragment-directive-stripped
     version of the URL. </p>
+    <p> Additionally, since the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#hashchangeevent" id="ref-for-hashchangeevent">HashChangeEvent</a></code> is <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#updating-the-document"> fired in response to a changed fragment</a> between URLs of session history entries, <code>hashchange</code> will not be fired if a navigation or traversal changes only the fragment
+    directive. </p>
     <p> Some examples are provided to help clarify various edge cases. </p>
    </div>
-   <div class="example" id="example-609a3312">
-    <a class="self-link" href="#example-609a3312"></a> 
-<pre>window.location = 'https://example.com#foo:~:bar';
+   <div class="example" id="example-c4fd5b50">
+    <a class="self-link" href="#example-c4fd5b50"></a> 
+<pre>window.location = "https://example.com#page1:~:hello";
+console.log(window.location.href); // 'https://example.com#page1'
+console.log(window.location.hash); // '#page1'
 </pre>
-    <p>The page loads and when the document’s URL is set the fragment directive is
-  stripped out during the "create and initialize a Document object" steps.</p>
-<pre>console.log(window.location.href); // 'https://example.com#foo'
-console.log(window.location.hash); // '#foo'
+    <p>The initial navigation created a new session history entry. The entry’s URL is stripped of the
+  fragment directive: "https://example.com#page1". The entry’s directive state value is set to
+  "hello". Since the document is populated from the entry, web APIs don’t include the fragment
+  directive in URLs.</p>
+<pre>location.hash = "page2";
+console.log(location.href); // 'https://example.com#page2'
 </pre>
-    <p>Since same document navigations are made by adding a new session history
-  entry and using the "traverse the history" steps, the the fragment directive
-  will be stripped here as well.</p>
-<pre>window.location.hash = 'fizz:~:buzz';
-console.log(window.location.href); // 'https://example.com#fizz'
-console.log(window.location.hash); // '#fizz'
+    <p>A same document navigation changed only the fragment. This adds a new session history entry in the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to
+  a fragment</a> steps. However, since only the fragment changed, the new entry’s directive state
+  points to the same state as the first entry, with a value of "bar".</p>
+<pre>onhashchange = () => console.assert(false, "hashchange doesn’t fire.");
+location.hash = "page2:~:world";
+console.log(location.href); // 'https://example.com#page2'
+onhashchange = null;
 </pre>
-    <p>The hashchange event is dispatched when only the fragment directive changes
-  because the comparison for it is done on the URLs in the session history
-  entries, where the fragment directive hasn’t been removed.</p>
-<pre>onhashchange = () => {console.log('HASHCHANGE');};
-window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
-console.log(window.location.href); // 'https://example.com#fizz'
-console.log(window.location.hash); // '#fizz'
+    <p>A same document navigation changes only the fragment but includes a fragment directive. Since an
+  explicit directive was provided, the new entry includes its own directive state with a value of
+  "fizz".</p>
+    <p>The hashchange event is not fired since the page-visible fragment is unchanged; only the fragment
+  directive changed. This is because the comparison for hashchange is done on the URLs in the
+  session history entries, where the fragment directive has been removed.</p>
+<pre>history.pushState("", "", "page3");
+console.log(location.href); // 'https://example.com/page3'
 </pre>
+    <p>pushState creates a new session history entry for the same document. However, since the
+  non-fragment URL has changed, this entry has its own directive state with value currently null.</p>
    </div>
-   <div class="example" id="example-42953739">
-    <a class="self-link" href="#example-42953739"></a> In other cases where a Document’s URL is not set by the UA, there is no
+   <div class="example" id="example-f4d8b076">
+    <a class="self-link" href="#example-f4d8b076"></a> In other cases where a URL is not set to a session history entry, there is no
   fragment directive stripping. 
     <p>For URL objects:</p>
 <pre>let url = new URL('https://example.com#foo:~:bar');
@@ -1137,19 +1322,6 @@ console.log(document.url.hash); // '#foo:~:bar'
   console.log(anchor.hash); // '#foo:~:bar'
 &lt;/script>
 </pre>
-   </div>
-   <div class="example" id="example-c1edb88d">
-    <a class="self-link" href="#example-c1edb88d"></a> History pushState will create a session history entry where the URL’s
-  fragment directive isn’t stripped. However, traversing to the entry will
-  cause it to set its URL on the document which will process the fragment
-  directive before setting it on the Document (but the fragment directive
-  remains on the entry). 
-<pre>history.pushState({}, 'title', 'index.html#foo:~:bar');
-window.location = 'newpage.html';
-// on newpage.html
-history.back();
-</pre>
-    <p>Results in the current document having "bar" as the fragment directive.</p>
    </div>
    <h4 class="heading settled" data-level="3.3.2" id="parsing-the-fragment-directive"><span class="secno">3.3.2. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive">text directive</dfn> is a kind of <a data-link-type="dfn" href="#directives" id="ref-for-directives">directive</a> representing a range of
@@ -1349,9 +1521,9 @@ has been successfully found</em>.</p>
    <p>This specification does not specify exactly how a UA achieves this as there are
 multiple solutions with differing tradeoffs. For example, a UA <em>may</em> continue to walk the tree even after a match is found in <a data-link-type="dfn" href="#find-a-range-from-a-text-directive" id="ref-for-find-a-range-from-a-text-directive">find a range from a
 text directive</a>.  Alternatively, it <em>may</em> schedule an asynchronous task
-to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document④">Document</a>'s indicated part.</p>
+to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">Document</a>'s indicated part.</p>
    <h4 class="heading settled" data-level="3.4.4" id="restricting-the-text-fragment"><span class="secno">3.4.4. </span><span class="content">Restricting the Text Fragment</span><a class="self-link" href="#restricting-the-text-fragment"></a></h4>
-   <p>Amend the definition of a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> and of a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑤">Document</a> to include a new
+   <p>Amend the definition of a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> and of a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">Document</a> to include a new
 boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation">text directive user activation</a> field:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-fetch" title="Fetch Standard">[FETCH]</a>:</strong></p>
@@ -1360,17 +1532,17 @@ boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" 
    </blockquote>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-text-directive-user-activation">text directive user activation</dfn>, which is a boolean,
+    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-text-directive-user-activation">text directive user activation</dfn>, which is a boolean,
   initially false.</p>
     <div class="note" role="note">
       <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①">text directive user activation</a> provides the necessary user gesture signal to allow
     a single activation of a text fragment. It is set to true during document loading only if the
     navigation occurred as a result of a user activation and is propagated across client-side
     redirects. 
-     <p>If a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation②">text directive user activation</a> isn’t used to activate a text
+     <p>If a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document③">Document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation②">text directive user activation</a> isn’t used to activate a text
     fragment, it is instead used to set a new navigation <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request②">request</a>'s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation">text directive user activation</a> to true. In this way, a <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation③">text directive user activation</a> can be propagated
-    from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> to another across a navigation.</p>
-     <p>Both <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation④">text directive user activation</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation①">text directive user activation</a> are always set to false when used, such that a
+    from one <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document④">Document</a> to another across a navigation.</p>
+     <p>Both <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑤">Document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation④">text directive user activation</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request③">request</a>'s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation①">text directive user activation</a> are always set to false when used, such that a
     single user activation cannot be reused to activate more than one text fragment.</p>
     </div>
    </blockquote>
@@ -1401,7 +1573,7 @@ boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" 
    </div>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⓪">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-allow-text-fragment-scroll">allow text fragment scroll</dfn>, which is a
+    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑥">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-allow-text-fragment-scroll">allow text fragment scroll</dfn>, which is a
   boolean, initially false.</p>
     <div class="note" role="note">
      <p> <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll">allow text fragment scroll</a> is used to determine whether a text fragment will
@@ -1440,11 +1612,9 @@ and initialize a Document object</a> steps by adding the following steps before 
       <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll①">allow text fragment scroll</a> by following these sub-steps:</p>
       <ol>
        <li data-md>
-        <p>If <var>document</var>’s <a data-link-type="dfn" href="#document-fragment-directive" id="ref-for-document-fragment-directive②">fragment directive</a> field is null or empty, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll②">allow text fragment scroll</a> to false and abort these sub-steps.</p>
-       <li data-md>
         <p>Let <var>text directive user activation</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑧">text directive user activation</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑨">text directive user activation</a> to false.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll③">allow text fragment scroll</a> to true and abort these sub-steps.</p>
+        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll②">allow text fragment scroll</a> to true and abort these sub-steps.</p>
         <div class="note" role="note">
          <p> If a navigation originates from browser UI, it’s always ok to allow it
       since it’ll be user triggered and the page/script isn’t providing the
@@ -1462,19 +1632,19 @@ and initialize a Document object</a> steps by adding the following steps before 
          <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a more detailed discussion of how this applies. </p>
         </div>
        <li data-md>
-        <p>If <var>text directive user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to false and abort these sub-steps.</p>
+        <p>If <var>text directive user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll③">allow text fragment scroll</a> to false and abort these sub-steps.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to true and abort these
+        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these
   sub-steps.</p>
        <li data-md>
         <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a> is a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing
-  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to true and abort these sub-steps.</p>
+  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to true and abort these sub-steps.</p>
         <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
     document is loaded in a noopener context. That is, a new top level
     browsing context group to which the navigator does not have script access
     and which can be placed into a separate process. </div>
        <li data-md>
-        <p>Otherwise, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to false.</p>
+        <p>Otherwise, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to false.</p>
       </ol>
     </ol>
    </blockquote>
@@ -1501,13 +1671,13 @@ steps of the task queued in step 2:</p>
      <li data-md>
       <p>If document has no parser, or its parser has stopped parsing, or the user
   agent has reason to believe the user is no longer interested in scrolling to
-  the fragment, then set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑧">allow text fragment scroll</a> to false and abort these steps.</p>
+  the fragment, then set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to false and abort these steps.</p>
      <li data-md>
       <p>Scroll to the fragment given in document’s URL. If this does not find an
   indicated part, then try to scroll to the fragment for
   document.</p>
      <li data-md>
-      <p>Set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑨">allow text fragment scroll</a> to false.</p>
+      <p>Set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑧">allow text fragment scroll</a> to false.</p>
     </ol>
    </blockquote>
    <h3 class="heading settled" data-level="3.5" id="navigating-to-text-fragment"><span class="secno">3.5. </span><span class="content">Navigating to a Text Fragment</span><a class="self-link" href="#navigating-to-text-fragment"></a></h3>
@@ -1558,7 +1728,7 @@ indicated part processing model to return a <a data-link-type="dfn" href="https:
     would resolve this problem. </div>
      <li data-md>
       <p><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
-  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①①">Document</a>. If the result is false:</p>
+  the policy value</a> for <code>force-load-at-top</code> in the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a>. If the result is false:</p>
       <ol>
        <li data-md>
         <p>If <var>range</var> wasn’t produced as a result of a text fragment, or if the
@@ -1584,9 +1754,9 @@ beginning of the processing model for the <a data-link-type="dfn" href="https://
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
     <ol>
      <li data-md>
-      <p>Let <var>fragment directive string</var> be the document’s <a data-link-type="dfn" href="#document-fragment-directive" id="ref-for-document-fragment-directive③">fragment directive</a>.</p>
+      <p>Let <var>fragment directive string</var> be the document’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#latest-entry">latest entry</a>’s <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a>.</p>
      <li data-md>
-      <p>If the document’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll①⓪">allow text fragment scroll</a> is true then:</p>
+      <p>If the document’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑨">allow text fragment scroll</a> is true then:</p>
       <ol>
        <li data-md>
         <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> that is the result of running
@@ -1690,7 +1860,7 @@ text=bar,baz
   list.</p>
    </div>
    <div class="algorithm" data-algorithm="process a fragment directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①②">Document</a> <var>document</var>, run these steps: 
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
     <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">ranges</a> that are to be visually
@@ -1725,7 +1895,7 @@ directive</a> steps on <var>directive</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a range from a text directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑦">text directive</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①③">Document</a> <var>document</var>, run the
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-text-directive">find a range from a text directive</dfn>, given a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑦">text directive</a> <var>parsedValues</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑨">Document</a> <var>document</var>, run the
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
@@ -2318,9 +2488,9 @@ persisted state</a> steps by inserting a new step after 2:</p>
    <ol start="3">
     <li data-md>
      <p><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
-the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①④">Document</a>. If
+the document policy value</a> of the "force-load-at-top" feature for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⓪">Document</a>. If
 the result is true, then the user agent should not restore the scroll
-position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①⑤">Document</a> or any of its scrollable regions.</p>
+position for the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①①">Document</a> or any of its scrollable regions.</p>
    </ol>
    <h3 class="heading settled" data-level="3.8" id="feature-detectability"><span class="secno">3.8. </span><span class="content">Feature Detectability</span><a class="self-link" href="#feature-detectability"></a></h3>
    <p>For feature detectability, we propose adding a new FragmentDirective interface
@@ -2492,18 +2662,19 @@ manipulations
    <li><a href="#document-allow-text-fragment-scroll">allow text fragment scroll</a><span>, in § 3.4.4</span>
    <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.3</span>
    <li><a href="#directives">directives</a><span>, in § 3.3</span>
+   <li>
+    directive state
+    <ul>
+     <li><a href="#directive-state">definition of</a><span>, in § 3.3.1</span>
+     <li><a href="#she-directive-state">dfn for she</a><span>, in § 3.3.1</span>
+    </ul>
    <li><a href="#text-directive-end">end</a><span>, in § 3.3.2</span>
    <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.5.1</span>
    <li><a href="#find-a-range-from-a-text-directive">find a range from a text directive</a><span>, in § 3.5.1</span>
    <li><a href="#find-a-string-in-range">find a string in range</a><span>, in § 3.5.1</span>
    <li><a href="#first-common-ancestor">first common ancestor</a><span>, in § 3.5</span>
-   <li>
-    fragment directive
-    <ul>
-     <li><a href="#fragment-directive">definition of</a><span>, in § 3.3</span>
-     <li><a href="#document-fragment-directive">dfn for Document</a><span>, in § 3.3.1</span>
-    </ul>
+   <li><a href="#fragment-directive">fragment directive</a><span>, in § 3.3</span>
    <li>
     FragmentDirective
     <ul>
@@ -2523,10 +2694,9 @@ manipulations
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.3</span>
    <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.3.2</span>
    <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.5.1</span>
-   <li><a href="#process-and-consume-fragment-directive">process and consume fragment directive</a><span>, in § 3.3.1</span>
+   <li><a href="#remove-the-fragment-directive">remove the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.5.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.5</span>
-   <li><a href="#split-the-fragment-from-the-fragment-directive">split the fragment from the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#text-directive-start">start</a><span>, in § 3.3.2</span>
    <li><a href="#text-directive-suffix">suffix</a><span>, in § 3.3.2</span>
    <li><a href="#text-directive">text directive</a><span>, in § 3.3.2</span>
@@ -2544,6 +2714,7 @@ manipulations
     </ul>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.3</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.3</span>
+   <li><a href="#directive-state-value">value</a><span>, in § 3.3.1</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.5.1</span>
    <li><a href="#word-boundary">word boundary</a><span>, in § 3.5.2</span>
    <li><a href="#word-bounded">word bounded</a><span>, in § 3.5.2</span>
@@ -2659,13 +2830,11 @@ manipulations
   <aside aria-labelledby="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" class="dfn-panel" data-for="985c42e2af63b3e74bd3b70d55668fd4" id="infopanel-for-985c42e2af63b3e74bd3b70d55668fd4">
    <span id="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" style="display:none">Info about the 'document' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-document">https://dom.spec.whatwg.org/#concept-document</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-document">3.3. The Fragment Directive</a>
-    <li><a href="#ref-for-concept-document①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-document②">(2)</a> <a href="#ref-for-concept-document③">(3)</a>
-    <li><a href="#ref-for-concept-document④">3.4.3. Search Timing</a>
-    <li><a href="#ref-for-concept-document⑤">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document⑥">(2)</a> <a href="#ref-for-concept-document⑦">(3)</a> <a href="#ref-for-concept-document⑧">(4)</a> <a href="#ref-for-concept-document⑨">(5)</a> <a href="#ref-for-concept-document①⓪">(6)</a>
-    <li><a href="#ref-for-concept-document①①">3.5. Navigating to a Text Fragment</a>
-    <li><a href="#ref-for-concept-document①②">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-document①③">(2)</a>
-    <li><a href="#ref-for-concept-document①④">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①⑤">(2)</a>
+    <li><a href="#ref-for-concept-document">3.4.3. Search Timing</a>
+    <li><a href="#ref-for-concept-document①">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-concept-document②">(2)</a> <a href="#ref-for-concept-document③">(3)</a> <a href="#ref-for-concept-document④">(4)</a> <a href="#ref-for-concept-document⑤">(5)</a> <a href="#ref-for-concept-document⑥">(6)</a>
+    <li><a href="#ref-for-concept-document⑦">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-concept-document⑧">3.5.1. Finding Ranges in a Document</a> <a href="#ref-for-concept-document⑨">(2)</a>
+    <li><a href="#ref-for-concept-document①⓪">3.7. Document Policy Integration</a> <a href="#ref-for-concept-document①①">(2)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-6780f5129791c577e5710641ce0e787a" class="dfn-panel" data-for="6780f5129791c577e5710641ce0e787a" id="infopanel-for-6780f5129791c577e5710641ce0e787a">
@@ -2817,8 +2986,7 @@ manipulations
   <aside aria-labelledby="infopaneltitle-for-2fc74f43c6d7f15a4a2fbfbece346388" class="dfn-panel" data-for="2fc74f43c6d7f15a4a2fbfbece346388" id="infopanel-for-2fc74f43c6d7f15a4a2fbfbece346388">
    <span id="infopaneltitle-for-2fc74f43c6d7f15a4a2fbfbece346388" style="display:none">Info about the 'url' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-document-url">https://dom.spec.whatwg.org/#concept-document-url</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-document-url">3.3. The Fragment Directive</a>
-    <li><a href="#ref-for-concept-document-url①">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-document-url②">(2)</a> <a href="#ref-for-concept-document-url③">(3)</a> <a href="#ref-for-concept-document-url④">(4)</a>
+    <li><a href="#ref-for-concept-document-url">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-491791562dd138987138e7051a96c07c" class="dfn-panel" data-for="491791562dd138987138e7051a96c07c" id="infopanel-for-491791562dd138987138e7051a96c07c">
@@ -2887,6 +3055,12 @@ manipulations
     <li><a href="#ref-for-htmlvideoelement">3.5.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
+  <aside aria-labelledby="infopaneltitle-for-e57cf03d5231bf211b6e11747eb511a2" class="dfn-panel" data-for="e57cf03d5231bf211b6e11747eb511a2" id="infopanel-for-e57cf03d5231bf211b6e11747eb511a2">
+   <span id="infopaneltitle-for-e57cf03d5231bf211b6e11747eb511a2" style="display:none">Info about the 'HashChangeEvent' external reference.</span><a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#hashchangeevent">https://html.spec.whatwg.org/multipage/nav-history-apis.html#hashchangeevent</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-hashchangeevent">3.3.1. Processing the fragment directive</a>
+   </ul>
+  </aside>
   <aside aria-labelledby="infopaneltitle-for-4b63022be77634e01931166ef990401a" class="dfn-panel" data-for="4b63022be77634e01931166ef990401a" id="infopanel-for-4b63022be77634e01931166ef990401a">
    <span id="infopaneltitle-for-4b63022be77634e01931166ef990401a" style="display:none">Info about the 'Location' external reference.</span><a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location">https://html.spec.whatwg.org/multipage/nav-history-apis.html#location</a><b>Referenced in:</b>
    <ul>
@@ -2928,6 +3102,12 @@ manipulations
    <span id="infopaneltitle-for-b51df82e894ee794ca3f536db97ad537" style="display:none">Info about the 'multiple' external reference.</span><a href="https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple">https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-attr-select-multiple">3.5.1. Finding Ranges in a Document</a>
+   </ul>
+  </aside>
+  <aside aria-labelledby="infopaneltitle-for-566b28e53fa11b6a6ff3a9d32626c2c5" class="dfn-panel" data-for="566b28e53fa11b6a6ff3a9d32626c2c5" id="infopanel-for-566b28e53fa11b6a6ff3a9d32626c2c5">
+   <span id="infopaneltitle-for-566b28e53fa11b6a6ff3a9d32626c2c5" style="display:none">Info about the 'navigate' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate">https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-navigate">3.3.1. Processing the fragment directive</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-7369d61835fa8a54aba2f14b16179bb7" class="dfn-panel" data-for="7369d61835fa8a54aba2f14b16179bb7" id="infopanel-for-7369d61835fa8a54aba2f14b16179bb7">
@@ -3101,12 +3281,6 @@ manipulations
     <li><a href="#ref-for-struct">3.3.2. Parsing the fragment directive</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-decbbd3ee5a73b54e8e8996ce1fddbbc" class="dfn-panel" data-for="decbbd3ee5a73b54e8e8996ce1fddbbc" id="infopanel-for-decbbd3ee5a73b54e8e8996ce1fddbbc">
-   <span id="infopaneltitle-for-decbbd3ee5a73b54e8e8996ce1fddbbc" style="display:none">Info about the 'tuple' external reference.</span><a href="https://infra.spec.whatwg.org/#tuple">https://infra.spec.whatwg.org/#tuple</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-tuple">3.3.1. Processing the fragment directive</a> <a href="#ref-for-tuple①">(2)</a>
-   </ul>
-  </aside>
   <aside aria-labelledby="infopaneltitle-for-60cc34e102fbb39581626f2f37e3179a" class="dfn-panel" data-for="60cc34e102fbb39581626f2f37e3179a" id="infopanel-for-60cc34e102fbb39581626f2f37e3179a">
    <span id="infopaneltitle-for-60cc34e102fbb39581626f2f37e3179a" style="display:none">Info about the 'fragment' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-fragment">https://url.spec.whatwg.org/#concept-url-fragment</a><b>Referenced in:</b>
    <ul>
@@ -3123,7 +3297,7 @@ manipulations
   <aside aria-labelledby="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" class="dfn-panel" data-for="fc05c76e016d3aec6a25a91c066500c8" id="infopanel-for-fc05c76e016d3aec6a25a91c066500c8">
    <span id="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" style="display:none">Info about the 'url' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url">https://url.spec.whatwg.org/#concept-url</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-url">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-url①">(2)</a>
+    <li><a href="#ref-for-concept-url">3.3.1. Processing the fragment directive</a> <a href="#ref-for-concept-url①">(2)</a> <a href="#ref-for-concept-url②">(3)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-46bd2da80269c4e9d4491ad1e341a8f5" class="dfn-panel" data-for="46bd2da80269c4e9d4491ad1e341a8f5" id="infopanel-for-46bd2da80269c4e9d4491ad1e341a8f5">
@@ -3229,6 +3403,7 @@ manipulations
      <li><span class="dfn-paneled" id="257c32b9f7676f6cdb079793771ec03b">HTMLScriptElement</span>
      <li><span class="dfn-paneled" id="004ac07b9e7dd26f7341693e2162496d">HTMLStyleElement</span>
      <li><span class="dfn-paneled" id="a958269402aae8e8d7d28d3cb6aacc8d">HTMLVideoElement</span>
+     <li><span class="dfn-paneled" id="e57cf03d5231bf211b6e11747eb511a2">HashChangeEvent</span>
      <li><span class="dfn-paneled" id="4b63022be77634e01931166ef990401a">Location</span>
      <li><span class="dfn-paneled" id="de11cdc07a64c79878f1c3074e81554a">active document</span>
      <li><span class="dfn-paneled" id="004498b212013045422acbba8c92f503">being rendered</span>
@@ -3236,6 +3411,7 @@ manipulations
      <li><span class="dfn-paneled" id="7033f3e77cd84c91db6d5e82613c4d33">browsing context set</span>
      <li><span class="dfn-paneled" id="726a16249061363ef85fbdad67a6e959">language</span>
      <li><span class="dfn-paneled" id="b51df82e894ee794ca3f536db97ad537">multiple</span>
+     <li><span class="dfn-paneled" id="566b28e53fa11b6a6ff3a9d32626c2c5">navigate</span>
      <li><span class="dfn-paneled" id="7369d61835fa8a54aba2f14b16179bb7">restore persisted state</span>
      <li><span class="dfn-paneled" id="0bbe052a00d2d9a1853b94d848e97f83">scroll to the fragment</span>
      <li><span class="dfn-paneled" id="3fff2218abea20e2aebc96a3c4ed942d">select</span>
@@ -3267,7 +3443,6 @@ manipulations
      <li><span class="dfn-paneled" id="adb176cd03e93496f5eaada8f9e4dc0f">strictly split a string</span>
      <li><span class="dfn-paneled" id="40b59bc325bd4d66701dfd8b7f1847c0">string</span>
      <li><span class="dfn-paneled" id="3ee316b93eb2dbe81d01a666cce50f9b">struct</span>
-     <li><span class="dfn-paneled" id="decbbd3ee5a73b54e8e8996ce1fddbbc">tuple</span>
     </ul>
    <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
@@ -3295,7 +3470,7 @@ manipulations
    <dt id="biblio-css-cascade-5">[CSS-CASCADE-5]
    <dd>Elika Etemad; Miriam Suzanne; Tab Atkins Jr.. <a href="https://drafts.csswg.org/css-cascade-5/"><cite>CSS Cascading and Inheritance Level 5</cite></a>. URL: <a href="https://drafts.csswg.org/css-cascade-5/">https://drafts.csswg.org/css-cascade-5/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
-   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://drafts.csswg.org/css-display/"><cite>CSS Display Module Level 3</cite></a>. URL: <a href="https://drafts.csswg.org/css-display/">https://drafts.csswg.org/css-display/</a>
+   <dd>Elika Etemad; Tab Atkins Jr.. <a href="https://drafts.csswg.org/css-display/"><cite>CSS Display Module Level 3</cite></a>. URL: <a href="https://drafts.csswg.org/css-display/">https://drafts.csswg.org/css-display/</a>
    <dt id="biblio-css-display-4">[CSS-DISPLAY-4]
    <dd>CSS Display Module Level 4 URL: <a href="https://drafts.csswg.org/css-display-4/">https://drafts.csswg.org/css-display-4/</a>
    <dt id="biblio-document-policy">[DOCUMENT-POLICY]
@@ -3340,6 +3515,14 @@ manipulations
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
+   <div class="issue"> The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL"> create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment."> uses the fragment from an existing entry</a> so the directive would already be removed. However,
+    I think that’s wrong. If the redirect URL includes a fragment it should be used, see <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
+    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
+    where the directive would have to be removed. <a class="issue-return" href="#issue-b598ad03" title="Jump to section">↵</a></div>
+   <div class="issue"> If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which is
+    treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+    one. But maybe in this case we should return the empty string? That way a page can explicitly
+    clear directives/highlights by navigating/pushState to '#:~:'. <a class="issue-return" href="#issue-827449be" title="Jump to section">↵</a></div>
    <div class="issue"> What should be set as target if inside a shadow tree? <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a> <a class="issue-return" href="#issue-424a4e25" title="Jump to section">↵</a></div>
    <div class="issue"> These revealing algorithms currently wont work well since <var>target</var> could be an ancestor or even the root document node. Issue <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a> proposes restricting matches to <code>contain:style layout</code> blocks which
     would resolve this problem. <a class="issue-return" href="#issue-10739530" title="Jump to section">↵</a></div>
@@ -3357,7 +3540,8 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
    <ul>
     <li><a href="#ref-for-fragment-directive">3.2. Syntax</a>
     <li><a href="#ref-for-fragment-directive①">3.3. The Fragment Directive</a> <a href="#ref-for-fragment-directive②">(2)</a>
-    <li><a href="#ref-for-fragment-directive③">3.3.1. Processing the fragment directive</a> <a href="#ref-for-fragment-directive④">(2)</a> <a href="#ref-for-fragment-directive⑤">(3)</a> <a href="#ref-for-fragment-directive⑥">(4)</a> <a href="#ref-for-fragment-directive⑦">(5)</a>
+    <li><a href="#ref-for-fragment-directive③">3.3.1. Processing the fragment directive</a> <a href="#ref-for-fragment-directive④">(2)</a> <a href="#ref-for-fragment-directive⑤">(3)</a> <a href="#ref-for-fragment-directive⑥">(4)</a>
+    <li><a href="#ref-for-fragment-directive⑦">3.5. Navigating to a Text Fragment</a>
     <li><a href="#ref-for-fragment-directive⑧">3.6.1. URLs in UA features</a> <a href="#ref-for-fragment-directive⑨">(2)</a> <a href="#ref-for-fragment-directive①⓪">(3)</a>
     <li><a href="#ref-for-fragment-directive①①">3.6.1.1. Location Bar</a>
     <li><a href="#ref-for-fragment-directive①②">3.6.1.2. Bookmarks</a> <a href="#ref-for-fragment-directive①③">(2)</a>
@@ -3377,25 +3561,28 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-directives">3.3.2. Parsing the fragment directive</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-document-fragment-directive" class="dfn-panel" data-for="document-fragment-directive" id="infopanel-for-document-fragment-directive">
-   <span id="infopaneltitle-for-document-fragment-directive" style="display:none">Info about the 'fragment
-    directive' definition.</span><b><a href="#document-fragment-directive">#document-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-directive-state" class="dfn-panel" data-for="directive-state" id="infopanel-for-directive-state">
+   <span id="infopaneltitle-for-directive-state" style="display:none">Info about the 'directive state' definition.</span><b><a href="#directive-state">#directive-state</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document-fragment-directive">3.3.1. Processing the fragment directive</a> <a href="#ref-for-document-fragment-directive①">(2)</a>
-    <li><a href="#ref-for-document-fragment-directive②">3.4.4. Restricting the Text Fragment</a>
-    <li><a href="#ref-for-document-fragment-directive③">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-directive-state">3.3.1. Processing the fragment directive</a> <a href="#ref-for-directive-state①">(2)</a> <a href="#ref-for-directive-state②">(3)</a> <a href="#ref-for-directive-state③">(4)</a> <a href="#ref-for-directive-state④">(5)</a> <a href="#ref-for-directive-state⑤">(6)</a> <a href="#ref-for-directive-state⑥">(7)</a> <a href="#ref-for-directive-state⑦">(8)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-split-the-fragment-from-the-fragment-directive" class="dfn-panel" data-for="split-the-fragment-from-the-fragment-directive" id="infopanel-for-split-the-fragment-from-the-fragment-directive">
-   <span id="infopaneltitle-for-split-the-fragment-from-the-fragment-directive" style="display:none">Info about the 'split the fragment from the fragment directive' definition.</span><b><a href="#split-the-fragment-from-the-fragment-directive">#split-the-fragment-from-the-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-directive-state-value" class="dfn-panel" data-for="directive-state-value" id="infopanel-for-directive-state-value">
+   <span id="infopaneltitle-for-directive-state-value" style="display:none">Info about the 'value' definition.</span><b><a href="#directive-state-value">#directive-state-value</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-split-the-fragment-from-the-fragment-directive">3.3.1. Processing the fragment directive</a>
+    <li><a href="#ref-for-directive-state-value">3.3.1. Processing the fragment directive</a> <a href="#ref-for-directive-state-value①">(2)</a> <a href="#ref-for-directive-state-value②">(3)</a> <a href="#ref-for-directive-state-value③">(4)</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-process-and-consume-fragment-directive" class="dfn-panel" data-for="process-and-consume-fragment-directive" id="infopanel-for-process-and-consume-fragment-directive">
-   <span id="infopaneltitle-for-process-and-consume-fragment-directive" style="display:none">Info about the 'process and consume fragment directive' definition.</span><b><a href="#process-and-consume-fragment-directive">#process-and-consume-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-she-directive-state" class="dfn-panel" data-for="she-directive-state" id="infopanel-for-she-directive-state">
+   <span id="infopaneltitle-for-she-directive-state" style="display:none">Info about the 'directive state' definition.</span><b><a href="#she-directive-state">#she-directive-state</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-process-and-consume-fragment-directive">3.3.1. Processing the fragment directive</a> <a href="#ref-for-process-and-consume-fragment-directive①">(2)</a>
+    <li><a href="#ref-for-she-directive-state">3.3.1. Processing the fragment directive</a> <a href="#ref-for-she-directive-state①">(2)</a> <a href="#ref-for-she-directive-state②">(3)</a> <a href="#ref-for-she-directive-state③">(4)</a> <a href="#ref-for-she-directive-state④">(5)</a> <a href="#ref-for-she-directive-state⑤">(6)</a> <a href="#ref-for-she-directive-state⑥">(7)</a>
+   </ul>
+  </aside>
+  <aside aria-labelledby="infopaneltitle-for-remove-the-fragment-directive" class="dfn-panel" data-for="remove-the-fragment-directive" id="infopanel-for-remove-the-fragment-directive">
+   <span id="infopaneltitle-for-remove-the-fragment-directive" style="display:none">Info about the 'remove the fragment directive' definition.</span><b><a href="#remove-the-fragment-directive">#remove-the-fragment-directive</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-remove-the-fragment-directive">3.3.1. Processing the fragment directive</a> <a href="#ref-for-remove-the-fragment-directive①">(2)</a> <a href="#ref-for-remove-the-fragment-directive②">(3)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-text-directive" class="dfn-panel" data-for="text-directive" id="infopanel-for-text-directive">
@@ -3535,8 +3722,8 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
   <aside aria-labelledby="infopaneltitle-for-document-allow-text-fragment-scroll" class="dfn-panel" data-for="document-allow-text-fragment-scroll" id="infopanel-for-document-allow-text-fragment-scroll">
    <span id="infopaneltitle-for-document-allow-text-fragment-scroll" style="display:none">Info about the 'allow text fragment scroll' definition.</span><b><a href="#document-allow-text-fragment-scroll">#document-allow-text-fragment-scroll</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-document-allow-text-fragment-scroll">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-allow-text-fragment-scroll①">(2)</a> <a href="#ref-for-document-allow-text-fragment-scroll②">(3)</a> <a href="#ref-for-document-allow-text-fragment-scroll③">(4)</a> <a href="#ref-for-document-allow-text-fragment-scroll④">(5)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑤">(6)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑥">(7)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑦">(8)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑧">(9)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑨">(10)</a>
-    <li><a href="#ref-for-document-allow-text-fragment-scroll①⓪">3.5. Navigating to a Text Fragment</a>
+    <li><a href="#ref-for-document-allow-text-fragment-scroll">3.4.4. Restricting the Text Fragment</a> <a href="#ref-for-document-allow-text-fragment-scroll①">(2)</a> <a href="#ref-for-document-allow-text-fragment-scroll②">(3)</a> <a href="#ref-for-document-allow-text-fragment-scroll③">(4)</a> <a href="#ref-for-document-allow-text-fragment-scroll④">(5)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑤">(6)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑥">(7)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑦">(8)</a> <a href="#ref-for-document-allow-text-fragment-scroll⑧">(9)</a>
+    <li><a href="#ref-for-document-allow-text-fragment-scroll⑨">3.5. Navigating to a Text Fragment</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-first-common-ancestor" class="dfn-panel" data-for="first-common-ancestor" id="infopanel-for-first-common-ancestor">

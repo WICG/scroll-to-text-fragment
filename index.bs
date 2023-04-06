@@ -59,6 +59,16 @@ spec:url; type:dfn; text:fragment
   }
 </pre>
 
+<style>
+  .monkeypatch {
+    color: grey;
+  }
+
+  .monkeypatch .diff {
+    color: black;
+  }
+</style>
+
 <h2 id=infrastructure>Infrastructure</h2>
 
 <p>This specification depends on the Infra Standard. [[!INFRA]]
@@ -237,12 +247,12 @@ The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
 <div class="note">
-  The [=/fragment directive=] is part of the URL fragment. This means it
+  The [=fragment directive=] is part of the URL fragment. This means it
   always appears after a U+0023 (#) code point in a URL.
 </div>
 
 <div class="example">
-  To add a [=/fragment directive=] to a URL like https://example.com, a fragment
+  To add a [=fragment directive=] to a URL like https://example.com, a fragment
   is first appended to the URL: https://example.com#:~:text=foo.
 </div>
 
@@ -260,115 +270,225 @@ action. Multiple directives may appear in the fragment directive.
   <p>Contains 2 text directives and one unknown directive.</p>
 </div>
 
-
-To prevent impacting page operation, it is stripped from a [=Document=]'s
-[=Document/URL=] to prevent interaction with author script. This also ensures
-future directives can be added without web compatibility risk.
+To prevent impacting page operation, it is stripped from script-accessible APIs to prevent
+interaction with author script. This also ensures future directives can be added without web
+compatibility risk.
 
 ### Processing the fragment directive ### {#processing-the-fragment-directive}
 
-The [=/fragment directive=] is processed and removed from the fragment whenever the
-UA sets the [=Document/URL=] on a [=Document=]. This is defined with the
-following additions and changes.
-
-To the definition of [=Document=], add:
-
->   <strong>Monkeypatching [[DOM]]:</strong>
->
->   <em>
->     Each document has an associated <dfn for="Document">fragment
->     directive</dfn> which is either null or an ASCII string holding data used
->     by the UA to process the resource. It is initially null.
->   </em>
-
-<div algorithm="split the fragment from the fragment directive">
-  To <dfn export>split the fragment from the fragment directive</dfn>, given an ASCII string
-  |raw fragment| and returning a [=/tuple=] consisting of a <code>fragment</code> and a
-  <code>fragment directive</code> (both ASCII strings), run these steps:
-
-  <ol class="algorithm">
-    1. Let |position| be the [=string/position variable=] pointing to the first code
-        point of the first instance, if one exists, of the [=fragment directive delimiter=] in |raw
-        fragment|, or past the end of |raw fragment| otherwise.
-    1. Let |fragment| be the [=code point substring by positions=] of |raw fragment| from the
-        start of |raw fragment| to |position|.
-    1. Let |fragmentDirective| be an ASCII string, initially empty.
-    1. Advance |position| by the [=string/code point length=] of the [=fragment directive
-        delimiter=].
-    1. If |position| does not point past the end of |raw fragment|:
-        1. Set |fragmentDirective| to the [=code point substring to the end of the string=]
-            |raw fragment| starting from |position|
-    1. Return the [=/tuple=] (|fragment|, |fragmentDirective|).
-  </ol>
-</div>
-
-
-Whenever the fragment directive is stripped from the URL, the
-Document's [=Document/fragment directive=] is set to the content of the fragment directive.
-
-Add a series of steps that will process a fragment directive on a [=Document/URL=]:
-
->   <strong>Monkeypatching [[DOM]]:</strong>
->
->   To <dfn>process and consume fragment directive</dfn> from a [=/URL=]
->   |url| and [=Document=] |document|, run these steps:
->   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
->   1. If |raw fragment| is non-null and contains the [=fragment directive
->       delimiter=] as a substring:
->       1. Let |components| be the result of running [=split the fragment from the fragment
->           directive=] on |raw fragment|.
->       1. Set |url|'s [=url/fragment=] to |components|' <code>fragment</code>.
->       1. Set |document|'s [=Document/fragment directive=] to |components|' <code>fragment directive</code>.
->           <div class="note">This is stored on the document but currently not web-exposed</div>
+This section describes the mechanism by which the fragment directive is hidden
+from script and how it fits into [[HTML#navigation-and-session-history]].
 
 <div class="note">
-  These changes make a URL's fragment end at the [=fragment directive
-  delimiter=]. The [=/fragment directive=] includes all characters that follow,
-  but not including, the delimiter.
+  The summarized changes in this section:
+
+  * Session history entries now include a new "directive state" item
+  * All new entries are created with a directive state with an empty value. If the new URL includes
+      a fragment directive it will be written to the state's value (otherwise it remains null).
+  * Any time a URL potentially including a fragment directive is written to a session history entry,
+      extract the fragment directive from the URL and store it in a directive state item of the
+      entry. There are three such points where a URL can potentially include a directive:
+      * In the "navigate" steps for typical cross-document navigations
+      * In the "navigate to a fragment" steps for fragment based same-document navigations
+      * In the "URL and history update steps" for synchronous updates such as
+          pushState/replaceState.
+  * Same-document navigations that change only the fragment, and the new URL doesn't specify a
+      directive, will create an entry whose directive state refers to the previous entry's directive
+      state.
+
 </div>
 
-<div class="example">
-<code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the [=/fragment directive=] is the string
-"text=foo".
+<div class="issue">
+    The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL">
+    create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always
+    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment.">
+    uses the fragment from an existing entry</a> so the directive would already be removed. However,
+    I think that's wrong. If the redirect URL includes a fragment it should be used, see
+    <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all
+    <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
+    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
+    where the directive would have to be removed.
 </div>
 
+In [[HTML#session-history-infrastructure]], define [=/directive state=]:
 
-Amend the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
-create and initialize a Document object</a> steps to parse and remove the
-[=/fragment directive=] by inserting the following steps right before the
-setting |document|'s [=Document/URL=]
-(<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#initialise-the-document-object">currently</a>
-step 9):
+>   <strong>Monkeypatching [[HTML#session-history-infrastructure]]:</strong>
+>
+>   <dfn>directive state</dfn> holds the value of the [=fragment directive=] at the time the session
+>   history entry was created and is used to invoke directives, such as text highlighting, whenever
+>   the entry is traversed. It has:
+>   * <dfn for="directive state">value</dfn>, the [=fragment directive=] ASCII string or null,
+>       initially null.
+>
+>   A [=/directive state=] may be shared across contiguous session history entries.
+>
+>   <div class="note">
+>       <p>The fragment directive is removed from the URL before the URL is set to the session
+>       history entry. It is instead stored in the directive state. This prevents it from being
+>       visible to script APIs so that a directive can be specified without interfering with a
+>       page's operation.</p>
+>
+>       <p>The fragment directive is stored in the directive state object, rather than a raw string,
+>       since the same directive state can be shared across multiple contiguous session history
+>       entries. On a traversal, the directive is only processed (i.e. search text and highlight) if
+>       the directive state has changed between two entries.</p>
+>   </div>
+
+To the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-entry">session history entry</a>, add:
+
+>   <strong>Monkeypatching [[HTML#session-history-entries]]:</strong>
+>
+>   <div class="monkeypatch">A session history entry is a struct with the following items:
+>     * ...
+>     * persisted user state, which is implementation-defined, initially null
+>     * <span class="diff"><dfn for=she>directive state</dfn>, a [=/directive state=],
+>         initially a new [=/directive state=]</span>
+>   </div>
+
+Add a helper algorithm for removing and returning a fragment directive string from a [=/URL=]:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   9. Run the [=process and consume fragment directive=] steps on
->     |creationURL| and |document|.
->   10. Set |document|'s [=Document/URL=] to be |creationURL|.
-
-Amend the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history">
-traverse the history</a> steps to process the [=/fragment directive=]
-during a history navigation by inserting steps before setting the |newDocument|'s URL (<a
-href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#traverse-the-history">currently</a>
-step 6).
-
->   <strong>Monkeypatching [[HTML]]:</strong>
+>   <div class="note">
+>     This algorithm makes a URL's fragment end at the [=fragment directive
+>     delimiter=]. The returned [=/fragment directive=] includes all characters that follow the
+>     delimiter but does not include the delimiter.
+>   </div>
 >
->   6. Let |processedURL| be a copy of <var ignore="">entry</var>'s URL.
->   7. Run the [=process and consume fragment directive=] steps on
->       |processedURL| and |document|.
->   8. Set |newDocument|'s URL to |processedURL|.
+>   <div class="issue">
+>     If a URL's fragment ends with ':~:' (i.e. empty directive), this will return null which is
+>     treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+>     one. But maybe in this case we should return the empty string? That way a page can explicitly
+>     clear directives/highlights by navigating/pushState to '#:~:'.
+>   </div>
+>
+>   To <dfn>remove the fragment directive</dfn> from a [=/URL=] |url|, run these steps:
+>   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
+>   1. Let |fragment directive| be null.
+>   1. If |raw fragment| is non-null and contains the [=fragment directive delimiter=] as a
+>       substring:
+>       1. Let |position| be the [=string/position variable=] pointing to the first code
+>           point of the first instance, if one exists, of the [=fragment directive delimiter=] in
+>           |raw fragment|, or past the end of |raw fragment| otherwise.
+>       1. Let |new fragment| be the [=code point substring by positions=] of |raw fragment| from
+>           the start of |raw fragment| to |position|.
+>       1. Advance |position| by the [=string/code point length=] of the [=fragment directive
+>           delimiter=].
+>       1. If |position| does not point past the end of |raw fragment|:
+>           1. Set |fragment directive| to the [=code point substring to the end of the string=]
+>               |raw fragment| starting from |position|
+>       1. Set |url|'s [=url/fragment=] to |new fragment|.
+>   1. Return |fragment directive|.
+>
+>   <div class="example">
+>      <code>https://example.org/#test:~:text=foo</code> will be parsed such that
+>      the fragment is the string "test" and the [=/fragment directive=] is the string
+>      "text=foo".
+>   </div>
+
+The next three monkeypatches modify the creation of a session history entry, where the URL might
+contain a fragment directive, to remove the fragment directive and store it in the [=/directive
+state=].
+
+In the definition of [=navigate=]:
+
+>   <strong>Monkeypatching [[HTML#beginning-navigation]]:</strong>
+>
+>   <div class="monkeypatch">To navigate a navigable navigable to a URL |url|...:
+>     1. ...
+>         <li value="14">Set navigable's ongoing navigation to navigationId.</li>
+>     15. If url's scheme is "javascript", then...
+>     16. In parallel, run these steps:
+>         1. ...
+>             <li value="5">If url is about:blank, then set documentState's origin to documentState's initiator origin.</li>
+>         6. Otherwise, if url is about:srcdoc, then set documentState's origin to navigable's parent's active document's origin.
+>         7. <strike>Let historyEntry be a new session history entry, with its URL set to url and
+>             its document state set to documentState.</strike>
+>             <li value="7"><span class="diff">Let |fragment directive| be the result of running [=remove the
+>             fragment directive=] on |url|.</span></li>
+>         8. <span class="diff">Let |directive state| be a new [=/directive
+>             state=] with [=directive state/value=] set to |fragment directive|.</span>
+>         9. <span class="diff">Let historyEntry be a new session history entry, with its URL
+>             set to |url|, its document state set to documentState, and its [=she/directive state=]
+>             set to |directive state|.</span>
+>         10. Let navigationParams be null.
+>         11. ...
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to a fragment</a>:
+
+>   <strong>Monkeypatching [[HTML#scroll-to-fragid]]:</strong>
+>
+>   <div class="monkeypatch">To navigate to a fragment given navigable |navigable|, ...:
+>     1. <span class="diff">Let |directive state| be navigable's active session history
+>         entry's [=she/directive state=].</span>
+>     1. <span class="diff">Let |fragment directive| be the result of running
+>         [=remove the fragment directive=] on |url|.</span>
+>     1. <span class="diff">If |url| does not equal |navigable|'s active session history
+>         entry's URL with exclude fragments set to true OR |fragment directive| is not null:</span>
+>         <div class="note">Otherwise, when only the fragment has changed and it did not specify
+>         a directive, the active entry's directive state is reused. This prevents a fragment
+>         change from clobbering highlights.</div>
+>         1. <span class="diff">Let |directive state| be a new [=/directive state=] with
+>             [=directive state/value=] set to |fragment directive|.
+>     2. Let historyEntry be a new session history entry, with
+>         * URL url
+>         * document state navigable's active session history entry's document state
+>         * scroll restoration mode navigable's active session history entry's scroll restoration
+>             mode
+>         * <span class="diff">[=she/directive state=] |directive state|</span>
+>     2. Let entryToReplace be navigable's active session history entry if historyHandling is
+>         "replace", otherwise null.
+>     3. ...
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#url-and-history-update-steps">URL and history update steps</a>:
+
+>   <strong>Monkeypatching [[HTML#navigate-non-frag-sync]]:</strong>
+>
+>   <div class="monkeypatch">The URL and history update steps, given a Document |document|, ...:
+>     1. Let |navigable| be |document|'s node navigable.
+>     2. Let |activeEntry| be |navigable|'s active session history entry.
+>     3. <span class="diff">Let |fragment directive| be the result of running [=remove the
+>         fragment directive=] on |newUrl|.</span>
+>     5. Let |historyEntry| be a new session history entry, with
+>         * URL |newUrl|
+>         * ...
+>         * <span class="diff">[=she/directive state=] |activeEntry|'s [=she/directive
+>             state=]</span>
+>     6. If |document|'s is initial about:blank is true, then set historyHandling to "replace".
+>     7. If historyHandling is "push", then:
+>         1. Increment document's history object's index.
+>         2. Set document's history object's length to its index + 1.
+>         3. <span class="diff">If |newUrl| does not equal |activeEntry|'s URL with exclude
+>             fragments set to true OR |fragment directive| is not null, then:</span>
+>             <div class="note">Otherwise, when only the fragment has changed and it did not specify
+>             a directive, the active entry's directive state is reused. This prevents a fragment
+>             change from clobbering highlights.</div>
+>             1. <span class="diff">Let |historyEntry|'s [=she/directive state=] be a new
+>                 [=/directive state=] with [=directive state/value=] set to |fragment
+>                 directive|.</span>
+>     8. <span class="diff">Otherwise, if |fragment directive| is not null, set
+>         |historyEntry|'s [=she/directive state=]'s [=directive state/value=] to |fragment
+>         directive|.</span>
+>     9. If serializedData is not null, then restore the history object state given document and
+>         newEntry.
+>   </div>
 
 <div class="note">
   <p>
-    The changes in this section imply that a URL is only stripped of its fragment
-    directive when it is set on a Document. Notably, since a window's
-    {{Location}} object is a representation of the [=/URL=] of the [=active
-    document=], all getters on it will show a fragment-directive-stripped
+    Since a Document is populated from a history entry, its [=Document/URL=] will not include the
+    fragment directive. Similarly, since a window's {{Location}} object is a representation of the
+    [=/URL=] of the [=active document=], all getters on it will show a fragment-directive-stripped
     version of the URL.
+  </p>
+
+  <p>
+    Additionally, since the {{HashChangeEvent}} is
+    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#updating-the-document">
+    fired in response to a changed fragment</a> between URLs of session history entries,
+    <code>hashchange</code> will not be fired if a navigation or traversal changes only the fragment
+    directive.
   </p>
 
   <p>
@@ -378,41 +498,52 @@ step 6).
 
 <div class="example">
   ```
-  window.location = 'https://example.com#foo:~:bar';
+  window.location = "https://example.com#page1:~:hello";
+  console.log(window.location.href); // 'https://example.com#page1'
+  console.log(window.location.hash); // '#page1'
   ```
 
-  The page loads and when the document's URL is set the fragment directive is
-  stripped out during the "create and initialize a Document object" steps.
+  The initial navigation created a new session history entry. The entry's URL is stripped of the
+  fragment directive: "https://example.com#page1". The entry's directive state value is set to
+  "hello". Since the document is populated from the entry, web APIs don't include the fragment
+  directive in URLs.
 
   ```
-  console.log(window.location.href); // 'https://example.com#foo'
-  console.log(window.location.hash); // '#foo'
+  location.hash = "page2";
+  console.log(location.href); // 'https://example.com#page2'
   ```
 
-  Since same document navigations are made by adding a new session history
-  entry and using the "traverse the history" steps, the the fragment directive
-  will be stripped here as well.
+  A same document navigation changed only the fragment. This adds a new session history entry in the
+  <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to
+  a fragment</a> steps. However, since only the fragment changed, the new entry's directive state
+  points to the same state as the first entry, with a value of "bar".
 
   ```
-  window.location.hash = 'fizz:~:buzz';
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+  onhashchange = () => console.assert(false, "hashchange doesn't fire.");
+  location.hash = "page2:~:world";
+  console.log(location.href); // 'https://example.com#page2'
+  onhashchange = null;
   ```
 
-  The hashchange event is dispatched when only the fragment directive changes
-  because the comparison for it is done on the URLs in the session history
-  entries, where the fragment directive hasn't been removed.
+  A same document navigation changes only the fragment but includes a fragment directive. Since an
+  explicit directive was provided, the new entry includes its own directive state with a value of
+  "fizz".
+
+  The hashchange event is not fired since the page-visible fragment is unchanged; only the fragment
+  directive changed. This is because the comparison for hashchange is done on the URLs in the
+  session history entries, where the fragment directive has been removed.
 
   ```
-  onhashchange = () => {console.log('HASHCHANGE');};
-  window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+  history.pushState("", "", "page3");
+  console.log(location.href); // 'https://example.com/page3'
   ```
+
+  pushState creates a new session history entry for the same document. However, since the
+  non-fragment URL has changed, this entry has its own directive state with value currently null.
 </div>
 
 <div class="example">
-  In other cases where a Document's URL is not set by the UA, there is no
+  In other cases where a URL is not set to a session history entry, there is no
   fragment directive stripping.
 
   For URL objects:
@@ -438,25 +569,6 @@ step 6).
   </script>
   ```
 </div>
-
-<div class="example">
-  History pushState will create a session history entry where the URL's
-  fragment directive isn't stripped. However, traversing to the entry will
-  cause it to set its URL on the document which will process the fragment
-  directive before setting it on the Document (but the fragment directive
-  remains on the entry).
-
-
-  ```
-  history.pushState({}, 'title', 'index.html#foo:~:bar');
-  window.location = 'newpage.html';
-  // on newpage.html
-  history.back();
-  ```
-
-  Results in the current document having "bar" as the fragment directive.
-</div>
-
 
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
 
@@ -838,8 +950,11 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             activated per user-activated navigation.
 >           </div>
 >   16. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
+<!--
+TODO is the document's latest entry set by here yet? If not the allow bit will have to be set some other way.
 >       1. If |document|'s [=Document/fragment directive=] field is null or empty, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
+-->
 >       1. Let |text directive user activation| be the value of |document|'s
 >           [=document/text directive user activation=] and set |document|'s
 >           [=document/text directive user activation=] to false.
@@ -1012,7 +1127,9 @@ so that the indicated part is a [=range=]:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   1. Let |fragment directive string| be the document's [=Document/fragment directive=].
+>   1. Let |fragment directive string| be the document's
+>       <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#latest-entry">latest entry</a>'s
+>       [=fragment directive=].
 >   1. If the document's [=document/allow text fragment scroll=] is true then:
 >       1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
 >           the [=process a fragment directive=] steps with |fragment directive
