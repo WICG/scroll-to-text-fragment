@@ -785,7 +785,7 @@ indicated part</a>, enable a fragment to indicate a [=range=]. Make the followin
 >   1. <span class="diff">If |directives| is non-null and |document|'s [=document/allow text
 >       fragment scroll=] is true then:</span>
 >       1. <span class="diff">Let |ranges| be a <a spec=infra>list</a> that is the result of running
->           the [=process a fragment directive=] steps with |directives| and the document.</span>
+>           the [=invoke text directives=] steps with |directives| and the document.</span>
 >       1. <span class="diff">If |ranges| is non-empty, then:</span>
 >           1. <span class="diff">Let |firstRange| be the first item of |ranges|.</span>
 >           1. <span class="diff">Visually indicate each [=range=] in |ranges| in an
@@ -1299,23 +1299,23 @@ To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
   regardless of how many other directives are provided or their match result.
 
   If a directive successfully matches to text in the document, it returns a
-  [=range=] indicating that match in the document. The [=process a fragment
-  directive=] steps are the high level API provided by this section. These
-  return a <a spec=infra>list</a> of [=ranges=] that were matched by the
-  individual directive matching steps, in the order the directives were
+  [=range=] indicating that match in the document. The
+  [=invoke text directives=] steps are the high level API provided by this
+  section. These return a <a spec=infra>list</a> of [=ranges=] that were matched
+  by the individual directive matching steps, in the order the directives were
   specified in the fragment directive string.
 
   If a directive was not matched, it does not add an item to the returned
   list.
 </div>
 
-<div algorithm="process a fragment directive">
-To <dfn>process a fragment directive</dfn>, given as input an <a
-spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
+<div algorithm="invoke text directives">
+To <dfn>invoke text directives</dfn>, given as input an <a
+spec=infra>ASCII string</a> |text directives| and a [=Document=]
 |document|, run these steps:
 
 <div class="note">
-  This algorithm takes as input a |fragment directive input|, that is the
+  This algorithm takes as input a |text directives|, that is the
   raw text of the fragment directive and the |document| over which it operates.
   It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
   indicated, the first of which will be scrolled into view (if the UA scrolls
@@ -1323,11 +1323,11 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 </div>
 
   <ol class="algorithm">
-    1. If |fragment directive input| is not a [=valid fragment directive=], then
+    1. If |text directives| is not a [=valid fragment directive=], then
         return an empty <a spec=infra>list</a>.
     2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>ASCII string</a>s
         that is the result of [=strictly split a string|strictly splitting the
-        string=] |fragment directive input| on "&".
+        string=] |text directives| on "&".
     3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
     4. For each <a spec=infra>ASCII string</a> |directive| of |directives|:
         1. If |directive| does not match the production [=TextDirective=],

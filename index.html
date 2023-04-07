@@ -1513,7 +1513,7 @@ fragment as a fallback.</p>
        <ol>
         <li data-md>
          <p><span class="diff">Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> that is the result of running
-  the <a data-link-type="dfn" href="#process-a-fragment-directive" id="ref-for-process-a-fragment-directive">process a fragment directive</a> steps with <var>directives</var> and the document.</span></p>
+  the <a data-link-type="dfn" href="#invoke-text-directives" id="ref-for-invoke-text-directives">invoke text directives</a> steps with <var>directives</var> and the document.</span></p>
         <li data-md>
          <p><span class="diff">If <var>ranges</var> is non-empty, then:</span></p>
          <ol>
@@ -1985,29 +1985,28 @@ text=bar,baz
   instance of rendered text that matches the restrictions in the directive.
   Each search is independent of any others; that is, the result is the same
   regardless of how many other directives are provided or their match result.</p>
-    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#process-a-fragment-directive" id="ref-for-process-a-fragment-directive①">process a fragment
-  directive</a> steps are the high level API provided by this section. These
-  return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">ranges</a> that were matched by the
-  individual directive matching steps, in the order the directives were
+    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#invoke-text-directives" id="ref-for-invoke-text-directives①">invoke text directives</a> steps are the high level API provided by this
+  section. These return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">ranges</a> that were matched
+  by the individual directive matching steps, in the order the directives were
   specified in the fragment directive string.</p>
     <p>If a directive was not matched, it does not add an item to the returned
   list.</p>
    </div>
-   <div class="algorithm" data-algorithm="process a fragment directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-a-fragment-directive">process a fragment directive</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>fragment directive input</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
-    <div class="note" role="note"> This algorithm takes as input a <var>fragment directive input</var>, that is the
+   <div class="algorithm" data-algorithm="invoke text directives">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="invoke-text-directives">invoke text directives</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>text directives</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
+    <div class="note" role="note"> This algorithm takes as input a <var>text directives</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">ranges</a> that are to be visually
   indicated, the first of which will be scrolled into view (if the UA scrolls
   automatically). </div>
     <ol class="algorithm">
      <li data-md>
-      <p>If <var>fragment directive input</var> is not a <a data-link-type="dfn" href="#valid-fragment-directive" id="ref-for-valid-fragment-directive">valid fragment directive</a>, then
+      <p>If <var>text directives</var> is not a <a data-link-type="dfn" href="#valid-fragment-directive" id="ref-for-valid-fragment-directive">valid fragment directive</a>, then
 return an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list④">list</a>.</p>
      <li data-md>
       <p>Let <var>directives</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑤">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a>s
 that is the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting the
-string</a> <var>fragment directive input</var> on "&amp;".</p>
+string</a> <var>text directives</var> on "&amp;".</p>
      <li data-md>
       <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">ranges</a>, initially empty.</p>
      <li data-md>
@@ -2819,6 +2818,7 @@ manipulations
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in § 3.3</span>
    <li><a href="#get-boundary-point-at-index">get boundary point at index</a><span>, in § 3.6.1</span>
    <li><a href="#has-block-level-display">has block-level display</a><span>, in § 3.6.1</span>
+   <li><a href="#invoke-text-directives">invoke text directives</a><span>, in § 3.6.1</span>
    <li><a href="#is-at-a-word-boundary">is at a word boundary</a><span>, in § 3.6.2</span>
    <li><a href="#locale">locale</a><span>, in § 3.6.2</span>
    <li><a href="#nearest-block-ancestor">nearest block ancestor</a><span>, in § 3.6.1</span>
@@ -2827,7 +2827,6 @@ manipulations
    <li><a href="#parse-a-text-directive">parse a text directive</a><span>, in § 3.4</span>
    <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.4</span>
    <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.4</span>
-   <li><a href="#process-a-fragment-directive">process a fragment directive</a><span>, in § 3.6.1</span>
    <li><a href="#remove-the-fragment-directive">remove the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.6.1</span>
    <li><a href="#shadow-including-parent">shadow-including parent</a><span>, in § 3.6</span>
@@ -3887,11 +3886,11 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
     <li><a href="#ref-for-shadow-including-parent">3.6. Navigating to a Text Fragment</a>
    </ul>
   </aside>
-  <aside aria-labelledby="infopaneltitle-for-process-a-fragment-directive" class="dfn-panel" data-for="process-a-fragment-directive" id="infopanel-for-process-a-fragment-directive">
-   <span id="infopaneltitle-for-process-a-fragment-directive" style="display:none">Info about the 'process a fragment directive' definition.</span><b><a href="#process-a-fragment-directive">#process-a-fragment-directive</a></b><b>Referenced in:</b>
+  <aside aria-labelledby="infopaneltitle-for-invoke-text-directives" class="dfn-panel" data-for="invoke-text-directives" id="infopanel-for-invoke-text-directives">
+   <span id="infopaneltitle-for-invoke-text-directives" style="display:none">Info about the 'invoke text directives' definition.</span><b><a href="#invoke-text-directives">#invoke-text-directives</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-process-a-fragment-directive">3.4.1. Invoking Text Directives</a>
-    <li><a href="#ref-for-process-a-fragment-directive①">3.6.1. Finding Ranges in a Document</a>
+    <li><a href="#ref-for-invoke-text-directives">3.4.1. Invoking Text Directives</a>
+    <li><a href="#ref-for-invoke-text-directives①">3.6.1. Finding Ranges in a Document</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-find-a-range-from-a-text-directive" class="dfn-panel" data-for="find-a-range-from-a-text-directive" id="infopanel-for-find-a-range-from-a-text-directive">
