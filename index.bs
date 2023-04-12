@@ -320,7 +320,7 @@ In [[HTML#session-history-infrastructure]], define [=/directive state=]:
 >   * <dfn for="directive state">value</dfn>, the [=fragment directive=] ASCII string or null,
 >       initially null.
 >
->   A [=/directive state=] may be shared across contiguous session history entries.
+>   A [=/directive state=] may be shared by multiple session history entries.
 >
 >   <div class="note">
 >       <p>The fragment directive is removed from the URL before the URL is set to the session
