@@ -12,7 +12,7 @@
   }
 
   .monkeypatch .diff {
-    color: black;
+    color: var(--text);
   }
 </style>
 <style>/* style-autolinks */
@@ -744,7 +744,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">URL Fragment Text Directives</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-04-06">6 April 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-04-12">12 April 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -859,7 +859,6 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
      <ol class="toc">
       <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
-      <li><a href="#w3c-conformant-algorithms"><span class="secno"></span> <span class="content">Conformant Algorithms</span></a>
      </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
@@ -1054,10 +1053,10 @@ from script and how it fits into <a href="https://html.spec.whatwg.org/multipage
   the entry is traversed. It has:</p>
     <ul>
      <li data-md>
-      <p><dfn class="dfn-paneled" data-dfn-for="directive state" data-dfn-type="dfn" data-noexport id="directive-state-value">value</dfn>, the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> ASCII string or null,
+      <p><dfn class="dfn-paneled" data-dfn-for="directive state" data-dfn-type="dfn" data-noexport id="directive-state-value">value</dfn>, the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive④">fragment directive</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string">ASCII string</a> or null,
   initially null.</p>
     </ul>
-    <p>A <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state①">directive state</a> may be shared across contiguous session history entries.</p>
+    <p>A <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state①">directive state</a> may be shared by multiple session history entries.</p>
     <div class="note" role="note">
      <p>The fragment directive is removed from the URL before the URL is set to the session
       history entry. It is instead stored in the directive state. This prevents it from being
@@ -1091,8 +1090,8 @@ initially a new <a data-link-type="dfn" href="#directive-state" id="ref-for-dire
     <div class="note" role="note"> This algorithm makes a URL’s fragment end at the <a data-link-type="dfn" href="#fragment-directive-delimiter" id="ref-for-fragment-directive-delimiter①">fragment directive
     delimiter</a>. The returned <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑤">fragment directive</a> includes all characters that follow the
     delimiter but does not include the delimiter. </div>
-    <div class="issue" id="issue-827449be"><a class="self-link" href="#issue-827449be"></a> If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which is
-    treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+    <div class="issue" id="issue-f4a5d96b"><a class="self-link" href="#issue-f4a5d96b"></a> TODO: If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which
+    is treated as the URL not specifying an explicit directive (and avoids clobbering an existing
     one. But maybe in this case we should return the empty string? That way a page can explicitly
     clear directives/highlights by navigating/pushState to '#:~:'. </div>
     <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="remove-the-fragment-directive">remove the fragment directive</dfn> from a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> <var>url</var>, run these steps:</p>
@@ -1183,8 +1182,7 @@ entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-di
       <li data-md>
        <p><span class="diff">Let <var>fragment directive</var> be the result of running <a data-link-type="dfn" href="#remove-the-fragment-directive" id="ref-for-remove-the-fragment-directive①">remove the fragment directive</a> on <var>url</var>.</span></p>
       <li data-md>
-       <p><span class="diff">If <var>url</var> does not equal <var>navigable</var>’s active session history
-entry’s URL with exclude fragments set to true OR <var>fragment directive</var> is not null:</span></p>
+       <p><span class="diff">If <var>fragment directive</var> is not null:</span></p>
        <div class="note" role="note">Otherwise, when only the fragment has changed and it did not specify
 a directive, the active entry’s directive state is reused. This prevents a fragment
 change from clobbering highlights.</div>
@@ -1366,7 +1364,7 @@ state</a> to apply the directives associated with a session history entry to a <
    </blockquote>
    <h4 class="heading settled" data-level="3.3.3" id="parsing-the-fragment-directive"><span class="secno">3.3.3. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
    <h4 class="heading settled" data-level="3.3.4" id="fragment-directive-grammar"><span class="secno">3.3.4. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
-   <p>An <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string">ASCII string</a> is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive</dfn> if
+   <p>An <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive</dfn> if
 it matches the production:</p>
    <dl>
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirectiveproduction"><code>FragmentDirective</code></dfn> <code>::=</code> 
@@ -1417,7 +1415,7 @@ of these items.</p>
    <p>See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
 used.</p>
    <div class="algorithm" data-algorithm="parse a text directive">
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> <var>text
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>text
 directive input</var>, run these steps:</p>
     <div class="note" role="note">
      <p> This algorithm takes a single text directive string as input (e.g.
@@ -1993,7 +1991,7 @@ text=bar,baz
   list.</p>
    </div>
    <div class="algorithm" data-algorithm="invoke text directives">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="invoke-text-directives">invoke text directives</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> <var>text directives</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="invoke-text-directives">invoke text directives</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a> <var>text directives</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
     <div class="note" role="note"> This algorithm takes as input a <var>text directives</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
   It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">ranges</a> that are to be visually
@@ -2004,13 +2002,13 @@ text=bar,baz
       <p>If <var>text directives</var> is not a <a data-link-type="dfn" href="#valid-fragment-directive" id="ref-for-valid-fragment-directive">valid fragment directive</a>, then
 return an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list④">list</a>.</p>
      <li data-md>
-      <p>Let <var>directives</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑤">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a>s
+      <p>Let <var>directives</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑤">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string④">ASCII string</a>s
 that is the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting the
 string</a> <var>text directives</var> on "&amp;".</p>
      <li data-md>
       <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">ranges</a>, initially empty.</p>
      <li data-md>
-      <p>For each <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string④">ASCII string</a> <var>directive</var> of <var>directives</var>:</p>
+      <p>For each <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string⑤">ASCII string</a> <var>directive</var> of <var>directives</var>:</p>
       <ol>
        <li data-md>
         <p>If <var>directive</var> does not match the production <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective③">TextDirective</a>,
@@ -2773,20 +2771,6 @@ manipulations
     <ul class="wpt-tests-list"></ul>
     <hr>
    </details>
-   <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
-   <p>Requirements phrased in the imperative as part of algorithms
-    (such as "strip any leading space characters"
-    or "return false and abort these steps")
-    are to be interpreted with the meaning of the key word
-    ("must", "should", "may", etc)
-    used in introducing the algorithm. </p>
-   <p>Conformance requirements phrased as algorithms or specific steps
-    can be implemented in any manner,
-    so long as the end result is equivalent.
-    In particular, the algorithms defined in this specification
-    are intended to be easy to understand
-    and are not intended to be performant.
-    Implementers are encouraged to optimize. </p>
   </div>
 <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
@@ -3299,9 +3283,10 @@ manipulations
   <aside aria-labelledby="infopaneltitle-for-61c7c9c76ff1cedf412e7a18bbe24e2c" class="dfn-panel" data-for="61c7c9c76ff1cedf412e7a18bbe24e2c" id="infopanel-for-61c7c9c76ff1cedf412e7a18bbe24e2c">
    <span id="infopaneltitle-for-61c7c9c76ff1cedf412e7a18bbe24e2c" style="display:none">Info about the 'ascii string' external reference.</span><a href="https://infra.spec.whatwg.org/#ascii-string">https://infra.spec.whatwg.org/#ascii-string</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ascii-string">3.3.4. Fragment directive grammar</a>
-    <li><a href="#ref-for-ascii-string①">3.4. Text Directives</a>
-    <li><a href="#ref-for-ascii-string②">3.6.1. Finding Ranges in a Document</a> <a href="#ref-for-ascii-string③">(2)</a> <a href="#ref-for-ascii-string④">(3)</a>
+    <li><a href="#ref-for-ascii-string">3.3.1. Extracting the fragment directive</a>
+    <li><a href="#ref-for-ascii-string①">3.3.4. Fragment directive grammar</a>
+    <li><a href="#ref-for-ascii-string②">3.4. Text Directives</a>
+    <li><a href="#ref-for-ascii-string③">3.6.1. Finding Ranges in a Document</a> <a href="#ref-for-ascii-string④">(2)</a> <a href="#ref-for-ascii-string⑤">(3)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-7618b9a6d44febb7e784c8f39faac140" class="dfn-panel" data-for="7618b9a6d44febb7e784c8f39faac140" id="infopanel-for-7618b9a6d44febb7e784c8f39faac140">
@@ -3654,10 +3639,10 @@ manipulations
     I think that’s wrong. If the redirect URL includes a fragment it should be used, see <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
     RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
     where the directive would have to be removed. <a class="issue-return" href="#issue-b598ad03" title="Jump to section">↵</a></div>
-   <div class="issue"> If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which is
-    treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+   <div class="issue"> TODO: If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which
+    is treated as the URL not specifying an explicit directive (and avoids clobbering an existing
     one. But maybe in this case we should return the empty string? That way a page can explicitly
-    clear directives/highlights by navigating/pushState to '#:~:'. <a class="issue-return" href="#issue-827449be" title="Jump to section">↵</a></div>
+    clear directives/highlights by navigating/pushState to '#:~:'. <a class="issue-return" href="#issue-f4a5d96b" title="Jump to section">↵</a></div>
    <div class="issue"> What should be set as target if inside a shadow tree? <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a> <a class="issue-return" href="#issue-424a4e25" title="Jump to section">↵</a></div>
    <div class="issue"> These revealing algorithms currently wont work well since <var>target</var> could be an
       ancestor or even the root document node. Issue <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a> proposes

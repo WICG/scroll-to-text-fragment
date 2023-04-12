@@ -65,7 +65,7 @@ spec:url; type:dfn; text:fragment
   }
 
   .monkeypatch .diff {
-    color: black;
+    color: var(--text);
   }
 </style>
 
@@ -317,7 +317,7 @@ In [[HTML#session-history-infrastructure]], define [=/directive state=]:
 >   <dfn>directive state</dfn> holds the value of the [=fragment directive=] at the time the session
 >   history entry was created and is used to invoke directives, such as text highlighting, whenever
 >   the entry is traversed. It has:
->   * <dfn for="directive state">value</dfn>, the [=fragment directive=] ASCII string or null,
+>   * <dfn for="directive state">value</dfn>, the [=fragment directive=] [=ASCII string=] or null,
 >       initially null.
 >
 >   A [=/directive state=] may be shared by multiple session history entries.
@@ -356,8 +356,8 @@ Add a helper algorithm for removing and returning a fragment directive string fr
 >   </div>
 >
 >   <div class="issue">
->     If a URL's fragment ends with ':~:' (i.e. empty directive), this will return null which is
->     treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+>     TODO: If a URL's fragment ends with ':~:' (i.e. empty directive), this will return null which
+>     is treated as the URL not specifying an explicit directive (and avoids clobbering an existing
 >     one. But maybe in this case we should return the empty string? That way a page can explicitly
 >     clear directives/highlights by navigating/pushState to '#:~:'.
 >   </div>
@@ -424,8 +424,7 @@ In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-th
 >         entry's [=she/directive state=].</span>
 >     1. <span class="diff">Let |fragment directive| be the result of running
 >         [=remove the fragment directive=] on |url|.</span>
->     1. <span class="diff">If |url| does not equal |navigable|'s active session history
->         entry's URL with exclude fragments set to true OR |fragment directive| is not null:</span>
+>     1. <span class="diff">If |fragment directive| is not null:</span>
 >         <div class="note">Otherwise, when only the fragment has changed and it did not specify
 >         a directive, the active entry's directive state is reused. This prevents a fragment
 >         change from clobbering highlights.</div>
