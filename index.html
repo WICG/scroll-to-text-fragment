@@ -1025,7 +1025,7 @@ from script and how it fits into <a href="https://html.spec.whatwg.org/multipage
      <li data-md>
       <p>Any time a URL potentially including a fragment directive is written to a session history entry,
   extract the fragment directive from the URL and store it in a directive state item of the
-  entry. There are three such points where a URL can potentially include a directive:</p>
+  entry. There are four such points where a URL can potentially include a directive:</p>
       <ul>
        <li data-md>
         <p>In the "navigate" steps for typical cross-document navigations</p>
@@ -1034,6 +1034,8 @@ from script and how it fits into <a href="https://html.spec.whatwg.org/multipage
        <li data-md>
         <p>In the "URL and history update steps" for synchronous updates such as
   pushState/replaceState.</p>
+       <li data-md>
+        <p>In the "create navigation params by fetching" steps for URLs coming from a redirect.</p>
       </ul>
      <li data-md>
       <p>Same-document navigations that change only the fragment, and the new URL doesn’t specify a
@@ -1041,10 +1043,6 @@ from script and how it fits into <a href="https://html.spec.whatwg.org/multipage
   state.</p>
     </ul>
    </div>
-   <div class="issue" id="issue-b598ad03"><a class="self-link" href="#issue-b598ad03"></a> The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL"> create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment."> uses the fragment from an existing entry</a> so the directive would already be removed. However,
-    I think that’s wrong. If the redirect URL includes a fragment it should be used, see <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
-    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
-    where the directive would have to be removed. </div>
    <p>In <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-infrastructure"><cite>HTML</cite> § 7.4.1 Session history</a>, define <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state">directive state</a>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-infrastructure"><cite>HTML</cite> § 7.4.1 Session history</a>:</strong></p>
@@ -1129,7 +1127,7 @@ initially a new <a data-link-type="dfn" href="#directive-state" id="ref-for-dire
      the fragment is the string "test" and the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑥">fragment directive</a> is the string
      "text=foo". </div>
    </blockquote>
-   <p>The next three monkeypatches modify the creation of a session history entry, where the URL might
+   <p>The next four monkeypatches modify the creation of a session history entry, where the URL might
 contain a fragment directive, to remove the fragment directive and store it in the <a data-link-type="dfn" href="#directive-state" id="ref-for-directive-state④">directive
 state</a>.</p>
    <p>In the definition of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate" id="ref-for-navigate">navigate</a>:</p>
@@ -1265,6 +1263,44 @@ newEntry.</p>
      </ol>
     </div>
    </blockquote>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching"> create navigation params by fetching</a>:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#populating-a-session-history-entry"><cite>HTML</cite> § 7.4.5 Populating a session history entry</a>:</strong></p>
+    <div class="monkeypatch">
+     To create navigation params by fetching given a session history entry <var>entry</var>, ...: 
+     <ol>
+      <li data-md>
+       <p class="assertion">Assert: this is running in parallel.</p>
+      <li data-md>
+       <p>...</p>
+      <li value="17">Let currentURL be request’s current URL.
+      <li data-md>
+       <p>Let commitEarlyHints be null.</p>
+      <li data-md>
+       <p>While true:</p>
+       <ol>
+        <li data-md>
+         <p>If request’s reserved client is not null and currentURL’s origin is not the same as request’s reserved client’s creation URL’s origin, then:</p>
+        <li data-md>
+         <p>...</p>
+        <li value="21">Set currentURL to <var>locationURL</var>.
+        <li data-md>
+         <p><span class="diff">Let <var>fragment directive</var> be the result of running <a data-link-type="dfn" href="#remove-the-fragment-directive" id="ref-for-remove-the-fragment-directive③">remove the fragment directive</a> on <var>locationURL</var>.</span></p>
+        <li data-md>
+         <strike class="diff">Set <var>entry</var>’s URL to currentURL.</strike>
+        <li data-md>
+         <p><span class="diff">Set <var>entry</var>’s URL to <var>locationURL</var>.</span></p>
+        <li data-md>
+         <p><span class="diff">Set <var>entry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑦">directive state</a>'s <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value④">value</a> to <var>fragment directive</var>.</span></p>
+        <li data-md>
+         <p>If <var>locationURL</var> is a URL whose scheme is not a fetch scheme, then return a new non-fetch
+scheme navigation params, with initiator origin request’s current URL’s origin</p>
+        <li data-md>
+         <p>...</p>
+       </ol>
+     </ol>
+    </div>
+   </blockquote>
    <div class="note" role="note">
     <p> Since a Document is populated from a history entry, its <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-url" id="ref-for-concept-document-url">URL</a> will not include the
     fragment directive. Similarly, since a window’s <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#location" id="ref-for-location">Location</a></code> object is a representation of the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url②">URL</a> of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document">active document</a>, all getters on it will show a fragment-directive-stripped
@@ -1330,7 +1366,7 @@ console.log(document.url.hash); // '#foo:~:bar'
    <h4 class="heading settled" data-level="3.3.2" id="applying-directives-to-a-document"><span class="secno">3.3.2. </span><span class="content">Applying directives to a document</span><a class="self-link" href="#applying-directives-to-a-document"></a></h4>
    <p>The section above described how the <a data-link-type="dfn" href="#fragment-directive" id="ref-for-fragment-directive⑦">fragment directive</a> is separated from the URL and stored in a
 session history entry.</p>
-   <p>This section defines how and when navigations and traversals make use of history entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑦">directive
+   <p>This section defines how and when navigations and traversals make use of history entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑧">directive
 state</a> to apply the directives associated with a session history entry to a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">Document</a>.</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://dom.spec.whatwg.org/#interface-document"><cite>DOM</cite> § 4.5 Interface Document</a>:</strong></p>
@@ -1353,7 +1389,7 @@ state</a> to apply the directives associated with a session history entry to a <
         <li data-md>
          <p>Let <var>oldURL</var> be <var>document</var>’s latest entry’s URL.</p>
         <li data-md>
-         <p><span class="diff">If <var>document</var>’s latest entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑧">directive state</a> is not <var>entry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑨">directive state</a> then set <var>document</var>’s <a data-link-type="dfn" href="#document-uninvoked-directives" id="ref-for-document-uninvoked-directives">uninvoked directives</a> to <var>entry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state①⓪">directive state</a>'s <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value④">value</a>.</span></p>
+         <p><span class="diff">If <var>document</var>’s latest entry’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state⑨">directive state</a> is not <var>entry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state①⓪">directive state</a> then set <var>document</var>’s <a data-link-type="dfn" href="#document-uninvoked-directives" id="ref-for-document-uninvoked-directives">uninvoked directives</a> to <var>entry</var>’s <a data-link-type="dfn" href="#she-directive-state" id="ref-for-she-directive-state①①">directive state</a>'s <a data-link-type="dfn" href="#directive-state-value" id="ref-for-directive-state-value⑤">value</a>.</span></p>
         <li data-md>
          <p>Set <var>document</var>’s latest entry to <var>entry</var></p>
         <li data-md>
@@ -3635,10 +3671,6 @@ manipulations
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
-   <div class="issue"> The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL"> create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment."> uses the fragment from an existing entry</a> so the directive would already be removed. However,
-    I think that’s wrong. If the redirect URL includes a fragment it should be used, see <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
-    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
-    where the directive would have to be removed. <a class="issue-return" href="#issue-b598ad03" title="Jump to section">↵</a></div>
    <div class="issue"> TODO: If a URL’s fragment ends with ':~:' (i.e. empty directive), this will return null which
     is treated as the URL not specifying an explicit directive (and avoids clobbering an existing
     one. But maybe in this case we should return the empty string? That way a page can explicitly
@@ -3692,21 +3724,21 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
   <aside aria-labelledby="infopaneltitle-for-directive-state-value" class="dfn-panel" data-for="directive-state-value" id="infopanel-for-directive-state-value">
    <span id="infopaneltitle-for-directive-state-value" style="display:none">Info about the 'value' definition.</span><b><a href="#directive-state-value">#directive-state-value</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-directive-state-value">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-directive-state-value①">(2)</a> <a href="#ref-for-directive-state-value②">(3)</a> <a href="#ref-for-directive-state-value③">(4)</a>
-    <li><a href="#ref-for-directive-state-value④">3.3.2. Applying directives to a document</a>
+    <li><a href="#ref-for-directive-state-value">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-directive-state-value①">(2)</a> <a href="#ref-for-directive-state-value②">(3)</a> <a href="#ref-for-directive-state-value③">(4)</a> <a href="#ref-for-directive-state-value④">(5)</a>
+    <li><a href="#ref-for-directive-state-value⑤">3.3.2. Applying directives to a document</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-she-directive-state" class="dfn-panel" data-for="she-directive-state" id="infopanel-for-she-directive-state">
    <span id="infopaneltitle-for-she-directive-state" style="display:none">Info about the 'directive state' definition.</span><b><a href="#she-directive-state">#she-directive-state</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-she-directive-state">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-she-directive-state①">(2)</a> <a href="#ref-for-she-directive-state②">(3)</a> <a href="#ref-for-she-directive-state③">(4)</a> <a href="#ref-for-she-directive-state④">(5)</a> <a href="#ref-for-she-directive-state⑤">(6)</a> <a href="#ref-for-she-directive-state⑥">(7)</a>
-    <li><a href="#ref-for-she-directive-state⑦">3.3.2. Applying directives to a document</a> <a href="#ref-for-she-directive-state⑧">(2)</a> <a href="#ref-for-she-directive-state⑨">(3)</a> <a href="#ref-for-she-directive-state①⓪">(4)</a>
+    <li><a href="#ref-for-she-directive-state">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-she-directive-state①">(2)</a> <a href="#ref-for-she-directive-state②">(3)</a> <a href="#ref-for-she-directive-state③">(4)</a> <a href="#ref-for-she-directive-state④">(5)</a> <a href="#ref-for-she-directive-state⑤">(6)</a> <a href="#ref-for-she-directive-state⑥">(7)</a> <a href="#ref-for-she-directive-state⑦">(8)</a>
+    <li><a href="#ref-for-she-directive-state⑧">3.3.2. Applying directives to a document</a> <a href="#ref-for-she-directive-state⑨">(2)</a> <a href="#ref-for-she-directive-state①⓪">(3)</a> <a href="#ref-for-she-directive-state①①">(4)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-remove-the-fragment-directive" class="dfn-panel" data-for="remove-the-fragment-directive" id="infopanel-for-remove-the-fragment-directive">
    <span id="infopaneltitle-for-remove-the-fragment-directive" style="display:none">Info about the 'remove the fragment directive' definition.</span><b><a href="#remove-the-fragment-directive">#remove-the-fragment-directive</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-remove-the-fragment-directive">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-remove-the-fragment-directive①">(2)</a> <a href="#ref-for-remove-the-fragment-directive②">(3)</a>
+    <li><a href="#ref-for-remove-the-fragment-directive">3.3.1. Extracting the fragment directive</a> <a href="#ref-for-remove-the-fragment-directive①">(2)</a> <a href="#ref-for-remove-the-fragment-directive②">(3)</a> <a href="#ref-for-remove-the-fragment-directive③">(4)</a>
    </ul>
   </aside>
   <aside aria-labelledby="infopaneltitle-for-document-uninvoked-directives" class="dfn-panel" data-for="document-uninvoked-directives" id="infopanel-for-document-uninvoked-directives">

@@ -287,27 +287,16 @@ from script and how it fits into [[HTML#navigation-and-session-history]].
       a fragment directive it will be written to the state's value (otherwise it remains null).
   * Any time a URL potentially including a fragment directive is written to a session history entry,
       extract the fragment directive from the URL and store it in a directive state item of the
-      entry. There are three such points where a URL can potentially include a directive:
+      entry. There are four such points where a URL can potentially include a directive:
       * In the "navigate" steps for typical cross-document navigations
       * In the "navigate to a fragment" steps for fragment based same-document navigations
       * In the "URL and history update steps" for synchronous updates such as
           pushState/replaceState.
+      * In the "create navigation params by fetching" steps for URLs coming from a redirect.
   * Same-document navigations that change only the fragment, and the new URL doesn't specify a
       directive, will create an entry whose directive state refers to the previous entry's directive
       state.
 
-</div>
-
-<div class="issue">
-    The <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20entry%27s%20URL%20to%20currentURL">
-    create navigation params by fetching</a> steps also write a URL to an entry. As written, that URL always
-    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching:~:text=Set%20locationURL%20to%20response%27s%20location%20URL%20given%20currentURL%27s%20fragment.">
-    uses the fragment from an existing entry</a> so the directive would already be removed. However,
-    I think that's wrong. If the redirect URL includes a fragment it should be used, see
-    <a href="https://www.rfc-editor.org/rfc/rfc7231#section-7.1.2">RFC7231</a>. Browsers all
-    <a href="https://wpt.fyi/results/fetch/redirect-navigate/preserve-fragment.html">implement the
-    RFC behavior</a> so it seems like this is a spec bug in HTML. If fixed, this is a fourth place
-    where the directive would have to be removed.
 </div>
 
 In [[HTML#session-history-infrastructure]], define [=/directive state=]:
@@ -386,7 +375,7 @@ Add a helper algorithm for removing and returning a fragment directive string fr
 >      "text=foo".
 >   </div>
 
-The next three monkeypatches modify the creation of a session history entry, where the URL might
+The next four monkeypatches modify the creation of a session history entry, where the URL might
 contain a fragment directive, to remove the fragment directive and store it in the [=/directive
 state=].
 
@@ -472,6 +461,32 @@ In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-th
 >         directive|.</span>
 >     9. If serializedData is not null, then restore the history object state given document and
 >         newEntry.
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching">
+create navigation params by fetching</a>:
+
+>   <strong>Monkeypatching [[HTML#populating-a-session-history-entry]]:</strong>
+>
+>   <div class="monkeypatch">To create navigation params by fetching given a session history entry
+>       |entry|, ...:
+>     1. Assert: this is running in parallel.
+>     1. ...
+>         <li value="17">Let currentURL be request's current URL.</li>
+>     1. Let commitEarlyHints be null.
+>     1. While true:
+>         1. If request's reserved client is not null and currentURL's origin is not the same as request's reserved client's creation URL's origin, then:
+>         1. ...
+>             <li value="21">Set currentURL to |locationURL|.</li>
+>         1. <span class="diff">Let |fragment directive| be the result of running
+>             [=remove the fragment directive=] on |locationURL|.</span>
+>         1. <strike class="diff">Set |entry|'s URL to currentURL.</strike>
+>         1. <span class="diff">Set |entry|'s URL to |locationURL|.</span>
+>         1. <span class="diff">Set |entry|'s [=she/directive state=]'s [=directive state/value=] to
+>             |fragment directive|.
+>         1. If |locationURL| is a URL whose scheme is not a fetch scheme, then return a new non-fetch
+>             scheme navigation params, with initiator origin request's current URL's origin
+>         1. ...
 >   </div>
 
 <div class="note">
