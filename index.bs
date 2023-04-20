@@ -59,6 +59,16 @@ spec:url; type:dfn; text:fragment
   }
 </pre>
 
+<style>
+  .monkeypatch {
+    color: grey;
+  }
+
+  .monkeypatch .diff {
+    color: var(--text);
+  }
+</style>
+
 <h2 id=infrastructure>Infrastructure</h2>
 
 <p>This specification depends on the Infra Standard. [[!INFRA]]
@@ -237,12 +247,12 @@ The <dfn>fragment directive delimiter</dfn> is the string ":~:", that is the
 three consecutive code points U+003A (:), U+007E (~), U+003A (:).
 
 <div class="note">
-  The [=/fragment directive=] is part of the URL fragment. This means it
+  The [=fragment directive=] is part of the URL fragment. This means it
   always appears after a U+0023 (#) code point in a URL.
 </div>
 
 <div class="example">
-  To add a [=/fragment directive=] to a URL like https://example.com, a fragment
+  To add a [=fragment directive=] to a URL like https://example.com, a fragment
   is first appended to the URL: https://example.com#:~:text=foo.
 </div>
 
@@ -260,115 +270,239 @@ action. Multiple directives may appear in the fragment directive.
   <p>Contains 2 text directives and one unknown directive.</p>
 </div>
 
+To prevent impacting page operation, it is stripped from script-accessible APIs to prevent
+interaction with author script. This also ensures future directives can be added without web
+compatibility risk.
 
-To prevent impacting page operation, it is stripped from a [=Document=]'s
-[=Document/URL=] to prevent interaction with author script. This also ensures
-future directives can be added without web compatibility risk.
+### Extracting the fragment directive ### {#extracting-the-fragment-directive}
 
-### Processing the fragment directive ### {#processing-the-fragment-directive}
-
-The [=/fragment directive=] is processed and removed from the fragment whenever the
-UA sets the [=Document/URL=] on a [=Document=]. This is defined with the
-following additions and changes.
-
-To the definition of [=Document=], add:
-
->   <strong>Monkeypatching [[DOM]]:</strong>
->
->   <em>
->     Each document has an associated <dfn for="Document">fragment
->     directive</dfn> which is either null or an ASCII string holding data used
->     by the UA to process the resource. It is initially null.
->   </em>
-
-<div algorithm="split the fragment from the fragment directive">
-  To <dfn export>split the fragment from the fragment directive</dfn>, given an ASCII string
-  |raw fragment| and returning a [=/tuple=] consisting of a <code>fragment</code> and a
-  <code>fragment directive</code> (both ASCII strings), run these steps:
-
-  <ol class="algorithm">
-    1. Let |position| be the [=string/position variable=] pointing to the first code
-        point of the first instance, if one exists, of the [=fragment directive delimiter=] in |raw
-        fragment|, or past the end of |raw fragment| otherwise.
-    1. Let |fragment| be the [=code point substring by positions=] of |raw fragment| from the
-        start of |raw fragment| to |position|.
-    1. Let |fragmentDirective| be an ASCII string, initially empty.
-    1. Advance |position| by the [=string/code point length=] of the [=fragment directive
-        delimiter=].
-    1. If |position| does not point past the end of |raw fragment|:
-        1. Set |fragmentDirective| to the [=code point substring to the end of the string=]
-            |raw fragment| starting from |position|
-    1. Return the [=/tuple=] (|fragment|, |fragmentDirective|).
-  </ol>
-</div>
-
-
-Whenever the fragment directive is stripped from the URL, the
-Document's [=Document/fragment directive=] is set to the content of the fragment directive.
-
-Add a series of steps that will process a fragment directive on a [=Document/URL=]:
-
->   <strong>Monkeypatching [[DOM]]:</strong>
->
->   To <dfn>process and consume fragment directive</dfn> from a [=/URL=]
->   |url| and [=Document=] |document|, run these steps:
->   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
->   1. If |raw fragment| is non-null and contains the [=fragment directive
->       delimiter=] as a substring:
->       1. Let |components| be the result of running [=split the fragment from the fragment
->           directive=] on |raw fragment|.
->       1. Set |url|'s [=url/fragment=] to |components|' <code>fragment</code>.
->       1. Set |document|'s [=Document/fragment directive=] to |components|' <code>fragment directive</code>.
->           <div class="note">This is stored on the document but currently not web-exposed</div>
+This section describes the mechanism by which the fragment directive is hidden
+from script and how it fits into [[HTML#navigation-and-session-history]].
 
 <div class="note">
-  These changes make a URL's fragment end at the [=fragment directive
-  delimiter=]. The [=/fragment directive=] includes all characters that follow,
-  but not including, the delimiter.
+  The summarized changes in this section:
+
+  * Session history entries now include a new "directive state" item
+  * All new entries are created with a directive state with an empty value. If the new URL includes
+      a fragment directive it will be written to the state's value (otherwise it remains null).
+  * Any time a URL potentially including a fragment directive is written to a session history entry,
+      extract the fragment directive from the URL and store it in a directive state item of the
+      entry. There are four such points where a URL can potentially include a directive:
+      * In the "navigate" steps for typical cross-document navigations
+      * In the "navigate to a fragment" steps for fragment based same-document navigations
+      * In the "URL and history update steps" for synchronous updates such as
+          pushState/replaceState.
+      * In the "create navigation params by fetching" steps for URLs coming from a redirect.
+  * Same-document navigations that change only the fragment, and the new URL doesn't specify a
+      directive, will create an entry whose directive state refers to the previous entry's directive
+      state.
+
 </div>
 
-<div class="example">
-<code>https://example.org/#test:~:text=foo</code> will be parsed such that
-the fragment is the string "test" and the [=/fragment directive=] is the string
-"text=foo".
-</div>
+In [[HTML#session-history-infrastructure]], define [=/directive state=]:
 
+>   <strong>Monkeypatching [[HTML#session-history-infrastructure]]:</strong>
+>
+>   <dfn>directive state</dfn> holds the value of the [=fragment directive=] at the time the session
+>   history entry was created and is used to invoke directives, such as text highlighting, whenever
+>   the entry is traversed. It has:
+>   * <dfn for="directive state">value</dfn>, the [=fragment directive=] [=ASCII string=] or null,
+>       initially null.
+>
+>   A [=/directive state=] may be shared by multiple session history entries.
+>
+>   <div class="note">
+>       <p>The fragment directive is removed from the URL before the URL is set to the session
+>       history entry. It is instead stored in the directive state. This prevents it from being
+>       visible to script APIs so that a directive can be specified without interfering with a
+>       page's operation.</p>
+>
+>       <p>The fragment directive is stored in the directive state object, rather than a raw string,
+>       since the same directive state can be shared across multiple contiguous session history
+>       entries. On a traversal, the directive is only processed (i.e. search text and highlight) if
+>       the directive state has changed between two entries.</p>
+>   </div>
 
-Amend the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#initialise-the-document-object">
-create and initialize a Document object</a> steps to parse and remove the
-[=/fragment directive=] by inserting the following steps right before the
-setting |document|'s [=Document/URL=]
-(<a href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#initialise-the-document-object">currently</a>
-step 9):
+To the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#session-history-entry">session history entry</a>, add:
+
+>   <strong>Monkeypatching [[HTML#session-history-entries]]:</strong>
+>
+>   <div class="monkeypatch">A session history entry is a struct with the following items:
+>     * ...
+>     * persisted user state, which is implementation-defined, initially null
+>     * <span class="diff"><dfn for=she>directive state</dfn>, a [=/directive state=],
+>         initially a new [=/directive state=]</span>
+>   </div>
+
+Add a helper algorithm for removing and returning a fragment directive string from a [=/URL=]:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   9. Run the [=process and consume fragment directive=] steps on
->     |creationURL| and |document|.
->   10. Set |document|'s [=Document/URL=] to be |creationURL|.
-
-Amend the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#traverse-the-history">
-traverse the history</a> steps to process the [=/fragment directive=]
-during a history navigation by inserting steps before setting the |newDocument|'s URL (<a
-href="https://html.spec.whatwg.org/commit-snapshots/6ccb1ec8b8e79116880ea7a519d5a96fe8558afc/#traverse-the-history">currently</a>
-step 6).
-
->   <strong>Monkeypatching [[HTML]]:</strong>
+>   <div class="note">
+>     This algorithm makes a URL's fragment end at the [=fragment directive
+>     delimiter=]. The returned [=/fragment directive=] includes all characters that follow the
+>     delimiter but does not include the delimiter.
+>   </div>
 >
->   6. Let |processedURL| be a copy of <var ignore="">entry</var>'s URL.
->   7. Run the [=process and consume fragment directive=] steps on
->       |processedURL| and |document|.
->   8. Set |newDocument|'s URL to |processedURL|.
+>   <div class="issue">
+>     TODO: If a URL's fragment ends with ':~:' (i.e. empty directive), this will return null which
+>     is treated as the URL not specifying an explicit directive (and avoids clobbering an existing
+>     one. But maybe in this case we should return the empty string? That way a page can explicitly
+>     clear directives/highlights by navigating/pushState to '#:~:'.
+>   </div>
+>
+>   To <dfn>remove the fragment directive</dfn> from a [=/URL=] |url|, run these steps:
+>   1. Let |raw fragment| be equal to |url|'s [=url/fragment=].
+>   1. Let |fragment directive| be null.
+>   1. If |raw fragment| is non-null and contains the [=fragment directive delimiter=] as a
+>       substring:
+>       1. Let |position| be the [=string/position variable=] pointing to the first code
+>           point of the first instance, if one exists, of the [=fragment directive delimiter=] in
+>           |raw fragment|, or past the end of |raw fragment| otherwise.
+>       1. Let |new fragment| be the [=code point substring by positions=] of |raw fragment| from
+>           the start of |raw fragment| to |position|.
+>       1. Advance |position| by the [=string/code point length=] of the [=fragment directive
+>           delimiter=].
+>       1. If |position| does not point past the end of |raw fragment|:
+>           1. Set |fragment directive| to the [=code point substring to the end of the string=]
+>               |raw fragment| starting from |position|
+>       1. Set |url|'s [=url/fragment=] to |new fragment|.
+>   1. Return |fragment directive|.
+>
+>   <div class="example">
+>      <code>https://example.org/#test:~:text=foo</code> will be parsed such that
+>      the fragment is the string "test" and the [=/fragment directive=] is the string
+>      "text=foo".
+>   </div>
+
+The next four monkeypatches modify the creation of a session history entry, where the URL might
+contain a fragment directive, to remove the fragment directive and store it in the [=/directive
+state=].
+
+In the definition of [=navigate=]:
+
+>   <strong>Monkeypatching [[HTML#beginning-navigation]]:</strong>
+>
+>   <div class="monkeypatch">To navigate a navigable navigable to a URL |url|...:
+>     1. ...
+>         <li value="14">Set navigable's ongoing navigation to navigationId.</li>
+>     15. If url's scheme is "javascript", then...
+>     16. In parallel, run these steps:
+>         1. ...
+>             <li value="5">If url is about:blank, then set documentState's origin to documentState's initiator origin.</li>
+>         6. Otherwise, if url is about:srcdoc, then set documentState's origin to navigable's parent's active document's origin.
+>         7. <strike>Let historyEntry be a new session history entry, with its URL set to url and
+>             its document state set to documentState.</strike>
+>             <li value="7"><span class="diff">Let |fragment directive| be the result of running [=remove the
+>             fragment directive=] on |url|.</span></li>
+>         8. <span class="diff">Let |directive state| be a new [=/directive
+>             state=] with [=directive state/value=] set to |fragment directive|.</span>
+>         9. <span class="diff">Let historyEntry be a new session history entry, with its URL
+>             set to |url|, its document state set to documentState, and its [=she/directive state=]
+>             set to |directive state|.</span>
+>         10. Let navigationParams be null.
+>         11. ...
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to a fragment</a>:
+
+>   <strong>Monkeypatching [[HTML#scroll-to-fragid]]:</strong>
+>
+>   <div class="monkeypatch">To navigate to a fragment given navigable |navigable|, ...:
+>     1. <span class="diff">Let |directive state| be navigable's active session history
+>         entry's [=she/directive state=].</span>
+>     1. <span class="diff">Let |fragment directive| be the result of running
+>         [=remove the fragment directive=] on |url|.</span>
+>     1. <span class="diff">If |fragment directive| is not null:</span>
+>         <div class="note">Otherwise, when only the fragment has changed and it did not specify
+>         a directive, the active entry's directive state is reused. This prevents a fragment
+>         change from clobbering highlights.</div>
+>         1. <span class="diff">Let |directive state| be a new [=/directive state=] with
+>             [=directive state/value=] set to |fragment directive|.
+>     2. Let historyEntry be a new session history entry, with
+>         * URL url
+>         * document state navigable's active session history entry's document state
+>         * scroll restoration mode navigable's active session history entry's scroll restoration
+>             mode
+>         * <span class="diff">[=she/directive state=] |directive state|</span>
+>     2. Let entryToReplace be navigable's active session history entry if historyHandling is
+>         "replace", otherwise null.
+>     3. ...
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#url-and-history-update-steps">URL and history update steps</a>:
+
+>   <strong>Monkeypatching [[HTML#navigate-non-frag-sync]]:</strong>
+>
+>   <div class="monkeypatch">The URL and history update steps, given a Document |document|, ...:
+>     1. Let |navigable| be |document|'s node navigable.
+>     2. Let |activeEntry| be |navigable|'s active session history entry.
+>     3. <span class="diff">Let |fragment directive| be the result of running [=remove the
+>         fragment directive=] on |newUrl|.</span>
+>     5. Let |historyEntry| be a new session history entry, with
+>         * URL |newUrl|
+>         * ...
+>         * <span class="diff">[=she/directive state=] |activeEntry|'s [=she/directive
+>             state=]</span>
+>     6. If |document|'s is initial about:blank is true, then set historyHandling to "replace".
+>     7. If historyHandling is "push", then:
+>         1. Increment document's history object's index.
+>         2. Set document's history object's length to its index + 1.
+>         3. <span class="diff">If |newUrl| does not equal |activeEntry|'s URL with exclude
+>             fragments set to true OR |fragment directive| is not null, then:</span>
+>             <div class="note">Otherwise, when only the fragment has changed and it did not specify
+>             a directive, the active entry's directive state is reused. This prevents a fragment
+>             change from clobbering highlights.</div>
+>             1. <span class="diff">Let |historyEntry|'s [=she/directive state=] be a new
+>                 [=/directive state=] with [=directive state/value=] set to |fragment
+>                 directive|.</span>
+>     8. <span class="diff">Otherwise, if |fragment directive| is not null, set
+>         |historyEntry|'s [=she/directive state=]'s [=directive state/value=] to |fragment
+>         directive|.</span>
+>     9. If serializedData is not null, then restore the history object state given document and
+>         newEntry.
+>   </div>
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching">
+create navigation params by fetching</a>:
+
+>   <strong>Monkeypatching [[HTML#populating-a-session-history-entry]]:</strong>
+>
+>   <div class="monkeypatch">To create navigation params by fetching given a session history entry
+>       |entry|, ...:
+>     1. Assert: this is running in parallel.
+>     1. ...
+>         <li value="17">Let currentURL be request's current URL.</li>
+>     1. Let commitEarlyHints be null.
+>     1. While true:
+>         1. If request's reserved client is not null and currentURL's origin is not the same as request's reserved client's creation URL's origin, then:
+>         1. ...
+>             <li value="21">Set currentURL to |locationURL|.</li>
+>         1. <span class="diff">Let |fragment directive| be the result of running
+>             [=remove the fragment directive=] on |locationURL|.</span>
+>         1. <strike class="diff">Set |entry|'s URL to currentURL.</strike>
+>         1. <span class="diff">Set |entry|'s URL to |locationURL|.</span>
+>         1. <span class="diff">Set |entry|'s [=she/directive state=]'s [=directive state/value=] to
+>             |fragment directive|.
+>         1. If |locationURL| is a URL whose scheme is not a fetch scheme, then return a new non-fetch
+>             scheme navigation params, with initiator origin request's current URL's origin
+>         1. ...
+>   </div>
 
 <div class="note">
   <p>
-    The changes in this section imply that a URL is only stripped of its fragment
-    directive when it is set on a Document. Notably, since a window's
-    {{Location}} object is a representation of the [=/URL=] of the [=active
-    document=], all getters on it will show a fragment-directive-stripped
+    Since a Document is populated from a history entry, its [=Document/URL=] will not include the
+    fragment directive. Similarly, since a window's {{Location}} object is a representation of the
+    [=/URL=] of the [=active document=], all getters on it will show a fragment-directive-stripped
     version of the URL.
+  </p>
+
+  <p>
+    Additionally, since the {{HashChangeEvent}} is
+    <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#updating-the-document">
+    fired in response to a changed fragment</a> between URLs of session history entries,
+    <code>hashchange</code> will not be fired if a navigation or traversal changes only the fragment
+    directive.
   </p>
 
   <p>
@@ -378,41 +512,52 @@ step 6).
 
 <div class="example">
   ```
-  window.location = 'https://example.com#foo:~:bar';
+  window.location = "https://example.com#page1:~:hello";
+  console.log(window.location.href); // 'https://example.com#page1'
+  console.log(window.location.hash); // '#page1'
   ```
 
-  The page loads and when the document's URL is set the fragment directive is
-  stripped out during the "create and initialize a Document object" steps.
+  The initial navigation created a new session history entry. The entry's URL is stripped of the
+  fragment directive: "https://example.com#page1". The entry's directive state value is set to
+  "hello". Since the document is populated from the entry, web APIs don't include the fragment
+  directive in URLs.
 
   ```
-  console.log(window.location.href); // 'https://example.com#foo'
-  console.log(window.location.hash); // '#foo'
+  location.hash = "page2";
+  console.log(location.href); // 'https://example.com#page2'
   ```
 
-  Since same document navigations are made by adding a new session history
-  entry and using the "traverse the history" steps, the the fragment directive
-  will be stripped here as well.
+  A same document navigation changed only the fragment. This adds a new session history entry in the
+  <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to
+  a fragment</a> steps. However, since only the fragment changed, the new entry's directive state
+  points to the same state as the first entry, with a value of "bar".
 
   ```
-  window.location.hash = 'fizz:~:buzz';
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+  onhashchange = () => console.assert(false, "hashchange doesn't fire.");
+  location.hash = "page2:~:world";
+  console.log(location.href); // 'https://example.com#page2'
+  onhashchange = null;
   ```
 
-  The hashchange event is dispatched when only the fragment directive changes
-  because the comparison for it is done on the URLs in the session history
-  entries, where the fragment directive hasn't been removed.
+  A same document navigation changes only the fragment but includes a fragment directive. Since an
+  explicit directive was provided, the new entry includes its own directive state with a value of
+  "fizz".
+
+  The hashchange event is not fired since the page-visible fragment is unchanged; only the fragment
+  directive changed. This is because the comparison for hashchange is done on the URLs in the
+  session history entries, where the fragment directive has been removed.
 
   ```
-  onhashchange = () => {console.log('HASHCHANGE');};
-  window.location.hash = 'fizz:~:zillch'; // 'HASHCHANGE'
-  console.log(window.location.href); // 'https://example.com#fizz'
-  console.log(window.location.hash); // '#fizz'
+  history.pushState("", "", "page3");
+  console.log(location.href); // 'https://example.com/page3'
   ```
+
+  pushState creates a new session history entry for the same document. However, since the
+  non-fragment URL has changed, this entry has its own directive state with value currently null.
 </div>
 
 <div class="example">
-  In other cases where a Document's URL is not set by the UA, there is no
+  In other cases where a URL is not set to a session history entry, there is no
   fragment directive stripping.
 
   For URL objects:
@@ -439,97 +584,39 @@ step 6).
   ```
 </div>
 
-<div class="example">
-  History pushState will create a session history entry where the URL's
-  fragment directive isn't stripped. However, traversing to the entry will
-  cause it to set its URL on the document which will process the fragment
-  directive before setting it on the Document (but the fragment directive
-  remains on the entry).
+### Applying directives to a document ### {#applying-directives-to-a-document}
 
+The section above described how the [=fragment directive=] is separated from the URL and stored in a
+session history entry.
 
-  ```
-  history.pushState({}, 'title', 'index.html#foo:~:bar');
-  window.location = 'newpage.html';
-  // on newpage.html
-  history.back();
-  ```
+This section defines how and when navigations and traversals make use of history entry's [=she/directive
+state=] to apply the directives associated with a session history entry to a [=Document=].
 
-  Results in the current document having "bar" as the fragment directive.
-</div>
+>   <strong>Monkeypatching [[DOM#interface-document]]:</strong>
+>
+>   Each document has an associated <dfn for="Document">uninvoked directives</dfn> which is either
+>   null or an ASCII string holding data used by the UA to process the resource. It is initially
+>   null.
 
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application">
+update document for history step application</a>:
+
+>   <strong>Monkeypatching [[HTML#updating-the-document]]:</strong>
+>
+>   <div class="monkeypatch">To update document for history step application given a Document
+>   |document|, a session history entry |entry|,...
+>     1. ...
+>         <li value="4">Set |document|'s history object's length to scriptHistoryLength</li>
+>     5. If <var ignore>documentsEntryChanged</var> is true, then:
+>         1. Let <var ignore>oldURL</var> be |document|'s latest entry's URL.
+>         2. <span class="diff">If |document|'s latest entry's [=she/directive state=] is not |entry|'s
+>             [=she/directive state=] then set |document|'s [=Document/uninvoked directives=] to |entry|'s
+>             [=she/directive state=]'s [=directive state/value=].</span>
+>         3. Set |document|'s latest entry to |entry|
+>         4. ...
+>   </div>
 
 ### Parsing the fragment directive ### {#parsing-the-fragment-directive}
-
-A <dfn>text directive</dfn> is a kind of [=directive=] representing a range of
-text to be indicated to the user. It is a <a spec=infra>struct</a> that consists of
-four strings: <dfn for="text directive">start</dfn>,
-<dfn for="text directive">end</dfn>,
-<dfn for="text directive">prefix</dfn>, and
-<dfn for="text directive">suffix</dfn>. [=text directive/start=]
-is required to be non-null. The other three items may be set to null,
-indicating they weren't provided. The empty string is not a valid value for any
-of these items.
-
-See [[#syntax]] for the what each of these components means and how they're
-used.
-
-<div algorithm="parse a text directive">
-
-To <dfn>parse a text directive</dfn>, on an <a spec="infra">ASCII string</a> |text
-directive input|, run these steps:
-
-<div class="note">
-  <p>
-    This algorithm takes a single text directive string as input (e.g.
-    "text=prefix-,foo,bar") and attempts to parse the string into the
-    components of the directive (e.g. ("prefix", "foo", "bar", null)). See
-    [[#syntax]] for the what each of these components means and how they're
-    used.
-  </p>
-  <p>
-    Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a [=text directive=].
-  </p>
-</div>
-
-  <ol class="algorithm">
-    1. [=/Assert=]: |text directive input| matches the production [=TextDirective=].
-    1. Let |textDirectiveString| be the substring of |text directive
-        input| starting at index 5.
-        <div class="note">
-          This is the remainder of the |text directive input| following,
-          but not including, the "text=" prefix.
-        </div>
-    1. Let |tokens| be a <a for=/>list</a> of strings that is the result of
-        <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
-    1. If |tokens| has size less than 1 or greater than 4, return null.
-    1. If any of |tokens|'s items are the empty string, return null.
-    1. Let |retVal| be a [=text directive=] with each of its items initialized
-        to null.
-    1. Let |potential prefix| be the first item of |tokens|.
-    1. If the last character of |potential prefix| is U+002D (-), then:
-        1. Set |retVal|'s [=text directive/prefix=] to the
-            [=string/percent-decode|percent-decoding=] of the result of removing the
-            last character from |potential prefix|.
-        1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
-    1. Let |potential suffix| be the last item of |tokens|, if one exists, null
-        otherwise.
-    1. If |potential suffix| is non-null and its first character is U+002D (-),
-        then:
-        1. Set |retVal|'s [=text directive/suffix=] to the
-            [=string/percent-decode|percent-decoding=] of the result of removing the
-            first character from |potential suffix|.
-        1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
-    1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
-        return null.
-    1. Set |retVal|'s [=text directive/start=] be the
-        [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
-    1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-        [=text directive/end=] be the
-        [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
-    1. Return |retVal|.
-  </ol>
-</div>
 
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 
@@ -606,6 +693,246 @@ it matches the production:
   <dt><dfn>`PercentEncodedChar`</dfn> `::=`</dt>
   <dd><code>"%" [a-zA-Z0-9]+</code></dd>
 </dl>
+
+## Text Directives ## {#text-directives}
+
+A <dfn>text directive</dfn> is a kind of [=/directive=] representing a range of
+text to be indicated to the user. It is a <a spec=infra>struct</a> that consists of
+four strings: <dfn for="text directive">start</dfn>,
+<dfn for="text directive">end</dfn>,
+<dfn for="text directive">prefix</dfn>, and
+<dfn for="text directive">suffix</dfn>. [=text directive/start=]
+is required to be non-null. The other three items may be set to null,
+indicating they weren't provided. The empty string is not a valid value for any
+of these items.
+
+See [[#syntax]] for the what each of these components means and how they're
+used.
+
+<div algorithm="parse a text directive">
+
+To <dfn>parse a text directive</dfn>, on an <a spec="infra">ASCII string</a> |text
+directive input|, run these steps:
+
+<div class="note">
+  <p>
+    This algorithm takes a single text directive string as input (e.g.
+    "text=prefix-,foo,bar") and attempts to parse the string into the
+    components of the directive (e.g. ("prefix", "foo", "bar", null)). See
+    [[#syntax]] for the what each of these components means and how they're
+    used.
+  </p>
+  <p>
+    Returns null if the input is invalid or fails to parse in any way.
+    Otherwise, returns a [=text directive=].
+  </p>
+</div>
+
+  <ol class="algorithm">
+    1. [=/Assert=]: |text directive input| matches the production [=TextDirective=].
+    1. Let |textDirectiveString| be the substring of |text directive
+        input| starting at index 5.
+        <div class="note">
+          This is the remainder of the |text directive input| following,
+          but not including, the "text=" prefix.
+        </div>
+    1. Let |tokens| be a <a for=/>list</a> of strings that is the result of
+        <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
+    1. If |tokens| has size less than 1 or greater than 4, return null.
+    1. If any of |tokens|'s items are the empty string, return null.
+    1. Let |retVal| be a [=text directive=] with each of its items initialized
+        to null.
+    1. Let |potential prefix| be the first item of |tokens|.
+    1. If the last character of |potential prefix| is U+002D (-), then:
+        1. Set |retVal|'s [=text directive/prefix=] to the
+            [=string/percent-decode|percent-decoding=] of the result of removing the
+            last character from |potential prefix|.
+        1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
+    1. Let |potential suffix| be the last item of |tokens|, if one exists, null
+        otherwise.
+    1. If |potential suffix| is non-null and its first character is U+002D (-),
+        then:
+        1. Set |retVal|'s [=text directive/suffix=] to the
+            [=string/percent-decode|percent-decoding=] of the result of removing the
+            first character from |potential suffix|.
+        1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
+    1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
+        return null.
+    1. Set |retVal|'s [=text directive/start=] be the
+        [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
+    1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
+        [=text directive/end=] be the
+        [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
+    1. Return |retVal|.
+  </ol>
+</div>
+
+### Invoking Text Directives ### {#invoking-text-directives}
+
+This section describes how text directives in a document's [=Document/uninvoked directives=] are
+processed and invoked to cause indication of the relevant text passages.
+
+<div class="note">
+    The summarized changes in this section:
+
+    * Modify the indicated part processing model to try processing [=Document/uninvoked directives=]
+        into a [=range=] that will be returned as the indicated part.
+    * Modify "scrolling to a fragment" to correctly scroll and set the Document's target element in the case
+        of a [=range=] based indicated part.
+    * Ensure [=Document/uninvoked directives=] is reset to null when the user agent has finished the
+        fragment search for the current navigation/traversal.
+    * If the user agent finishes searching for a text directive, ensure it tries the regular
+        fragment as a fallback.
+</div>
+
+In <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">
+indicated part</a>, enable a fragment to indicate a [=range=]. Make the following changes:
+
+>   <strong>Monkeypatching [[HTML#scrolling-to-a-fragment]]:</strong>
+>
+>   <div class="monkeypatch">
+>   For an HTML document |document|, the following processing model must be followed to determine
+>   its indicated part:
+>
+>   1. <span class="diff">Let |directives| be the document's [=Document/uninvoked directives=].
+>       </span>
+>   1. <span class="diff">If |directives| is non-null and |document|'s [=document/allow text
+>       fragment scroll=] is true then:</span>
+>       1. <span class="diff">Let |ranges| be a <a spec=infra>list</a> that is the result of running
+>           the [=invoke text directives=] steps with |directives| and the document.</span>
+>       1. <span class="diff">If |ranges| is non-empty, then:</span>
+>           1. <span class="diff">Let |firstRange| be the first item of |ranges|.</span>
+>           1. <span class="diff">Visually indicate each [=range=] in |ranges| in an
+>               [=implementation-defined=] way. The indication must not be observable from author
+>               script. See [[#indicating-the-text-match]].</span>
+>               <div class="note">
+>                 The first [=range=] in |ranges| is the one that gets scrolled into view but all
+>                 ranges should be visually indicated to the user.
+>               </div>
+>           1. <span class="diff">Set |firstRange| as |document|'s indicated part, return.</span>
+>   1. Let fragment be document's URL's fragment.
+>   1. If fragment is the empty string, then return the special value top of the document.
+>   1. Let potentialIndicatedElement be the result of finding a potential indicated element given
+>       document and fragment.
+>   1. ...
+>
+>   </div>
+
+In <a spec=HTML>scroll to the fragment</a>, handle a indicated part that is a [=range=] and also
+prevent fragment scrolling if the force-load-at-top policy is enabled. Make the following changes:
+
+>   <strong>Monkeypatching [[HTML#scrolling-to-a-fragment]]:</strong>
+>
+>   <div class="monkeypatch">
+>   1. If document's indicated part is null, then set document's target element to null.
+>   2. Otherwise, if document's indicated part is top of the document, then:
+>       1. Set document's target element to null.
+>       2. Scroll to the beginning of the document for document.
+>       3. Return.
+>   3. Otherwise:
+>       1. Assert: document's indicated part is an element <span class="diff">or it is a [=range=].</span>
+>       2. <span class="diff">Let |scrollTarget| be |document|'s indicated part.</span>
+>       3. <span class="diff">Let |target| be |scrollTarget|.</span>
+>       4. <span class="diff">If |target| is a [=range=], then:</span>
+>           1. <span class="diff">Set |target| to be the [=first common ancestor=] of |target|'s
+>               [=range/start node=] and [=range/end node=].</span>
+>           2. <span class="diff">While |target| is non-null and is not an [=element=], set |target| to
+>               |target|'s [=tree/parent=].</span>
+>               <div class="issue">
+>                   What should be set as target if inside a shadow tree?
+>                   <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a>
+>               </div>
+>       4. <span class="diff">Assert: |target| is an [=element=].</span>
+>       5. Set |document|'s target element to |target|.
+>       6. Run the ancestor details revealing algorithm on |target|.
+>       7. Run the ancestor hidden-until-found revealing algorithm on |target|.
+>           <div class="issue">
+>               These revealing algorithms currently wont work well since |target| could be an
+>               ancestor or even the root document node. Issue
+>               <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a> proposes
+>               restricting matches to `contain:style layout` blocks which would resolve this
+>               problem.
+>           </div>
+>       8. <span class="diff"><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get the policy
+>           value</a> for `force-load-at-top` for |document|. If the result is false:</span>
+>           1. <span class="diff">[=scroll a target into view=],
+>               with <em>target</em> set to |scrollTarget|, <em>behavior</em> set to "auto", <em>block</em> set to "center", and
+>               <em>inline</em> set to "nearest".</span>
+>
+>               <span class="diff">Implementations MAY avoid scrolling to the target if it is
+>               produced from a [=text directive=].</span>
+>
+>           <div class="issue">
+>               <code>force-load-at-top</code> should be checked only when a new document is being
+>               loaded.
+>               <a href="https://github.com/WICG/scroll-to-text-fragment/issues/186">#186</a>
+>           </div>
+>       9. <strike class="diff">Scroll target into view, with behavior set to "auto", block set to
+>           "start", and inline set to "nearest".</strike>
+>       10. Run the focusing steps for target, with the Document's viewport as the fallback target.
+>           <div class="issue">Implementation note: Blink doesn’t currently set focus for text
+>           fragments, it probably should? TODO: file crbug.</div>
+>       11. Move the sequential focus navigation starting point to target.
+>
+>   </div>
+
+The next two monkeypatches ensure the user agent clears [=Document/uninvoked directives=] when
+the fragment search is complete. In the case where a text directive search finishes because parsing
+has stopped, it tries one more search for a non-text directive fragment.
+
+In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment">
+try to scroll to the fragment</a>:
+
+>   <strong>Monkeypatching [[HTML#scrolling-to-a-fragment]]:</strong>
+>
+>   <div class="monkeypatch">
+>   To try to scroll to the fragment for a Document |document|, perform the following steps in
+>   parallel:
+>   1. Wait for an implementation-defined amount of time. (This is intended to allow the user agent
+>       to optimize the user experience in the face of performance concerns.)
+>   2. Queue a global task on the navigation and traversal task source given document's relevant
+>       global object to run these steps:
+>       1. <strike class="diff">If document has no parser, or its parser has stopped parsing, or the user agent
+>           has reason to believe the user is no longer interested in scrolling to the fragment, then
+>           abort these steps.</strike>
+>           <li value="1" class="diff">If the user agent has reason to believe the user is no longer interested in scrolling to
+>           the fragment, then:</span>
+>           1. <span class="diff">Set [=Document/uninvoked directives=] to null.</span>
+>           1. <span class="diff">Abort these steps.</span>
+>       1. <span class="diff">If the document has no parser, or its parser has stopped parsing,
+>           then:</li>
+>           1. <span class="diff">If [=Document/uninvoked directives=] is not null, then:</span>
+>               1. <span class="diff">Set [=Document/uninvoked directives=] to null.</span>
+>               1. <span class="diff"><a spec=HTML>Scroll to the fragment</a> given |document|.</span>
+>           1. <span class="diff">Abort these steps.</span>
+>       2. Scroll to the fragment given document.
+>       3. If document's indicated part is still null, then try to scroll to the fragment for
+>           document. <span class="diff">Otherwise, set [=Document/uninvoked directives=] to
+>           null.</span>
+
+In the definition of
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">
+navigate to a fragment</a>:
+
+>   <strong>Monkeypatching [[HTML#scroll-to-fragid]]:</strong>
+>
+>   <div class="monkeypatch">To navigate to a fragment given navigable |navigable|, ...:
+>     1. ...
+>         <li value="8">Update document for history step application given navigable's active
+>         document, historyEntry, true, scriptHistoryIndex, and scriptHistoryLength. </li>
+>     9. Scroll to the fragment given navigable's active document.
+>         <li class="diff">Set |navigable|'s active document's [=Document/uninvoked directives=] to
+>         null.</li>
+>     11. Let traversable be navigable's traversable navigable.
+>     12. ...
+
+Scrolling to the indicated part is only one of several things that happens from "scroll to the
+fragment". Rename it and related definitions:
+
+>   <strong>Monkeypatching [[HTML#scroll-to-fragid]]:</strong>
+>
+>   Rename [[HTML#scroll-to-fragid]] and related steps to "indicating a fragment" to reflect it's
+>   broader effects.
 
 ## Security and Privacy ## {#security-and-privacy}
 
@@ -838,7 +1165,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >             activated per user-activated navigation.
 >           </div>
 >   16. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
->       1. If |document|'s [=Document/fragment directive=] field is null or empty, set
+>       1. If |document|'s [=Document/uninvoked directives=] field is null or empty, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
 >       1. Let |text directive user activation| be the value of |document|'s
 >           [=document/text directive user activation=] and set |document|'s
@@ -938,127 +1265,6 @@ indicated part processing model to return a [=range=], rather than an
 [=element=], that will be scrolled into view.
 </div>
 
-To enable the <a spec=HTML>scroll to the fragment</a> algorithm to operate on a
-[=range=] indicated part, replace step 3 of this algorithm as follows:
-
-<!--TODO This and following sections would flow better if reordered.-->
-
->   <strong>Monkeypatching [[HTML]]:</strong>
->
->   Replace:
->
->   1. <strike>Assert: document's indicated part is an element.</strike>
->   1. <strike>Let target be document's indicated part.</strike>
->   1. <strike>Set document's target element to target.</strike>
->   1. <strike>Run the ancestor details revealing algorithm on target.</strike>
->   1. <strike>Run the ancestor hidden-until-found revealing algorithm on target.</strike>
->   1. <strike>Scroll target into view, with behavior set to "auto", block set to "start", and inline set to "nearest".</strike>
->   1. <strike>Run the focusing steps for target, with the Document's viewport as the fallback target.</strike>
->   1. <strike>Move the sequential focus navigation starting point to target.</strike>
->
->   With:
->
->   1. Assert: document's indicated part is a [=range=].
->   1. Let |range| be the [=range=] that is |document|'s
->       <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>.
->   1. Let |target| be the [=first common ancestor=] of |range|'s
->       [=range/start node=] and [=range/end node=].
->   1. While |target| is non-null and is not an [=element=], set |target| to
->       |target|'s [=tree/parent=].
->       <div class="issue">
->           What should be set as target if inside a shadow tree?
->           <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a>
->       </div>
->   1. Set |document|'s [=target element=] to |target|.
->   1. Run the ancestor details revealing algorithm on target.
->   1. Run the ancestor hidden-until-found revealing algorithm on target.
->       <div class="issue">
->         These revealing algorithms currently wont work well since |target|
->         could be an ancestor or even the root document node. Issue
->         <a href="https://github.com/WICG/scroll-to-text-fragment/issues/89">#89</a>
->         proposes restricting matches to `contain:style layout` blocks which
->         would resolve this problem.
->       </div>
->   1. <a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
->       the policy value</a> for `force-load-at-top` in the
->       [=Document=]. If the result is false:
->       1. If |range| wasn't produced as a result of a text fragment, or if the
->           UA supports scrolling of text fragments on navigation, invoke
->           <a href="https://drafts.csswg.org/cssom-view-1/#scroll-a-target-into-view">
->           scroll a target into view</a>, with <em>target</em> set to |range|,
->           containingElement |target|, <em>behavior</em> set to "auto",
->           <em>block</em> set to "center", and <em>inline</em> set to
->           "nearest".
->           <!-- TODO: Update scroll-a-target-into-view once autolink database
->           includes it. -->
->
->       <div class="issue">
->           <code>force-load-at-top</code> should be checked only when a new
->           document is being loaded.
->           <a href="https://github.com/WICG/scroll-to-text-fragment/issues/186">#186</a>
->       </div>
->   1. Let |start node| be |range|'s [=range/start node=].
->   1. Run the focusing steps for |start node|, with the Document's viewport as the fallback target.
->       <div class="issue">
->           Implementation note: Blink doesn't currently set focus for text
->           fragments, it probably should? TODO: file crbug.
->       </div>
->   1. Move the sequential focus navigation starting point to |start node|.
-
-To enable a fragment to indicate a range of text, add the following steps to the
-beginning of the processing model for the [=HTML Document=]'s
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-indicated-part-of-the-document">indicated part</a>
-so that the indicated part is a [=range=]:
-
->   <strong>Monkeypatching [[HTML]]:</strong>
->
->   1. Let |fragment directive string| be the document's [=Document/fragment directive=].
->   1. If the document's [=document/allow text fragment scroll=] is true then:
->       1. Let |ranges| be a <a spec=infra>list</a> that is the result of running
->           the [=process a fragment directive=] steps with |fragment directive
->           string| and the document.
->       1. If |ranges| is non-empty, then:
->           1. Let |range| be the first item of |ranges|.
->               <div class="note">
->                 The first [=range=] in |ranges| is specifically
->                 scrolled into view. This [=range=], along with the
->                 remaining |ranges| should be visually indicated in a way that
->                 is not revealed to script, which is left as UA-defined behavior.
->               </div>
->           1. Set |range| as |document|'s indicated part, return.
-
-In order for the indicated part to return a [=range=] for regular element
-fragments, modify the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#find-a-potential-indicated-element">
-find a potential indicated element</a> steps as follows:
-
->   <strong>Monkeypatching [[HTML]]:</strong>
->
->   Replace:
->
->   1. <strike>If there is an element in the document tree whose root is
->       document and that has an ID equal to fragment, then return the first
->       such element in tree order.</strike>
->   1. <strike>If there is an a element in the document tree whose root is
->       document that has a name attribute whose value is equal to fragment,
->       then return the first such element in tree order.</strike>
->   1. <strike>Return null.</strike>
->
->   With:
->
->   1. Let |element| be an [=Element=], initially null.
->   1. If there is an element in the document tree whose root is document and
->       that has an ID equal to fragment, set |element| to the first such
->       element in tree order.
->   1. Otherwise, if there is an element in the document tree whose root is
->       document that has a name attribute whose value is equal to fragment,
->       then set |element| to the first such element in tree order.
->   1. If |element| is null, return null.
->   1. Otherwise, return a [=range=] with [=range/start=] (|element|, 0) and
->       [=range/end=] (|element|, |element|'s [=Node/length=]).
->
->  And rename this algorithm and the returned variables.
-
 <div algorithm="first common ancestor">
 To find the <dfn>first common ancestor</dfn> of two nodes |nodeA| and |nodeB|,
 follow these steps:
@@ -1107,23 +1313,23 @@ To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
   regardless of how many other directives are provided or their match result.
 
   If a directive successfully matches to text in the document, it returns a
-  [=range=] indicating that match in the document. The [=process a fragment
-  directive=] steps are the high level API provided by this section. These
-  return a <a spec=infra>list</a> of [=ranges=] that were matched by the
-  individual directive matching steps, in the order the directives were
+  [=range=] indicating that match in the document. The
+  [=invoke text directives=] steps are the high level API provided by this
+  section. These return a <a spec=infra>list</a> of [=ranges=] that were matched
+  by the individual directive matching steps, in the order the directives were
   specified in the fragment directive string.
 
   If a directive was not matched, it does not add an item to the returned
   list.
 </div>
 
-<div algorithm="process a fragment directive">
-To <dfn>process a fragment directive</dfn>, given as input an <a
-spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
+<div algorithm="invoke text directives">
+To <dfn>invoke text directives</dfn>, given as input an <a
+spec=infra>ASCII string</a> |text directives| and a [=Document=]
 |document|, run these steps:
 
 <div class="note">
-  This algorithm takes as input a |fragment directive input|, that is the
+  This algorithm takes as input a |text directives|, that is the
   raw text of the fragment directive and the |document| over which it operates.
   It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
   indicated, the first of which will be scrolled into view (if the UA scrolls
@@ -1131,11 +1337,11 @@ spec=infra>ASCII string</a> |fragment directive input| and a [=Document=]
 </div>
 
   <ol class="algorithm">
-    1. If |fragment directive input| is not a [=valid fragment directive=], then
+    1. If |text directives| is not a [=valid fragment directive=], then
         return an empty <a spec=infra>list</a>.
     2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>ASCII string</a>s
         that is the result of [=strictly split a string|strictly splitting the
-        string=] |fragment directive input| on "&".
+        string=] |text directives| on "&".
     3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
     4. For each <a spec=infra>ASCII string</a> |directive| of |directives|:
         1. If |directive| does not match the production [=TextDirective=],
@@ -1687,10 +1893,10 @@ The UA should provide to the user some method of dismissing the match, such
 that the matched text no longer appears visually indicated.
 
 The exact appearance and mechanics of the indication are left as UA-defined.
-However, the UA must not use the Document's <a
-href="https://w3c.github.io/selection-api/#dfn-selection">selection</a> to
-indicate the text match as doing so could allow attack vectors for content
-exfiltration.
+However, the UA must not use any methods observable by author script, such as
+the Document's <a href="https://w3c.github.io/selection-api/#dfn-selection">
+selection</a>, to indicate the text match. Doing so could allow attack vectors
+for content exfiltration.
 
 The UA must not visually indicate any provided context terms.
 
