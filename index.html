@@ -1477,7 +1477,7 @@ it matches the production:</p>
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective"><code>UnknownDirective</code></dfn> <code>::=</code> 
     <dd> <code><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a></code> 
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="characterstring"><code>CharacterString</code></dfn> <code>::=</code> 
-    <dd> <code>(<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar">PercentEncodedChar</a>)+</code> 
+    <dd> <code>(<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedbyte" id="ref-for-percentencodedbyte">PercentEncodedByte</a>)+</code> 
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="explicitchar"><code>ExplicitChar</code></dfn> <code>::=</code> 
     <dd>
       <code>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
@@ -1499,7 +1499,7 @@ it matches the production:</p>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivesuffix"><code>TextDirectiveSuffix</code></dfn> <code>::=</code>
     <dd><code>"-"<a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring③">TextDirectiveString</a></code>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectivestring"><code>TextDirectiveString</code></dfn> <code>::=</code>
-    <dd><code>(<a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar">TextDirectiveExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedchar" id="ref-for-percentencodedchar①">PercentEncodedChar</a>)+</code>
+    <dd><code>(<a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar">TextDirectiveExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedbyte" id="ref-for-percentencodedbyte①">PercentEncodedByte</a>)+</code>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveexplicitchar"><code>TextDirectiveExplicitChar</code></dfn> <code>::=</code>
     <dd>
       <code> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
@@ -1508,8 +1508,8 @@ it matches the production:</p>
     explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a> syntax, that is "&amp;", "-", and ",".
     If a text fragment refers to a "&amp;", "-", or "," character in the document,
     it will be percent-encoded in the fragment. </div>
-    <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedchar"><code>PercentEncodedChar</code></dfn> <code>::=</code>
-    <dd><code>"%" [a-zA-Z0-9]+</code>
+    <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedbyte"><code>PercentEncodedByte</code></dfn> <code>::=</code>
+    <dd><code>"%" [a-zA-Z0-9][a-zA-Z0-9]</code>
    </dl>
    <h3 class="heading settled" data-level="3.4" id="text-directives"><span class="secno">3.4. </span><span class="content">Text Directives</span><a class="self-link" href="#text-directives"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="text-directive">text directive</dfn> is a kind of <a data-link-type="dfn" href="#directives" id="ref-for-directives">directive</a> representing a range of
@@ -2914,7 +2914,7 @@ manipulations
    <li><a href="#next-non-whitespace-position">next non-whitespace position</a><span>, in § 3.6.1</span>
    <li><a href="#non-searchable-subtree">non-searchable subtree</a><span>, in § 3.6.1</span>
    <li><a href="#parse-a-text-directive">parse a text directive</a><span>, in § 3.4</span>
-   <li><a href="#percentencodedchar">PercentEncodedChar</a><span>, in § 3.3.4</span>
+   <li><a href="#percentencodedbyte">PercentEncodedByte</a><span>, in § 3.3.4</span>
    <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.4</span>
    <li><a href="#remove-the-fragment-directive">remove the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.6.1</span>
@@ -3575,7 +3575,7 @@ window.dfnpanelData['textdirectiveprefix'] = {"dfnID": "textdirectiveprefix", "u
 window.dfnpanelData['textdirectivesuffix'] = {"dfnID": "textdirectivesuffix", "url": "#textdirectivesuffix", "dfnText": "TextDirectiveSuffix", "refSections": [{"refs": [{"id": "ref-for-textdirectivesuffix"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
 window.dfnpanelData['textdirectivestring'] = {"dfnID": "textdirectivestring", "url": "#textdirectivestring", "dfnText": "TextDirectiveString", "refSections": [{"refs": [{"id": "ref-for-textdirectivestring"}, {"id": "ref-for-textdirectivestring\u2460"}, {"id": "ref-for-textdirectivestring\u2461"}, {"id": "ref-for-textdirectivestring\u2462"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
 window.dfnpanelData['textdirectiveexplicitchar'] = {"dfnID": "textdirectiveexplicitchar", "url": "#textdirectiveexplicitchar", "dfnText": "TextDirectiveExplicitChar", "refSections": [{"refs": [{"id": "ref-for-textdirectiveexplicitchar"}, {"id": "ref-for-textdirectiveexplicitchar\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['percentencodedchar'] = {"dfnID": "percentencodedchar", "url": "#percentencodedchar", "dfnText": "PercentEncodedChar", "refSections": [{"refs": [{"id": "ref-for-percentencodedchar"}, {"id": "ref-for-percentencodedchar\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['percentencodedbyte'] = {"dfnID": "percentencodedbyte", "url": "#percentencodedbyte", "dfnText": "PercentEncodedByte", "refSections": [{"refs": [{"id": "ref-for-percentencodedbyte"}, {"id": "ref-for-percentencodedbyte\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
 window.dfnpanelData['text-directive'] = {"dfnID": "text-directive", "url": "#text-directive", "dfnText": "text directive", "refSections": [{"refs": [{"id": "ref-for-text-directive"}], "title": "3.2. Syntax"}, {"refs": [{"id": "ref-for-text-directive\u2460"}, {"id": "ref-for-text-directive\u2461"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive\u2462"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-text-directive\u2463"}, {"id": "ref-for-text-directive\u2464"}], "title": "3.5.1. Motivation"}, {"refs": [{"id": "ref-for-text-directive\u2465"}], "title": "3.5.3. Search Timing"}, {"refs": [{"id": "ref-for-text-directive\u2466"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-text-directive\u2467"}], "title": "3.6.1. Finding Ranges in a Document"}, {"refs": [{"id": "ref-for-text-directive\u2468"}], "title": "4. Generating Text Fragment Directives"}, {"refs": [{"id": "ref-for-text-directive\u2460\u24ea"}, {"id": "ref-for-text-directive\u2460\u2460"}, {"id": "ref-for-text-directive\u2460\u2461"}], "title": "4.2. Use Context Only When Necessary"}, {"refs": [{"id": "ref-for-text-directive\u2460\u2462"}, {"id": "ref-for-text-directive\u2460\u2463"}], "title": "4.3. Determine If Fragment Id Is Needed"}], "external": false};
 window.dfnpanelData['text-directive-start'] = {"dfnID": "text-directive-start", "url": "#text-directive-start", "dfnText": "start", "refSections": [{"refs": [{"id": "ref-for-text-directive-start"}, {"id": "ref-for-text-directive-start\u2460"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive-start\u2461"}, {"id": "ref-for-text-directive-start\u2462"}, {"id": "ref-for-text-directive-start\u2463"}, {"id": "ref-for-text-directive-start\u2464"}, {"id": "ref-for-text-directive-start\u2465"}, {"id": "ref-for-text-directive-start\u2466"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
 window.dfnpanelData['text-directive-end'] = {"dfnID": "text-directive-end", "url": "#text-directive-end", "dfnText": "end", "refSections": [{"refs": [{"id": "ref-for-text-directive-end"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive-end\u2460"}, {"id": "ref-for-text-directive-end\u2461"}, {"id": "ref-for-text-directive-end\u2462"}, {"id": "ref-for-text-directive-end\u2463"}, {"id": "ref-for-text-directive-end\u2464"}, {"id": "ref-for-text-directive-end\u2465"}, {"id": "ref-for-text-directive-end\u2466"}, {"id": "ref-for-text-directive-end\u2467"}, {"id": "ref-for-text-directive-end\u2468"}, {"id": "ref-for-text-directive-end\u2460\u24ea"}, {"id": "ref-for-text-directive-end\u2460\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
