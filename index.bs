@@ -22,6 +22,7 @@ spec:css-display-3; type:value; for:display; text:grid
 spec:css-display-4; type:property; text:display
 spec:css-display-4; type:property; text:visibility
 spec:dom; type:dfn; for:/; text:element
+spec:dom; type:dfn; text:parent element
 spec:dom; type:dfn; text:range
 spec:html; type:element; text:link
 spec:html; type:dfn; for:/; text:origin
@@ -1181,8 +1182,8 @@ and initialize a Document object</a> steps by adding the following steps before 
 >               text snippet.
 >             </p>
 >             <p>
->               Note: Depending on the UA, there can be cases where the <var
->               ignore=''>incumbentNavigationOrigin</var> parameter is null but
+>               Note: Depending on the UA, there can be cases where the
+>               <var ignore=''>incumbentNavigationOrigin</var> parameter is null but
 >               it's not clear that the navigation is to be considered as
 >               initiated from browser UI. E.g. an "open in new window" context
 >               menu item when right clicking on a link. The intent in this item
@@ -1194,8 +1195,8 @@ and initialize a Document object</a> steps by adding the following steps before 
 >               side-effects in the navigation).
 >             </p>
 >             <p>
->               See <a
->               href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
+>               See
+>               <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
 >               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
 >             </p>
 >           </div>
