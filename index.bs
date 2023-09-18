@@ -640,7 +640,7 @@ it matches the production:
     <dfn>`CharacterString`</dfn> `::=`
   </dt>
   <dd>
-    <code>([=ExplicitChar=] | [=PercentEncodedChar=])+</code>
+    <code>([=ExplicitChar=] | [=PercentEncodedByte=])+</code>
   </dd>
   <dt>
     <dfn>`ExplicitChar`</dfn> `::=`
@@ -677,7 +677,7 @@ it matches the production:
   <dt><dfn>`TextDirectiveSuffix`</dfn> `::=`</dt>
   <dd><code>"-"[=TextDirectiveString=]</code></dd>
   <dt><dfn>`TextDirectiveString`</dfn> `::=`</dt>
-  <dd><code>([=TextDirectiveExplicitChar=] | [=PercentEncodedChar=])+</code></dd>
+  <dd><code>([=TextDirectiveExplicitChar=] | [=PercentEncodedByte=])+</code></dd>
   <dt><dfn>`TextDirectiveExplicitChar`</dfn> `::=`</dt>
   <dd>
   <code>
@@ -691,8 +691,8 @@ it matches the production:
     it will be percent-encoded in the fragment.
   </div>
   </dd>
-  <dt><dfn>`PercentEncodedChar`</dfn> `::=`</dt>
-  <dd><code>"%" [a-zA-Z0-9]+</code></dd>
+  <dt><dfn>`PercentEncodedByte`</dfn> `::=`</dt>
+  <dd><code>"%" [a-zA-Z0-9][a-zA-Z0-9]</code></dd>
 </dl>
 
 ## Text Directives ## {#text-directives}
