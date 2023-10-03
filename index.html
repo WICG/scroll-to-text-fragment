@@ -1046,17 +1046,18 @@ text coming before another term in logical order, while <code>suffix</code> and 
 reader, for example, by converting the displayed string to Unicode. However, the
 string representation of a URL remains plain ASCII characters.</p>
    <div class="example" id="example-b17c0d6b">
-    <a class="self-link" href="#example-b17c0d6b"></a> Suppose we want to select the text <code>مِصر‎</code> (Egypt, in Arabic),
-  that’s preceeded by <code>البحرين‎</code> (Bahrain, in Arabic). We would
+    <a class="self-link" href="#example-b17c0d6b"></a> Suppose we want to select the text <code lang="ar">مِصر‎</code> (Egypt, in Arabic),
+  that’s preceeded by <code lang="ar">البحرين‎</code> (Bahrain, in Arabic). We would
   first percent encode each term: 
-    <p><code>مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
+    <p><code lang="ar">مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
   [0xD9,0x85] is the first (right-most) character of the Arabic word.)</p>
-    <p><code>البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"</p>
+    <p><code lang="ar">البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"</p>
     <p>The text fragment would then become:</p>
     <p><code> :~:text=%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86-,%D9%85%D8%B5%D8%B1 </code></p>
     <p>When displayed in a browser’s address bar, the browser can visually render the
   text in its natural RTL direction, appearing to the user:</p>
-    <p><code> :~:text=البحرين-,مِصر </code></p>
+    <p><code> :~:text=<span lang="ar">البحرين</span>-,<span lang="ar">مِصر</span> </code>
+</p>
    </div>
    <h3 class="heading settled" data-level="3.3" id="the-fragment-directive"><span class="secno">3.3. </span><span class="content">The Fragment Directive</span><a class="self-link" href="#the-fragment-directive"></a></h3>
    <p>To avoid compatibility issues with usage of existing URL fragments, this spec
@@ -1797,7 +1798,7 @@ null.
 fragment". Rename it and related definitions:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>:</strong></p>
-    <p>Rename <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a> and related steps to "indicating a fragment" to reflect it’s
+    <p>Rename <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a> and related steps to "indicating a fragment" to reflect its
   broader effects.</p>
    </blockquote>
    <h3 class="heading settled" data-level="3.5" id="security-and-privacy"><span class="secno">3.5. </span><span class="content">Security and Privacy</span><a class="self-link" href="#security-and-privacy"></a></h3>
@@ -2631,8 +2632,8 @@ is more than 0 and <var>position</var> equals either 0 or <var>text</var>’s le
    </div>
    <div class="example" id="example-1b2a6f00"><a class="self-link" href="#example-1b2a6f00"></a> The substring "mountain range" is word bounded within the string "An impressive
   mountain range" but not within "An impressive mountain ranger". </div>
-   <div class="example" id="example-c7882c95"><a class="self-link" href="#example-c7882c95"></a> In the Japanese string "ウィキペディアへようこそ" (Welcome to Wikipedia),
-  "ようこそ" (Welcome) is considered word-bounded but "ようこ" is not. </div>
+   <div class="example" id="example-c7882c95"><a class="self-link" href="#example-c7882c95"></a> In the Japanese string "<span lang="ja">ウィキペディアへようこそ</span>" (Welcome to Wikipedia),
+  "ようこそ" (Welcome) is considered word-bounded but "<span lang="ja">ようこ</span>" is not. </div>
    <h3 class="heading settled" data-level="3.7" id="indicating-the-text-match"><span class="secno">3.7. </span><span class="content">Indicating The Text Match</span><a class="self-link" href="#indicating-the-text-match"></a></h3>
    <p>The UA may choose to scroll the text fragment into view as part of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment①">try to scroll to the fragment</a> steps or by some other mechanism;
 however, it is not required to scroll the match into view.</p>
