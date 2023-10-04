@@ -214,14 +214,14 @@ reader, for example, by converting the displayed string to Unicode. However, the
 string representation of a URL remains plain ASCII characters.
 
 <div class="example">
-  Suppose we want to select the text <code>مِصر‎</code> (Egypt, in Arabic),
-  that's preceeded by <code>البحرين‎</code> (Bahrain, in Arabic). We would
+  Suppose we want to select the text <code lang="ar">مِصر‎</code> (Egypt, in Arabic),
+  that's preceeded by <code lang="ar">البحرين‎</code> (Bahrain, in Arabic). We would
   first percent encode each term:
 
-  <code>مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
+  <code lang="ar">مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
   [0xD9,0x85] is the first (right-most) character of the Arabic word.)
 
-  <code>البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"
+  <code lang="ar">البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"
 
   The text fragment would then become:
 
@@ -233,7 +233,7 @@ string representation of a URL remains plain ASCII characters.
   text in its natural RTL direction, appearing to the user:
 
   <code>
-    :~:text=البحرين-,مِصر
+    :~:text=<span lang="ar">البحرين</span>-,<span lang="ar">مِصر</span>
   </code>
 </div>
 
@@ -932,7 +932,7 @@ fragment". Rename it and related definitions:
 
 >   <strong>Monkeypatching [[HTML#scroll-to-fragid]]:</strong>
 >
->   Rename [[HTML#scroll-to-fragid]] and related steps to "indicating a fragment" to reflect it's
+>   Rename [[HTML#scroll-to-fragid]] and related steps to "indicating a fragment" to reflect its
 >   broader effects.
 
 ## Security and Privacy ## {#security-and-privacy}
@@ -1877,8 +1877,8 @@ is more than 0 and |position| equals either 0 or |text|'s length.
 </div>
 
 <div class="example">
-  In the Japanese string "ウィキペディアへようこそ" (Welcome to Wikipedia),
-  "ようこそ" (Welcome) is considered word-bounded but "ようこ" is not.
+  In the Japanese string "<span lang="ja">ウィキペディアへようこそ</span>" (Welcome to Wikipedia),
+  "<span lang="ja">ようこそ</span>" (Welcome) is considered word-bounded but "<span lang="ja">ようこ</span>" is not.
 </div>
 
 ## Indicating The Text Match ## {#indicating-the-text-match}
