@@ -1958,26 +1958,35 @@ boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" 
    <div class="note" role="note"> TODO: This should really only prevent potentially observable side-effects like
   automatic scrolling. Unobservable effects like a highlight could be safely
   allowed in all cases. </div>
+   <p>Amend the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params">navigation params</a> to include a new field:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <dl>
+     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="user-involvement">user involvement</dfn>
+     <dd>A <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement">user navigation involvement</a> value.
+    </dl>
+    <p>Initialize <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement">user involvement</a> value everywhere a navigation params is created, in particular,
+amend the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#attempt-to-populate-the-history-entry’s-document">attempt to populate the history entry’s document</a> to take a user navigation involvement as a parameter, using it to populate the field when creating
+a new navigation params.</p>
+   </blockquote>
    <p>Amend the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning <var>document</var>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol start="15">
+    <ol start="19">
      <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑥">text directive user activation</a> by following these sub-steps:</p>
-      <ol>
+      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑥">text directive user activation</a> to true if any of the following
+conditions hold, false otherwise:</p>
+      <ul>
        <li data-md>
-        <p>Let <var>is user activated</var> be true if the current navigation was initiated from
-  a window that had a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a> at the time the
-  navigation was initiated, or the UA has reason to believe it comes from a
-  direct user gesture (e.g. user typed into the address bar).</p>
-        <div class="note" role="note"> TODO: it’d be better to refer to the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#request-user-activation" id="ref-for-request-user-activation">user-activation</a> flag. </div>
+        <p><var>navigationParams</var>’s <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement①">user involvement</a> is "<code>activation</code>";</p>
        <li data-md>
-        <p>If <var>browsing context</var> is a top-level browsing context and if either of <var>is
-  user activated</var> or the <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation②">text directive user activation</a> of <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> object is true, set the <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑦">text directive user activation</a> to true. Otherwise, set it to false.</p>
-        <div class="note" role="note"> It’s important that the flag not be copyable so that only one text fragment can be
-    activated per user-activated navigation. </div>
-      </ol>
+        <p><var>navigationParams</var>’s <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement②">user involvement</a> is "<code>browser UI</code>"; or</p>
+       <li data-md>
+        <p><var>navigationParams</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>’s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation②">text directive user activation</a> is true.</p>
+        <div class="note" role="note"> It’s important that <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑦">text directive user activation</a> not be copyable so that
+  only one text fragment can be activated per user-activated navigation. </div>
+      </ul>
      <li data-md>
       <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll②">allow text fragment scroll</a> by following these sub-steps:</p>
       <ol>
@@ -1986,25 +1995,25 @@ and initialize a Document object</a> steps by adding the following steps before 
        <li data-md>
         <p>Let <var>text directive user activation</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑧">text directive user activation</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑨">text directive user activation</a> to false.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these sub-steps.</p>
+        <p>If the <var>navigationParam</var>’s <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement③">user involvement</a> is "<code>browser UI</code>", set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these sub-steps.</p>
         <div class="note" role="note">
          <p> If a navigation originates from browser UI, it’s always ok to allow it
       since it’ll be user triggered and the page/script isn’t providing the
       text snippet. </p>
-         <p> Note: Depending on the UA, there can be cases where the <var>incumbentNavigationOrigin</var> parameter is null but
-      it’s not clear that the navigation is to be considered as
-      initiated from browser UI. E.g. an "open in new window" context
-      menu item when right clicking on a link. The intent in this item
-      is to distinguish cases where the app/page is able to set the URL
-      from those that are fully under the user’s control. In the former
-      we want to prevent activation of the text fragment unless the
-      destination is loaded in a separate browsing context group (so that
-      the source cannot both control the text snippet and observe
-      side-effects in the navigation). </p>
-         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a more detailed discussion of how this applies. </p>
+         <p> Note: The intent in this item is to distinguish cases where the
+      app/page is able to control the URL from those that are fully
+      under the user’s control. In the former we want to prevent
+      scrolling of the text fragment unless the destination is loaded
+      in a separate browsing context group (so that the source cannot
+      both control the text snippet and observe side-effects in the
+      navigation). There are some cases where "browser UI" may be a
+      grey area in this regard. E.g. an "open in new window" context
+      menu item when right clicking on a link. </p>
+         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a related discussion of how this applies. </p>
         </div>
        <li data-md>
-        <p>If <var>text directive user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to false and abort these sub-steps.</p>
+        <p>If <var>text directive user activation</var> is false, or <var>browsing context</var> is
+  not a top-level browsing context, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to false and abort these sub-steps.</p>
        <li data-md>
         <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to true and abort these
   sub-steps.</p>
@@ -3027,6 +3036,7 @@ manipulations
     </ul>
    <li><a href="#document-uninvoked-directives">uninvoked directives</a><span>, in § 3.3.2</span>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.4</span>
+   <li><a href="#user-involvement">user involvement</a><span>, in § 3.5.4</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.4</span>
    <li><a href="#directive-state-value">value</a><span>, in § 3.3.1</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.6.1</span>
@@ -3102,7 +3112,6 @@ manipulations
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="55213b5b">request</span>
-     <li><span class="dfn-paneled" id="9939e831">user-activation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
@@ -3130,7 +3139,6 @@ manipulations
      <li><span class="dfn-paneled" id="85188fb3">select</span>
      <li><span class="dfn-paneled" id="c3ae9e6a">serializes as void</span>
      <li><span class="dfn-paneled" id="ae2a6342">top-level browsing context</span>
-     <li><span class="dfn-paneled" id="47fe679e">transient activation</span>
      <li><span class="dfn-paneled" id="8a051c9f">try to scroll to the fragment</span>
      <li><span class="dfn-paneled" id="5c1d019b">update document for history step application</span>
     </ul>
@@ -3597,7 +3605,6 @@ window.dfnpanelData['683b1507'] = {"dfnID": "683b1507", "url": "https://dom.spec
 window.dfnpanelData['c9f15d91'] = {"dfnID": "c9f15d91", "url": "https://dom.spec.whatwg.org/#concept-cd-substring", "dfnText": "substring data", "refSections": [{"refs": [{"id": "ref-for-concept-cd-substring"}, {"id": "ref-for-concept-cd-substring\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['347e8fe9'] = {"dfnID": "347e8fe9", "url": "https://dom.spec.whatwg.org/#concept-document-url", "dfnText": "url", "refSections": [{"refs": [{"id": "ref-for-concept-document-url"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
 window.dfnpanelData['55213b5b'] = {"dfnID": "55213b5b", "url": "https://fetch.spec.whatwg.org/#concept-request", "dfnText": "request", "refSections": [{"refs": [{"id": "ref-for-concept-request"}, {"id": "ref-for-concept-request\u2460"}, {"id": "ref-for-concept-request\u2461"}, {"id": "ref-for-concept-request\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
-window.dfnpanelData['9939e831'] = {"dfnID": "9939e831", "url": "https://fetch.spec.whatwg.org/#request-user-activation", "dfnText": "user-activation", "refSections": [{"refs": [{"id": "ref-for-request-user-activation"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['fe2a6718'] = {"dfnID": "fe2a6718", "url": "https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement", "dfnText": "HTMLAudioElement", "refSections": [{"refs": [{"id": "ref-for-htmlaudioelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['10e25f42'] = {"dfnID": "10e25f42", "url": "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement", "dfnText": "HTMLIFrameElement", "refSections": [{"refs": [{"id": "ref-for-htmliframeelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c5891539'] = {"dfnID": "c5891539", "url": "https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement", "dfnText": "HTMLImageElement", "refSections": [{"refs": [{"id": "ref-for-htmlimageelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
@@ -3621,7 +3628,6 @@ window.dfnpanelData['3f2e859c'] = {"dfnID": "3f2e859c", "url": "https://html.spe
 window.dfnpanelData['85188fb3'] = {"dfnID": "85188fb3", "url": "https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element", "dfnText": "select", "refSections": [{"refs": [{"id": "ref-for-the-select-element"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c3ae9e6a'] = {"dfnID": "c3ae9e6a", "url": "https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void", "dfnText": "serializes as void", "refSections": [{"refs": [{"id": "ref-for-serializes-as-void"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['ae2a6342'] = {"dfnID": "ae2a6342", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
-window.dfnpanelData['47fe679e'] = {"dfnID": "47fe679e", "url": "https://html.spec.whatwg.org/multipage/interaction.html#transient-activation", "dfnText": "transient activation", "refSections": [{"refs": [{"id": "ref-for-transient-activation"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['8a051c9f'] = {"dfnID": "8a051c9f", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment", "dfnText": "try to scroll to the fragment", "refSections": [{"refs": [{"id": "44bd3acf0"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment\u2460"}], "title": "3.7. Indicating The Text Match"}], "external": true};
 window.dfnpanelData['5c1d019b'] = {"dfnID": "5c1d019b", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application", "dfnText": "update document for history step application", "refSections": [{"refs": [{"id": "fb71d7890"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application"}], "title": "3.5.5. Restricting Scroll on Load"}], "external": true};
 window.dfnpanelData['53275e46'] = {"dfnID": "53275e46", "url": "https://infra.spec.whatwg.org/#list-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-list-append"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
@@ -3680,6 +3686,7 @@ window.dfnpanelData['parse-a-text-directive'] = {"dfnID": "parse-a-text-directiv
 window.dfnpanelData['request-text-directive-user-activation'] = {"dfnID": "request-text-directive-user-activation", "url": "#request-text-directive-user-activation", "dfnText": "text directive user activation", "refSections": [{"refs": [{"id": "ref-for-request-text-directive-user-activation"}, {"id": "ref-for-request-text-directive-user-activation\u2460"}, {"id": "ref-for-request-text-directive-user-activation\u2461"}, {"id": "ref-for-request-text-directive-user-activation\u2462"}, {"id": "ref-for-request-text-directive-user-activation\u2463"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
 window.dfnpanelData['document-text-directive-user-activation'] = {"dfnID": "document-text-directive-user-activation", "url": "#document-text-directive-user-activation", "dfnText": "text directive user activation", "refSections": [{"refs": [{"id": "ref-for-document-text-directive-user-activation"}, {"id": "ref-for-document-text-directive-user-activation\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2461"}, {"id": "ref-for-document-text-directive-user-activation\u2462"}, {"id": "ref-for-document-text-directive-user-activation\u2463"}, {"id": "ref-for-document-text-directive-user-activation\u2464"}, {"id": "ref-for-document-text-directive-user-activation\u2465"}, {"id": "ref-for-document-text-directive-user-activation\u2466"}, {"id": "ref-for-document-text-directive-user-activation\u2467"}, {"id": "ref-for-document-text-directive-user-activation\u2468"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u24ea"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
 window.dfnpanelData['document-allow-text-fragment-scroll'] = {"dfnID": "document-allow-text-fragment-scroll", "url": "#document-allow-text-fragment-scroll", "dfnText": "allow text fragment scroll", "refSections": [{"refs": [{"id": "ref-for-document-allow-text-fragment-scroll"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-document-allow-text-fragment-scroll\u2460"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2461"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2462"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2463"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2464"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2465"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2466"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2467"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2468"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2460\u24ea"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
+window.dfnpanelData['user-involvement'] = {"dfnID": "user-involvement", "url": "#user-involvement", "dfnText": "user involvement", "refSections": [{"refs": [{"id": "ref-for-user-involvement"}, {"id": "ref-for-user-involvement\u2460"}, {"id": "ref-for-user-involvement\u2461"}, {"id": "ref-for-user-involvement\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
 window.dfnpanelData['first-common-ancestor'] = {"dfnID": "first-common-ancestor", "url": "#first-common-ancestor", "dfnText": "first common ancestor", "refSections": [{"refs": [{"id": "ref-for-first-common-ancestor"}], "title": "3.4.1. Invoking Text Directives"}], "external": false};
 window.dfnpanelData['shadow-including-parent'] = {"dfnID": "shadow-including-parent", "url": "#shadow-including-parent", "dfnText": "shadow-including parent", "refSections": [{"refs": [{"id": "ref-for-shadow-including-parent"}], "title": "3.6. Navigating to a Text Fragment"}], "external": false};
 window.dfnpanelData['invoke-text-directives'] = {"dfnID": "invoke-text-directives", "url": "#invoke-text-directives", "dfnText": "invoke text directives", "refSections": [{"refs": [{"id": "ref-for-invoke-text-directives"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-invoke-text-directives\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};

@@ -1140,40 +1140,47 @@ boolean [=document/text directive user activation=] field:
   allowed in all cases.
 </div>
 
+Amend the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params">navigation params</a> to include a new field:
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>  <dl>
+>   <dt><dfn>user involvement</dfn></dt>
+>   <dd>A <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement">user navigation involvement</a> value.</dd>
+>  </dl>
+>
+>
+> Initialize [=user involvement=] value everywhere a navigation params is created, in particular,
+> amend the definition of
+> <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#attempt-to-populate-the-history-entry's-document">attempt to populate the history entry's document</a>
+> to take a user navigation involvement as a parameter, using it to populate the field when creating
+> a new navigation params.
+
 Amend the <a
 href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning |document|:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   15. Set |document|'s [=document/text directive user activation=] by following these sub-steps:
->       1. Let |is user activated| be true if the current navigation was initiated from
->           a window that had a <a spec="html">transient activation</a> at the time the
->           navigation was initiated, or the UA has reason to believe it comes from a
->           direct user gesture (e.g. user typed into the address bar).
->           <div class="note">
->             TODO: it'd be better to refer to the [=request/user-activation=] flag.
->           </div>
->       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
->           user activated| or the [=request/text directive user activation=] of
->           |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           object is true, set the |document|'s [=document/text directive user activation=]
->           to true. Otherwise, set it to false.
->           <div class="note">
->             It's important that the flag not be copyable so that only one text fragment can be
->             activated per user-activated navigation.
->           </div>
->   16. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
+>   19. Set |document|'s [=document/text directive user activation=] to true if any of the following
+>     conditions hold, false otherwise:
+>       * |navigationParams|'s [=user involvement=] is "<code>activation</code>";
+>       * |navigationParams|'s [=user involvement=] is "<code>browser UI</code>"; or
+>       * |navigationParams|'s 
+>         <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>'s
+>         [=request/text directive user activation=] is true.
+>         <div class="note">
+>           It's important that [=document/text directive user activation=] not be copyable so that
+>           only one text fragment can be activated per user-activated navigation.
+>         </div>
+>   20. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
 >       1. If |document|'s [=Document/uninvoked directives=] field is null or empty, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
 >       1. Let |text directive user activation| be the value of |document|'s
 >           [=document/text directive user activation=] and set |document|'s
 >           [=document/text directive user activation=] to false.
->       1. If the |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"none"` set [=document/allow text fragment scroll=] to true and abort these sub-steps.
+>       1. If |navigationParam|'s [=user involvement=] is "<code>browser UI</code>", set
+>           [=document/allow text fragment scroll=] to true and abort these sub-steps.
 >           <div class="note">
 >             <p>
 >               If a navigation originates from browser UI, it's always ok to allow it
@@ -1181,25 +1188,24 @@ and initialize a Document object</a> steps by adding the following steps before 
 >               text snippet.
 >             </p>
 >             <p>
->               Note: Depending on the UA, there can be cases where the
->               <var ignore=''>incumbentNavigationOrigin</var> parameter is null but
->               it's not clear that the navigation is to be considered as
->               initiated from browser UI. E.g. an "open in new window" context
->               menu item when right clicking on a link. The intent in this item
->               is to distinguish cases where the app/page is able to set the URL
->               from those that are fully under the user's control. In the former
->               we want to prevent activation of the text fragment unless the
->               destination is loaded in a separate browsing context group (so that
->               the source cannot both control the text snippet and observe
->               side-effects in the navigation).
+>               Note: The intent in this item is to distinguish cases where the
+>               app/page is able to control the URL from those that are fully
+>               under the user's control. In the former we want to prevent
+>               scrolling of the text fragment unless the destination is loaded
+>               in a separate browsing context group (so that the source cannot
+>               both control the text snippet and observe side-effects in the
+>               navigation). There are some cases where "browser UI" may be a
+>               grey area in this regard. E.g. an "open in new window" context
+>               menu item when right clicking on a link.
 >             </p>
 >             <p>
 >               See
 >               <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
->               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
+>               in [[FETCH-METADATA]] for a related discussion of how this applies.
 >             </p>
 >           </div>
->       1. If |text directive user activation| is false, set
+>       1. If |text directive user activation| is false, or <var ignore=''>browsing context</var> is
+>           not a top-level browsing context, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
 >       1. If the |navigationParam|'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
@@ -1207,8 +1213,7 @@ and initialize a Document object</a> steps by adding the following steps before 
 >           header and its value is `"same-origin"` set
 >           [=document/allow text fragment scroll=] to true and abort these
 >           sub-steps.
->       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
->           context=] and its
+>       1. If |document|'s [=Document/browsing context=]'s
 >           <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
 >           <a spec=HTML>browsing context set</a> has length 1, set
 >           [=document/allow text fragment scroll=] to true and abort these sub-steps.
