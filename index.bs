@@ -1156,7 +1156,37 @@ Amend the definition of <a href="https://html.spec.whatwg.org/multipage/browsing
 > to take a user navigation involvement as a parameter, using it to populate the field when creating
 > a new navigation params.
 
-Amend the <a
+Amend <a
+href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
+and initialize a Document object</a> to take the initiator origin as a new parameter:
+
+>   <strong>Monkeypatching [[HTML]]:</strong>
+>
+>   <div class="monkeypatch">A session history entry is a struct with the following items:
+>     To load an HTML document, given navigation params navigationParams <span class="diff">and
+>     <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a>
+>     <var ignore>initiatorOrigin</var></span>:
+>   </div>
+
+and pass the initiator origin as an argument wherever it is called, specifically through the
+<a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#navigate-html">load an HTML
+document</a> steps and the
+<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#loading-a-document">Load a
+document</a> steps:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   <dl class="switch">
+>     <dt>an <span>HTML MIME type</span></dt>
+>     <dd>
+>       Return the result of loading an HTML document, given <var ignore>navigationParams</var>
+>       <span class="diff">and <var ignore>initiatorOrigin</var></span>.
+>     </dd>
+>   <dl>
+> </div>
+
+and amend the <a
 href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning |document|:
 
@@ -1207,10 +1237,9 @@ and initialize a Document object</a> steps by adding the following steps before 
 >       1. If |text directive user activation| is false, or <var ignore=''>browsing context</var> is
 >           not a top-level browsing context, set
 >           [=document/allow text fragment scroll=] to false and abort these sub-steps.
->       1. If the |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"same-origin"` set
+>       1. If |navigationParam|'s
+>           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-origin">
+>           origin</a> is [=same origin=] with <var ignore>initiatorOrigin</var> set
 >           [=document/allow text fragment scroll=] to true and abort these
 >           sub-steps.
 >       1. If |document|'s [=Document/browsing context=]'s

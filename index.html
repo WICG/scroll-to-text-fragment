@@ -1969,7 +1969,27 @@ boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" 
 amend the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#attempt-to-populate-the-history-entry’s-document">attempt to populate the history entry’s document</a> to take a user navigation involvement as a parameter, using it to populate the field when creating
 a new navigation params.</p>
    </blockquote>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
+   <p>Amend <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
+and initialize a Document object</a> to take the initiator origin as a new parameter:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">A session history entry is a struct with the following items:
+    To load an HTML document, given navigation params navigationParams <span class="diff">and <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a> <var>initiatorOrigin</var></span>: </div>
+   </blockquote>
+   <p>and pass the initiator origin as an argument wherever it is called, specifically through the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#navigate-html">load an HTML
+document</a> steps and the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#loading-a-document">Load a
+document</a> steps:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <dl class="switch">
+      <dt>an <span>HTML MIME type</span>
+      <dd> Return the result of loading an HTML document, given <var>navigationParams</var> <span class="diff">and <var>initiatorOrigin</var></span>. </dd>
+      <dl></dl>
+     </dl>
+    </div>
+   </blockquote>
+   <p>and amend the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
 and initialize a Document object</a> steps by adding the following steps before returning <var>document</var>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
@@ -1995,7 +2015,7 @@ conditions hold, false otherwise:</p>
        <li data-md>
         <p>Let <var>text directive user activation</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑧">text directive user activation</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑨">text directive user activation</a> to false.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement③">user involvement</a> is "<code>browser UI</code>", set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these sub-steps.</p>
+        <p>If <var>navigationParam</var>’s <a data-link-type="dfn" href="#user-involvement" id="ref-for-user-involvement③">user involvement</a> is "<code>browser UI</code>", set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these sub-steps.</p>
         <div class="note" role="note">
          <p> If a navigation originates from browser UI, it’s always ok to allow it
       since it’ll be user triggered and the page/script isn’t providing the
@@ -2015,11 +2035,10 @@ conditions hold, false otherwise:</p>
         <p>If <var>text directive user activation</var> is false, or <var>browsing context</var> is
   not a top-level browsing context, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to false and abort these sub-steps.</p>
        <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to true and abort these
+        <p>If <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-origin"> origin</a> is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin" id="ref-for-same-origin">same origin</a> with <var>initiatorOrigin</var> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to true and abort these
   sub-steps.</p>
        <li data-md>
-        <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a> is a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing
-  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to true and abort these sub-steps.</p>
+        <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to true and abort these sub-steps.</p>
         <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
     document is loaded in a noopener context. That is, a new top level
     browsing context group to which the navigator does not have script access
@@ -3135,10 +3154,10 @@ manipulations
      <li><span class="dfn-paneled" id="b07164ad">multiple</span>
      <li><span class="dfn-paneled" id="2594e562">navigate</span>
      <li><span class="dfn-paneled" id="8b87b428">restore persisted state</span>
+     <li><span class="dfn-paneled" id="7393da89">same origin</span>
      <li><span class="dfn-paneled" id="3f2e859c">scroll to the fragment</span>
      <li><span class="dfn-paneled" id="85188fb3">select</span>
      <li><span class="dfn-paneled" id="c3ae9e6a">serializes as void</span>
-     <li><span class="dfn-paneled" id="ae2a6342">top-level browsing context</span>
      <li><span class="dfn-paneled" id="8a051c9f">try to scroll to the fragment</span>
      <li><span class="dfn-paneled" id="5c1d019b">update document for history step application</span>
     </ul>
@@ -3624,10 +3643,10 @@ window.dfnpanelData['d4dbbbf0'] = {"dfnID": "d4dbbbf0", "url": "https://html.spe
 window.dfnpanelData['b07164ad'] = {"dfnID": "b07164ad", "url": "https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple", "dfnText": "multiple", "refSections": [{"refs": [{"id": "ref-for-attr-select-multiple"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['2594e562'] = {"dfnID": "2594e562", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate", "dfnText": "navigate", "refSections": [{"refs": [{"id": "ref-for-navigate"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
 window.dfnpanelData['8b87b428'] = {"dfnID": "8b87b428", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state", "dfnText": "restore persisted state", "refSections": [{"refs": [{"id": "ref-for-restore-persisted-state"}], "title": "3.5.5. Restricting Scroll on Load"}, {"refs": [{"id": "ref-for-restore-persisted-state\u2460"}], "title": "3.8. Document Policy Integration"}], "external": true};
+window.dfnpanelData['7393da89'] = {"dfnID": "7393da89", "url": "https://html.spec.whatwg.org/multipage/browsers.html#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['3f2e859c'] = {"dfnID": "3f2e859c", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier", "dfnText": "scroll to the fragment", "refSections": [{"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier"}, {"id": "ref-for-scroll-to-the-fragment-identifier\u2460"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier\u2462"}], "title": "3.8. Document Policy Integration"}], "external": true};
 window.dfnpanelData['85188fb3'] = {"dfnID": "85188fb3", "url": "https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element", "dfnText": "select", "refSections": [{"refs": [{"id": "ref-for-the-select-element"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c3ae9e6a'] = {"dfnID": "c3ae9e6a", "url": "https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void", "dfnText": "serializes as void", "refSections": [{"refs": [{"id": "ref-for-serializes-as-void"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['ae2a6342'] = {"dfnID": "ae2a6342", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['8a051c9f'] = {"dfnID": "8a051c9f", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment", "dfnText": "try to scroll to the fragment", "refSections": [{"refs": [{"id": "44bd3acf0"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment\u2460"}], "title": "3.7. Indicating The Text Match"}], "external": true};
 window.dfnpanelData['5c1d019b'] = {"dfnID": "5c1d019b", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application", "dfnText": "update document for history step application", "refSections": [{"refs": [{"id": "fb71d7890"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application"}], "title": "3.5.5. Restricting Scroll on Load"}], "external": true};
 window.dfnpanelData['53275e46'] = {"dfnID": "53275e46", "url": "https://infra.spec.whatwg.org/#list-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-list-append"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
