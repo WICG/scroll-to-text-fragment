@@ -845,10 +845,10 @@ prevent fragment scrolling if the force-load-at-top policy is enabled. Make the 
 >                   What should be set as target if inside a shadow tree?
 >                   <a href="https://github.com/WICG/scroll-to-text-fragment/issues/190">#190</a>
 >               </div>
->       4. <span class="diff">Assert: |target| is an [=element=].</span>
->       5. Set |document|'s target element to |target|.
->       6. Run the ancestor details revealing algorithm on |target|.
->       7. Run the ancestor hidden-until-found revealing algorithm on |target|.
+>       5. <span class="diff">Assert: |target| is an [=element=].</span>
+>       6. Set |document|'s target element to |target|.
+>       7. Run the ancestor details revealing algorithm on |target|.
+>       8. Run the ancestor hidden-until-found revealing algorithm on |target|.
 >           <div class="issue">
 >               These revealing algorithms currently wont work well since |target| could be an
 >               ancestor or even the root document node. Issue
@@ -856,26 +856,24 @@ prevent fragment scrolling if the force-load-at-top policy is enabled. Make the 
 >               restricting matches to `contain:style layout` blocks which would resolve this
 >               problem.
 >           </div>
->       8. <span class="diff"><a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get the policy
->           value</a> for `force-load-at-top` for |document|. If the result is false:</span>
->           1. <span class="diff">[=scroll a target into view=],
->               with <em>target</em> set to |scrollTarget|, <em>behavior</em> set to "auto", <em>block</em> set to "center", and
->               <em>inline</em> set to "nearest".</span>
->
->               <span class="diff">Implementations MAY avoid scrolling to the target if it is
->               produced from a [=text directive=].</span>
->
->           <div class="issue">
->               <code>force-load-at-top</code> should be checked only when a new document is being
->               loaded.
->               <a href="https://github.com/WICG/scroll-to-text-fragment/issues/186">#186</a>
+>       9. <span class="diff">Let |blockPosition| be "center" if |scrollTarget| is a [=range=],
+>           "start" otherwise.</span>
+>           <div class="note">
+>             Scrolling to a text directive centers it in the block flow direction.
 >           </div>
->       9. <strike class="diff">Scroll target into view, with behavior set to "auto", block set to
+>       10. <strike class="diff">Scroll target into view, with behavior set to "auto", block set to
 >           "start", and inline set to "nearest".</strike>
->       10. Run the focusing steps for target, with the Document's viewport as the fallback target.
+>
+>           <li value="10"><span class="diff">[=scroll a target into view=],
+>           with <em>target</em> set to |scrollTarget|, <em>behavior</em> set to "auto",
+>           <em>block</em> set to |blockPosition|, and <em>inline</em> set to "nearest".</span>
+>
+>           <span class="diff">Implementations MAY avoid scrolling to the target if it is
+>           produced from a [=text directive=].</span></li>
+>       11. Run the focusing steps for target, with the Document's viewport as the fallback target.
 >           <div class="issue">Implementation note: Blink doesn’t currently set focus for text
 >           fragments, it probably should? TODO: file crbug.</div>
->       11. Move the sequential focus navigation starting point to target.
+>       12. Move the sequential focus navigation starting point to target.
 >
 >   </div>
 
@@ -1255,6 +1253,67 @@ steps of the task queued in step 2:
 >       document.
 >   3. Set <em>document</em>'s [=document/allow text fragment scroll=] to false.
 
+### Restricting Scroll on Load ### {#restricting-scroll-on-load}
+
+This section defines how the `force-load-at-top` policy is used to prevent all
+types of scrolling when loading a new document, including but not limited to
+text directives.
+
+ISSUE(WICG/scroll-to-text-fragment#242): Need to decide how `force-load-at-top`
+interacts with the Navigation API.
+
+Amend the <a spec=HTML>restore persisted state</a> steps to take a new boolean
+parameter which suppresses scroll restoration:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   To restore persisted state from a session history entry <var ignore>entry</var>
+>   <span class="diff">, and boolean |suppressScrolling|</span>:
+>
+>  1. If entry's scroll restoration mode is "auto", <span class="diff">|suppressScrolling|
+>     is false,</span> and entry's document's relevant global object's navigation API's suppress
+>     normal scroll restoration during ongoing navigation is false, then restore scroll position
+>     data given entry.
+>  2. ...
+
+
+Amend the <a spec=HTML>update document for history step application</a> steps
+to check the `force-load-at-top` policy and avoid scrolling in a new document
+if it's set.
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   1. ...
+>       <li value="4">Set document's history object's length to scriptHistoryLength.</li>
+>   5. <span class="diff">Let |scrollingBlockedInNewDocument| be the result of
+>       <a href="https://wicg.github.io/document-policy#algo-get-policy-value">getting the policy
+>       value</a> for `force-load-at-top` for |document|.</span>
+>   5. If documentsEntryChanged is true, then:
+>       1. Let oldURL be document's latest entry's URL.
+>       2. ...
+>           <li value="5"> If documentIsNew is false, then:
+>           1. Update the navigation API entries for a same-document navigation given navigation,
+>               entry, and "traverse".
+>           2. Fire an event named popstate...
+>           3. Restore persisted state given entry <span class="diff">and
+>               |suppressScrolling| set to false.</span>
+>           4. If oldURL's fragment is not equal to...
+>       6. Otherwise,
+>           1. Assert: entriesForNavigationAPI is given.
+>           2. Restore persisted state given entry <span class="diff">and
+>               |scrollingBlockedInNewDocument|.</span>
+>           3. Initialize the navigation API entries for a new document given navigation,
+>               entriesForNavigationAPI, and entry.
+>   6. If documentIsNew is true, then:
+>       1. <span class="diff">If |scrollingBlockedInNewDocument| is false,</span> try to scroll to
+>           the fragment for document.
+>       2. At this point scripts may run for the newly-created document document.
+>   7. Otherwise, if documentsEntryChanged is false and doNotReactivate is false, then:
+>       1. ...
+>
+> </div>
 
 ## Navigating to a Text Fragment ## {#navigating-to-text-fragment}
 
