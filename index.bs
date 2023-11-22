@@ -950,12 +950,19 @@ actor can determine that the text fragment was successfully found in victim
 page as a result of such a navigation, they can infer the existence of any text
 on the page.
 
-The following subsections restrict the feature to mitigate the expected attack
-vectors. In summary, text directives are invoked only on full (non-same-page)
-navigations that are the result of a user activation.  Additionally,
-navigations originating from a different origin than the destination will
-require the navigation to take place in a "noopener" context, such that the
-destination page is known to be sufficiently isolated.
+The processing model in the following subsections restricts the feature to
+mitigate the expected attack vectors. In summary, text directives are restricted
+to:
+
+* top level navigables (i.e. no iframes).
+    * ISSUE(WICG/scroll-to-text-fragment#240): This isn't strictly true, Chrome
+        allows this for same-origin initiators. Need to update the spec on this
+        point.
+* navigations that are the result of a user action
+* in cases where the navigation has a cross-origin initiator, the destination
+    must be opener isolated (i.e. no references to its global objects in other
+    documents)
+
 
 ### Scroll On Navigation ### {#scroll-on-navigation}
 
@@ -979,14 +986,6 @@ detectable and distinguished from natural user scrolls.
   page. The searched-for text appears nearby to a resource located on a unique
   (on the page) domain. The attacker may be able to infer the success or failure
   of the fragment search based on the order of requests for DNS lookup.
-</div>
-
-<div class="example">
-  A malicious page embeds a cross-origin victim in an iframe. The victim page
-  contains information sensitive to the user. The malicious page navigates the
-  victim to a text fragment. Since a successful fragment match will cause
-  focus, the malicious page can determine if the text appears in the victim by
-  listening for a blur event in its own document.
 </div>
 
 <div class="example">
