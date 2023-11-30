@@ -630,12 +630,23 @@ In the definition of <a spec="HTML">update document for history step application
 >         4. ...
 >   </div>
 
-### Parsing the fragment directive ### {#parsing-the-fragment-directive}
-
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 
-An <a spec=infra>ASCII string</a> is a <dfn>valid fragment directive</dfn> if
-it matches the production:
+Note: This section is non-normative.
+
+Note: This grammar is provided as a convenient reference; however, the rules and steps for parsing
+are specified imperatively in the [[#text-directives]] section. Where this grammar differs in
+behavior from the steps of that section, the steps there are to be taken as the authoritative source
+of truth.
+
+The [=FragmentDirective=] can contain multiple directives split by the "&" character. Currently this
+means we allow multiple text directives to enable multiple indicated strings in the page, but this
+also allows for future directive types to be added and combined. For extensibility, we do not fail
+to parse if an unknown directive is in the &-separated list of directives.
+
+A <a spec=infra>string</a> is a valid fragment directive if it matches the EBNF (Extended
+Backus-Naur Form) production:
+
 <dl>
   <dt>
     <dfn id="fragmentdirectiveproduction">`FragmentDirective`</dfn> `::=`
@@ -644,16 +655,22 @@ it matches the production:
     <code>([=TextDirective=] | [=UnknownDirective=]) ("&" [=FragmentDirective=])?</code>
   </dd>
   <dt>
+    <dfn>`TextDirective`</dfn> `::=`
+  </dt>
+  <dd>
+    <code>"text="[=CharacterString=]</code>
+  </dd>
+  <dt>
     <dfn>`UnknownDirective`</dfn> `::=`
   </dt>
   <dd>
-    <code>[=CharacterString=]</code>
+    <code>[=CharacterString=] - [=TextDirective=]</code>
   </dd>
   <dt>
     <dfn>`CharacterString`</dfn> `::=`
   </dt>
   <dd>
-    <code>([=ExplicitChar=] | [=PercentEncodedByte=])+</code>
+    <code>([=ExplicitChar=] | [=PercentEncodedByte=])*</code>
   </dd>
   <dt>
     <dfn>`ExplicitChar`</dfn> `::=`
@@ -667,16 +684,10 @@ it matches the production:
   </dd>
 </dl>
 
-<div class="note">
-  The [=FragmentDirective=] can contain multiple directives split by the "&"
-  character. Currently this means we allow multiple text directives to enable
-  multiple indicated strings in the page, but this also allows for future
-  directive types to be added and combined. For extensibility, we do not fail to
-  parse if an unknown directive is in the &-separated list of directives.
-</div>
+A [=TextDirective=] is considered valid if it matches the following production:
 
 <dl>
-  <dt><dfn>`TextDirective`</dfn> `::=`</dt>
+  <dt><dfn>`ValidTextDirective`</dfn> `::=`</dt>
   <dd><code>"text=" [=TextDirectiveParameters=]</code></dd>
   <dt><dfn>`TextDirectiveParameters`</dfn> `::=`</dt>
   <dd>
@@ -698,10 +709,10 @@ it matches the production:
     ";" | "=" | "?" | "@" | "_" | "~"
     </code>
   <div class = "note">
-    A [=TextDirectiveExplicitChar=] is any [=URL code point=] that is not
-    explicitly used in the [=TextDirective=] syntax, that is "&", "-", and ",".
-    If a text fragment refers to a "&", "-", or "," character in the document,
-    it will be percent-encoded in the fragment.
+    A [=TextDirectiveExplicitChar=] is any [=URL code point=] that is not explicitly used in the
+    [=FragmentDirective=] or [=ValidTextDirective=] syntax, that is "&", "-", and ",".  If a text
+    fragment refers to a "&", "-", or "," character in the document, it will be percent-encoded in
+    the fragment.
   </div>
   </dd>
   <dt><dfn>`PercentEncodedByte`</dfn> `::=`</dt>

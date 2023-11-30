@@ -881,8 +881,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <ol class="toc">
         <li><a href="#extracting-the-fragment-directive"><span class="secno">3.3.1</span> <span class="content">Extracting the fragment directive</span></a>
         <li><a href="#applying-directives-to-a-document"><span class="secno">3.3.2</span> <span class="content">Applying directives to a document</span></a>
-        <li><a href="#parsing-the-fragment-directive"><span class="secno">3.3.3</span> <span class="content">Parsing the fragment directive</span></a>
-        <li><a href="#fragment-directive-grammar"><span class="secno">3.3.4</span> <span class="content">Fragment directive grammar</span></a>
+        <li><a href="#fragment-directive-grammar"><span class="secno">3.3.3</span> <span class="content">Fragment directive grammar</span></a>
        </ol>
       <li>
        <a href="#text-directives"><span class="secno">3.4</span> <span class="content">Text Directives</span></a>
@@ -1475,30 +1474,36 @@ state</a> to apply the directives associated with a session history entry to a <
      </ol>
     </div>
    </blockquote>
-   <h4 class="heading settled" data-level="3.3.3" id="parsing-the-fragment-directive"><span class="secno">3.3.3. </span><span class="content">Parsing the fragment directive</span><a class="self-link" href="#parsing-the-fragment-directive"></a></h4>
-   <h4 class="heading settled" data-level="3.3.4" id="fragment-directive-grammar"><span class="secno">3.3.4. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
-   <p>An <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a> is a <dfn data-dfn-type="dfn" data-noexport id="valid-fragment-directive">valid fragment directive<a class="self-link" href="#valid-fragment-directive"></a></dfn> if
-it matches the production:</p>
+   <h4 class="heading settled" data-level="3.3.3" id="fragment-directive-grammar"><span class="secno">3.3.3. </span><span class="content">Fragment directive grammar</span><a class="self-link" href="#fragment-directive-grammar"></a></h4>
+   <p class="note" role="note"><span class="marker">Note:</span> This section is non-normative.</p>
+   <p class="note" role="note"><span class="marker">Note:</span> This grammar is provided as a convenient reference; however, the rules and steps for parsing
+are specified imperatively in the <a href="#text-directives">§ 3.4 Text Directives</a> section. Where this grammar differs in
+behavior from the steps of that section, the steps there are to be taken as the authoritative source
+of truth.</p>
+   <p>The <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction">FragmentDirective</a> can contain multiple directives split by the "&amp;" character. Currently this
+means we allow multiple text directives to enable multiple indicated strings in the page, but this
+also allows for future directive types to be added and combined. For extensibility, we do not fail
+to parse if an unknown directive is in the &amp;-separated list of directives.</p>
+   <p>A <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> is a valid fragment directive if it matches the EBNF (Extended
+Backus-Naur Form) production:</p>
    <dl>
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fragmentdirectiveproduction"><code>FragmentDirective</code></dfn> <code>::=</code> 
-    <dd> <code>(<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction">FragmentDirective</a>)?</code> 
+    <dd> <code>(<a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective">TextDirective</a> | <a data-link-type="dfn" href="#unknowndirective" id="ref-for-unknowndirective">UnknownDirective</a>) ("&amp;" <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction①">FragmentDirective</a>)?</code> 
+    <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective"><code>TextDirective</code></dfn> <code>::=</code> 
+    <dd> <code>"text="<a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a></code> 
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="unknowndirective"><code>UnknownDirective</code></dfn> <code>::=</code> 
-    <dd> <code><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring">CharacterString</a></code> 
+    <dd> <code><a data-link-type="dfn" href="#characterstring" id="ref-for-characterstring①">CharacterString</a> - <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a></code> 
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="characterstring"><code>CharacterString</code></dfn> <code>::=</code> 
-    <dd> <code>(<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedbyte" id="ref-for-percentencodedbyte">PercentEncodedByte</a>)+</code> 
+    <dd> <code>(<a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar">ExplicitChar</a> | <a data-link-type="dfn" href="#percentencodedbyte" id="ref-for-percentencodedbyte">PercentEncodedByte</a>)*</code> 
     <dt> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="explicitchar"><code>ExplicitChar</code></dfn> <code>::=</code> 
     <dd>
       <code>[a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
     ";" | "=" | "?" | "@" | "_" | "~" | "," | "-"</code> 
      <div class="note" role="note"> An <a data-link-type="dfn" href="#explicitchar" id="ref-for-explicitchar①">ExplicitChar</a> may be any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points">URL code point</a> other than "&amp;". </div>
    </dl>
-   <div class="note" role="note"> The <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction①">FragmentDirective</a> can contain multiple directives split by the "&amp;"
-  character. Currently this means we allow multiple text directives to enable
-  multiple indicated strings in the page, but this also allows for future
-  directive types to be added and combined. For extensibility, we do not fail to
-  parse if an unknown directive is in the &amp;-separated list of directives. </div>
+   <p>A <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective②">TextDirective</a> is considered valid if it matches the following production:</p>
    <dl>
-    <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirective"><code>TextDirective</code></dfn> <code>::=</code>
+    <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="validtextdirective"><code>ValidTextDirective</code></dfn> <code>::=</code>
     <dd><code>"text=" <a data-link-type="dfn" href="#textdirectiveparameters" id="ref-for-textdirectiveparameters">TextDirectiveParameters</a></code>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="textdirectiveparameters"><code>TextDirectiveParameters</code></dfn> <code>::=</code>
     <dd> <code> (<a data-link-type="dfn" href="#textdirectiveprefix" id="ref-for-textdirectiveprefix">TextDirectivePrefix</a> ",")? <a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring">TextDirectiveString</a> ("," <a data-link-type="dfn" href="#textdirectivestring" id="ref-for-textdirectivestring①">TextDirectiveString</a>)?  ("," <a data-link-type="dfn" href="#textdirectivesuffix" id="ref-for-textdirectivesuffix">TextDirectiveSuffix</a>)? </code> 
@@ -1512,10 +1517,9 @@ it matches the production:</p>
     <dd>
       <code> [a-zA-Z0-9] | "!" | "$" | "'" | "(" | ")" | "*" | "+" | "." | "/" | ":" |
     ";" | "=" | "?" | "@" | "_" | "~" </code> 
-     <div class="note" role="note"> A <a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar①">TextDirectiveExplicitChar</a> is any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points①">URL code point</a> that is not
-    explicitly used in the <a data-link-type="dfn" href="#textdirective" id="ref-for-textdirective①">TextDirective</a> syntax, that is "&amp;", "-", and ",".
-    If a text fragment refers to a "&amp;", "-", or "," character in the document,
-    it will be percent-encoded in the fragment. </div>
+     <div class="note" role="note"> A <a data-link-type="dfn" href="#textdirectiveexplicitchar" id="ref-for-textdirectiveexplicitchar①">TextDirectiveExplicitChar</a> is any <a data-link-type="dfn" href="https://url.spec.whatwg.org/#url-code-points" id="ref-for-url-code-points①">URL code point</a> that is not explicitly used in the <a data-link-type="dfn" href="#fragmentdirectiveproduction" id="ref-for-fragmentdirectiveproduction②">FragmentDirective</a> or <a data-link-type="dfn" href="#validtextdirective" id="ref-for-validtextdirective">ValidTextDirective</a> syntax, that is "&amp;", "-", and ",".  If a text
+    fragment refers to a "&amp;", "-", or "," character in the document, it will be percent-encoded in
+    the fragment. </div>
     <dt><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percentencodedbyte"><code>PercentEncodedByte</code></dfn> <code>::=</code>
     <dd><code>"%" [a-zA-Z0-9][a-zA-Z0-9]</code>
    </dl>
@@ -1528,12 +1532,12 @@ of these items.</p>
    <p>See <a href="#syntax">§ 3.2 Syntax</a> for the what each of these components means and how they’re
 used.</p>
    <div class="algorithm" data-algorithm="percent-decode a text directive term">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percent-decode-a-text-directive-term">percent-decode a text directive term</dfn> given an input <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>term</var>: 
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="percent-decode-a-text-directive-term">percent-decode a text directive term</dfn> given an input <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string①">string</a> <var>term</var>: 
     <ol class="algorithm">
      <li data-md>
       <p>If <var>term</var> is null, return null.</p>
      <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert">Assert</a>: <var>term</var> is an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a>.</p>
+      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert">Assert</a>: <var>term</var> is an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string①">ASCII string</a>.</p>
      <li data-md>
       <p>Let <var>decoded bytes</var> be the result of <a data-link-type="dfn" href="https://url.spec.whatwg.org/#string-percent-decode" id="ref-for-string-percent-decode">percent-decoding</a> <var>term</var>.</p>
      <li data-md>
@@ -1542,7 +1546,7 @@ bytes</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="parse a text directive">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string①">string</a> <var>text
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-text-directive">parse a text directive</dfn>, on an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string②">string</a> <var>text
   directive value</var>, run these steps: 
     <div class="note" role="note">
      <p> This algorithm takes a single text directive value string as input (e.g.  "prefix-,foo,bar") and
@@ -1554,10 +1558,10 @@ bytes</var>.</p>
      <li data-md>
       <p>Let <var>prefix</var>, <var>suffix</var>, <var>start</var>, <var>end</var>, each be null.</p>
      <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>text directive value</var> is an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a> with no code points in the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#fragment-percent-encode-set" id="ref-for-fragment-percent-encode-set">fragment percent-encode set</a> and no instances of
+      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>text directive value</var> is an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string②">ASCII string</a> with no code points in the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#fragment-percent-encode-set" id="ref-for-fragment-percent-encode-set">fragment percent-encode set</a> and no instances of
 U+0026 (&amp;).</p>
      <li data-md>
-      <p>Let <var>tokens</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string②">strings</a> that result from <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting</a> <var>text directive value</var> on U+002C (,).</p>
+      <p>Let <var>tokens</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string③">strings</a> that result from <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting</a> <var>text directive value</var> on U+002C (,).</p>
      <li data-md>
       <p>If <var>tokens</var> has <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> less than 1 or greater than 4, return null.</p>
      <li data-md>
@@ -1618,7 +1622,7 @@ from 0 with length <var>tokens</var>[0]'s <a data-link-type="dfn" href="https://
     </ol>
    </div>
    <div class="algorithm" data-algorithm="parse the fragment directive">
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-the-fragment-directive">parse the fragment directive</dfn>, an an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string④">ASCII string</a> <var>fragment
+    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-the-fragment-directive">parse the fragment directive</dfn>, an an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a> <var>fragment
 directive</var>, run these steps:</p>
     <div class="note" role="note"> This algorithm takes the fragment directive string (i.e. the part that follows ":~:") and returns
   a list of <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive④">text directive</a> objects parsed from that string. Can return an empty list. </div>
@@ -1629,7 +1633,7 @@ directive</var>, run these steps:</p>
      <li data-md>
       <p>Let <var>output</var> be an initially empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑤">text directives</a>.</p>
      <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate">For each</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string③">string</a> <var>directive</var> in <var>directives</var>:</p>
+      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate">For each</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>directive</var> in <var>directives</var>:</p>
       <ol>
        <li data-md>
         <p>If <var>directive</var> does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-starts-with" id="ref-for-string-starts-with①">start with</a> "<code>text=</code>", then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue">continue</a>.</p>
@@ -2808,7 +2812,7 @@ not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a string in a range">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑤">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
 run these steps: 
     <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑥">range</a> that represents the first instance of
   the <var>query</var> text that is fully contained within <var>searchRange</var>, optionally
@@ -3054,13 +3058,13 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
   word from the next. In such cases, and where the alphabet contains fewer
   than 100 characters, the dictionary must not contain more than 20% of the
   alphabet as valid, one-letter words. </p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="locale">locale</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑤">string</a> containing a valid <a data-link-type="biblio" href="#biblio-bcp47" title="Tags for Identifying Languages">[BCP47]</a> language tag, or the empty string. An empty string indicates that the primary
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="locale">locale</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑥">string</a> containing a valid <a data-link-type="biblio" href="#biblio-bcp47" title="Tags for Identifying Languages">[BCP47]</a> language tag, or the empty string. An empty string indicates that the primary
 language is unknown.</p>
-   <p>A substring is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="word-bounded">word bounded</dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑥">string</a> <var>text</var>,
+   <p>A substring is <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="word-bounded">word bounded</dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑦">string</a> <var>text</var>,
 given <a data-link-type="dfn" href="#locale" id="ref-for-locale">locales</a> <var>startLocale</var> and <var>endLocale</var>, if both the position of its
 first character <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary②">is at a word boundary</a> given <var>startLocale</var>, and the position
 after its last character <a data-link-type="dfn" href="#is-at-a-word-boundary" id="ref-for-is-at-a-word-boundary③">is at a word boundary</a> given <var>endLocale</var>.</p>
-   <p>A number <var>position</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="is-at-a-word-boundary">is at a word boundary</dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑦">string</a> <var>text</var>, given a <a data-link-type="dfn" href="#locale" id="ref-for-locale①">locale</a> <var>locale</var>, if, using <var>locale</var>, either a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary①">word
+   <p>A number <var>position</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="is-at-a-word-boundary">is at a word boundary</dfn> in a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string⑧">string</a> <var>text</var>, given a <a data-link-type="dfn" href="#locale" id="ref-for-locale①">locale</a> <var>locale</var>, if, using <var>locale</var>, either a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary①">word
 boundary</a> immediately precedes the <var>position</var>th code unit, or <var>text</var>’s length
 is more than 0 and <var>position</var> equals either 0 or <var>text</var>’s length.</p>
    <div class="note" role="note">
@@ -3339,7 +3343,7 @@ manipulations
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.4</span>
+   <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.3</span>
    <li><a href="#check-if-a-text-directive-can-be-scrolled">check if a text directive can be scrolled</a><span>, in § 3.5.4</span>
    <li><a href="#directives">directives</a><span>, in § 3.3</span>
    <li>
@@ -3349,7 +3353,7 @@ manipulations
      <li><a href="#she-directive-state">dfn for she</a><span>, in § 3.3.1</span>
     </ul>
    <li><a href="#text-directive-end">end</a><span>, in § 3.4</span>
-   <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.4</span>
+   <li><a href="#explicitchar">ExplicitChar</a><span>, in § 3.3.3</span>
    <li><a href="#find-a-range-from-a-node-list">find a range from a node list</a><span>, in § 3.6.1</span>
    <li><a href="#find-a-range-from-a-text-directive">find a range from a text directive</a><span>, in § 3.6.1</span>
    <li><a href="#find-a-string-in-range">find a string in range</a><span>, in § 3.6.1</span>
@@ -3359,7 +3363,7 @@ manipulations
     FragmentDirective
     <ul>
      <li><a href="#fragmentdirective">(interface)</a><span>, in § 3.9</span>
-     <li><a href="#fragmentdirectiveproduction">definition of</a><span>, in § 3.3.4</span>
+     <li><a href="#fragmentdirectiveproduction">definition of</a><span>, in § 3.3.3</span>
     </ul>
    <li><a href="#dom-document-fragmentdirective">fragmentDirective</a><span>, in § 3.9</span>
    <li><a href="#fragment-directive-delimiter">fragment directive delimiter</a><span>, in § 3.3</span>
@@ -3375,7 +3379,7 @@ manipulations
    <li><a href="#parse-the-fragment-directive">parse the fragment directive</a><span>, in § 3.4</span>
    <li><a href="#document-pending-text-directives">pending text directives</a><span>, in § 3.3.2</span>
    <li><a href="#percent-decode-a-text-directive-term">percent-decode a text directive term</a><span>, in § 3.4</span>
-   <li><a href="#percentencodedbyte">PercentEncodedByte</a><span>, in § 3.3.4</span>
+   <li><a href="#percentencodedbyte">PercentEncodedByte</a><span>, in § 3.3.3</span>
    <li><a href="#text-directive-prefix">prefix</a><span>, in § 3.4</span>
    <li><a href="#remove-the-fragment-directive">remove the fragment directive</a><span>, in § 3.3.1</span>
    <li><a href="#search-invisible">search invisible</a><span>, in § 3.6.1</span>
@@ -3383,22 +3387,22 @@ manipulations
    <li><a href="#text-directive-start">start</a><span>, in § 3.4</span>
    <li><a href="#text-directive-suffix">suffix</a><span>, in § 3.4</span>
    <li><a href="#text-directive">text directive</a><span>, in § 3.4</span>
-   <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.4</span>
+   <li><a href="#textdirective">TextDirective</a><span>, in § 3.3.3</span>
    <li><a href="#text-directive-allowing-mime-type">text directive allowing MIME type</a><span>, in § 3.5.4</span>
-   <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in § 3.3.4</span>
-   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in § 3.3.4</span>
-   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in § 3.3.4</span>
-   <li><a href="#textdirectivestring">TextDirectiveString</a><span>, in § 3.3.4</span>
-   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in § 3.3.4</span>
+   <li><a href="#textdirectiveexplicitchar">TextDirectiveExplicitChar</a><span>, in § 3.3.3</span>
+   <li><a href="#textdirectiveparameters">TextDirectiveParameters</a><span>, in § 3.3.3</span>
+   <li><a href="#textdirectiveprefix">TextDirectivePrefix</a><span>, in § 3.3.3</span>
+   <li><a href="#textdirectivestring">TextDirectiveString</a><span>, in § 3.3.3</span>
+   <li><a href="#textdirectivesuffix">TextDirectiveSuffix</a><span>, in § 3.3.3</span>
    <li>
     text directive user activation
     <ul>
      <li><a href="#document-text-directive-user-activation">dfn for document</a><span>, in § 3.5.4</span>
      <li><a href="#request-text-directive-user-activation">dfn for request</a><span>, in § 3.5.4</span>
     </ul>
-   <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.4</span>
+   <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.3</span>
    <li><a href="#navigation-params-user-involvement">user involvement</a><span>, in § 3.5.4</span>
-   <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.4</span>
+   <li><a href="#validtextdirective">ValidTextDirective</a><span>, in § 3.3.3</span>
    <li><a href="#directive-state-value">value</a><span>, in § 3.3.1</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.6.1</span>
    <li><a href="#word-boundary">word boundary</a><span>, in § 3.6.2</span>
@@ -4045,7 +4049,7 @@ window.dfnpanelData['8a051c9f'] = {"dfnID": "8a051c9f", "url": "https://html.spe
 window.dfnpanelData['5c1d019b'] = {"dfnID": "5c1d019b", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application", "dfnText": "update document for history step application", "refSections": [{"refs": [{"id": "ref-for-update-document-for-history-step-application"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application\u2460"}, {"id": "ref-for-update-document-for-history-step-application\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application\u2462"}], "title": "3.5.5. Restricting Scroll on Load"}], "external": true};
 window.dfnpanelData['34d2343e'] = {"dfnID": "34d2343e", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement", "dfnText": "user navigation involvement", "refSections": [{"refs": [{"id": "ref-for-user-navigation-involvement"}, {"id": "ref-for-user-navigation-involvement\u2460"}, {"id": "ref-for-user-navigation-involvement\u2461"}, {"id": "ref-for-user-navigation-involvement\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['53275e46'] = {"dfnID": "53275e46", "url": "https://infra.spec.whatwg.org/#list-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-list-append"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-list-append\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['2d5a2765'] = {"dfnID": "2d5a2765", "url": "https://infra.spec.whatwg.org/#ascii-string", "dfnText": "ascii string", "refSections": [{"refs": [{"id": "ref-for-ascii-string"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-ascii-string\u2460"}], "title": "3.3.4. Fragment directive grammar"}, {"refs": [{"id": "ref-for-ascii-string\u2461"}, {"id": "ref-for-ascii-string\u2462"}, {"id": "ref-for-ascii-string\u2463"}], "title": "3.4. Text Directives"}], "external": true};
+window.dfnpanelData['2d5a2765'] = {"dfnID": "2d5a2765", "url": "https://infra.spec.whatwg.org/#ascii-string", "dfnText": "ascii string", "refSections": [{"refs": [{"id": "ref-for-ascii-string"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-ascii-string\u2460"}, {"id": "ref-for-ascii-string\u2461"}, {"id": "ref-for-ascii-string\u2462"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['77b4c09a'] = {"dfnID": "77b4c09a", "url": "https://infra.spec.whatwg.org/#assert", "dfnText": "assert", "refSections": [{"refs": [{"id": "ref-for-assert"}, {"id": "ref-for-assert\u2460"}, {"id": "ref-for-assert\u2461"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-assert\u2462"}, {"id": "ref-for-assert\u2463"}, {"id": "ref-for-assert\u2464"}, {"id": "ref-for-assert\u2465"}, {"id": "ref-for-assert\u2466"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['7b0d918d'] = {"dfnID": "7b0d918d", "url": "https://infra.spec.whatwg.org/#iteration-break", "dfnText": "break", "refSections": [{"refs": [{"id": "ref-for-iteration-break"}, {"id": "ref-for-iteration-break\u2460"}, {"id": "ref-for-iteration-break\u2461"}, {"id": "ref-for-iteration-break\u2462"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['915aff5e'] = {"dfnID": "915aff5e", "url": "https://infra.spec.whatwg.org/#code-point", "dfnText": "code point", "refSections": [{"refs": [{"id": "ref-for-code-point"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
@@ -4066,7 +4070,7 @@ window.dfnpanelData['75bee4d5'] = {"dfnID": "75bee4d5", "url": "https://infra.sp
 window.dfnpanelData['0204d188'] = {"dfnID": "0204d188", "url": "https://infra.spec.whatwg.org/#list-size", "dfnText": "size", "refSections": [{"refs": [{"id": "ref-for-list-size"}, {"id": "ref-for-list-size\u2460"}, {"id": "ref-for-list-size\u2461"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['54627f47'] = {"dfnID": "54627f47", "url": "https://infra.spec.whatwg.org/#string-starts-with", "dfnText": "starts with", "refSections": [{"refs": [{"id": "ref-for-string-starts-with"}, {"id": "ref-for-string-starts-with\u2460"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['7a3dbdb1'] = {"dfnID": "7a3dbdb1", "url": "https://infra.spec.whatwg.org/#strictly-split", "dfnText": "strictly split a string", "refSections": [{"refs": [{"id": "ref-for-strictly-split"}, {"id": "ref-for-strictly-split\u2460"}], "title": "3.4. Text Directives"}], "external": true};
-window.dfnpanelData['0698d556'] = {"dfnID": "0698d556", "url": "https://infra.spec.whatwg.org/#string", "dfnText": "string", "refSections": [{"refs": [{"id": "ref-for-string"}, {"id": "ref-for-string\u2460"}, {"id": "ref-for-string\u2461"}, {"id": "ref-for-string\u2462"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-string\u2463"}], "title": "3.6.1. Finding Ranges in a Document"}, {"refs": [{"id": "ref-for-string\u2464"}, {"id": "ref-for-string\u2465"}, {"id": "ref-for-string\u2466"}], "title": "3.6.2. Word Boundaries"}], "external": true};
+window.dfnpanelData['0698d556'] = {"dfnID": "0698d556", "url": "https://infra.spec.whatwg.org/#string", "dfnText": "string", "refSections": [{"refs": [{"id": "ref-for-string"}], "title": "3.3.3. Fragment directive grammar"}, {"refs": [{"id": "ref-for-string\u2460"}, {"id": "ref-for-string\u2461"}, {"id": "ref-for-string\u2462"}, {"id": "ref-for-string\u2463"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-string\u2464"}], "title": "3.6.1. Finding Ranges in a Document"}, {"refs": [{"id": "ref-for-string\u2465"}, {"id": "ref-for-string\u2466"}, {"id": "ref-for-string\u2467"}], "title": "3.6.2. Word Boundaries"}], "external": true};
 window.dfnpanelData['984221ca'] = {"dfnID": "984221ca", "url": "https://infra.spec.whatwg.org/#struct", "dfnText": "struct", "refSections": [{"refs": [{"id": "ref-for-struct"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['7c195f8b'] = {"dfnID": "7c195f8b", "url": "https://mimesniff.spec.whatwg.org/#mime-type-essence", "dfnText": "essence", "refSections": [{"refs": [{"id": "ref-for-mime-type-essence"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['16785ec4'] = {"dfnID": "16785ec4", "url": "https://mimesniff.spec.whatwg.org/#mime-type", "dfnText": "mime type", "refSections": [{"refs": [{"id": "ref-for-mime-type"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
@@ -4074,7 +4078,7 @@ window.dfnpanelData['ed948033'] = {"dfnID": "ed948033", "url": "https://url.spec
 window.dfnpanelData['79fa146b'] = {"dfnID": "79fa146b", "url": "https://url.spec.whatwg.org/#fragment-percent-encode-set", "dfnText": "fragment percent-encode set", "refSections": [{"refs": [{"id": "ref-for-fragment-percent-encode-set"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['8f69ce41'] = {"dfnID": "8f69ce41", "url": "https://url.spec.whatwg.org/#string-percent-decode", "dfnText": "percent-decode", "refSections": [{"refs": [{"id": "ref-for-string-percent-decode"}], "title": "3.4. Text Directives"}], "external": true};
 window.dfnpanelData['dcffbccd'] = {"dfnID": "dcffbccd", "url": "https://url.spec.whatwg.org/#concept-url", "dfnText": "url", "refSections": [{"refs": [{"id": "ref-for-concept-url"}, {"id": "ref-for-concept-url\u2460"}, {"id": "ref-for-concept-url\u2461"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
-window.dfnpanelData['4bb788fe'] = {"dfnID": "4bb788fe", "url": "https://url.spec.whatwg.org/#url-code-points", "dfnText": "url code point", "refSections": [{"refs": [{"id": "ref-for-url-code-points"}, {"id": "ref-for-url-code-points\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": true};
+window.dfnpanelData['4bb788fe'] = {"dfnID": "4bb788fe", "url": "https://url.spec.whatwg.org/#url-code-points", "dfnText": "url code point", "refSections": [{"refs": [{"id": "ref-for-url-code-points"}, {"id": "ref-for-url-code-points\u2460"}], "title": "3.3.3. Fragment directive grammar"}], "external": true};
 window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "3.9. Feature Detectability"}], "external": true};
 window.dfnpanelData['a5c91173'] = {"dfnID": "a5c91173", "url": "https://webidl.spec.whatwg.org/#SameObject", "dfnText": "SameObject", "refSections": [{"refs": [{"id": "ref-for-SameObject"}], "title": "3.9. Feature Detectability"}], "external": true};
 window.dfnpanelData['fragment-directive'] = {"dfnID": "fragment-directive", "url": "#fragment-directive", "dfnText": "fragment directive", "refSections": [{"refs": [{"id": "ref-for-fragment-directive"}], "title": "3.2. Syntax"}, {"refs": [{"id": "ref-for-fragment-directive\u2460"}, {"id": "ref-for-fragment-directive\u2461"}], "title": "3.3. The Fragment Directive"}, {"refs": [{"id": "ref-for-fragment-directive\u2462"}, {"id": "ref-for-fragment-directive\u2463"}, {"id": "ref-for-fragment-directive\u2464"}, {"id": "ref-for-fragment-directive\u2465"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-fragment-directive\u2466"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-fragment-directive\u2467"}, {"id": "ref-for-fragment-directive\u2468"}, {"id": "ref-for-fragment-directive\u2460\u24ea"}], "title": "3.7.1. URLs in UA features"}, {"refs": [{"id": "ref-for-fragment-directive\u2460\u2460"}], "title": "3.7.1.1. Location Bar"}, {"refs": [{"id": "ref-for-fragment-directive\u2460\u2461"}, {"id": "ref-for-fragment-directive\u2460\u2462"}], "title": "3.7.1.2. Bookmarks"}, {"refs": [{"id": "ref-for-fragment-directive\u2460\u2463"}], "title": "3.7.1.3. Sharing"}], "external": false};
@@ -4085,17 +4089,18 @@ window.dfnpanelData['directive-state-value'] = {"dfnID": "directive-state-value"
 window.dfnpanelData['she-directive-state'] = {"dfnID": "she-directive-state", "url": "#she-directive-state", "dfnText": "directive state", "refSections": [{"refs": [{"id": "ref-for-she-directive-state"}, {"id": "ref-for-she-directive-state\u2460"}, {"id": "ref-for-she-directive-state\u2461"}, {"id": "ref-for-she-directive-state\u2462"}, {"id": "ref-for-she-directive-state\u2463"}, {"id": "ref-for-she-directive-state\u2464"}, {"id": "ref-for-she-directive-state\u2465"}, {"id": "ref-for-she-directive-state\u2466"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-she-directive-state\u2467"}, {"id": "ref-for-she-directive-state\u2468"}, {"id": "ref-for-she-directive-state\u2460\u24ea"}, {"id": "ref-for-she-directive-state\u2460\u2460"}], "title": "3.3.2. Applying directives to a document"}], "external": false};
 window.dfnpanelData['remove-the-fragment-directive'] = {"dfnID": "remove-the-fragment-directive", "url": "#remove-the-fragment-directive", "dfnText": "remove the fragment directive", "refSections": [{"refs": [{"id": "ref-for-remove-the-fragment-directive"}, {"id": "ref-for-remove-the-fragment-directive\u2460"}, {"id": "ref-for-remove-the-fragment-directive\u2461"}, {"id": "ref-for-remove-the-fragment-directive\u2462"}], "title": "3.3.1. Extracting the fragment directive"}], "external": false};
 window.dfnpanelData['document-pending-text-directives'] = {"dfnID": "document-pending-text-directives", "url": "#document-pending-text-directives", "dfnText": "pending text directives", "refSections": [{"refs": [{"id": "ref-for-document-pending-text-directives"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-document-pending-text-directives\u2460"}, {"id": "ref-for-document-pending-text-directives\u2461"}, {"id": "ref-for-document-pending-text-directives\u2462"}, {"id": "ref-for-document-pending-text-directives\u2463"}, {"id": "ref-for-document-pending-text-directives\u2464"}, {"id": "ref-for-document-pending-text-directives\u2465"}, {"id": "ref-for-document-pending-text-directives\u2466"}, {"id": "ref-for-document-pending-text-directives\u2467"}, {"id": "ref-for-document-pending-text-directives\u2468"}, {"id": "ref-for-document-pending-text-directives\u2460\u24ea"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-document-pending-text-directives\u2460\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
-window.dfnpanelData['fragmentdirectiveproduction'] = {"dfnID": "fragmentdirectiveproduction", "url": "#fragmentdirectiveproduction", "dfnText": "FragmentDirective", "refSections": [{"refs": [{"id": "ref-for-fragmentdirectiveproduction"}, {"id": "ref-for-fragmentdirectiveproduction\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['unknowndirective'] = {"dfnID": "unknowndirective", "url": "#unknowndirective", "dfnText": "UnknownDirective", "refSections": [{"refs": [{"id": "ref-for-unknowndirective"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['characterstring'] = {"dfnID": "characterstring", "url": "#characterstring", "dfnText": "CharacterString", "refSections": [{"refs": [{"id": "ref-for-characterstring"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['explicitchar'] = {"dfnID": "explicitchar", "url": "#explicitchar", "dfnText": "ExplicitChar", "refSections": [{"refs": [{"id": "ref-for-explicitchar"}, {"id": "ref-for-explicitchar\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirective'] = {"dfnID": "textdirective", "url": "#textdirective", "dfnText": "TextDirective", "refSections": [{"refs": [{"id": "ref-for-textdirective"}, {"id": "ref-for-textdirective\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirectiveparameters'] = {"dfnID": "textdirectiveparameters", "url": "#textdirectiveparameters", "dfnText": "TextDirectiveParameters", "refSections": [{"refs": [{"id": "ref-for-textdirectiveparameters"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirectiveprefix'] = {"dfnID": "textdirectiveprefix", "url": "#textdirectiveprefix", "dfnText": "TextDirectivePrefix", "refSections": [{"refs": [{"id": "ref-for-textdirectiveprefix"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirectivesuffix'] = {"dfnID": "textdirectivesuffix", "url": "#textdirectivesuffix", "dfnText": "TextDirectiveSuffix", "refSections": [{"refs": [{"id": "ref-for-textdirectivesuffix"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirectivestring'] = {"dfnID": "textdirectivestring", "url": "#textdirectivestring", "dfnText": "TextDirectiveString", "refSections": [{"refs": [{"id": "ref-for-textdirectivestring"}, {"id": "ref-for-textdirectivestring\u2460"}, {"id": "ref-for-textdirectivestring\u2461"}, {"id": "ref-for-textdirectivestring\u2462"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['textdirectiveexplicitchar'] = {"dfnID": "textdirectiveexplicitchar", "url": "#textdirectiveexplicitchar", "dfnText": "TextDirectiveExplicitChar", "refSections": [{"refs": [{"id": "ref-for-textdirectiveexplicitchar"}, {"id": "ref-for-textdirectiveexplicitchar\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
-window.dfnpanelData['percentencodedbyte'] = {"dfnID": "percentencodedbyte", "url": "#percentencodedbyte", "dfnText": "PercentEncodedByte", "refSections": [{"refs": [{"id": "ref-for-percentencodedbyte"}, {"id": "ref-for-percentencodedbyte\u2460"}], "title": "3.3.4. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['fragmentdirectiveproduction'] = {"dfnID": "fragmentdirectiveproduction", "url": "#fragmentdirectiveproduction", "dfnText": "FragmentDirective", "refSections": [{"refs": [{"id": "ref-for-fragmentdirectiveproduction"}, {"id": "ref-for-fragmentdirectiveproduction\u2460"}, {"id": "ref-for-fragmentdirectiveproduction\u2461"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirective'] = {"dfnID": "textdirective", "url": "#textdirective", "dfnText": "TextDirective", "refSections": [{"refs": [{"id": "ref-for-textdirective"}, {"id": "ref-for-textdirective\u2460"}, {"id": "ref-for-textdirective\u2461"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['unknowndirective'] = {"dfnID": "unknowndirective", "url": "#unknowndirective", "dfnText": "UnknownDirective", "refSections": [{"refs": [{"id": "ref-for-unknowndirective"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['characterstring'] = {"dfnID": "characterstring", "url": "#characterstring", "dfnText": "CharacterString", "refSections": [{"refs": [{"id": "ref-for-characterstring"}, {"id": "ref-for-characterstring\u2460"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['explicitchar'] = {"dfnID": "explicitchar", "url": "#explicitchar", "dfnText": "ExplicitChar", "refSections": [{"refs": [{"id": "ref-for-explicitchar"}, {"id": "ref-for-explicitchar\u2460"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['validtextdirective'] = {"dfnID": "validtextdirective", "url": "#validtextdirective", "dfnText": "ValidTextDirective", "refSections": [{"refs": [{"id": "ref-for-validtextdirective"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirectiveparameters'] = {"dfnID": "textdirectiveparameters", "url": "#textdirectiveparameters", "dfnText": "TextDirectiveParameters", "refSections": [{"refs": [{"id": "ref-for-textdirectiveparameters"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirectiveprefix'] = {"dfnID": "textdirectiveprefix", "url": "#textdirectiveprefix", "dfnText": "TextDirectivePrefix", "refSections": [{"refs": [{"id": "ref-for-textdirectiveprefix"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirectivesuffix'] = {"dfnID": "textdirectivesuffix", "url": "#textdirectivesuffix", "dfnText": "TextDirectiveSuffix", "refSections": [{"refs": [{"id": "ref-for-textdirectivesuffix"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirectivestring'] = {"dfnID": "textdirectivestring", "url": "#textdirectivestring", "dfnText": "TextDirectiveString", "refSections": [{"refs": [{"id": "ref-for-textdirectivestring"}, {"id": "ref-for-textdirectivestring\u2460"}, {"id": "ref-for-textdirectivestring\u2461"}, {"id": "ref-for-textdirectivestring\u2462"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['textdirectiveexplicitchar'] = {"dfnID": "textdirectiveexplicitchar", "url": "#textdirectiveexplicitchar", "dfnText": "TextDirectiveExplicitChar", "refSections": [{"refs": [{"id": "ref-for-textdirectiveexplicitchar"}, {"id": "ref-for-textdirectiveexplicitchar\u2460"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
+window.dfnpanelData['percentencodedbyte'] = {"dfnID": "percentencodedbyte", "url": "#percentencodedbyte", "dfnText": "PercentEncodedByte", "refSections": [{"refs": [{"id": "ref-for-percentencodedbyte"}, {"id": "ref-for-percentencodedbyte\u2460"}], "title": "3.3.3. Fragment directive grammar"}], "external": false};
 window.dfnpanelData['text-directive'] = {"dfnID": "text-directive", "url": "#text-directive", "dfnText": "text directive", "refSections": [{"refs": [{"id": "ref-for-text-directive"}], "title": "3.2. Syntax"}, {"refs": [{"id": "ref-for-text-directive\u2460"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-text-directive\u2461"}, {"id": "ref-for-text-directive\u2462"}, {"id": "ref-for-text-directive\u2463"}, {"id": "ref-for-text-directive\u2464"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive\u2465"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-text-directive\u2466"}, {"id": "ref-for-text-directive\u2467"}], "title": "3.5.1. Motivation"}, {"refs": [{"id": "ref-for-text-directive\u2468"}], "title": "3.5.3. Search Timing"}, {"refs": [{"id": "ref-for-text-directive\u2460\u24ea"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-text-directive\u2460\u2460"}, {"id": "ref-for-text-directive\u2460\u2461"}, {"id": "ref-for-text-directive\u2460\u2462"}], "title": "3.6.1. Finding Ranges in a Document"}, {"refs": [{"id": "ref-for-text-directive\u2460\u2463"}], "title": "4. Generating Text Fragment Directives"}, {"refs": [{"id": "ref-for-text-directive\u2460\u2464"}, {"id": "ref-for-text-directive\u2460\u2465"}, {"id": "ref-for-text-directive\u2460\u2466"}], "title": "4.2. Use Context Only When Necessary"}, {"refs": [{"id": "ref-for-text-directive\u2460\u2467"}, {"id": "ref-for-text-directive\u2460\u2468"}], "title": "4.3. Determine If Fragment Id Is Needed"}], "external": false};
 window.dfnpanelData['text-directive-start'] = {"dfnID": "text-directive-start", "url": "#text-directive-start", "dfnText": "start", "refSections": [{"refs": [{"id": "ref-for-text-directive-start"}, {"id": "ref-for-text-directive-start\u2460"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive-start\u2461"}, {"id": "ref-for-text-directive-start\u2462"}, {"id": "ref-for-text-directive-start\u2463"}, {"id": "ref-for-text-directive-start\u2464"}, {"id": "ref-for-text-directive-start\u2465"}, {"id": "ref-for-text-directive-start\u2466"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
 window.dfnpanelData['text-directive-end'] = {"dfnID": "text-directive-end", "url": "#text-directive-end", "dfnText": "end", "refSections": [{"refs": [{"id": "ref-for-text-directive-end"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive-end\u2460"}, {"id": "ref-for-text-directive-end\u2461"}, {"id": "ref-for-text-directive-end\u2462"}, {"id": "ref-for-text-directive-end\u2463"}, {"id": "ref-for-text-directive-end\u2464"}, {"id": "ref-for-text-directive-end\u2465"}, {"id": "ref-for-text-directive-end\u2466"}, {"id": "ref-for-text-directive-end\u2467"}, {"id": "ref-for-text-directive-end\u2468"}, {"id": "ref-for-text-directive-end\u2460\u24ea"}, {"id": "ref-for-text-directive-end\u2460\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
