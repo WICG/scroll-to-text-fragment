@@ -606,12 +606,10 @@ state=] to apply the directives associated with a session history entry to a [=/
 
 >   <strong>Monkeypatching [[DOM#interface-document]]:</strong>
 >
->   Each document has an associated <dfn for="Document">uninvoked directives</dfn> which is either
->   null or an ASCII string holding data used by the UA to process the resource. It is initially
->   null.
+>   Each document has an associated <dfn for="Document">pending text directives</dfn> which is either
+>   null or an <a spec=infra>list</a> of [=text directives=]. It is initially null.
 
-In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application">
-update document for history step application</a>:
+In the definition of <a spec="HTML">update document for history step application</a>:
 
 >   <strong>Monkeypatching [[HTML#updating-the-document]]:</strong>
 >
@@ -621,19 +619,34 @@ update document for history step application</a>:
 >         <li value="4">Set |document|'s history object's length to scriptHistoryLength</li>
 >     5. If <var ignore>documentsEntryChanged</var> is true, then:
 >         1. Let <var ignore>oldURL</var> be |document|'s latest entry's URL.
->         2. <span class="diff">If |document|'s latest entry's [=she/directive state=] is not |entry|'s
->             [=she/directive state=] then set |document|'s [=Document/uninvoked directives=] to |entry|'s
->             [=she/directive state=]'s [=directive state/value=].</span>
+>         2. <div class="diff">If |document|'s latest entry's [=she/directive state=] is not
+>             |entry|'s [=she/directive state=] then:
+>             1. Let |fragment directive| be |entry|'s [=she/directive state=]'s
+>                 [=directive state/value=].
+>             1. Set |document|'s [=Document/pending text directives=] to the result of [=parse the
+>                 fragment directive|parsing=] |fragment directive|.
+>                 </div>
 >         3. Set |document|'s latest entry to |entry|
 >         4. ...
 >   </div>
 
-### Parsing the fragment directive ### {#parsing-the-fragment-directive}
-
 ### Fragment directive grammar ### {#fragment-directive-grammar}
 
-An <a spec=infra>ASCII string</a> is a <dfn>valid fragment directive</dfn> if
-it matches the production:
+Note: This section is non-normative.
+
+Note: This grammar is provided as a convenient reference; however, the rules and steps for parsing
+are specified imperatively in the [[#text-directives]] section. Where this grammar differs in
+behavior from the steps of that section, the steps there are to be taken as the authoritative source
+of truth.
+
+The [=FragmentDirective=] can contain multiple directives split by the "&" character. Currently this
+means we allow multiple text directives to enable multiple indicated strings in the page, but this
+also allows for future directive types to be added and combined. For extensibility, we do not fail
+to parse if an unknown directive is in the &-separated list of directives.
+
+A <a spec=infra>string</a> is a valid fragment directive if it matches the EBNF (Extended
+Backus-Naur Form) production:
+
 <dl>
   <dt>
     <dfn id="fragmentdirectiveproduction">`FragmentDirective`</dfn> `::=`
@@ -642,16 +655,22 @@ it matches the production:
     <code>([=TextDirective=] | [=UnknownDirective=]) ("&" [=FragmentDirective=])?</code>
   </dd>
   <dt>
+    <dfn>`TextDirective`</dfn> `::=`
+  </dt>
+  <dd>
+    <code>"text="[=CharacterString=]</code>
+  </dd>
+  <dt>
     <dfn>`UnknownDirective`</dfn> `::=`
   </dt>
   <dd>
-    <code>[=CharacterString=]</code>
+    <code>[=CharacterString=] - [=TextDirective=]</code>
   </dd>
   <dt>
     <dfn>`CharacterString`</dfn> `::=`
   </dt>
   <dd>
-    <code>([=ExplicitChar=] | [=PercentEncodedByte=])+</code>
+    <code>([=ExplicitChar=] | [=PercentEncodedByte=])*</code>
   </dd>
   <dt>
     <dfn>`ExplicitChar`</dfn> `::=`
@@ -665,16 +684,10 @@ it matches the production:
   </dd>
 </dl>
 
-<div class="note">
-  The [=FragmentDirective=] can contain multiple directives split by the "&"
-  character. Currently this means we allow multiple text directives to enable
-  multiple indicated strings in the page, but this also allows for future
-  directive types to be added and combined. For extensibility, we do not fail to
-  parse if an unknown directive is in the &-separated list of directives.
-</div>
+A [=TextDirective=] is considered valid if it matches the following production:
 
 <dl>
-  <dt><dfn>`TextDirective`</dfn> `::=`</dt>
+  <dt><dfn>`ValidTextDirective`</dfn> `::=`</dt>
   <dd><code>"text=" [=TextDirectiveParameters=]</code></dd>
   <dt><dfn>`TextDirectiveParameters`</dfn> `::=`</dt>
   <dd>
@@ -696,10 +709,10 @@ it matches the production:
     ";" | "=" | "?" | "@" | "_" | "~"
     </code>
   <div class = "note">
-    A [=TextDirectiveExplicitChar=] is any [=URL code point=] that is not
-    explicitly used in the [=TextDirective=] syntax, that is "&", "-", and ",".
-    If a text fragment refers to a "&", "-", or "," character in the document,
-    it will be percent-encoded in the fragment.
+    A [=TextDirectiveExplicitChar=] is any [=URL code point=] that is not explicitly used in the
+    [=FragmentDirective=] or [=ValidTextDirective=] syntax, that is "&", "-", and ",".  If a text
+    fragment refers to a "&", "-", or "," character in the document, it will be percent-encoded in
+    the fragment.
   </div>
   </dd>
   <dt><dfn>`PercentEncodedByte`</dfn> `::=`</dt>
@@ -721,77 +734,120 @@ of these items.
 See [[#syntax]] for the what each of these components means and how they're
 used.
 
-<div algorithm="parse a text directive">
-
-To <dfn>parse a text directive</dfn>, on an <a spec="infra">ASCII string</a> |text
-directive input|, run these steps:
-
-<div class="note">
-  <p>
-    This algorithm takes a single text directive string as input (e.g.
-    "text=prefix-,foo,bar") and attempts to parse the string into the
-    components of the directive (e.g. ("prefix", "foo", "bar", null)). See
-    [[#syntax]] for the what each of these components means and how they're
-    used.
-  </p>
-  <p>
-    Returns null if the input is invalid or fails to parse in any way.
-    Otherwise, returns a [=text directive=].
-  </p>
-</div>
+<div algorithm="percent-decode a text directive term">
+  To <dfn>percent-decode a text directive term</dfn> given an input <a spec=infra>string</a> |term|:
 
   <ol class="algorithm">
-    1. [=/Assert=]: |text directive input| matches the production [=TextDirective=].
-    1. Let |textDirectiveString| be the substring of |text directive
-        input| starting at index 5.
-        <div class="note">
-          This is the remainder of the |text directive input| following,
-          but not including, the "text=" prefix.
-        </div>
-    1. Let |tokens| be a <a for=/>list</a> of strings that is the result of
-        <a lt="split on commas">splitting |textDirectiveString| on commas</a>.
-    1. If |tokens| has size less than 1 or greater than 4, return null.
-    1. If any of |tokens|'s items are the empty string, return null.
-    1. Let |retVal| be a [=text directive=] with each of its items initialized
-        to null.
-    1. Let |potential prefix| be the first item of |tokens|.
-    1. If the last character of |potential prefix| is U+002D (-), then:
-        1. Set |retVal|'s [=text directive/prefix=] to the
-            [=string/percent-decode|percent-decoding=] of the result of removing the
-            last character from |potential prefix|.
-        1. <a spec=infra for=list>Remove</a> the first item of the list |tokens|.
-    1. Let |potential suffix| be the last item of |tokens|, if one exists, null
-        otherwise.
-    1. If |potential suffix| is non-null and its first character is U+002D (-),
-        then:
-        1. Set |retVal|'s [=text directive/suffix=] to the
-            [=string/percent-decode|percent-decoding=] of the result of removing the
-            first character from |potential suffix|.
-        1. <a spec=infra for=list>Remove</a> the last item of the list |tokens|.
-    1. If |tokens| has <a spec=infra for=list>size</a> not equal to 1 nor 2 then
-        return null.
-    1. Set |retVal|'s [=text directive/start=] be the
-        [=string/percent-decode|percent-decoding=] of the first item of |tokens|.
-    1. If |tokens| has <a spec=infra for=list>size</a> 2, then set |retVal|'s
-        [=text directive/end=] be the
-        [=string/percent-decode|percent-decoding=] of the last item of |tokens|.
-    1. Return |retVal|.
+    1. If |term| is null, return null.
+    1. <a spec=infra>Assert</a>: |term| is an <a spec=infra>ASCII string</a>.
+    1. Let |decoded bytes| be the result of <a spec=url for=string
+        lt="percent-decode">percent-decoding</a> |term|.
+    1. Return the result of running <a spec=encoding>UTF-8 decode without BOM</a> on |decoded
+        bytes|.
   </ol>
+</div>
+
+<div algorithm="parse a text directive">
+  To <dfn>parse a text directive</dfn>, on an <a spec="infra">string</a> |text
+  directive value|, run these steps:
+
+  <div class="note">
+    <p>
+      This algorithm takes a single text directive value string as input (e.g.  "prefix-,foo,bar") and
+      attempts to parse the string into the components of the directive (e.g. ("prefix", "foo", "bar",
+      null)). See [[#syntax]] for the what each of these components means and how they're used.
+    </p>
+    <p>
+      Returns null if the input is invalid. Otherwise, returns a [=text directive=].
+    </p>
+  </div>
+
+  <ol class="algorithm">
+    1. Let |prefix|, |suffix|, |start|, |end|, each be null.
+    1. <a spec="infra">Assert</a>: |text directive value| is an <a spec="infra">ASCII string</a>
+        with no code points in the <a spec="URL">fragment percent-encode set</a> and no instances of
+        U+0026 (&).
+    1. Let |tokens| be a <a for=/>list</a> of <a spec="infra">strings</a> that result from
+        <a lt="strictly split a string">strictly splitting</a> |text directive value| on U+002C (,).
+    1. If |tokens| has <a for=list>size</a> less than 1 or greater than 4, return null.
+    1. If the first item of |tokens| <a spec=infra for=string>ends with</a> U+002D (-):
+        1. Set |prefix| to the <a spec=infra lt="code point substring">substring</a> of |tokens|[0]
+            from 0 with length |tokens|[0]'s <a spec=infra for=string lt="code point
+            length">length</a> - 1.
+        1. Remove the first item of |tokens|.
+        1. If |prefix| is the empty string or contains any instances of U+002D (-), return null.
+        1. If |tokens| is <a spec="infra" for="list">empty</a>, return null.
+    1. If the last item of |tokens| <a spec=infra for=string>starts with</a> U+002D (-):
+        1. Set |suffix| to the <a spec=infra lt="code point substring to the end of the
+            string">substring</a> of the last item of |tokens| from 1 to the end of the string.
+        1. Remove the last item of |tokens|.
+        1. If |suffix| is the empty string or contains any instances of U+002D (-), return null.
+        1. If |tokens| is <a spec="infra" for="list">empty</a>, return null.
+    1. If |tokens| has <a spec=infra for=list>size</a> greater than 2, return null.
+    1. <a spec=infra>Assert</a>: |tokens| has <a spec=infra for=list>size</a> 1 or 2.
+    1. Set |start| to the first item in |tokens|.
+    1. Remove the first item in |tokens|.
+    1. If |start| is the empty string or contains any instances of U+002D (-), return null.
+    1. If |tokens| is not <a spec=infra for=list>empty</a>:
+        1. Set |end| to the first item in |tokens|.
+        1. If |end| is the empty string or contains any instances of U+002D (-), return null.
+    1. Return a new [=text directive=], with
+        <dl class="props">
+          <dt>[=text directive/prefix=]</dt>
+          <dd>The [=percent-decode a text directive term|percent-decoding=] of |prefix|</dd>
+          <dt>[=text directive/start=]</dt>
+          <dd>The [=percent-decode a text directive term|percent-decoding=] of |start|</dd>
+          <dt>[=text directive/end=]</dt>
+          <dd>The [=percent-decode a text directive term|percent-decoding=] of |end|</dd>
+          <dt>[=text directive/suffix=]</dt>
+          <dd>The [=percent-decode a text directive term|percent-decoding=] of |suffix|</dd>
+        </dl>
+  </ol>
+</div>
+
+<div algorithm="parse the fragment directive">
+
+To <dfn>parse the fragment directive</dfn>, an an <a spec="infra">ASCII string</a> |fragment
+directive|, run these steps:
+
+<div class="note">
+  This algorithm takes the fragment directive string (i.e. the part that follows ":~:") and returns
+  a list of [=text directive=] objects parsed from that string. Can return an empty list.
+</div>
+
+<ol class="algorithm">
+  1. Let |directives| be the result of <a spec="infra" lt="strictly split a string">strictly
+      splitting</a> |fragment directive| on U+0026 (&).
+  1. Let |output| be an initially empty <a spec="infra">list</a> of [=text directives=].
+  1. <a spec="infra" for="list">For each</a> <a spec="infra">string</a> |directive| in |directives|:
+      1. If |directive| does not <a spec="infra" lt="starts with" for="string">start with</a>
+          "<code>text=</code>", then <a spec="infra" for="iteration">continue</a>.
+      1. Let |text directive value| be the <a spec="infra" lt="code point substring to the end of
+          the string">code point substring</a> from 5 to the end of |directive|.
+          <div class="note">Note: this may be the empty string.</div>
+      1. Let |parsed text directive| be the result of [=parse a text directive|parsing=] |text
+          directive value|.
+      1. If |parsed text directive| is non-null, <a spec="infra" for="list">append</a> it to
+          |output|.
+  1. Return |output|.
+
+</ol>
+
 </div>
 
 ### Invoking Text Directives ### {#invoking-text-directives}
 
-This section describes how text directives in a document's [=Document/uninvoked directives=] are
+This section describes how text directives in a document's [=Document/pending text directives=] are
 processed and invoked to cause indication of the relevant text passages.
 
 <div class="note">
     The summarized changes in this section:
 
-    * Modify the indicated part processing model to try processing [=Document/uninvoked directives=]
+    * Modify the indicated part processing model to try processing [=Document/pending text directives=]
         into a [=range=] that will be returned as the indicated part.
     * Modify "scrolling to a fragment" to correctly scroll and set the Document's target element in the case
         of a [=range=] based indicated part.
-    * Ensure [=Document/uninvoked directives=] is reset to null when the user agent has finished the
+    * Ensure [=Document/pending text directives=] is reset to null when the user agent has finished the
         fragment search for the current navigation/traversal.
     * If the user agent finishes searching for a text directive, ensure it tries the regular
         fragment as a fallback.
@@ -806,11 +862,11 @@ indicated part</a>, enable a fragment to indicate a [=range=]. Make the followin
 >   For an HTML document |document|, the following processing model must be followed to determine
 >   its indicated part:
 >
->   1. <span class="diff">Let |directives| be the document's [=Document/uninvoked directives=].
+>   1. <span class="diff">Let |text directives| be the document's [=Document/pending text directives=].
 >       </span>
->   1. <span class="diff">If |directives| is non-null then:</span>
+>   1. <span class="diff">If |text directives| is non-null then:</span>
 >       1. <span class="diff">Let |ranges| be a <a spec=infra>list</a> that is the result of running
->           the [=invoke text directives=] steps with |directives| and the document.</span>
+>           the [=invoke text directives=] steps with |text directives| and the document.</span>
 >       1. <span class="diff">If |ranges| is non-empty, then:</span>
 >           1. <span class="diff">Let |firstRange| be the first item of |ranges|.</span>
 >           1. <span class="diff">Visually indicate each [=range=] in |ranges| in an
@@ -885,7 +941,7 @@ prevent fragment scrolling if the force-load-at-top policy is enabled. Make the 
 >
 >   </div>
 
-The next two monkeypatches ensure the user agent clears [=Document/uninvoked directives=] when
+The next two monkeypatches ensure the user agent clears [=Document/pending text directives=] when
 the fragment search is complete. In the case where a text directive search finishes because parsing
 has stopped, it tries one more search for a non-text directive fragment.
 
@@ -906,17 +962,17 @@ try to scroll to the fragment</a>:
 >           abort these steps.</strike>
 >           <li value="1" class="diff">If the user agent has reason to believe the user is no longer interested in scrolling to
 >           the fragment, then:</span>
->           1. <span class="diff">Set [=Document/uninvoked directives=] to null.</span>
+>           1. <span class="diff">Set [=Document/pending text directives=] to null.</span>
 >           1. <span class="diff">Abort these steps.</span>
 >       1. <span class="diff">If the document has no parser, or its parser has stopped parsing,
 >           then:</li>
->           1. <span class="diff">If [=Document/uninvoked directives=] is not null, then:</span>
->               1. <span class="diff">Set [=Document/uninvoked directives=] to null.</span>
+>           1. <span class="diff">If [=Document/pending text directives=] is not null, then:</span>
+>               1. <span class="diff">Set [=Document/pending text directives=] to null.</span>
 >               1. <span class="diff"><a spec=HTML>Scroll to the fragment</a> given |document|.</span>
 >           1. <span class="diff">Abort these steps.</span>
 >       2. Scroll to the fragment given document.
 >       3. If document's indicated part is still null, then try to scroll to the fragment for
->           document. <span class="diff">Otherwise, set [=Document/uninvoked directives=] to
+>           document. <span class="diff">Otherwise, set [=Document/pending text directives=] to
 >           null.</span>
 
 In the definition of
@@ -930,7 +986,7 @@ navigate to a fragment</a>:
 >         <li value="8">Update document for history step application given navigable's active
 >         document, historyEntry, true, scriptHistoryIndex, and scriptHistoryLength. </li>
 >     9. Scroll to the fragment given navigable's active document.
->         <li class="diff">Set |navigable|'s active document's [=Document/uninvoked directives=] to
+>         <li class="diff">Set |navigable|'s active document's [=Document/pending text directives=] to
 >         null.</li>
 >     11. Let traversable be navigable's traversable navigable.
 >     12. ...
@@ -1264,7 +1320,7 @@ Issue: Is this valid to say in the HTML spec?
   |user involvement|, follow these steps:
 
   <ol class="algorithm">
-    1. If |document|'s [=Document/uninvoked directives=] field is null or empty, return false.
+    1. If |document|'s [=Document/pending text directives=] field is null or empty, return false.
     1. Let |is user involved| be true if: |document|'s [=document/text directive user activation=] is
         true, or |user involvement| is one of "<code>activation</code>" or "<code>browser
         UI</code>"; false otherwise.
@@ -1645,35 +1701,20 @@ To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
 </div>
 
 <div algorithm="invoke text directives">
-To <dfn>invoke text directives</dfn>, given as input an <a
-spec=infra>ASCII string</a> |text directives| and a [=/Document=]
-|document|, run these steps:
+  To <dfn>invoke text directives</dfn>, given as input a <a spec=infra>list</a> of [=text
+  directives=] |text directives| and a [=/Document=] |document|, run these steps:
 
-<div class="note">
-  This algorithm takes as input a |text directives|, that is the
-  raw text of the fragment directive and the |document| over which it operates.
-  It returns a <a spec=infra>list</a> of [=ranges=] that are to be visually
-  indicated, the first of which will be scrolled into view (if the UA scrolls
-  automatically).
-</div>
+  <div class="note">
+    This algorithm returns a <a spec=infra>list</a> of [=ranges=] that are to be visually indicated,
+    the first of which will be scrolled into view (if the UA scrolls automatically).
+  </div>
 
   <ol class="algorithm">
-    1. If |text directives| is not a [=valid fragment directive=], then
-        return an empty <a spec=infra>list</a>.
-    2. Let |directives| be a <a spec=infra>list</a> of <a spec=infra>ASCII string</a>s
-        that is the result of [=strictly split a string|strictly splitting the
-        string=] |text directives| on "&".
-    3. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
-    4. For each <a spec=infra>ASCII string</a> |directive| of |directives|:
-        1. If |directive| does not match the production [=TextDirective=],
-            then [=iteration/continue=].
-        1. Let |parsedValues| be the result of running the [=parse a text
-            directive=] steps on |directive|.
-        1. If |parsedValues| is null then [=iteration/continue=].
-        1. If the result of running [=find a range from a text directive=] given
-            |parsedValues| and |document| is non-null, then [=list/append=] it to
-            |ranges|.
-    5. Return |ranges|.
+    1. Let |ranges| be a <a spec=infra>list</a> of [=ranges=], initially empty.
+    1. <a spec=infra for=list>For each</a> [=text directive=] |directive| of |text directives|:
+        1. If the result of running [=find a range from a text directive=] given |directive| and
+            |document| is non-null, then [=list/append=] it to |ranges|.
+    1. Return |ranges|.
   </ol>
 </div>
 
