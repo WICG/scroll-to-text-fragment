@@ -27,10 +27,19 @@ spec:dom; type:dfn; for:range; text:start
 spec:dom; type:dfn; text:parent element
 spec:dom; type:dfn; text:range
 spec:html; type:element; text:link
-spec:html; type:dfn; for:/; text:origin
 spec:html; type:element; text:script
 spec:html; type:element; text:style
 spec:url; type:dfn; text:fragment
+</pre>
+
+<pre class="anchors">
+spec:html; type:dfn; for:browsing context; text:group; url: https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group
+spec:html; type:dfn; for:/; text:navigable; url: https://html.spec.whatwg.org/multipage/document-sequences.html#navigable
+spec:html; type:dfn; for:/; text:origin; url: https://html.spec.whatwg.org/multipage/browsers.html#concept-origin
+spec:html; type:dfn; text:user navigation involvement; url: https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement
+spec:html; type:dfn; for:document state; text:initiator origin; url: https://html.spec.whatwg.org/multipage/browsing-the-web.html#document-state-initiator-origin
+spec:html; type:dfn; for:/; text:document state; url: https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document-state
+spec:html; type:dfn; for:she; text:document; url: https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document
 </pre>
 
 <pre class="biblio">
@@ -593,7 +602,7 @@ The section above described how the [=fragment directive=] is separated from the
 session history entry.
 
 This section defines how and when navigations and traversals make use of history entry's [=she/directive
-state=] to apply the directives associated with a session history entry to a [=Document=].
+state=] to apply the directives associated with a session history entry to a [=/Document=].
 
 >   <strong>Monkeypatching [[DOM#interface-document]]:</strong>
 >
@@ -799,8 +808,7 @@ indicated part</a>, enable a fragment to indicate a [=range=]. Make the followin
 >
 >   1. <span class="diff">Let |directives| be the document's [=Document/uninvoked directives=].
 >       </span>
->   1. <span class="diff">If |directives| is non-null and |document|'s [=document/allow text
->       fragment scroll=] is true then:</span>
+>   1. <span class="diff">If |directives| is non-null then:</span>
 >       1. <span class="diff">Let |ranges| be a <a spec=infra>list</a> that is the result of running
 >           the [=invoke text directives=] steps with |directives| and the document.</span>
 >       1. <span class="diff">If |ranges| is non-empty, then:</span>
@@ -821,7 +829,7 @@ indicated part</a>, enable a fragment to indicate a [=range=]. Make the followin
 >
 >   </div>
 
-In <a spec=HTML>scroll to the fragment</a>, handle a indicated part that is a [=range=] and also
+In <a spec=HTML>scroll to the fragment</a>, handle an indicated part that is a [=range=] and also
 prevent fragment scrolling if the force-load-at-top policy is enabled. Make the following changes:
 
 >   <strong>Monkeypatching [[HTML#scrolling-to-a-fragment]]:</strong>
@@ -861,7 +869,7 @@ prevent fragment scrolling if the force-load-at-top policy is enabled. Make the 
 >           <div class="note">
 >             Scrolling to a text directive centers it in the block flow direction.
 >           </div>
->       10. <strike class="diff">Scroll target into view, with behavior set to "auto", block set to
+>       10. <strike class="diff">Scroll |target| into view, with behavior set to "auto", block set to
 >           "start", and inline set to "nearest".</strike>
 >
 >           <li value="10"><span class="diff">[=scroll a target into view=],
@@ -1053,11 +1061,28 @@ This specification does not specify exactly how a UA achieves this as there are
 multiple solutions with differing tradeoffs. For example, a UA <em>may</em>
 continue to walk the tree even after a match is found in [=find a range from a
 text directive=].  Alternatively, it <em>may</em> schedule an asynchronous task
-to find and set the [=Document=]'s indicated part.
+to find and set the [=/Document=]'s indicated part.
 
 ### Restricting the Text Fragment ### {#restricting-the-text-fragment}
 
-Amend the definition of a [=/request=] and of a [=Document=] to include a new
+<div class="note">
+  This section integrates with HTML navigation to restrict when an indicated text directive will
+  be allowed to scroll. In summary:
+
+  * Add a boolean <code>text directive user activation</code> to both Document and Request. This
+      flag is set on a document when created from a user activated navigation and consumed if a text
+      directive is scrolled. If unconsumed, it can be transfered to an outgoing navigation request.
+      This implements the user-activation-through-redirects behavior described in the note below.
+  * Define a series of checks, performed on a document and the user involvement and initiator origin
+      state of a navigation, to determine whether a text directive should be allowed to perform a
+      scroll.
+  * Compute the scroll permission from "finalize a cross document navigation" and from "navigate to
+      a fragment steps" and plumb it through to the "scroll to the fragment" steps where its used to
+      abort a text directive scroll.
+
+</div>
+
+Amend the definition of a [=/request=] and of a [=/Document=] to include a new
 boolean [=document/text directive user activation=] field:
 
 >   <strong>Monkeypatching [[FETCH]]:</strong>
@@ -1067,7 +1092,7 @@ boolean [=document/text directive user activation=] field:
 
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   Each [=Document=] has a <dfn for="document">text directive user activation</dfn>, which is a boolean,
+>   Each [=/Document=] has a <dfn for="document">text directive user activation</dfn>, which is a boolean,
 >   initially false.
 >
 >   <div class="note">
@@ -1076,12 +1101,12 @@ boolean [=document/text directive user activation=] field:
 >     navigation occurred as a result of a user activation and is propagated across client-side
 >     redirects.
 >
->     If a [=Document=]'s [=document/text directive user activation=] isn't used to activate a text
+>     If a [=/Document=]'s [=document/text directive user activation=] isn't used to activate a text
 >     fragment, it is instead used to set a new navigation [=/request=]'s [=request/text directive user activation=]
 >     to true. In this way, a [=document/text directive user activation=] can be propagated
->     from one [=Document=] to another across a navigation.
+>     from one [=/Document=] to another across a navigation.
 >
->     Both [=Document=]'s [=document/text directive user activation=] and [=/request=]'s
+>     Both [=/Document=]'s [=document/text directive user activation=] and [=/request=]'s
 >     [=request/text directive user activation=] are always set to false when used, such that a
 >     single user activation cannot be reused to activate more than one text fragment.
 >   </div>
@@ -1115,143 +1140,360 @@ boolean [=document/text directive user activation=] field:
   </p>
 </div>
 
+Amend the <a spec=HTML>create navigation params by fetching</a> steps to transfer the [=active
+document=]'s [=document/text directive user activation=] value into <var ignore>request</var>'s
+[=request/text directive user activation=].
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   1. Assert: this is running in parallel.
+>   2. Let documentResource be entry's document state's resource.
+>   3. Let <var ignore>request</var> be a new request, with
+>
+>      <dl class="props">
+>       <dt>url</dt>
+>       <dd><var ignore>entry</var>'s URL</dd>
+>
+>       <dt>...</dt>
+>       <dd>...</dd>
+>
+>       <dt>referrer policy</dt>
+>       <dd><var ignore>entry</var>'s document state's request referrer policy</dd>
+>
+>       <dt><span class="diff">[=request/text directive user activation=]</span></dt>
+>       <dd><span class="diff">|navigable|'s [=navigable/active document=]'s [=document/text directive user activation=]</span></dd>
+>      </dl>
+>     </li>
+>   4. <span class="diff">Set |navigable|'s [=navigable/active document=]'s [=document/text directive
+>       user activation=] to false.</span>
+>   5. If documentResource is a POST resource, then:
+>       1. ...
+>
+> </div>
+
+Amend the definition of <a spec=HTML>navigation params</a> to include a new field:
+
 >   <strong>Monkeypatching [[HTML]]:</strong>
 >
->   Each [=Document=] has an <dfn for="document">allow text fragment scroll</dfn>, which is a
->   boolean, initially false.
->   <div class="note">
->     <p>
->       [=document/allow text fragment scroll=] is used to determine whether a text fragment will
->       perform scrolling when the document is loaded. If it is false, the text fragment can be
->       visually indicated but will not be scrolled to. This implements the mitigations discussed in
->       [[#scroll-on-navigation]].
->     </p>
->     <p>
->       The reason we compute and store allow text fragment scroll, rather than performing these
->       checks at the time of use, is that it relies on the properties of the navigation while the
->       invocation will occur as part of the <a spec=HTML>scroll to the fragment</a> steps which can
->       happen outside the context of a navigation.
->     </p>
->   </div>
+>  <dl>
+>   <dt><dfn for="navigation params">user involvement</dfn></dt>
+>   <dd>A <a spec=HTML>user navigation involvement</a> value.</dd>
+>  </dl>
+>
 
-<div class="note">
-  TODO: This should really only prevent potentially observable side-effects like
-  automatic scrolling. Unobservable effects like a highlight could be safely
-  allowed in all cases.
+Initialize the [=navigation params/user involvement=] value everywhere a navigation params is
+created. Specifically: initialize it to true in the <a spec=HTML>create navigation params by
+fetching</a> case:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   To create navigation params by fetching given a session history entry entry, a navigable
+>   navigable, a source snapshot params sourceSnapshotParams, a target snapshot params
+>   targetSnapshotParams, a string cspNavigationType, a navigation ID-or-null navigationId, a
+>   NavigationTimingType navTimingType, <span class="diff">and a <a spec=HTML>user navigation
+>   involvement</a> |user involvement|</span>, perform the following steps. They return a navigation params,
+>   a non-fetch scheme navigation params, or null.
+>
+>   1. Assert: this is running in parallel.
+>   2. ...
+>       <li value="23">Let resultPolicyContainer be the result of determining navigation params policy container given
+>       response's URL, entry's document state's history policy container, sourceSnapshotParams's source
+>       policy container, null, and responsePolicyContainer.</li>
+>   24. If navigable's container is an iframe, and response's timing allow passed flag is set, then
+>       set container's pending resource-timing start time to null.
+>   25. Return a new navigation params, with
+>
+>       <dl>
+>        <dt>id</dt>
+>        <dd>navigationId</dd>
+>        <dt>...</dt>
+>        <dd>...</dd>
+>        <dt>about base URL</dt>
+>        <dd>entry's document state's about base URL</dd>
+>        <dt class="diff">[=navigation params/user involvement=]</dt>
+>        <dd class="diff">|user involvement|</dd>
+>       </dl>
+>
+> </div>
+
+Amend the
+<a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">
+create and initialize a Document object</a> steps to compute and store the [=document/text directive
+user activation=] flag:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   18. Process link headers given document, navigationParams's response, and "pre-media".
+>   19. <div class="diff">Set |document|'s [=document/text directive user activation=] to true if any of the following
+>     conditions hold, false otherwise:
+>       * |navigationParams|'s [=user involvement=] is "<code>activation</code>";
+>       * |navigationParams|'s [=user involvement=] is "<code>browser UI</code>"; or
+>       * |navigationParams|'s
+>         <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>'s
+>         [=request/text directive user activation=] is true.
+>         <div class="note">
+>           It's important that [=document/text directive user activation=] not be copyable so that
+>           only one text fragment can be activated per user-activated navigation.
+>         </div></div>
+>   20. Return |document|.
+>
+> </div>
+
+<div algorithm="check if a text directive can be scrolled">
+  To <dfn>check if a text directive can be scrolled</dfn>; given a [=/Document=] |document|, an
+  [=/origin=]-or-null |initiator origin|, and <a spec=HTML>user navigation involvement</a>-or-null
+  |user involvement|, follow these steps:
+
+  <ol class="algorithm">
+    1. If |document|'s [=Document/uninvoked directives=] field is null or empty, return false.
+    1. Let |is user involved| be true if: |document|'s [=document/text directive user activation=] is
+        true, or |user involvement| is one of "<code>activation</code>" or "<code>browser
+        UI</code>"; false otherwise.
+    1. Set |document|'s [=document/text directive user activation=] to false.
+    1. If |user involvement| is "<code>browser UI</code>", return true.
+        <div class="note">
+          <p>
+            If a navigation originates from browser UI, it's always ok to allow it since it'll be
+            user triggered and the page/script isn't providing the text snippet.
+          </p>
+          <p>
+            Note: The intent in this item is to distinguish cases where the app/page is able to
+            control the URL from those that are fully under the user's control. In the former we
+            want to prevent scrolling of the text fragment unless the destination is loaded in a
+            separate browsing context group (so that the source cannot both control the text snippet
+            and observe side-effects in the navigation). There are some cases where "browser UI" may
+            be a grey area in this regard. E.g. an "open in new window" context menu item when right
+            clicking on a link.
+          </p>
+          <p>
+            See
+            <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">
+            sec-fetch-site</a> in [[FETCH-METADATA]] for a related discussion of how this applies.
+          </p>
+        </div>
+    1. If |is user involved| is false, return false.
+    1. If |document|'s [=node navigable=] has a [=navigable/parent=], return false.
+    1. If |initiator origin| is non-null and |document|'s [=Document/origin=] is [=same origin=]
+        with |initiator origin|, return true.
+    1. If |document|'s [=Document/browsing context=]'s [=browsing context/group=]'s
+        <a spec=HTML>browsing context set</a> has length 1, return true.
+        <div class="note">
+          i.e. Only allow navigation from a cross-origin element/script if the
+          document is loaded in a noopener context. That is, a new top level
+          browsing context group to which the navigator does not have script access
+          and which can be placed into a separate process.
+        </div>
+    1. Otherwise, return false.
+  </ol>
 </div>
 
-Amend the <a
-href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
-and initialize a Document object</a> steps by adding the following steps before returning |document|:
+Amend (the already amended, in [[#invoking-text-directives]]) <a spec=HTML>scroll to the
+fragment</a> steps to add a new parameter, a boolean |allow text directive scroll|:
 
->   <strong>Monkeypatching [[HTML]]:</strong>
+> <strong>Monkeypatching [[HTML#scrolling-to-a-fragment]]:</strong>
 >
->   15. Set |document|'s [=document/text directive user activation=] by following these sub-steps:
->       1. Let |is user activated| be true if the current navigation was initiated from
->           a window that had a <a spec="html">transient activation</a> at the time the
->           navigation was initiated, or the UA has reason to believe it comes from a
->           direct user gesture (e.g. user typed into the address bar).
->           <div class="note">
->             TODO: it'd be better to refer to the [=request/user-activation=] flag.
->           </div>
->       1. If <var ignore=''>browsing context</var> is a top-level browsing context and if either of |is
->           user activated| or the [=request/text directive user activation=] of
->           |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           object is true, set the |document|'s [=document/text directive user activation=]
->           to true. Otherwise, set it to false.
->           <div class="note">
->             It's important that the flag not be copyable so that only one text fragment can be
->             activated per user-activated navigation.
->           </div>
->   16. Set |document|'s [=document/allow text fragment scroll=] by following these sub-steps:
->       1. If |document|'s [=Document/uninvoked directives=] field is null or empty, set
->           [=document/allow text fragment scroll=] to false and abort these sub-steps.
->       1. Let |text directive user activation| be the value of |document|'s
->           [=document/text directive user activation=] and set |document|'s
->           [=document/text directive user activation=] to false.
->       1. If the |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"none"` set [=document/allow text fragment scroll=] to true and abort these sub-steps.
->           <div class="note">
->             <p>
->               If a navigation originates from browser UI, it's always ok to allow it
->               since it'll be user triggered and the page/script isn't providing the
->               text snippet.
->             </p>
->             <p>
->               Note: Depending on the UA, there can be cases where the
->               <var ignore=''>incumbentNavigationOrigin</var> parameter is null but
->               it's not clear that the navigation is to be considered as
->               initiated from browser UI. E.g. an "open in new window" context
->               menu item when right clicking on a link. The intent in this item
->               is to distinguish cases where the app/page is able to set the URL
->               from those that are fully under the user's control. In the former
->               we want to prevent activation of the text fragment unless the
->               destination is loaded in a separate browsing context group (so that
->               the source cannot both control the text snippet and observe
->               side-effects in the navigation).
->             </p>
->             <p>
->               See
->               <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a>
->               in [[FETCH-METADATA]] for a more detailed discussion of how this applies.
->             </p>
->           </div>
->       1. If |text directive user activation| is false, set
->           [=document/allow text fragment scroll=] to false and abort these sub-steps.
->       1. If the |navigationParam|'s
->           <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>
->           has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a>
->           header and its value is `"same-origin"` set
->           [=document/allow text fragment scroll=] to true and abort these
->           sub-steps.
->       1. If |document|'s [=Document/browsing context=] is a [=top-level browsing
->           context=] and its
->           <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>'s
->           <a spec=HTML>browsing context set</a> has length 1, set
->           [=document/allow text fragment scroll=] to true and abort these sub-steps.
->           <div class="note">
->             i.e. Only allow navigation from a cross-origin element/script if the
->             document is loaded in a noopener context. That is, a new top level
->             browsing context group to which the navigator does not have script access
->             and which can be placed into a separate process.
->           </div>
->       1. Otherwise, set [=document/allow text fragment scroll=] to false.
-
-Amend step 2 of the
-<a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch">
-process a navigate fetch</a> steps to additionally set <var ignore=''>request</var>'s
-[=request/text directive user activation=] to the value of the [=active document=]'s
-[=document/text directive user activation=] and set the [=active document=]'s value to
-false.
-
->   <strong>Monkeypatching [[HTML]]:</strong>
+> <div class="monkeypatch">
+>   To scroll to the fragment given a Document |document| <span class="diff">and boolean |allow text
+>   directive scroll|</span>:
 >
->   2. Set request's client to sourceBrowsingContext's active document's relevant
->       settings object, destination to "document", mode to "navigate", credentials
->       mode to "include", use-URL-credentials flag, redirect mode to "manual",
->       replaces client id to browsingContext's active document's relevant settings
->       object's id, and [=request/text directive user activation=] to
->       sourceBrowsingContext's active document's
->       [=document/text directive user activation=]. Set sourceBrowsingContext's active
->       document's [=document/text directive user activation=] to false.
-
-
-Amend the <a spec=HTML>try to scroll to the fragment</a> steps by replacing the
-steps of the task queued in step 2:
-
->   <strong>Monkeypatching [[HTML]]:</strong>
+>   1. If document's indicated part is null, then set document's target element to null.
+>   2. ...
+>   3. Otherwise:
+>       1. Assert: document's indicated part is an element or it is a [=range=].
+>       2. ...
+>           <li value="4">If |target| is a [=range=], then:</li>
+>           1. <span class="diff">If |allow text directive scroll| is false, return.</span>
+>           1. Set |target| to be the [=first common ancestor=] of |target|'s [=range/start node=]
+>               and [=range/end node=].
+>           1. ...
 >
->   1. If document has no parser, or its parser has stopped parsing, or the user
->       agent has reason to believe the user is no longer interested in scrolling to
->       the fragment, then set <em>document</em>'s
->       [=document/allow text fragment scroll=] to false and abort these steps.
->   2. Scroll to the fragment given in document's URL. If this does not find an
->       indicated part, then try to scroll to the fragment for
->       document.
->   3. Set <em>document</em>'s [=document/allow text fragment scroll=] to false.
+> </div>
+
+Amend the <a spec=HTML>try to scroll to the fragment</a> by adding a boolean flag |allow text
+directive scroll| and replacing the steps of the task queued in step 2:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>  To try to scroll to the fragment for a Document |document|, <span class="diff">with boolean
+>  |allow text directive scroll|</span>, perform the following steps in parallel:
+>
+>   1. Wait for an implementation-defined amount of time. (This is intended to allow the user agent
+>       to optimize the user experience in the face of performance concerns.)
+>   2. Queue a global task on the navigation and traversal task source given document's relevant
+>       global object to run these steps:
+>       1. If document has no parser, or its parser has stopped parsing, or the user
+>           agent has reason to believe the user is no longer interested in scrolling to
+>           the fragment, then abort these steps.
+>       2. Scroll to the fragment given |document| <span class="diff">and |allow text directive
+>           scroll|.</span>
+>       3. If document's indicated part is still null, then try to scroll to the fragment for
+>           |document|<span class="diff"> and |allow text directive scroll|</span>.
+>
+>   </div>
+
+Amend the <a spec=HTML>update document for history step application</a> steps to take a boolean
+|allow text directive scroll| and use it when scrolling to a fragment:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>   To update document for history step application given a Document document, a session history
+>   entry entry, a boolean doNotReactivate, integers scriptHistoryLength and scriptHistoryIndex,
+>   an optional list of session history entries entriesForNavigationAPI, <span class="diff">and a
+>   boolean |allow text directive scroll|</span>:
+>
+>   1. Let documentIsNew be true if |document|'s latest entry is null; otherwise false.
+>   1. ...
+>       <li value="5">If documentsEntryChanged is true, then:
+>       1. Let oldURL be document's latest entry's URL.
+>       2. ...
+>   6. If documentIsNew is true, then:
+>       1. Try to scroll to the fragment with |document| <span class="diff">and |allow text
+>           directive scroll|.</span>
+>
+> </div>
+
+Amend the <a spec=HTML>apply the history step</a> algorithm to take a boolean |allow text directive
+scroll| and pass it through when calling <a spec=HTML>update document for history step application
+</a>:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>
+> To apply the history step given a non-negative integer step to a traversable navigable
+> traversable, with boolean checkForCancelation, source snapshot params-or-null
+> sourceSnapshotParams, navigable-or-null initiatorToCheck, user navigation involvement-or-null
+> userInvolvementForNavigateEvents, <span class="diff">and boolean |allow text directive scroll|
+> (default false)</span> perform the following steps. They
+> return "initiator-disallowed", "canceled-by-beforeunload", "canceled-by-navigate", or "applied".
+>
+> 14. While completedChangeJobs does not equal totalChangeJobs:
+>     1. ...
+>         <li value="11">Queue a global task on the navigation and traversal task source given
+>         navigable's active window to run the steps:
+>             1. If changingNavigableContinuation's update-only is false, then:
+>                 1. ...
+>                 2. Activate history entry |targetEntry| for navigable.
+>             2. Let updateDocument be an algorithm step which performs update document for history
+>                 step application given |targetEntry|'s document, |targetEntry|,
+>                 changingNavigableContinuation's update-only, scriptHistoryLength,
+>                 scriptHistoryIndex, entriesForNavigationAPI, <span class="diff">and |allow text
+>                 directive scroll|</span>
+>             3. If |targetEntry|'s document is equal to displayedDocument, then perform
+>                 updateDocument.
+> 15. Let totalNonchangingJobs be the size of nonchangingNavigablesThatStillNeedUpdates.
+>
+> </div>
+
+Amend the <a spec=HTML>apply the push/replace history step</a> to take and pass |allow text
+directive scrolling| to apply the history step:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>  To apply the push/replace history step given a non-negative integer |step| to a traversable
+>  navigable |traversable|, <span class="diff">with boolean |allow text directive scroll| (default
+>  false)</span>:
+>
+>  Return the result of applying the history step |step| to |traversable| given false, null, null,
+>  null, <span class="diff">|allow text directive scroll|</span>.
+> </div>
+
+Note: The |allow text directive scroll| is intentionally not set for traversal and reload cases.
+This avoids extensive plumbing and checks for initiator origin and user involvement and history
+scroll state should take precedence anyway. The text directive may still be used as the indicated
+part of the document so highlights will be restored.
+
+Amend the <a spec=HTML>finalize a cross-document navigation</a> to take a |user involvement|
+parameter and compute and pass |allow text directive scrolling| to apply the push/replace history
+step:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>
+> To finalize a cross-document navigation given a navigable navigable, history handling behavior
+> historyHandling, session history entry historyEntry, <span class="diff"> and <a spec=HTML>user
+> navigation involvement</a> |user involvement| (default "none")</span>:
+>
+> 1. Assert: this is running on navigable's traversable navigable's session history traversal queue.
+> 2. ...
+>     <li value="10"><span class="diff">Let |allow text directive scroll| be the result of [=check if a text
+>     directive can be scrolled|checking if a text directive can be scrolled=], given
+>     |historyEntry|'s [=she/document=], |historyEntry|'s <a spec=HTML>document state</a>'s
+>     [=document state/initiator origin=], and |user involvement|</span>
+> 11. Apply the push/replace history step targetStep to traversable, <span class="diff">with |allow
+>     text directive scroll|.</span>
+
+Amend the <a spec=HTML>navigate</a> algorithm to pass |user involvement| to the finalize a
+cross-document navigation steps:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>
+> 1. ...
+>     <li value="20">. In parallel, run these steps:</li>
+>     1. ...
+>         <li value="9">. Attempt to populate the history entry's document for historyEntry, given
+>         navigable, "navigate", sourceSnapshotParams, targetSnapshotParams, navigationId,
+>         navigationParams, cspNavigationType, with allowPOST set to true and completionSteps set to
+>         the following step:</li>
+>         1. Append session history traversal steps to navigable's traversable to finalize a
+>             cross-document navigation given navigable, historyHandling, historyEntry,
+>             <span class="diff">and |userInvolvement|</span>.
+
+Amend the <a spec=HTML>Navigate to a fragment</a> algorithm to take an |initiator origin| parameter
+and pass the |allow text directive scroll| flag when scrolling to the fragment:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>
+> To navigate to a fragment given a navigable navigable, a URL url, a history handling behavior
+> historyHandling, a user navigation involvement |userInvolvement|, a serialized state-or-null
+> navigationAPIState, navigation ID navigationId, <span class="diff">an [=/origin=] |initiator
+> origin|</span>:
+>
+> 1. Let navigation be |navigable|'s active window's navigation API.
+> 2. ...
+>     <li value="14"> Update document for history step application given navigable's active document, historyEntry, true, scriptHistoryIndex, and scriptHistoryLength.
+> 15. Update the navigation API entries for a same-document navigation given navigation, historyEntry, and historyHandling.
+> 16. <span class="diff">Let |allow text directive scroll| be the result of [=check if a text
+>     directive can be scrolled|checking if a text directive can be scrolled=], given
+>     |navigable|'s [=active document=], |initiator origin|, and |userInvolvement|</span>
+> 17. Scroll to the fragment given |navigable|'s active document<span class="diff">, and |allow text
+>     directive scroll|.</span>
+>
+> </div>
+
+Amend the <a spec=HTML>navigate</a> algorithm to pass the initiator origin when performing a
+fragment navigation:
+
+> <strong>Monkeypatching [[HTML]]:</strong>
+>
+> <div class="monkeypatch">
+>
+> 10. If the navigation must be a replace given url and navigable's active document, then set historyHandling to "replace".
+> 11. If all of the following are true:
+>     * documentResource is null;
+>     * response is null;
+>     * url equals navigable's active session history entry's URL with exclude fragments set to true; and
+>     * url's fragment is non-null,
+>
+>     then:
+>
+>     1. Navigate to a fragment given navigable, url, historyHandling, userInvolvement,
+>         navigationAPIState, navigationId, <span class="diff">and <var ignore>
+>         initiatorOriginSnapshot</var></span>
+>     1. Let navigation be |navigable|'s active window's navigation API.
+>
+> </div>
 
 ### Restricting Scroll on Load ### {#restricting-scroll-on-load}
 
@@ -1386,7 +1628,7 @@ To find the <dfn>shadow-including parent</dfn> of |node| follow these steps:
 
 <div algorithm="invoke text directives">
 To <dfn>invoke text directives</dfn>, given as input an <a
-spec=infra>ASCII string</a> |text directives| and a [=Document=]
+spec=infra>ASCII string</a> |text directives| and a [=/Document=]
 |document|, run these steps:
 
 <div class="note">
@@ -1419,7 +1661,7 @@ spec=infra>ASCII string</a> |text directives| and a [=Document=]
 
 <div algorithm="find a range from a text directive">
 To <dfn>find a range from a text directive</dfn>, given a
-[=text directive=] |parsedValues| and [=Document=] |document|, run the
+[=text directive=] |parsedValues| and [=/Document=] |document|, run the
 following steps:
 
 <div class="note">
@@ -2096,9 +2338,9 @@ History scroll restoration is blocked by amending the <a spec="HTML">restore
 persisted state</a> steps by inserting a new step after 2:
 
 3. <a href="https://wicg.github.io/document-policy#algo-get-policy-value">Get
-    the document policy value</a> of the "force-load-at-top" feature for the [=Document=]. If
+    the document policy value</a> of the "force-load-at-top" feature for the [=/Document=]. If
     the result is true, then the user agent should not restore the scroll
-    position for the [=Document=] or any of its scrollable regions.
+    position for the [=/Document=] or any of its scrollable regions.
 
 
 ## Feature Detectability ## {#feature-detectability}

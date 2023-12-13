@@ -813,7 +813,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">URL Fragment Text Directives</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-22">22 November 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-28">28 November 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1238,7 +1238,7 @@ set to <var>url</var>, its document state set to documentState, and its <a data-
      </ol>
     </div>
    </blockquote>
-   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to a fragment</a>:</p>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid" id="319d7c290">navigate to a fragment</a>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>:</strong></p>
     <div class="monkeypatch">
@@ -1333,7 +1333,7 @@ newEntry.</p>
      </ol>
     </div>
    </blockquote>
-   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching"> create navigation params by fetching</a>:</p>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching" id="fc0e1ad00"> create navigation params by fetching</a>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#populating-a-session-history-entry"><cite>HTML</cite> § 7.4.5 Populating a session history entry</a>:</strong></p>
     <div class="monkeypatch">
@@ -1392,7 +1392,7 @@ console.log(window.location.hash); // '#page1'
 <pre>location.hash = "page2";
 console.log(location.href); // 'https://example.com#page2'
 </pre>
-    <p>A same document navigation changed only the fragment. This adds a new session history entry in the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid">navigate to
+    <p>A same document navigation changed only the fragment. This adds a new session history entry in the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid" id="319d7c291">navigate to
   a fragment</a> steps. However, since only the fragment changed, the new entry’s directive state
   points to the same state as the first entry, with a value of "bar".</p>
 <pre>onhashchange = () => console.assert(false, "hashchange doesn’t fire.");
@@ -1612,8 +1612,7 @@ fragment as a fallback.</p>
       <li data-md>
        <p><span class="diff">Let <var>directives</var> be the document’s <a data-link-type="dfn" href="#document-uninvoked-directives" id="ref-for-document-uninvoked-directives④">uninvoked directives</a>. </span></p>
       <li data-md>
-       <p><span class="diff">If <var>directives</var> is non-null and <var>document</var>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll">allow text
-  fragment scroll</a> is true then:</span></p>
+       <p><span class="diff">If <var>directives</var> is non-null then:</span></p>
        <ol>
         <li data-md>
          <p><span class="diff">Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> that is the result of running
@@ -1644,7 +1643,7 @@ fragment as a fallback.</p>
      </ol>
     </div>
    </blockquote>
-   <p>In <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier">scroll to the fragment</a>, handle a indicated part that is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑤">range</a> and also
+   <p>In <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier">scroll to the fragment</a>, handle an indicated part that is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑤">range</a> and also
 prevent fragment scrolling if the force-load-at-top policy is enabled. Make the following changes:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scrolling-to-a-fragment"><cite>HTML</cite> § 7.4.6.3 Scrolling to a fragment</a>:</strong></p>
@@ -1697,7 +1696,7 @@ prevent fragment scrolling if the force-load-at-top policy is enabled. Make the 
   "start" otherwise.</span></p>
          <div class="note" role="note"> Scrolling to a text directive centers it in the block flow direction. </div>
         <li data-md>
-         <strike class="diff">Scroll target into view, with behavior set to "auto", block set to
+         <strike class="diff">Scroll <var>target</var> into view, with behavior set to "auto", block set to
   "start", and inline set to "nearest".</strike>
         <li value="10">
          <span class="diff"><a data-link-type="dfn" href="https://drafts.csswg.org/cssom-view-1/#scroll-a-target-into-view" id="ref-for-scroll-a-target-into-view">scroll a target into view</a>,
@@ -1771,7 +1770,7 @@ has stopped, it tries one more search for a non-text directive fragment.</p>
      </ol>
     </div>
    </blockquote>
-   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid"> navigate to a fragment</a>:</p>
+   <p>In the definition of <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid" id="319d7c292"> navigate to a fragment</a>:</p>
    <blockquote>
     <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>:</strong></p>
     <div class="monkeypatch">
@@ -1893,6 +1892,25 @@ multiple solutions with differing tradeoffs. For example, a UA <em>may</em> cont
 text directive</a>.  Alternatively, it <em>may</em> schedule an asynchronous task
 to find and set the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">Document</a>'s indicated part.</p>
    <h4 class="heading settled" data-level="3.5.4" id="restricting-the-text-fragment"><span class="secno">3.5.4. </span><span class="content">Restricting the Text Fragment</span><a class="self-link" href="#restricting-the-text-fragment"></a></h4>
+   <div class="note" role="note">
+     This section integrates with HTML navigation to restrict when an indicated text directive will
+  be allowed to scroll. In summary: 
+    <ul>
+     <li data-md>
+      <p>Add a boolean <code>text directive user activation</code> to both Document and Request. This
+  flag is set on a document when created from a user activated navigation and consumed if a text
+  directive is scrolled. If unconsumed, it can be transfered to an outgoing navigation request.
+  This implements the user-activation-through-redirects behavior described in the note below.</p>
+     <li data-md>
+      <p>Define a series of checks, performed on a document and the user involvement and initiator origin
+  state of a navigation, to determine whether a text directive should be allowed to perform a
+  scroll.</p>
+     <li data-md>
+      <p>Compute the scroll permission from "finalize a cross document navigation" and from "navigate to
+  a fragment steps" and plumb it through to the "scroll to the fragment" steps where its used to
+  abort a text directive scroll.</p>
+    </ul>
+   </div>
    <p>Amend the definition of a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> and of a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a> to include a new
 boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation">text directive user activation</a> field:</p>
    <blockquote>
@@ -1941,116 +1959,405 @@ boolean <a data-link-type="dfn" href="#document-text-directive-user-activation" 
     <p><img alt="Diagram showing how a text fragment flag is set and used" height="671" src="https://raw.githubusercontent.com/WICG/scroll-to-text-fragment/master/text_fragment_activation_flag.png" style="margin-left:auto;margin-right:auto;display:block" width="745"></p>
     <p> See <a href="redirects.md">redirects.md</a> for a more in-depth discussion. </p>
    </div>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching" id="ref-for-create-navigation-params-by-fetching">create navigation params by fetching</a> steps to transfer the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document①">active
+document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑥">text directive user activation</a> value into <var>request</var>’s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation②">text directive user activation</a>.</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <p>Each <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a> has an <dfn class="dfn-paneled" data-dfn-for="document" data-dfn-type="dfn" data-noexport id="document-allow-text-fragment-scroll">allow text fragment scroll</dfn>, which is a
-  boolean, initially false.</p>
-    <div class="note" role="note">
-     <p> <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll①">allow text fragment scroll</a> is used to determine whether a text fragment will
-      perform scrolling when the document is loaded. If it is false, the text fragment can be
-      visually indicated but will not be scrolled to. This implements the mitigations discussed in <a href="#scroll-on-navigation">§ 3.5.2 Scroll On Navigation</a>. </p>
-     <p> The reason we compute and store allow text fragment scroll, rather than performing these
-      checks at the time of use, is that it relies on the properties of the navigation while the
-      invocation will occur as part of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier②">scroll to the fragment</a> steps which can
-      happen outside the context of a navigation. </p>
+    <div class="monkeypatch">
+     <ol>
+      <li data-md>
+       <p class="assertion">Assert: this is running in parallel.</p>
+      <li data-md>
+       <p>Let documentResource be entry’s document state’s resource.</p>
+      <li data-md>
+       <p>Let <var>request</var> be a new request, with</p>
+       <dl class="props">
+        <dt>url
+        <dd><var>entry</var>’s URL
+        <dt>...
+        <dd>...
+        <dt>referrer policy
+        <dd><var>entry</var>’s document state’s request referrer policy
+        <dt><span class="diff"><a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation③">text directive user activation</a></span>
+        <dd><span class="diff"><var>navigable</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document②">active document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑦">text directive user activation</a></span>
+       </dl>
+      <li data-md>
+       <p><span class="diff">Set <var>navigable</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document③">active document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑧">text directive
+  user activation</a> to false.</span></p>
+      <li data-md>
+       <p>If documentResource is a POST resource, then:</p>
+       <ol>
+        <li data-md>
+         <p>...</p>
+       </ol>
+     </ol>
     </div>
    </blockquote>
-   <div class="note" role="note"> TODO: This should really only prevent potentially observable side-effects like
-  automatic scrolling. Unobservable effects like a highlight could be safely
-  allowed in all cases. </div>
-   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object">create
-and initialize a Document object</a> steps by adding the following steps before returning <var>document</var>:</p>
+   <p>Amend the definition of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params" id="ref-for-navigation-params">navigation params</a> to include a new field:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol start="15">
-     <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑥">text directive user activation</a> by following these sub-steps:</p>
-      <ol>
-       <li data-md>
-        <p>Let <var>is user activated</var> be true if the current navigation was initiated from
-  a window that had a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a> at the time the
-  navigation was initiated, or the UA has reason to believe it comes from a
-  direct user gesture (e.g. user typed into the address bar).</p>
-        <div class="note" role="note"> TODO: it’d be better to refer to the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#request-user-activation" id="ref-for-request-user-activation">user-activation</a> flag. </div>
-       <li data-md>
-        <p>If <var>browsing context</var> is a top-level browsing context and if either of <var>is
-  user activated</var> or the <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation②">text directive user activation</a> of <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> object is true, set the <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑦">text directive user activation</a> to true. Otherwise, set it to false.</p>
-        <div class="note" role="note"> It’s important that the flag not be copyable so that only one text fragment can be
-    activated per user-activated navigation. </div>
-      </ol>
-     <li data-md>
-      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll②">allow text fragment scroll</a> by following these sub-steps:</p>
-      <ol>
-       <li data-md>
-        <p>If <var>document</var>’s <a data-link-type="dfn" href="#document-uninvoked-directives" id="ref-for-document-uninvoked-directives①①">uninvoked directives</a> field is null or empty, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll③">allow text fragment scroll</a> to false and abort these sub-steps.</p>
-       <li data-md>
-        <p>Let <var>text directive user activation</var> be the value of <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑧">text directive user activation</a> and set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑨">text directive user activation</a> to false.</p>
-       <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"none"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll④">allow text fragment scroll</a> to true and abort these sub-steps.</p>
-        <div class="note" role="note">
-         <p> If a navigation originates from browser UI, it’s always ok to allow it
-      since it’ll be user triggered and the page/script isn’t providing the
-      text snippet. </p>
-         <p> Note: Depending on the UA, there can be cases where the <var>incumbentNavigationOrigin</var> parameter is null but
-      it’s not clear that the navigation is to be considered as
-      initiated from browser UI. E.g. an "open in new window" context
-      menu item when right clicking on a link. The intent in this item
-      is to distinguish cases where the app/page is able to set the URL
-      from those that are fully under the user’s control. In the former
-      we want to prevent activation of the text fragment unless the
-      destination is loaded in a separate browsing context group (so that
-      the source cannot both control the text snippet and observe
-      side-effects in the navigation). </p>
-         <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated">sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a more detailed discussion of how this applies. </p>
-        </div>
-       <li data-md>
-        <p>If <var>text directive user activation</var> is false, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑤">allow text fragment scroll</a> to false and abort these sub-steps.</p>
-       <li data-md>
-        <p>If the <var>navigationParam</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a> has a <a href="https://w3c.github.io/webappsec-fetch-metadata/#http-headerdef-sec-fetch-site">sec-fetch-site</a> header and its value is <code>"same-origin"</code> set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑥">allow text fragment scroll</a> to true and abort these
-  sub-steps.</p>
-       <li data-md>
-        <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a> is a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing
-  context</a> and its <a href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group">group</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑦">allow text fragment scroll</a> to true and abort these sub-steps.</p>
-        <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
-    document is loaded in a noopener context. That is, a new top level
-    browsing context group to which the navigator does not have script access
-    and which can be placed into a separate process. </div>
-       <li data-md>
-        <p>Otherwise, set <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑧">allow text fragment scroll</a> to false.</p>
-      </ol>
-    </ol>
+    <dl>
+     <dt><dfn class="dfn-paneled" data-dfn-for="navigation params" data-dfn-type="dfn" data-noexport id="navigation-params-user-involvement">user involvement</dfn>
+     <dd>A <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement" id="ref-for-user-navigation-involvement">user navigation involvement</a> value.
+    </dl>
    </blockquote>
-   <p>Amend step 2 of the <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#process-a-navigate-fetch"> process a navigate fetch</a> steps to additionally set <var>request</var>’s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation③">text directive user activation</a> to the value of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document①">active document</a>'s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①⓪">text directive user activation</a> and set the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document②">active document</a>'s value to
-false.</p>
+   <p>Initialize the <a data-link-type="dfn" href="#navigation-params-user-involvement" id="ref-for-navigation-params-user-involvement">user involvement</a> value everywhere a navigation params is
+created. Specifically: initialize it to true in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching" id="ref-for-create-navigation-params-by-fetching①">create navigation params by
+fetching</a> case:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol start="2">
-     <li data-md>
-      <p>Set request’s client to sourceBrowsingContext’s active document’s relevant
-  settings object, destination to "document", mode to "navigate", credentials
-  mode to "include", use-URL-credentials flag, redirect mode to "manual",
-  replaces client id to browsingContext’s active document’s relevant settings
-  object’s id, and <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation④">text directive user activation</a> to
-  sourceBrowsingContext’s active document’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①①">text directive user activation</a>. Set sourceBrowsingContext’s active
-  document’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①②">text directive user activation</a> to false.</p>
-    </ol>
+    <div class="monkeypatch">
+      To create navigation params by fetching given a session history entry entry, a navigable
+  navigable, a source snapshot params sourceSnapshotParams, a target snapshot params
+  targetSnapshotParams, a string cspNavigationType, a navigation ID-or-null navigationId, a
+  NavigationTimingType navTimingType, <span class="diff">and a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement" id="ref-for-user-navigation-involvement①">user navigation
+  involvement</a> <var>user involvement</var></span>, perform the following steps. They return a navigation params,
+  a non-fetch scheme navigation params, or null. 
+     <ol>
+      <li data-md>
+       <p class="assertion">Assert: this is running in parallel.</p>
+      <li data-md>
+       <p>...</p>
+      <li value="23">Let resultPolicyContainer be the result of determining navigation params policy container given
+  response’s URL, entry’s document state’s history policy container, sourceSnapshotParams’s source
+  policy container, null, and responsePolicyContainer.
+      <li data-md>
+       <p>If navigable’s container is an iframe, and response’s timing allow passed flag is set, then
+  set container’s pending resource-timing start time to null.</p>
+      <li data-md>
+       <p>Return a new navigation params, with</p>
+       <dl>
+        <dt>id
+        <dd>navigationId
+        <dt>...
+        <dd>...
+        <dt>about base URL
+        <dd>entry’s document state’s about base URL
+        <dt class="diff"><a data-link-type="dfn" href="#navigation-params-user-involvement" id="ref-for-navigation-params-user-involvement①">user involvement</a>
+        <dd class="diff"><var>user involvement</var>
+       </dl>
+     </ol>
+    </div>
    </blockquote>
-   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</a> steps by replacing the
-steps of the task queued in step 2:</p>
+   <p>Amend the <a href="https://html.spec.whatwg.org/multipage/document-lifecycle.html#initialise-the-document-object"> create and initialize a Document object</a> steps to compute and store the <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation⑨">text directive
+user activation</a> flag:</p>
    <blockquote>
     <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
-    <ol>
+    <div class="monkeypatch">
+     <ol start="18">
+      <li data-md>
+       <p>Process link headers given document, navigationParams’s response, and "pre-media".</p>
+      <li data-md>
+       <div class="diff">
+        Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①⓪">text directive user activation</a> to true if any of the following
+conditions hold, false otherwise: 
+        <ul>
+         <li data-md>
+          <p><var>navigationParams</var>’s <a data-link-type="dfn" href="#navigation-params-user-involvement" id="ref-for-navigation-params-user-involvement②">user involvement</a> is "<code>activation</code>";</p>
+         <li data-md>
+          <p><var>navigationParams</var>’s <a data-link-type="dfn" href="#navigation-params-user-involvement" id="ref-for-navigation-params-user-involvement③">user involvement</a> is "<code>browser UI</code>"; or</p>
+         <li data-md>
+          <p><var>navigationParams</var>’s <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params-request">request</a>’s <a data-link-type="dfn" href="#request-text-directive-user-activation" id="ref-for-request-text-directive-user-activation④">text directive user activation</a> is true.</p>
+          <div class="note" role="note"> It’s important that <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①①">text directive user activation</a> not be copyable so that
+  only one text fragment can be activated per user-activated navigation. </div>
+        </ul>
+       </div>
+      <li data-md>
+       <p>Return <var>document</var>.</p>
+     </ol>
+    </div>
+   </blockquote>
+   <div class="algorithm" data-algorithm="check if a text directive can be scrolled">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="check-if-a-text-directive-can-be-scrolled">check if a text directive can be scrolled</dfn>; given a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑦">Document</a> <var>document</var>, an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin" id="ref-for-concept-origin">origin</a>-or-null <var>initiator origin</var>, and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement" id="ref-for-user-navigation-involvement②">user navigation involvement</a>-or-null <var>user involvement</var>, follow these steps: 
+    <ol class="algorithm">
      <li data-md>
-      <p>If document has no parser, or its parser has stopped parsing, or the user
+      <p>If <var>document</var>’s <a data-link-type="dfn" href="#document-uninvoked-directives" id="ref-for-document-uninvoked-directives①①">uninvoked directives</a> field is null or empty, return false.</p>
+     <li data-md>
+      <p>Let <var>is user involved</var> be true if: <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①②">text directive user activation</a> is
+true, or <var>user involvement</var> is one of "<code>activation</code>" or "<code>browser
+UI</code>"; false otherwise.</p>
+     <li data-md>
+      <p>Set <var>document</var>’s <a data-link-type="dfn" href="#document-text-directive-user-activation" id="ref-for-document-text-directive-user-activation①③">text directive user activation</a> to false.</p>
+     <li data-md>
+      <p>If <var>user involvement</var> is "<code>browser UI</code>", return true.</p>
+      <div class="note" role="note">
+       <p> If a navigation originates from browser UI, it’s always ok to allow it since it’ll be
+    user triggered and the page/script isn’t providing the text snippet. </p>
+       <p> Note: The intent in this item is to distinguish cases where the app/page is able to
+    control the URL from those that are fully under the user’s control. In the former we
+    want to prevent scrolling of the text fragment unless the destination is loaded in a
+    separate browsing context group (so that the source cannot both control the text snippet
+    and observe side-effects in the navigation). There are some cases where "browser UI" may
+    be a grey area in this regard. E.g. an "open in new window" context menu item when right
+    clicking on a link. </p>
+       <p> See <a href="https://w3c.github.io/webappsec-fetch-metadata/#directly-user-initiated"> sec-fetch-site</a> in <a data-link-type="biblio" href="#biblio-fetch-metadata" title="Fetch Metadata Request Headers">[FETCH-METADATA]</a> for a related discussion of how this applies. </p>
+      </div>
+     <li data-md>
+      <p>If <var>is user involved</var> is false, return false.</p>
+     <li data-md>
+      <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#node-navigable" id="ref-for-node-navigable">node navigable</a> has a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-parent" id="ref-for-nav-parent">parent</a>, return false.</p>
+     <li data-md>
+      <p>If <var>initiator origin</var> is non-null and <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document-origin" id="ref-for-concept-document-origin">origin</a> is <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin" id="ref-for-same-origin">same origin</a> with <var>initiator origin</var>, return true.</p>
+     <li data-md>
+      <p>If <var>document</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc" id="ref-for-concept-document-bc">browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group" id="ref-for-tlbc-group">group</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set" id="ref-for-browsing-context-set">browsing context set</a> has length 1, return true.</p>
+      <div class="note" role="note"> i.e. Only allow navigation from a cross-origin element/script if the
+  document is loaded in a noopener context. That is, a new top level
+  browsing context group to which the navigator does not have script access
+  and which can be placed into a separate process. </div>
+     <li data-md>
+      <p>Otherwise, return false.</p>
+    </ol>
+   </div>
+   <p>Amend (the already amended, in <a href="#invoking-text-directives">§ 3.4.1 Invoking Text Directives</a>) <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier" id="ref-for-scroll-to-the-fragment-identifier②">scroll to the
+fragment</a> steps to add a new parameter, a boolean <var>allow text directive scroll</var>:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scrolling-to-a-fragment"><cite>HTML</cite> § 7.4.6.3 Scrolling to a fragment</a>:</strong></p>
+    <div class="monkeypatch">
+      To scroll to the fragment given a Document <var>document</var> <span class="diff">and boolean <var>allow text
+  directive scroll</var></span>: 
+     <ol>
+      <li data-md>
+       <p>If document’s indicated part is null, then set document’s target element to null.</p>
+      <li data-md>
+       <p>...</p>
+      <li data-md>
+       <p>Otherwise:</p>
+       <ol>
+        <li data-md>
+         <p class="assertion">Assert: document’s indicated part is an element or it is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑨">range</a>.</p>
+        <li data-md>
+         <p>...</p>
+        <li value="4">If <var>target</var> is a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">range</a>, then:
+        <ol>
+         <li data-md>
+          <p><span class="diff">If <var>allow text directive scroll</var> is false, return.</span></p>
+         <li data-md>
+          <p>Set <var>target</var> to be the <a data-link-type="dfn" href="#first-common-ancestor" id="ref-for-first-common-ancestor①">first common ancestor</a> of <var>target</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①">start node</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node①">end node</a>.</p>
+         <li data-md>
+          <p>...</p>
+        </ol>
+       </ol>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment" id="ref-for-try-to-scroll-to-the-fragment">try to scroll to the fragment</a> by adding a boolean flag <var>allow text
+directive scroll</var> and replacing the steps of the task queued in step 2:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+      To try to scroll to the fragment for a Document <var>document</var>, <span class="diff">with boolean <var>allow text directive scroll</var></span>, perform the following steps in parallel: 
+     <ol>
+      <li data-md>
+       <p>Wait for an implementation-defined amount of time. (This is intended to allow the user agent
+  to optimize the user experience in the face of performance concerns.)</p>
+      <li data-md>
+       <p>Queue a global task on the navigation and traversal task source given document’s relevant
+  global object to run these steps:</p>
+       <ol>
+        <li data-md>
+         <p>If document has no parser, or its parser has stopped parsing, or the user
   agent has reason to believe the user is no longer interested in scrolling to
-  the fragment, then set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll⑨">allow text fragment scroll</a> to false and abort these steps.</p>
-     <li data-md>
-      <p>Scroll to the fragment given in document’s URL. If this does not find an
-  indicated part, then try to scroll to the fragment for
-  document.</p>
-     <li data-md>
-      <p>Set <em>document</em>’s <a data-link-type="dfn" href="#document-allow-text-fragment-scroll" id="ref-for-document-allow-text-fragment-scroll①⓪">allow text fragment scroll</a> to false.</p>
-    </ol>
+  the fragment, then abort these steps.</p>
+        <li data-md>
+         <p>Scroll to the fragment given <var>document</var> <span class="diff">and <var>allow text directive
+  scroll</var>.</span></p>
+        <li data-md>
+         <p>If document’s indicated part is still null, then try to scroll to the fragment for <var>document</var><span class="diff"> and <var>allow text directive scroll</var></span>.</p>
+       </ol>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application" id="ref-for-update-document-for-history-step-application">update document for history step application</a> steps to take a boolean <var>allow text directive scroll</var> and use it when scrolling to a fragment:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+      To update document for history step application given a Document document, a session history
+  entry entry, a boolean doNotReactivate, integers scriptHistoryLength and scriptHistoryIndex,
+  an optional list of session history entries entriesForNavigationAPI, <span class="diff">and a
+  boolean <var>allow text directive scroll</var></span>: 
+     <ol>
+      <li data-md>
+       <p>Let documentIsNew be true if <var>document</var>’s latest entry is null; otherwise false.</p>
+      <li data-md>
+       <p>...</p>
+      <li value="5">
+       If documentsEntryChanged is true, then: 
+       <ol>
+        <li data-md>
+         <p>Let oldURL be document’s latest entry’s URL.</p>
+        <li data-md>
+         <p>...</p>
+       </ol>
+      <li data-md>
+       <p>If documentIsNew is true, then:</p>
+       <ol>
+        <li data-md>
+         <p>Try to scroll to the fragment with <var>document</var> <span class="diff">and <var>allow text
+  directive scroll</var>.</span></p>
+       </ol>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#apply-the-history-step" id="ref-for-apply-the-history-step">apply the history step</a> algorithm to take a boolean <var>allow text directive
+scroll</var> and pass it through when calling <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application" id="ref-for-update-document-for-history-step-application①">update document for history step application </a>:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <p>To apply the history step given a non-negative integer step to a traversable navigable
+traversable, with boolean checkForCancelation, source snapshot params-or-null
+sourceSnapshotParams, navigable-or-null initiatorToCheck, user navigation involvement-or-null
+userInvolvementForNavigateEvents, <span class="diff">and boolean <var>allow text directive scroll</var> (default false)</span> perform the following steps. They
+return "initiator-disallowed", "canceled-by-beforeunload", "canceled-by-navigate", or "applied".</p>
+     <ol start="14">
+      <li data-md>
+       <p>While completedChangeJobs does not equal totalChangeJobs:</p>
+       <ol>
+        <li data-md>
+         <p>...</p>
+        <li value="11">
+         Queue a global task on the navigation and traversal task source given
+navigable’s active window to run the steps: 
+         <ol>
+          <li data-md>
+           <p>If changingNavigableContinuation’s update-only is false, then:</p>
+           <ol>
+            <li data-md>
+             <p>...</p>
+            <li data-md>
+             <p>Activate history entry <var>targetEntry</var> for navigable.</p>
+           </ol>
+          <li data-md>
+           <p>Let updateDocument be an algorithm step which performs update document for history
+step application given <var>targetEntry</var>’s document, <var>targetEntry</var>,
+changingNavigableContinuation’s update-only, scriptHistoryLength,
+scriptHistoryIndex, entriesForNavigationAPI, <span class="diff">and <var>allow text
+directive scroll</var></span></p>
+          <li data-md>
+           <p>If <var>targetEntry</var>’s document is equal to displayedDocument, then perform
+updateDocument.</p>
+         </ol>
+       </ol>
+      <li data-md>
+       <p>Let totalNonchangingJobs be the size of nonchangingNavigablesThatStillNeedUpdates.</p>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#apply-the-push%2Freplace-history-step" id="ref-for-apply-the-push%2Freplace-history-step">apply the push/replace history step</a> to take and pass <var>allow text
+directive scrolling</var> to apply the history step:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+      To apply the push/replace history step given a non-negative integer <var>step</var> to a traversable
+ navigable <var>traversable</var>, <span class="diff">with boolean <var>allow text directive scroll</var> (default
+ false)</span>: 
+     <p>Return the result of applying the history step <var>step</var> to <var>traversable</var> given false, null, null,
+ null, <span class="diff"><var>allow text directive scroll</var></span>.</p>
+    </div>
+   </blockquote>
+   <p class="note" role="note"><span class="marker">Note:</span> The <var>allow text directive scroll</var> is intentionally not set for traversal and reload cases.
+This avoids extensive plumbing and checks for initiator origin and user involvement and history
+scroll state should take precedence anyway. The text directive may still be used as the indicated
+part of the document so highlights will be restored.</p>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#finalize-a-cross-document-navigation" id="ref-for-finalize-a-cross-document-navigation">finalize a cross-document navigation</a> to take a <var>user involvement</var> parameter and compute and pass <var>allow text directive scrolling</var> to apply the push/replace history
+step:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <p>To finalize a cross-document navigation given a navigable navigable, history handling behavior
+historyHandling, session history entry historyEntry, <span class="diff"> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement" id="ref-for-user-navigation-involvement③">user
+navigation involvement</a> <var>user involvement</var> (default "none")</span>:</p>
+     <ol>
+      <li data-md>
+       <p class="assertion">Assert: this is running on navigable’s traversable navigable’s session history traversal queue.</p>
+      <li data-md>
+       <p>...</p>
+      <li value="10"><span class="diff">Let <var>allow text directive scroll</var> be the result of <a data-link-type="dfn" href="#check-if-a-text-directive-can-be-scrolled" id="ref-for-check-if-a-text-directive-can-be-scrolled">checking if a text directive can be scrolled</a>, given <var>historyEntry</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document" id="ref-for-she-document">document</a>, <var>historyEntry</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document-state" id="ref-for-she-document-state">document state</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#document-state-initiator-origin" id="ref-for-document-state-initiator-origin">initiator origin</a>, and <var>user involvement</var></span> 
+      <li data-md>
+       <p>Apply the push/replace history step targetStep to traversable, <span class="diff">with <var>allow
+text directive scroll</var>.</span></p>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate" id="ref-for-navigate①">navigate</a> algorithm to pass <var>user involvement</var> to the finalize a
+cross-document navigation steps:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <ol>
+      <li data-md>
+       <p>...</p>
+      <li value="20">. In parallel, run these steps:
+      <ol>
+       <li data-md>
+        <p>...</p>
+       <li value="9">. Attempt to populate the history entry’s document for historyEntry, given
+navigable, "navigate", sourceSnapshotParams, targetSnapshotParams, navigationId,
+navigationParams, cspNavigationType, with allowPOST set to true and completionSteps set to
+the following step:
+       <ol>
+        <li data-md>
+         <p>Append session history traversal steps to navigable’s traversable to finalize a
+cross-document navigation given navigable, historyHandling, historyEntry, <span class="diff">and <var>userInvolvement</var></span>.</p>
+       </ol>
+      </ol>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid" id="ref-for-navigate-fragid">Navigate to a fragment</a> algorithm to take an <var>initiator origin</var> parameter
+and pass the <var>allow text directive scroll</var> flag when scrolling to the fragment:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <p>To navigate to a fragment given a navigable navigable, a URL url, a history handling behavior
+historyHandling, a user navigation involvement <var>userInvolvement</var>, a serialized state-or-null
+navigationAPIState, navigation ID navigationId, <span class="diff">an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin" id="ref-for-concept-origin①">origin</a> <var>initiator
+origin</var></span>:</p>
+     <ol>
+      <li data-md>
+       <p>Let navigation be <var>navigable</var>’s active window’s navigation API.</p>
+      <li data-md>
+       <p>...</p>
+      <li value="14"> Update document for history step application given navigable’s active document, historyEntry, true, scriptHistoryIndex, and scriptHistoryLength. 
+      <li data-md>
+       <p>Update the navigation API entries for a same-document navigation given navigation, historyEntry, and historyHandling.</p>
+      <li data-md>
+       <p><span class="diff">Let <var>allow text directive scroll</var> be the result of <a data-link-type="dfn" href="#check-if-a-text-directive-can-be-scrolled" id="ref-for-check-if-a-text-directive-can-be-scrolled①">checking if a text directive can be scrolled</a>, given <var>navigable</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document" id="ref-for-nav-document④">active document</a>, <var>initiator origin</var>, and <var>userInvolvement</var></span></p>
+      <li data-md>
+       <p>Scroll to the fragment given <var>navigable</var>’s active document<span class="diff">, and <var>allow text
+directive scroll</var>.</span></p>
+     </ol>
+    </div>
+   </blockquote>
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate" id="ref-for-navigate②">navigate</a> algorithm to pass the initiator origin when performing a
+fragment navigation:</p>
+   <blockquote>
+    <p><strong>Monkeypatching <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>:</strong></p>
+    <div class="monkeypatch">
+     <ol start="10">
+      <li data-md>
+       <p>If the navigation must be a replace given url and navigable’s active document, then set historyHandling to "replace".</p>
+      <li data-md>
+       <p>If all of the following are true:</p>
+       <ul>
+        <li data-md>
+         <p>documentResource is null;</p>
+        <li data-md>
+         <p>response is null;</p>
+        <li data-md>
+         <p>url equals navigable’s active session history entry’s URL with exclude fragments set to true; and</p>
+        <li data-md>
+         <p>url’s fragment is non-null,</p>
+       </ul>
+       <p>then:</p>
+       <ol>
+        <li data-md>
+         <p>Navigate to a fragment given navigable, url, historyHandling, userInvolvement,
+navigationAPIState, navigationId, <span class="diff">and <var> initiatorOriginSnapshot</var></span></p>
+        <li data-md>
+         <p>Let navigation be <var>navigable</var>’s active window’s navigation API.</p>
+       </ol>
+     </ol>
+    </div>
    </blockquote>
    <h4 class="heading settled" data-level="3.5.5" id="restricting-scroll-on-load"><span class="secno">3.5.5. </span><span class="content">Restricting Scroll on Load</span><a class="self-link" href="#restricting-scroll-on-load"></a></h4>
    <p>This section defines how the <code>force-load-at-top</code> policy is used to prevent all
@@ -2073,7 +2380,7 @@ data given entry.</p>
      </ol>
     </div>
    </blockquote>
-   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application" id="ref-for-update-document-for-history-step-application">update document for history step application</a> steps
+   <p>Amend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application" id="ref-for-update-document-for-history-step-application②">update document for history step application</a> steps
 to check the <code>force-load-at-top</code> policy and avoid scrolling in a new document
 if it’s set.</p>
    <blockquote>
@@ -2140,7 +2447,7 @@ if it’s set.</p>
    <div class="note" role="note"> The text fragment specification proposes an amendment to <a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid"><cite>HTML</cite> § 7.4.2.3.3 Fragment navigations</a>. In summary, if a <a data-link-type="dfn" href="#text-directive" id="ref-for-text-directive⑦">text directive</a> is
 present and a match is found in the page, the text fragment takes precedent over
 the element fragment as the indicated part. We amend the HTML Document’s
-indicated part processing model to return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range⑨">range</a>, rather than an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element②">element</a>, that will be scrolled into view. </div>
+indicated part processing model to return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">range</a>, rather than an <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-element" id="ref-for-concept-element②">element</a>, that will be scrolled into view. </div>
    <div class="algorithm" data-algorithm="first common ancestor">
      To find the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="first-common-ancestor">first common ancestor</dfn> of two nodes <var>nodeA</var> and <var>nodeB</var>,
 follow these steps: 
@@ -2166,7 +2473,7 @@ ancestor</a> of <var>nodeB</var>, let <var>commonAncestor</var> be <var>commonAn
    <h4 class="heading settled" data-level="3.6.1" id="finding-ranges-in-a-document"><span class="secno">3.6.1. </span><span class="content">Finding Ranges in a Document</span><a class="self-link" href="#finding-ranges-in-a-document"></a></h4>
    <div class="note" role="note">
      This section outlines several algorithms and definitions that specify how to
-  turn a full fragment directive string into a list of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⓪">Ranges</a> in the
+  turn a full fragment directive string into a list of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">Ranges</a> in the
   document. 
     <p>At a high level, we take a fragment directive string that looks like this:</p>
 <pre>text=prefix-,foo&amp;unknown&amp;text=bar,baz
@@ -2179,8 +2486,8 @@ text=bar,baz
   instance of rendered text that matches the restrictions in the directive.
   Each search is independent of any others; that is, the result is the same
   regardless of how many other directives are provided or their match result.</p>
-    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①①">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#invoke-text-directives" id="ref-for-invoke-text-directives①">invoke text directives</a> steps are the high level API provided by this
-  section. These return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①②">ranges</a> that were matched
+    <p>If a directive successfully matches to text in the document, it returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">range</a> indicating that match in the document. The <a data-link-type="dfn" href="#invoke-text-directives" id="ref-for-invoke-text-directives①">invoke text directives</a> steps are the high level API provided by this
+  section. These return a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">ranges</a> that were matched
   by the individual directive matching steps, in the order the directives were
   specified in the fragment directive string.</p>
     <p>If a directive was not matched, it does not add an item to the returned
@@ -2190,7 +2497,7 @@ text=bar,baz
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="invoke-text-directives">invoke text directives</dfn>, given as input an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string③">ASCII string</a> <var>text directives</var> and a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document⑧">Document</a> <var>document</var>, run these steps: 
     <div class="note" role="note"> This algorithm takes as input a <var>text directives</var>, that is the
   raw text of the fragment directive and the <var>document</var> over which it operates.
-  It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①③">ranges</a> that are to be visually
+  It returns a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">ranges</a> that are to be visually
   indicated, the first of which will be scrolled into view (if the UA scrolls
   automatically). </div>
     <ol class="algorithm">
@@ -2202,7 +2509,7 @@ return an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#lis
 that is the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#strictly-split" id="ref-for-strictly-split">strictly splitting the
 string</a> <var>text directives</var> on "&amp;".</p>
      <li data-md>
-      <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①④">ranges</a>, initially empty.</p>
+      <p>Let <var>ranges</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑥">list</a> of <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">ranges</a>, initially empty.</p>
      <li data-md>
       <p>For each <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-string" id="ref-for-ascii-string⑤">ASCII string</a> <var>directive</var> of <var>directives</var>:</p>
       <ol>
@@ -2226,12 +2533,12 @@ directive</a> steps on <var>directive</var>.</p>
 following steps: 
     <div class="note" role="note">
       This algorithm takes as input a successfully parsed text directive and a
-  document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑤">range</a> that points to the first
+  document in which to search. It returns a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> that points to the first
   text passage within the document that matches the searched-for text and
   satisfies the surrounding context. Returns null if no such passage exists. 
      <p><a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end①">end</a> can be null. If omitted, this is an "exact"
-  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑥">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start②">start</a>. If <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end②">end</a> is
-  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑦">range</a> will start with <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start③">start</a> and end with <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end③">end</a>. In the normative text below, we’ll call a
+  search and the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> will contain a string exactly matching <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start②">start</a>. If <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end②">end</a> is
+  provided, this is a "range" search; the returned <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> will start with <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start③">start</a> and end with <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end③">end</a>. In the normative text below, we’ll call a
   text passage that matches the provided <a data-link-type="dfn" href="#text-directive-start" id="ref-for-text-directive-start④">start</a> and <a data-link-type="dfn" href="#text-directive-end" id="ref-for-text-directive-end④">end</a>, regardless of which mode we’re in, the
   "matching text".</p>
      <p>Either or both of <a data-link-type="dfn" href="#text-directive-prefix" id="ref-for-text-directive-prefix①">prefix</a> and <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix①">suffix</a> can be null, in which case context on that
@@ -2261,7 +2568,7 @@ following steps:
     </div>
     <ol class="algorithm">
      <li data-md>
-      <p>Let <var>searchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑧">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start">start</a> (<var>document</var>, 0) and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end">end</a> (<var>document</var>, <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length">length</a>)</p>
+      <p>Let <var>searchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start">start</a> (<var>document</var>, 0) and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end">end</a> (<var>document</var>, <var>document</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length">length</a>)</p>
      <li data-md>
       <p>While <var>searchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed">collapsed</a>:</p>
       <ol>
@@ -2278,7 +2585,7 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
          <li data-md>
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after">after</a> <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start②">start</a></p>
          <li data-md>
-          <p>Let <var>matchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range①⑨">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start③">start</a> is <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end②">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end③">end</a>.</p>
+          <p>Let <var>matchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start③">start</a> is <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end②">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end③">end</a>.</p>
          <li data-md>
           <p>Advance <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start④">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position">next non-whitespace position</a>.</p>
          <li data-md>
@@ -2286,7 +2593,7 @@ in range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-lin
           <div class="note" role="note"> This can happen if <var>prefixMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end④">end</a> or its subsequent
   non-whitespace position is at the end of the document. </div>
          <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node①">start node</a> is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text">Text</a></code> node.</p>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node②">start node</a> is a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text">Text</a></code> node.</p>
           <div class="note" role="note"> <var>matchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑤">start</a> now points to the next
   non-whitespace text data following a matched prefix. </div>
          <li data-md>
@@ -2318,7 +2625,7 @@ range</a> steps with <var>query</var> <var>parsedValues</var>’s <a data-link-t
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑧">start</a> to the first <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp①">boundary point</a> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp-after" id="ref-for-concept-range-bp-after①">after</a> <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start⑨">start</a></p>
         </ol>
        <li data-md>
-        <p>Let <var>rangeEndSearchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⓪">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑤">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a>.</p>
+        <p>Let <var>rangeEndSearchRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⓪">start</a> is <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑤">end</a> and whose <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑥">end</a> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end⑦">end</a>.</p>
        <li data-md>
         <p>While <var>rangeEndSearchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed②">collapsed</a>:</p>
         <ol>
@@ -2342,7 +2649,7 @@ represents a range exactly containing an instance of matching text.</p>
          <li data-md>
           <p>If <var>parsedValues</var>’s <a data-link-type="dfn" href="#text-directive-suffix" id="ref-for-text-directive-suffix⑥">suffix</a> is null, return <var>potentialMatch</var>.</p>
          <li data-md>
-          <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②①">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⓪">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a>.</p>
+          <p>Let <var>suffixRange</var> be a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①①">start</a> equal to <var>potentialMatch</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⓪">end</a> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①①">end</a> equal to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①②">end</a>.</p>
          <li data-md>
           <p>Advance <var>suffixRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①②">start</a> to the <a data-link-type="dfn" href="#next-non-whitespace-position" id="ref-for-next-non-whitespace-position①">next non-whitespace
 position</a>.</p>
@@ -2394,14 +2701,14 @@ then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-brea
     </ul>
    </details>
    <div class="algorithm" data-algorithm="advance range start to next non-whitespace position">
-     To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②②">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑥">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
+     To advance a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②④">range</a> <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑥">start</a> to the <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="next non-whitespace position" data-noexport id="next-non-whitespace-position">next
 non-whitespace position</dfn> follow the steps: 
     <ol class="algorithm">
      <li data-md>
       <p>While <var>range</var> is not collapsed:</p>
       <ol>
        <li data-md>
-        <p>Let <var>node</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node②">start node</a>.</p>
+        <p>Let <var>node</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node③">start node</a>.</p>
        <li data-md>
         <p>Let <var>offset</var> be <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset">start offset</a>.</p>
        <li data-md>
@@ -2409,7 +2716,7 @@ non-whitespace position</dfn> follow the steps:
 not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node">visible text node</a> or if <var>offset</var> is equal to <var>node</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length①">length</a> then:</p>
         <ol>
          <li data-md>
-          <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node③">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order">shadow-including tree order</a>.</p>
+          <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node④">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order">shadow-including tree order</a>.</p>
          <li data-md>
           <p>Set <var>range</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset①">start offset</a> to 0.</p>
          <li data-md>
@@ -2441,16 +2748,16 @@ not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text
     </ol>
    </div>
    <div class="algorithm" data-algorithm="find a string in a range">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②③">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-string-in-range">find a string in range</dfn> given a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string">string</a> <var>query</var>, a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a> <var>searchRange</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>,
 run these steps: 
-    <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②④">range</a> that represents the first instance of
+    <div class="note" role="note"> This algorithm will return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑥">range</a> that represents the first instance of
   the <var>query</var> text that is fully contained within <var>searchRange</var>, optionally
   restricting itself to matches that start and/or end at word boundaries (see <a href="#word-boundaries">§ 3.6.2 Word Boundaries</a>). Returns null if none is found. </div>
     <div class="note" role="note">
      <p> The basic premise of this algorithm is to walk all searchable text nodes
     within a block, collecting them into a list. The list is then concatenated
     into a single string in which we can search, using the node list to
-    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑤">range</a>. </p>
+    determine offsets with a node so we can return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑦">range</a>. </p>
      <p> Collection breaks when we hit a block node, e.g. searching over this tree: </p>
 <pre>&lt;div>
   a&lt;em>b&lt;/em>c&lt;div>d&lt;/div>e
@@ -2466,12 +2773,12 @@ run these steps:
       <p>While <var>searchRange</var> is not <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#range-collapsed" id="ref-for-range-collapsed⑤">collapsed</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>curNode</var> be <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node④">start node</a>.</p>
+        <p>Let <var>curNode</var> be <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a>.</p>
        <li data-md>
         <p>If <var>curNode</var> is part of a <a data-link-type="dfn" href="#non-searchable-subtree" id="ref-for-non-searchable-subtree①">non-searchable subtree</a>:</p>
         <ol>
          <li data-md>
-          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑤">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order①">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant">shadow-including
+          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑥">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order①">shadow-including tree order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant" id="ref-for-concept-shadow-including-descendant">shadow-including
 descendant</a> of <var>curNode</var>.</p>
          <li data-md>
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑤">start offset</a> to 0.</p>
@@ -2482,7 +2789,7 @@ descendant</a> of <var>curNode</var>.</p>
         <p>If <var>curNode</var> is not a <a data-link-type="dfn" href="#visible-text-node" id="ref-for-visible-text-node①">visible text node</a>:</p>
         <ol>
          <li data-md>
-          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑥">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>, that is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-doctype" id="ref-for-concept-doctype">doctype</a>.</p>
+          <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑦">start node</a> to the next node, in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order②">shadow-including tree order</a>, that is not a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-doctype" id="ref-for-concept-doctype">doctype</a>.</p>
          <li data-md>
           <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑥">start offset</a> to 0.</p>
          <li data-md>
@@ -2513,11 +2820,11 @@ order</a>, that isn’t a <a data-link-type="dfn" href="https://dom.spec.whatwg.
           <p>Set <var>curNode</var> to the next node in <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order" id="ref-for-concept-shadow-including-tree-order④">shadow-including tree order</a>.</p>
         </ol>
        <li data-md>
-        <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, <var>textNodeList</var>, <var>wordStartBounded</var> and <var>wordEndBounded</var> as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑥">range</a> is not null, then return it.</p>
+        <p>Run the <a data-link-type="dfn" href="#find-a-range-from-a-node-list" id="ref-for-find-a-range-from-a-node-list">find a range from a node list</a> steps given <var>query</var>, <var>searchRange</var>, <var>textNodeList</var>, <var>wordStartBounded</var> and <var>wordEndBounded</var> as input. If the resulting <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑧">range</a> is not null, then return it.</p>
        <li data-md>
         <p>If <var>curNode</var> is null, then <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-break" id="ref-for-iteration-break③">break</a>.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert④">Assert</a>: <var>curNode</var> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-following" id="ref-for-concept-tree-following">follows</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑦">start node</a>.</p>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert④">Assert</a>: <var>curNode</var> <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-tree-following" id="ref-for-concept-tree-following">follows</a> <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a>.</p>
        <li data-md>
         <p>Set <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑦">start</a> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp③">boundary point</a> (<var>curNode</var>,
 0).</p>
@@ -2561,7 +2868,7 @@ return <var>curNode</var>.</p>
    </div>
    <div class="algorithm" data-algorithm="range from node list">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="find-a-range-from-a-node-list">find a range from a node list</dfn> given a search string <var>queryString</var>,
-a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑦">range</a> <var>searchRange</var>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>, follow these steps: 
+a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑨">range</a> <var>searchRange</var>, a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list⑧">list</a> of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#text" id="ref-for-text④">Text</a></code> nodes <var>nodes</var>, and booleans <var>wordStartBounded</var> and <var>wordEndBounded</var>, follow these steps: 
     <div class="note" role="note">
       Optionally, this will only return a match if the matched text begins and/or
   ends on a <a data-link-type="dfn" href="#word-boundary" id="ref-for-word-boundary">word boundary</a>. For example: 
@@ -2586,7 +2893,7 @@ to Ranges in the DOM). <a href="https://github.com/WICG/scroll-to-text-fragment/
      <li data-md>
       <p>Let <var>searchStart</var> be 0.</p>
      <li data-md>
-      <p>If the first item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑧">start node</a> then
+      <p>If the first item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-node" id="ref-for-concept-range-start-node⑨">start node</a> then
 set <var>searchStart</var> to <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start-offset" id="ref-for-concept-range-start-offset⑦">start offset</a>.</p>
      <li data-md>
       <p>Let <var>start</var> and <var>end</var> be <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp④">boundary points</a>, initially null.</p>
@@ -2625,7 +2932,7 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
      <li data-md>
       <p>Let <var>endInset</var> be 0.</p>
      <li data-md>
-      <p>If the last item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node①">end node</a> then set <var>endInset</var> to (<var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node②">end node</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length②">length</a> − <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-offset" id="ref-for-concept-range-end-offset">end offset</a>)</p>
+      <p>If the last item in <var>nodes</var> is <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node②">end node</a> then set <var>endInset</var> to (<var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-node" id="ref-for-concept-range-end-node③">end node</a>'s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-node-length" id="ref-for-concept-node-length②">length</a> − <var>searchRange</var>’s <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end-offset" id="ref-for-concept-range-end-offset">end offset</a>)</p>
       <div class="note" role="note"> <var>endInset</var> is the offset from the last position in the last node in the
   reverse direction. Alternatively, it is the length of the node that’s not
   included in the range. </div>
@@ -2635,7 +2942,7 @@ not at a word boundary</a> in <var>searchBuffer</var>, given the <a data-link-ty
      <li data-md>
       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert⑤">Assert</a>: <var>start</var> and <var>end</var> are non-null, valid <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-bp" id="ref-for-concept-range-bp⑦">boundary points</a> in <var>searchRange</var>.</p>
      <li data-md>
-      <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range②⑧">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑧">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑤">end</a> <var>end</var>.</p>
+      <p>Return a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range" id="ref-for-concept-range③⓪">range</a> with <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-start" id="ref-for-concept-range-start①⑧">start</a> <var>start</var> and <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-range-end" id="ref-for-concept-range-end①⑤">end</a> <var>end</var>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="boundary point at index">
@@ -2972,8 +3279,8 @@ manipulations
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#document-allow-text-fragment-scroll">allow text fragment scroll</a><span>, in § 3.5.4</span>
    <li><a href="#characterstring">CharacterString</a><span>, in § 3.3.4</span>
+   <li><a href="#check-if-a-text-directive-can-be-scrolled">check if a text directive can be scrolled</a><span>, in § 3.5.4</span>
    <li><a href="#directives">directives</a><span>, in § 3.3</span>
    <li>
     directive state
@@ -3027,6 +3334,7 @@ manipulations
     </ul>
    <li><a href="#document-uninvoked-directives">uninvoked directives</a><span>, in § 3.3.2</span>
    <li><a href="#unknowndirective">UnknownDirective</a><span>, in § 3.3.4</span>
+   <li><a href="#navigation-params-user-involvement">user involvement</a><span>, in § 3.5.4</span>
    <li><a href="#valid-fragment-directive">valid fragment directive</a><span>, in § 3.3.4</span>
    <li><a href="#directive-state-value">value</a><span>, in § 3.3.1</span>
    <li><a href="#visible-text-node">visible text node</a><span>, in § 3.6.1</span>
@@ -3084,6 +3392,7 @@ manipulations
      <li><span class="dfn-paneled" id="5e8d5f81">length</span>
      <li><span class="dfn-paneled" id="d462b34f">node</span>
      <li><span class="dfn-paneled" id="5216e1a0">node document</span>
+     <li><span class="dfn-paneled" id="c62cd7cf">origin</span>
      <li><span class="dfn-paneled" id="d729a9ff">parent</span>
      <li><span class="dfn-paneled" id="5afeceea">parent element</span>
      <li><span class="dfn-paneled" id="8044ee41">range</span>
@@ -3102,7 +3411,6 @@ manipulations
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="55213b5b">request</span>
-     <li><span class="dfn-paneled" id="9939e831">user-activation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
@@ -3119,20 +3427,33 @@ manipulations
      <li><span class="dfn-paneled" id="78492a07">HashChangeEvent</span>
      <li><span class="dfn-paneled" id="cc549724">Location</span>
      <li><span class="dfn-paneled" id="35972864">active document</span>
+     <li><span class="dfn-paneled" id="3c75104d">apply the history step</span>
+     <li><span class="dfn-paneled" id="1c1db69e">apply the push/replace history step</span>
      <li><span class="dfn-paneled" id="f8434dee">being rendered</span>
      <li><span class="dfn-paneled" id="3b2ff63e">browsing context</span>
      <li><span class="dfn-paneled" id="b0b49d3c">browsing context set</span>
+     <li><span class="dfn-paneled" id="07ad3048">create navigation params by fetching</span>
+     <li><span class="dfn-paneled" id="65393af9">document</span>
+     <li><span class="dfn-paneled" id="092de955">document state</span>
+     <li><span class="dfn-paneled" id="7f118064">finalize a cross-document navigation</span>
+     <li><span class="dfn-paneled" id="40a1c717">group</span>
+     <li><span class="dfn-paneled" id="2895d75d">initiator origin</span>
      <li><span class="dfn-paneled" id="d4dbbbf0">language</span>
      <li><span class="dfn-paneled" id="b07164ad">multiple</span>
      <li><span class="dfn-paneled" id="2594e562">navigate</span>
+     <li><span class="dfn-paneled" id="fffd9ca9">navigate to a fragment</span>
+     <li><span class="dfn-paneled" id="4437edc6">navigation params</span>
+     <li><span class="dfn-paneled" id="13dd6cae">node navigable</span>
+     <li><span class="dfn-paneled" id="086e3aff">origin</span>
+     <li><span class="dfn-paneled" id="1bba3db7">parent</span>
      <li><span class="dfn-paneled" id="8b87b428">restore persisted state</span>
+     <li><span class="dfn-paneled" id="7393da89">same origin</span>
      <li><span class="dfn-paneled" id="3f2e859c">scroll to the fragment</span>
      <li><span class="dfn-paneled" id="85188fb3">select</span>
      <li><span class="dfn-paneled" id="c3ae9e6a">serializes as void</span>
-     <li><span class="dfn-paneled" id="ae2a6342">top-level browsing context</span>
-     <li><span class="dfn-paneled" id="47fe679e">transient activation</span>
      <li><span class="dfn-paneled" id="8a051c9f">try to scroll to the fragment</span>
      <li><span class="dfn-paneled" id="5c1d019b">update document for history step application</span>
+     <li><span class="dfn-paneled" id="34d2343e">user navigation involvement</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
@@ -3576,28 +3897,28 @@ window.dfnpanelData['a973e0fe'] = {"dfnID": "a973e0fe", "url": "https://dom.spec
 window.dfnpanelData['2f0ba72c'] = {"dfnID": "2f0ba72c", "url": "https://dom.spec.whatwg.org/#document-element", "dfnText": "document element", "refSections": [{"refs": [{"id": "ref-for-document-element"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['27d9b7ea'] = {"dfnID": "27d9b7ea", "url": "https://dom.spec.whatwg.org/#concept-element", "dfnText": "element", "refSections": [{"refs": [{"id": "ref-for-concept-element"}, {"id": "ref-for-concept-element\u2460"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-element\u2461"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-concept-element\u2462"}, {"id": "ref-for-concept-element\u2463"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['5bbf7dec'] = {"dfnID": "5bbf7dec", "url": "https://dom.spec.whatwg.org/#concept-range-end", "dfnText": "end", "refSections": [{"refs": [{"id": "ref-for-concept-range-end"}, {"id": "ref-for-concept-range-end\u2460"}, {"id": "ref-for-concept-range-end\u2461"}, {"id": "ref-for-concept-range-end\u2462"}, {"id": "ref-for-concept-range-end\u2463"}, {"id": "ref-for-concept-range-end\u2464"}, {"id": "ref-for-concept-range-end\u2465"}, {"id": "ref-for-concept-range-end\u2466"}, {"id": "ref-for-concept-range-end\u2467"}, {"id": "ref-for-concept-range-end\u2468"}, {"id": "ref-for-concept-range-end\u2460\u24ea"}, {"id": "ref-for-concept-range-end\u2460\u2460"}, {"id": "ref-for-concept-range-end\u2460\u2461"}, {"id": "ref-for-concept-range-end\u2460\u2462"}, {"id": "ref-for-concept-range-end\u2460\u2463"}, {"id": "ref-for-concept-range-end\u2460\u2464"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['3edd98b4'] = {"dfnID": "3edd98b4", "url": "https://dom.spec.whatwg.org/#concept-range-end-node", "dfnText": "end node", "refSections": [{"refs": [{"id": "ref-for-concept-range-end-node"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range-end-node\u2460"}, {"id": "ref-for-concept-range-end-node\u2461"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
+window.dfnpanelData['3edd98b4'] = {"dfnID": "3edd98b4", "url": "https://dom.spec.whatwg.org/#concept-range-end-node", "dfnText": "end node", "refSections": [{"refs": [{"id": "ref-for-concept-range-end-node"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range-end-node\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-concept-range-end-node\u2461"}, {"id": "ref-for-concept-range-end-node\u2462"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['203b148b'] = {"dfnID": "203b148b", "url": "https://dom.spec.whatwg.org/#concept-range-end-offset", "dfnText": "end offset", "refSections": [{"refs": [{"id": "ref-for-concept-range-end-offset"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['6fba6744'] = {"dfnID": "6fba6744", "url": "https://dom.spec.whatwg.org/#concept-tree-following", "dfnText": "following", "refSections": [{"refs": [{"id": "ref-for-concept-tree-following"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['5d233601'] = {"dfnID": "5d233601", "url": "https://dom.spec.whatwg.org/#concept-documentfragment-host", "dfnText": "host", "refSections": [{"refs": [{"id": "ref-for-concept-documentfragment-host"}], "title": "3.6. Navigating to a Text Fragment"}], "external": true};
 window.dfnpanelData['5e8d5f81'] = {"dfnID": "5e8d5f81", "url": "https://dom.spec.whatwg.org/#concept-node-length", "dfnText": "length", "refSections": [{"refs": [{"id": "ref-for-concept-node-length"}, {"id": "ref-for-concept-node-length\u2460"}, {"id": "ref-for-concept-node-length\u2461"}, {"id": "ref-for-concept-node-length\u2462"}, {"id": "ref-for-concept-node-length\u2463"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['d462b34f'] = {"dfnID": "d462b34f", "url": "https://dom.spec.whatwg.org/#boundary-point-node", "dfnText": "node", "refSections": [{"refs": [{"id": "ref-for-boundary-point-node"}, {"id": "ref-for-boundary-point-node\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['5216e1a0'] = {"dfnID": "5216e1a0", "url": "https://dom.spec.whatwg.org/#concept-node-document", "dfnText": "node document", "refSections": [{"refs": [{"id": "ref-for-concept-node-document"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
+window.dfnpanelData['c62cd7cf'] = {"dfnID": "c62cd7cf", "url": "https://dom.spec.whatwg.org/#concept-document-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-document-origin"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['d729a9ff'] = {"dfnID": "d729a9ff", "url": "https://dom.spec.whatwg.org/#concept-tree-parent", "dfnText": "parent", "refSections": [{"refs": [{"id": "ref-for-concept-tree-parent"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-tree-parent\u2460"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-concept-tree-parent\u2461"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['5afeceea'] = {"dfnID": "5afeceea", "url": "https://dom.spec.whatwg.org/#parent-element", "dfnText": "parent element", "refSections": [{"refs": [{"id": "ref-for-parent-element"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['8044ee41'] = {"dfnID": "8044ee41", "url": "https://dom.spec.whatwg.org/#concept-range", "dfnText": "range", "refSections": [{"refs": [{"id": "ref-for-concept-range"}, {"id": "ref-for-concept-range\u2460"}, {"id": "ref-for-concept-range\u2461"}, {"id": "ref-for-concept-range\u2462"}, {"id": "ref-for-concept-range\u2463"}, {"id": "ref-for-concept-range\u2464"}, {"id": "ref-for-concept-range\u2465"}, {"id": "ref-for-concept-range\u2466"}, {"id": "ref-for-concept-range\u2467"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range\u2468"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-concept-range\u2460\u24ea"}, {"id": "ref-for-concept-range\u2460\u2460"}, {"id": "ref-for-concept-range\u2460\u2461"}, {"id": "ref-for-concept-range\u2460\u2462"}, {"id": "ref-for-concept-range\u2460\u2463"}, {"id": "ref-for-concept-range\u2460\u2464"}, {"id": "ref-for-concept-range\u2460\u2465"}, {"id": "ref-for-concept-range\u2460\u2466"}, {"id": "ref-for-concept-range\u2460\u2467"}, {"id": "ref-for-concept-range\u2460\u2468"}, {"id": "ref-for-concept-range\u2461\u24ea"}, {"id": "ref-for-concept-range\u2461\u2460"}, {"id": "ref-for-concept-range\u2461\u2461"}, {"id": "ref-for-concept-range\u2461\u2462"}, {"id": "ref-for-concept-range\u2461\u2463"}, {"id": "ref-for-concept-range\u2461\u2464"}, {"id": "ref-for-concept-range\u2461\u2465"}, {"id": "ref-for-concept-range\u2461\u2466"}, {"id": "ref-for-concept-range\u2461\u2467"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
+window.dfnpanelData['8044ee41'] = {"dfnID": "8044ee41", "url": "https://dom.spec.whatwg.org/#concept-range", "dfnText": "range", "refSections": [{"refs": [{"id": "ref-for-concept-range"}, {"id": "ref-for-concept-range\u2460"}, {"id": "ref-for-concept-range\u2461"}, {"id": "ref-for-concept-range\u2462"}, {"id": "ref-for-concept-range\u2463"}, {"id": "ref-for-concept-range\u2464"}, {"id": "ref-for-concept-range\u2465"}, {"id": "ref-for-concept-range\u2466"}, {"id": "ref-for-concept-range\u2467"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range\u2468"}, {"id": "ref-for-concept-range\u2460\u24ea"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-concept-range\u2460\u2460"}], "title": "3.6. Navigating to a Text Fragment"}, {"refs": [{"id": "ref-for-concept-range\u2460\u2461"}, {"id": "ref-for-concept-range\u2460\u2462"}, {"id": "ref-for-concept-range\u2460\u2463"}, {"id": "ref-for-concept-range\u2460\u2464"}, {"id": "ref-for-concept-range\u2460\u2465"}, {"id": "ref-for-concept-range\u2460\u2466"}, {"id": "ref-for-concept-range\u2460\u2467"}, {"id": "ref-for-concept-range\u2460\u2468"}, {"id": "ref-for-concept-range\u2461\u24ea"}, {"id": "ref-for-concept-range\u2461\u2460"}, {"id": "ref-for-concept-range\u2461\u2461"}, {"id": "ref-for-concept-range\u2461\u2462"}, {"id": "ref-for-concept-range\u2461\u2463"}, {"id": "ref-for-concept-range\u2461\u2464"}, {"id": "ref-for-concept-range\u2461\u2465"}, {"id": "ref-for-concept-range\u2461\u2466"}, {"id": "ref-for-concept-range\u2461\u2467"}, {"id": "ref-for-concept-range\u2461\u2468"}, {"id": "ref-for-concept-range\u2462\u24ea"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['3fcc582f'] = {"dfnID": "3fcc582f", "url": "https://dom.spec.whatwg.org/#concept-shadow-root", "dfnText": "shadow root", "refSections": [{"refs": [{"id": "ref-for-concept-shadow-root"}], "title": "3.6. Navigating to a Text Fragment"}], "external": true};
 window.dfnpanelData['8f378588'] = {"dfnID": "8f378588", "url": "https://dom.spec.whatwg.org/#concept-shadow-including-ancestor", "dfnText": "shadow-including ancestor", "refSections": [{"refs": [{"id": "ref-for-concept-shadow-including-ancestor"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['fd32e3c9'] = {"dfnID": "fd32e3c9", "url": "https://dom.spec.whatwg.org/#concept-shadow-including-descendant", "dfnText": "shadow-including descendant", "refSections": [{"refs": [{"id": "ref-for-concept-shadow-including-descendant"}, {"id": "ref-for-concept-shadow-including-descendant\u2460"}, {"id": "ref-for-concept-shadow-including-descendant\u2461"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['3d6a3d36'] = {"dfnID": "3d6a3d36", "url": "https://dom.spec.whatwg.org/#concept-shadow-including-inclusive-ancestor", "dfnText": "shadow-including inclusive ancestor", "refSections": [{"refs": [{"id": "ref-for-concept-shadow-including-inclusive-ancestor"}], "title": "3.6. Navigating to a Text Fragment"}], "external": true};
 window.dfnpanelData['fefa5851'] = {"dfnID": "fefa5851", "url": "https://dom.spec.whatwg.org/#concept-shadow-including-tree-order", "dfnText": "shadow-including tree order", "refSections": [{"refs": [{"id": "ref-for-concept-shadow-including-tree-order"}, {"id": "ref-for-concept-shadow-including-tree-order\u2460"}, {"id": "ref-for-concept-shadow-including-tree-order\u2461"}, {"id": "ref-for-concept-shadow-including-tree-order\u2462"}, {"id": "ref-for-concept-shadow-including-tree-order\u2463"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['936c50ab'] = {"dfnID": "936c50ab", "url": "https://dom.spec.whatwg.org/#concept-range-start", "dfnText": "start", "refSections": [{"refs": [{"id": "ref-for-concept-range-start"}, {"id": "ref-for-concept-range-start\u2460"}, {"id": "ref-for-concept-range-start\u2461"}, {"id": "ref-for-concept-range-start\u2462"}, {"id": "ref-for-concept-range-start\u2463"}, {"id": "ref-for-concept-range-start\u2464"}, {"id": "ref-for-concept-range-start\u2465"}, {"id": "ref-for-concept-range-start\u2466"}, {"id": "ref-for-concept-range-start\u2467"}, {"id": "ref-for-concept-range-start\u2468"}, {"id": "ref-for-concept-range-start\u2460\u24ea"}, {"id": "ref-for-concept-range-start\u2460\u2460"}, {"id": "ref-for-concept-range-start\u2460\u2461"}, {"id": "ref-for-concept-range-start\u2460\u2462"}, {"id": "ref-for-concept-range-start\u2460\u2463"}, {"id": "ref-for-concept-range-start\u2460\u2464"}, {"id": "ref-for-concept-range-start\u2460\u2465"}, {"id": "ref-for-concept-range-start\u2460\u2466"}, {"id": "ref-for-concept-range-start\u2460\u2467"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['6c88f67e'] = {"dfnID": "6c88f67e", "url": "https://dom.spec.whatwg.org/#concept-range-start-node", "dfnText": "start node", "refSections": [{"refs": [{"id": "ref-for-concept-range-start-node"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range-start-node\u2460"}, {"id": "ref-for-concept-range-start-node\u2461"}, {"id": "ref-for-concept-range-start-node\u2462"}, {"id": "ref-for-concept-range-start-node\u2463"}, {"id": "ref-for-concept-range-start-node\u2464"}, {"id": "ref-for-concept-range-start-node\u2465"}, {"id": "ref-for-concept-range-start-node\u2466"}, {"id": "ref-for-concept-range-start-node\u2467"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
+window.dfnpanelData['6c88f67e'] = {"dfnID": "6c88f67e", "url": "https://dom.spec.whatwg.org/#concept-range-start-node", "dfnText": "start node", "refSections": [{"refs": [{"id": "ref-for-concept-range-start-node"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-concept-range-start-node\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-concept-range-start-node\u2461"}, {"id": "ref-for-concept-range-start-node\u2462"}, {"id": "ref-for-concept-range-start-node\u2463"}, {"id": "ref-for-concept-range-start-node\u2464"}, {"id": "ref-for-concept-range-start-node\u2465"}, {"id": "ref-for-concept-range-start-node\u2466"}, {"id": "ref-for-concept-range-start-node\u2467"}, {"id": "ref-for-concept-range-start-node\u2468"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['683b1507'] = {"dfnID": "683b1507", "url": "https://dom.spec.whatwg.org/#concept-range-start-offset", "dfnText": "start offset", "refSections": [{"refs": [{"id": "ref-for-concept-range-start-offset"}, {"id": "ref-for-concept-range-start-offset\u2460"}, {"id": "ref-for-concept-range-start-offset\u2461"}, {"id": "ref-for-concept-range-start-offset\u2462"}, {"id": "ref-for-concept-range-start-offset\u2463"}, {"id": "ref-for-concept-range-start-offset\u2464"}, {"id": "ref-for-concept-range-start-offset\u2465"}, {"id": "ref-for-concept-range-start-offset\u2466"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c9f15d91'] = {"dfnID": "c9f15d91", "url": "https://dom.spec.whatwg.org/#concept-cd-substring", "dfnText": "substring data", "refSections": [{"refs": [{"id": "ref-for-concept-cd-substring"}, {"id": "ref-for-concept-cd-substring\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['347e8fe9'] = {"dfnID": "347e8fe9", "url": "https://dom.spec.whatwg.org/#concept-document-url", "dfnText": "url", "refSections": [{"refs": [{"id": "ref-for-concept-document-url"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
 window.dfnpanelData['55213b5b'] = {"dfnID": "55213b5b", "url": "https://fetch.spec.whatwg.org/#concept-request", "dfnText": "request", "refSections": [{"refs": [{"id": "ref-for-concept-request"}, {"id": "ref-for-concept-request\u2460"}, {"id": "ref-for-concept-request\u2461"}, {"id": "ref-for-concept-request\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
-window.dfnpanelData['9939e831'] = {"dfnID": "9939e831", "url": "https://fetch.spec.whatwg.org/#request-user-activation", "dfnText": "user-activation", "refSections": [{"refs": [{"id": "ref-for-request-user-activation"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['fe2a6718'] = {"dfnID": "fe2a6718", "url": "https://html.spec.whatwg.org/multipage/media.html#htmlaudioelement", "dfnText": "HTMLAudioElement", "refSections": [{"refs": [{"id": "ref-for-htmlaudioelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['10e25f42'] = {"dfnID": "10e25f42", "url": "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement", "dfnText": "HTMLIFrameElement", "refSections": [{"refs": [{"id": "ref-for-htmliframeelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c5891539'] = {"dfnID": "c5891539", "url": "https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement", "dfnText": "HTMLImageElement", "refSections": [{"refs": [{"id": "ref-for-htmlimageelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
@@ -3609,21 +3930,34 @@ window.dfnpanelData['aa8746c3'] = {"dfnID": "aa8746c3", "url": "https://html.spe
 window.dfnpanelData['f57f330b'] = {"dfnID": "f57f330b", "url": "https://html.spec.whatwg.org/multipage/media.html#htmlvideoelement", "dfnText": "HTMLVideoElement", "refSections": [{"refs": [{"id": "ref-for-htmlvideoelement"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['78492a07'] = {"dfnID": "78492a07", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#hashchangeevent", "dfnText": "HashChangeEvent", "refSections": [{"refs": [{"id": "ref-for-hashchangeevent"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
 window.dfnpanelData['cc549724'] = {"dfnID": "cc549724", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#location", "dfnText": "Location", "refSections": [{"refs": [{"id": "ref-for-location"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
-window.dfnpanelData['35972864'] = {"dfnID": "35972864", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document", "dfnText": "active document", "refSections": [{"refs": [{"id": "ref-for-nav-document"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-nav-document\u2460"}, {"id": "ref-for-nav-document\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['35972864'] = {"dfnID": "35972864", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#nav-document", "dfnText": "active document", "refSections": [{"refs": [{"id": "ref-for-nav-document"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-nav-document\u2460"}, {"id": "ref-for-nav-document\u2461"}, {"id": "ref-for-nav-document\u2462"}, {"id": "ref-for-nav-document\u2463"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['3c75104d'] = {"dfnID": "3c75104d", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#apply-the-history-step", "dfnText": "apply the history step", "refSections": [{"refs": [{"id": "ref-for-apply-the-history-step"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['1c1db69e'] = {"dfnID": "1c1db69e", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#apply-the-push%2Freplace-history-step", "dfnText": "apply the push/replace history step", "refSections": [{"refs": [{"id": "ref-for-apply-the-push%2Freplace-history-step"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['f8434dee'] = {"dfnID": "f8434dee", "url": "https://html.spec.whatwg.org/multipage/rendering.html#being-rendered", "dfnText": "being rendered", "refSections": [{"refs": [{"id": "ref-for-being-rendered"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['3b2ff63e'] = {"dfnID": "3b2ff63e", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#concept-document-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-concept-document-bc"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['b0b49d3c'] = {"dfnID": "b0b49d3c", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context-set", "dfnText": "browsing context set", "refSections": [{"refs": [{"id": "ref-for-browsing-context-set"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['07ad3048'] = {"dfnID": "07ad3048", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#create-navigation-params-by-fetching", "dfnText": "create navigation params by fetching", "refSections": [{"refs": [{"id": "fc0e1ad00"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-create-navigation-params-by-fetching"}, {"id": "ref-for-create-navigation-params-by-fetching\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['65393af9'] = {"dfnID": "65393af9", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document", "dfnText": "document", "refSections": [{"refs": [{"id": "ref-for-she-document"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['092de955'] = {"dfnID": "092de955", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#she-document-state", "dfnText": "document state", "refSections": [{"refs": [{"id": "ref-for-she-document-state"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['7f118064'] = {"dfnID": "7f118064", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#finalize-a-cross-document-navigation", "dfnText": "finalize a cross-document navigation", "refSections": [{"refs": [{"id": "ref-for-finalize-a-cross-document-navigation"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['40a1c717'] = {"dfnID": "40a1c717", "url": "https://html.spec.whatwg.org/multipage/browsers.html#tlbc-group", "dfnText": "group", "refSections": [{"refs": [{"id": "ref-for-tlbc-group"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['2895d75d'] = {"dfnID": "2895d75d", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#document-state-initiator-origin", "dfnText": "initiator origin", "refSections": [{"refs": [{"id": "ref-for-document-state-initiator-origin"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['d4dbbbf0'] = {"dfnID": "d4dbbbf0", "url": "https://html.spec.whatwg.org/multipage/dom.html#language", "dfnText": "language", "refSections": [{"refs": [{"id": "ref-for-language"}, {"id": "ref-for-language\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['b07164ad'] = {"dfnID": "b07164ad", "url": "https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple", "dfnText": "multiple", "refSections": [{"refs": [{"id": "ref-for-attr-select-multiple"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['2594e562'] = {"dfnID": "2594e562", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate", "dfnText": "navigate", "refSections": [{"refs": [{"id": "ref-for-navigate"}], "title": "3.3.1. Extracting the fragment directive"}], "external": true};
+window.dfnpanelData['2594e562'] = {"dfnID": "2594e562", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate", "dfnText": "navigate", "refSections": [{"refs": [{"id": "ref-for-navigate"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-navigate\u2460"}, {"id": "ref-for-navigate\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['fffd9ca9'] = {"dfnID": "fffd9ca9", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate-fragid", "dfnText": "navigate to a fragment", "refSections": [{"refs": [{"id": "319d7c290"}, {"id": "319d7c291"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "319d7c292"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-navigate-fragid"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['4437edc6'] = {"dfnID": "4437edc6", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigation-params", "dfnText": "navigation params", "refSections": [{"refs": [{"id": "ref-for-navigation-params"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['13dd6cae'] = {"dfnID": "13dd6cae", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#node-navigable", "dfnText": "node navigable", "refSections": [{"refs": [{"id": "ref-for-node-navigable"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['086e3aff'] = {"dfnID": "086e3aff", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-origin"}, {"id": "ref-for-concept-origin\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
+window.dfnpanelData['1bba3db7'] = {"dfnID": "1bba3db7", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#nav-parent", "dfnText": "parent", "refSections": [{"refs": [{"id": "ref-for-nav-parent"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['8b87b428'] = {"dfnID": "8b87b428", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#restore-persisted-state", "dfnText": "restore persisted state", "refSections": [{"refs": [{"id": "ref-for-restore-persisted-state"}], "title": "3.5.5. Restricting Scroll on Load"}, {"refs": [{"id": "ref-for-restore-persisted-state\u2460"}], "title": "3.8. Document Policy Integration"}], "external": true};
+window.dfnpanelData['7393da89'] = {"dfnID": "7393da89", "url": "https://html.spec.whatwg.org/multipage/browsers.html#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['3f2e859c'] = {"dfnID": "3f2e859c", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-the-fragment-identifier", "dfnText": "scroll to the fragment", "refSections": [{"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier"}, {"id": "ref-for-scroll-to-the-fragment-identifier\u2460"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-scroll-to-the-fragment-identifier\u2462"}], "title": "3.8. Document Policy Integration"}], "external": true};
 window.dfnpanelData['85188fb3'] = {"dfnID": "85188fb3", "url": "https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element", "dfnText": "select", "refSections": [{"refs": [{"id": "ref-for-the-select-element"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['c3ae9e6a'] = {"dfnID": "c3ae9e6a", "url": "https://html.spec.whatwg.org/multipage/parsing.html#serializes-as-void", "dfnText": "serializes as void", "refSections": [{"refs": [{"id": "ref-for-serializes-as-void"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
-window.dfnpanelData['ae2a6342'] = {"dfnID": "ae2a6342", "url": "https://html.spec.whatwg.org/multipage/document-sequences.html#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
-window.dfnpanelData['47fe679e'] = {"dfnID": "47fe679e", "url": "https://html.spec.whatwg.org/multipage/interaction.html#transient-activation", "dfnText": "transient activation", "refSections": [{"refs": [{"id": "ref-for-transient-activation"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['8a051c9f'] = {"dfnID": "8a051c9f", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment", "dfnText": "try to scroll to the fragment", "refSections": [{"refs": [{"id": "44bd3acf0"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-try-to-scroll-to-the-fragment\u2460"}], "title": "3.7. Indicating The Text Match"}], "external": true};
-window.dfnpanelData['5c1d019b'] = {"dfnID": "5c1d019b", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application", "dfnText": "update document for history step application", "refSections": [{"refs": [{"id": "fb71d7890"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application"}], "title": "3.5.5. Restricting Scroll on Load"}], "external": true};
+window.dfnpanelData['5c1d019b'] = {"dfnID": "5c1d019b", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#update-document-for-history-step-application", "dfnText": "update document for history step application", "refSections": [{"refs": [{"id": "fb71d7890"}], "title": "3.3.2. Applying directives to a document"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application"}, {"id": "ref-for-update-document-for-history-step-application\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}, {"refs": [{"id": "ref-for-update-document-for-history-step-application\u2461"}], "title": "3.5.5. Restricting Scroll on Load"}], "external": true};
+window.dfnpanelData['34d2343e'] = {"dfnID": "34d2343e", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#user-navigation-involvement", "dfnText": "user navigation involvement", "refSections": [{"refs": [{"id": "ref-for-user-navigation-involvement"}, {"id": "ref-for-user-navigation-involvement\u2460"}, {"id": "ref-for-user-navigation-involvement\u2461"}, {"id": "ref-for-user-navigation-involvement\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": true};
 window.dfnpanelData['53275e46'] = {"dfnID": "53275e46", "url": "https://infra.spec.whatwg.org/#list-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-list-append"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['2d5a2765'] = {"dfnID": "2d5a2765", "url": "https://infra.spec.whatwg.org/#ascii-string", "dfnText": "ascii string", "refSections": [{"refs": [{"id": "ref-for-ascii-string"}], "title": "3.3.1. Extracting the fragment directive"}, {"refs": [{"id": "ref-for-ascii-string\u2460"}], "title": "3.3.4. Fragment directive grammar"}, {"refs": [{"id": "ref-for-ascii-string\u2461"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-ascii-string\u2462"}, {"id": "ref-for-ascii-string\u2463"}, {"id": "ref-for-ascii-string\u2464"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
 window.dfnpanelData['77b4c09a'] = {"dfnID": "77b4c09a", "url": "https://infra.spec.whatwg.org/#assert", "dfnText": "assert", "refSections": [{"refs": [{"id": "ref-for-assert"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-assert\u2460"}, {"id": "ref-for-assert\u2461"}, {"id": "ref-for-assert\u2462"}, {"id": "ref-for-assert\u2463"}, {"id": "ref-for-assert\u2464"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": true};
@@ -3678,9 +4012,10 @@ window.dfnpanelData['text-directive-prefix'] = {"dfnID": "text-directive-prefix"
 window.dfnpanelData['text-directive-suffix'] = {"dfnID": "text-directive-suffix", "url": "#text-directive-suffix", "dfnText": "suffix", "refSections": [{"refs": [{"id": "ref-for-text-directive-suffix"}], "title": "3.4. Text Directives"}, {"refs": [{"id": "ref-for-text-directive-suffix\u2460"}, {"id": "ref-for-text-directive-suffix\u2461"}, {"id": "ref-for-text-directive-suffix\u2462"}, {"id": "ref-for-text-directive-suffix\u2463"}, {"id": "ref-for-text-directive-suffix\u2464"}, {"id": "ref-for-text-directive-suffix\u2465"}, {"id": "ref-for-text-directive-suffix\u2466"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
 window.dfnpanelData['parse-a-text-directive'] = {"dfnID": "parse-a-text-directive", "url": "#parse-a-text-directive", "dfnText": "parse a text directive", "refSections": [{"refs": [{"id": "ref-for-parse-a-text-directive"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
 window.dfnpanelData['request-text-directive-user-activation'] = {"dfnID": "request-text-directive-user-activation", "url": "#request-text-directive-user-activation", "dfnText": "text directive user activation", "refSections": [{"refs": [{"id": "ref-for-request-text-directive-user-activation"}, {"id": "ref-for-request-text-directive-user-activation\u2460"}, {"id": "ref-for-request-text-directive-user-activation\u2461"}, {"id": "ref-for-request-text-directive-user-activation\u2462"}, {"id": "ref-for-request-text-directive-user-activation\u2463"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
-window.dfnpanelData['document-text-directive-user-activation'] = {"dfnID": "document-text-directive-user-activation", "url": "#document-text-directive-user-activation", "dfnText": "text directive user activation", "refSections": [{"refs": [{"id": "ref-for-document-text-directive-user-activation"}, {"id": "ref-for-document-text-directive-user-activation\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2461"}, {"id": "ref-for-document-text-directive-user-activation\u2462"}, {"id": "ref-for-document-text-directive-user-activation\u2463"}, {"id": "ref-for-document-text-directive-user-activation\u2464"}, {"id": "ref-for-document-text-directive-user-activation\u2465"}, {"id": "ref-for-document-text-directive-user-activation\u2466"}, {"id": "ref-for-document-text-directive-user-activation\u2467"}, {"id": "ref-for-document-text-directive-user-activation\u2468"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u24ea"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2461"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
-window.dfnpanelData['document-allow-text-fragment-scroll'] = {"dfnID": "document-allow-text-fragment-scroll", "url": "#document-allow-text-fragment-scroll", "dfnText": "allow text fragment scroll", "refSections": [{"refs": [{"id": "ref-for-document-allow-text-fragment-scroll"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-document-allow-text-fragment-scroll\u2460"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2461"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2462"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2463"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2464"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2465"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2466"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2467"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2468"}, {"id": "ref-for-document-allow-text-fragment-scroll\u2460\u24ea"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
-window.dfnpanelData['first-common-ancestor'] = {"dfnID": "first-common-ancestor", "url": "#first-common-ancestor", "dfnText": "first common ancestor", "refSections": [{"refs": [{"id": "ref-for-first-common-ancestor"}], "title": "3.4.1. Invoking Text Directives"}], "external": false};
+window.dfnpanelData['document-text-directive-user-activation'] = {"dfnID": "document-text-directive-user-activation", "url": "#document-text-directive-user-activation", "dfnText": "text directive user activation", "refSections": [{"refs": [{"id": "ref-for-document-text-directive-user-activation"}, {"id": "ref-for-document-text-directive-user-activation\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2461"}, {"id": "ref-for-document-text-directive-user-activation\u2462"}, {"id": "ref-for-document-text-directive-user-activation\u2463"}, {"id": "ref-for-document-text-directive-user-activation\u2464"}, {"id": "ref-for-document-text-directive-user-activation\u2465"}, {"id": "ref-for-document-text-directive-user-activation\u2466"}, {"id": "ref-for-document-text-directive-user-activation\u2467"}, {"id": "ref-for-document-text-directive-user-activation\u2468"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u24ea"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2460"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2461"}, {"id": "ref-for-document-text-directive-user-activation\u2460\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
+window.dfnpanelData['navigation-params-user-involvement'] = {"dfnID": "navigation-params-user-involvement", "url": "#navigation-params-user-involvement", "dfnText": "user involvement", "refSections": [{"refs": [{"id": "ref-for-navigation-params-user-involvement"}, {"id": "ref-for-navigation-params-user-involvement\u2460"}, {"id": "ref-for-navigation-params-user-involvement\u2461"}, {"id": "ref-for-navigation-params-user-involvement\u2462"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
+window.dfnpanelData['check-if-a-text-directive-can-be-scrolled'] = {"dfnID": "check-if-a-text-directive-can-be-scrolled", "url": "#check-if-a-text-directive-can-be-scrolled", "dfnText": "check if a text directive can be scrolled", "refSections": [{"refs": [{"id": "ref-for-check-if-a-text-directive-can-be-scrolled"}, {"id": "ref-for-check-if-a-text-directive-can-be-scrolled\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
+window.dfnpanelData['first-common-ancestor'] = {"dfnID": "first-common-ancestor", "url": "#first-common-ancestor", "dfnText": "first common ancestor", "refSections": [{"refs": [{"id": "ref-for-first-common-ancestor"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-first-common-ancestor\u2460"}], "title": "3.5.4. Restricting the Text Fragment"}], "external": false};
 window.dfnpanelData['shadow-including-parent'] = {"dfnID": "shadow-including-parent", "url": "#shadow-including-parent", "dfnText": "shadow-including parent", "refSections": [{"refs": [{"id": "ref-for-shadow-including-parent"}], "title": "3.6. Navigating to a Text Fragment"}], "external": false};
 window.dfnpanelData['invoke-text-directives'] = {"dfnID": "invoke-text-directives", "url": "#invoke-text-directives", "dfnText": "invoke text directives", "refSections": [{"refs": [{"id": "ref-for-invoke-text-directives"}], "title": "3.4.1. Invoking Text Directives"}, {"refs": [{"id": "ref-for-invoke-text-directives\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
 window.dfnpanelData['find-a-range-from-a-text-directive'] = {"dfnID": "find-a-range-from-a-text-directive", "url": "#find-a-range-from-a-text-directive", "dfnText": "find a range from a text directive", "refSections": [{"refs": [{"id": "ref-for-find-a-range-from-a-text-directive"}], "title": "3.5.3. Search Timing"}, {"refs": [{"id": "ref-for-find-a-range-from-a-text-directive\u2460"}], "title": "3.6.1. Finding Ranges in a Document"}], "external": false};
