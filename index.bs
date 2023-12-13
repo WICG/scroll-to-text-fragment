@@ -99,13 +99,30 @@ URLs that direct the user to the answer they are looking for in the page rather
 than linking to the top of the page.
 
 ### User sharing ### {#user-sharing}
-With text fragments, browsers may implement an option to 'Copy URL to here'
+With text directives, browsers may implement an option to 'Copy URL to here'
 when the user opens the context menu on a text selection. The browser can then
 generate a URL with the text selection appropriately specified, and the
 recipient of the URL will have the specified text conveniently indicated.
 Without text fragments, if a user wants to share a passage of text from a page,
 they would likely just copy and paste the passage, in which case the receiver
 loses the context of the page.
+
+## Link Lifetime ## {#link-lifetime}
+
+This specification attempts to maximize the useful lifetime of text directive links, for example, by
+using the actual text content as the URL payload, and allowing a fallback element-id fragment.
+However, pages on the web often update and change their content. As such, links like this may "rot"
+in that the text content they point to no longer exists on the destination page.
+
+Text directive links can be useful despite this problem. In user sharing use cases, the link is
+often transient, intended to be used only within a short time of sending. For longer duration use
+cases, such as references and web page links, text directives are still valuable since they degrade
+gracefully into an ordinary link. Additionally, the presence of a stale text directive can be useful
+information to surface to a user, to help them understand the link creator's original intent and
+that the page content may have changed since the link was created.
+
+See [[#generating-text-fragment-directives]] for best practices on how to create robust text
+directive links.
 
 # Description # {#description}
 
