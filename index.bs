@@ -1242,6 +1242,22 @@ user activation=] flag:
 >
 > </div>
 
+A <dfn>text directive allowing MIME type</dfn> is a [=MIME type=] whose [=MIME type/essence=] is
+"<code>text/html</code>" or "<code>text/plain</code>".
+
+Note: As noted in <a
+href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#scrolling-to-a-fragment">scrolling
+to a fragment, fragment processing is defined individually by each MIME type. As such, the
+<a spec=HTML>scroll to the fragment</a> steps where text directives are scrolled should only apply
+to text/html media types. However, in practice, web browsers tend to apply HTML fragment processing
+to other types, such as text/plain (e.g. add an element with an id to a text/plain document,
+navigating to the fragment-id causes scrolling). While this is the case, enabling text directives in
+text/plain documents is useful. Other types are explicitly disallowed to prevent the possibility of
+XS-Search attacks on potentially sensitive application data (e.g. text/css, application/json,
+application/javascript, etc.).
+
+Issue: Is this valid to say in the HTML spec?
+
 <div algorithm="check if a text directive can be scrolled">
   To <dfn>check if a text directive can be scrolled</dfn>; given a [=/Document=] |document|, an
   [=/origin=]-or-null |initiator origin|, and <a spec=HTML>user navigation involvement</a>-or-null
@@ -1253,6 +1269,8 @@ user activation=] flag:
         true, or |user involvement| is one of "<code>activation</code>" or "<code>browser
         UI</code>"; false otherwise.
     1. Set |document|'s [=document/text directive user activation=] to false.
+    1. If |document|'s [=Document/content type=] is not a [=text directive allowing MIME type=],
+        return false.
     1. If |user involvement| is "<code>browser UI</code>", return true.
         <div class="note">
           <p>
