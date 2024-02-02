@@ -302,7 +302,7 @@ view. However, all matched directives will be visually indicated on the page.
 For example:
 
 ```
-example.com#:~:text=foo&text=bar&text=bas
+example.com#:~:text=foo&text=bar&text=baz
 ```
 
 will target each of “foo”, “bar”, and “baz” and use the “foo” result as the
