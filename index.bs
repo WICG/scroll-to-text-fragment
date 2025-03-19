@@ -1798,7 +1798,8 @@ following steps:
             1. Let |prefixMatch| be the the result of running the [=find a string
                 in range=] steps with |query| |parsedValues|'s
                 [=text directive/prefix=], |searchRange| |searchRange|,
-                |wordStartBounded| true and |wordEndBounded| false.
+                |wordStartBounded| true, |wordEndBounded| false and
+                |matchMustBeAtBeginning| false.
             1. If |prefixMatch| is null, return null.
             1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
                 [=boundary point/after=] |prefixMatch|'s [=range/start=]
@@ -1824,11 +1825,9 @@ following steps:
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
                 [=text directive/start=], |searchRange| |matchRange|,
-                |wordStartBounded| false, and |wordEndBounded|
-                |mustEndAtWordBoundary|.
-            1. If |potentialMatch| is null, return null.
-            1. If |potentialMatch|'s [=range/start=] is not |matchRange|'s
-                [=range/start=], then [=iteration/continue=].
+                |wordStartBounded| false, |wordEndBounded|
+                |mustEndAtWordBoundary| and |matchMustBeAtBeginning| true.
+            1. If |potentialMatch| is null, [=iteration/continue=].
                 <div class="note">
                   In this case, we found a prefix but it was followed by something
                   other than a matching text so we'll continue searching for the
@@ -1842,8 +1841,8 @@ following steps:
             1. Set |potentialMatch| to the result of running the [=find a string in
                 range=] steps with |query| |parsedValues|'s
                 [=text directive/start=], |searchRange| |searchRange|,
-                |wordStartBounded| true, and |wordEndBounded|
-                |mustEndAtWordBoundary|.
+                |wordStartBounded| true, |wordEndBounded|
+                |mustEndAtWordBoundary| and |matchMustBeAtBeginning| false.
             1. If |potentialMatch| is null, return null.
             1. Set |searchRange|'s [=range/start=] to the first [=/boundary point=]
                 [=boundary point/after=] |potentialMatch|'s [=range/start=]
@@ -1858,8 +1857,8 @@ following steps:
                 1. Let |endMatch| be the result of running the [=find a string
                     in range=] steps with |query| |parsedValues|'s
                     [=text directive/end=], |searchRange| |rangeEndSearchRange|,
-                    |wordStartBounded| true, and |wordEndBounded|
-                    |mustEndAtWordBoundary|.
+                    |wordStartBounded| true, |wordEndBounded|
+                    |mustEndAtWordBoundary| and |matchMustBeAtBeginning| false.
                 1. If |endMatch| is null then return null.
                 1. Set |potentialMatch|'s [=range/end=] to |endMatch|'s
                     [=range/end=].
@@ -1874,17 +1873,11 @@ following steps:
                 position=].
             1. Let |suffixMatch| be result of running the [=find a string in range=]
                 steps with |query| |parsedValues|'s [=text directive/suffix=],
-                |searchRange| |suffixRange|, |wordStartBounded| false, and
-                |wordEndBounded| true.
-            1. If |suffixMatch| is null then return null.
-                <div class="note">
-                  If the suffix doesn't appear in the remaining text of the document,
-                  there's no possible way to make a match.
-                </div>
-            1. If |suffixMatch|'s [=range/start=] is |suffixRange|'s [=range/start=],
-                return |potentialMatch|.
-            1. If |parsedValues|'s [=text directive/end=] item is null
-                then [=iteration/break=];
+                |searchRange| |suffixRange|, |wordStartBounded| false,
+                |wordEndBounded| true and |matchMustBeAtBeginning| true.
+            1. If |suffixMatch| is non-null, return |potentialMatch|.
+            1. If |parsedValues|'s [=text directive/end=] item is null and
+                |suffixMatch| is null, then [=iteration/break=];
                 <div class="note">
                   If this is an exact match and the suffix doesn't match,
                   start searching for the next range start by breaking out
@@ -1950,8 +1943,8 @@ non-whitespace position</dfn> follow the steps:
 
 <div algorithm="find a string in a range">
 To <dfn>find a string in range</dfn> given a <a spec=infra>string</a> |query|, a
-[=range=] |searchRange|, and booleans |wordStartBounded| and |wordEndBounded|,
-run these steps:
+[=range=] |searchRange|, and booleans |wordStartBounded|, |wordEndBounded| and
+|matchMustBeAtBeginning|, run these steps:
 
 <div class="note">
   This algorithm will return a [=range=] that represents the first instance of
@@ -2014,8 +2007,10 @@ run these steps:
                 |textNodeList|.
             1. Set |curNode| to the next node in [=shadow-including tree order=].
         1. Run the [=find a range from a node list=] steps given |query|,
-            |searchRange|, |textNodeList|, |wordStartBounded| and |wordEndBounded|
-            as input. If the resulting [=range=] is not null, then return it.
+            |searchRange|, |textNodeList|, |wordStartBounded|, |wordEndBounded|
+            and |matchMustBeAtBeginning| as input. If the resulting [=range=]
+            is not null, then return it.
+        1. If |matchMustBeAtBeginning| is true, return null.
         1. If |curNode| is null, then [=iteration/break=].
         1. [=/Assert=]: |curNode| [=tree/following|follows=] |searchRange|'s
             [=range/start node=].
@@ -2062,7 +2057,7 @@ To find the <dfn>nearest block ancestor</dfn> of a |node| follow the steps:
 <div algorithm="range from node list">
 To <dfn>find a range from a node list</dfn> given a search string |queryString|,
 a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
-|wordStartBounded| and |wordEndBounded|, follow these steps:
+|wordStartBounded|, |wordEndBounded| and |matchMustBeAtBeginning|, follow these steps:
 
 <div class="note">
   Optionally, this will only return a match if the matched text begins and/or
@@ -2075,6 +2070,10 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
   </div>
 
   See [[#word-boundaries]] for details and more examples.
+</div>
+<div class="note">
+  Optionally, this will only return a match if the matched text is at the beginning
+  of the node list.
 </div>
 
   <ol class="algorithm">
@@ -2101,6 +2100,7 @@ a [=range=] |searchRange|, a [=/list=] of {{Text}} nodes |nodes|, and booleans
               and other marks.
             </div>
         1. If |matchIndex| is null, return null.
+        1. If |matchMustBeAtBeginning| is true and |matchIndex| is not 0, return null.
         1. Let |endIx| be |matchIndex| + |queryString|'s [=string/length=].
             <div class="note">
                |endIx| is the index of the last character in the match + 1.
