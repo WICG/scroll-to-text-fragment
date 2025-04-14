@@ -187,18 +187,20 @@ Fragments](https://www.w3.org/TR/media-frags/#media-fragment-syntax) (e.g.
 #row=4).
 
 The _text_ keyword will be used to identify a block of text that should be
-indicated.  The provided text is percent-decoded before matching. Dash (-),
-ampersand (&), and comma (,) characters in text snippets must be
-percent-encoded to avoid being interpreted as part of the text fragment
-syntax.
+indicated. The provided text must be percent encoded using the standard [percent
+encode set](https://url.spec.whatwg.org/#percent-encoded-bytes) and is then
+percent-decoded before matching. The percent encode set is inclusive of dash
+(-), ampersand (&), and comma (,) as to avoid being interpreted as part of the
+text fragment syntax.
 
 The [URL standard](https://url.spec.whatwg.org/) specifies that a fragment can
-contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as
-well as [UTF-8 percent encoded
+contain [URL code points](https://url.spec.whatwg.org/#url-code-points), as well
+as [UTF-8 percent encoded
 characters](https://url.spec.whatwg.org/#utf-8-percent-encode). Characters in
 the [fragment percent encode
 set](https://url.spec.whatwg.org/#fragment-percent-encode-set) must be percent
-encoded.
+encoded. Fragment directive requires the more restrictive [percent encode
+set](https://url.spec.whatwg.org/#percent-encoded-bytes).
 
 There are two kinds of terms specified in the text directive: the _match_ and
 the _context_. The match is the portion of text that’s to be indicated. The
@@ -287,7 +289,8 @@ Since the text “United States” is ambiguous, we must provide a suffix to dis
 ### Multiple Text Directives
 
 Users can specify multiple snippets by providing additional text directives in
-the _fragment directive_, separated by the ampersand (&) character.
+the _fragment directive_, separated by the ampersand (&) character. Fragment
+directives must be percent encoded.
 
 Each `text=` directive is considered independent in the sense that success or
 failure to match in one does not affect matching of any others. Each starts
