@@ -246,7 +246,7 @@ string representation of a URL remains plain ASCII characters.
   that's preceeded by <code lang="ar">البحرين‎</code> (Bahrain, in Arabic). We would
   first percent encode each term:
 
-  <code lang="ar">مِصر‎</code> becomes "%D9%85%D8%B5%D8%B1" (Note: UTF-8 character
+  <code lang="ar">مِصر‎</code> becomes "%D9%85%D9%90%D8%B5%D8%B1" (Note: UTF-8 character
   [0xD9,0x85] is the first (right-most) character of the Arabic word.)
 
   <code lang="ar">البحرين‎</code> becomes "%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86"
@@ -254,7 +254,7 @@ string representation of a URL remains plain ASCII characters.
   The text fragment would then become:
 
   <code>
-    :~:text=%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86-,%D9%85%D8%B5%D8%B1
+    :~:text=%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%D9%8A%D9%86-,%D9%85%D9%90%D8%B5%D8%B1
   </code>
 
   When displayed in a browser's address bar, the browser can visually render the
