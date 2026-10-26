@@ -824,7 +824,7 @@ used.
 
 <div algorithm="parse the fragment directive">
 
-To <dfn>parse the fragment directive</dfn>, an an <a spec="infra">ASCII string</a> |fragment
+To <dfn>parse the fragment directive</dfn>, an <a spec="infra">ASCII string</a> |fragment
 directive|, run these steps:
 
 <div class="note">
@@ -1795,7 +1795,7 @@ following steps:
     1. While |searchRange| is not [=range/collapsed=]:
         1. Let |potentialMatch| be null.
         1. If |parsedValues|'s [=text directive/prefix=] is not null:
-            1. Let |prefixMatch| be the the result of running the [=find a string
+            1. Let |prefixMatch| be the result of running the [=find a string
                 in range=] steps with |query| |parsedValues|'s
                 [=text directive/prefix=], |searchRange| |searchRange|,
                 |wordStartBounded| true, |wordEndBounded| false and
@@ -2320,7 +2320,7 @@ recommendations for how UAs can handle these cases.
 
 The general principle is that a URL should include the [=/fragment directive=]
 only while the visual indicator is visible (i.e. not dismissed). If the user
-dismisses the indicator, the URL should reflect that by also removing the the
+dismisses the indicator, the URL should reflect that by also removing the
 [=/fragment directive=].
 
 If the URL includes a text fragment but a match wasn't found in the current
